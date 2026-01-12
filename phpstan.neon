@@ -1,0 +1,18 @@
+parameters:
+    level: 0
+    paths:
+        - src
+    excludePaths:
+        - src/Console/stubs
+    ignoreErrors:
+        - '#Unsafe usage of new static#'
+        - '#on an unknown class#'
+        - '#not found#'
+        - '#Result of .* is used#'
+        - '#Call to sprintf contains 0 placeholders#'
+        - '#return statement is missing#'
+        - '#Access to an undefined property#'
+        - '#Access to undefined constant#'
+        - '#has invalid type#'
+        - '#is not covariant with#'
+    reportUnmatchedIgnoredErrors: false

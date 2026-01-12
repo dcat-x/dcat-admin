@@ -1,0 +1,22 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "npm run development",
+        "development": "mix",
+        "watch": "mix watch",
+        "watch-poll": "mix watch -- --watch-options-poll=1000",
+        "hot": "mix watch --hot",
+        "prod": "npm run production",
+        "production": "mix --production"
+    },
+    "devDependencies": {
+        "cross-env": "^7.0",
+        "dotenv": "^16.0",
+        "glob": "^10.0",
+        "laravel-mix": "^6.0",
+        "resolve-url-loader": "^5.0",
+        "rtlcss": "^4.0",
+        "sass": "^1.77",
+        "sass-loader": "^14.0"
+    }
+}
