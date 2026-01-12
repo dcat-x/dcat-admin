@@ -11,12 +11,12 @@
     },
     "devDependencies": {
         "cross-env": "^7.0",
-        "dotenv": "^16.0",
-        "glob": "^10.0",
+        "dotenv": "^16.4",
+        "glob": "^11.0",
         "laravel-mix": "^6.0",
         "resolve-url-loader": "^5.0",
-        "rtlcss": "^4.0",
-        "sass": "^1.77",
-        "sass-loader": "^14.0"
+        "rtlcss": "^4.3",
+        "sass": "^1.83",
+        "sass-loader": "^16.0"
     }
 }
