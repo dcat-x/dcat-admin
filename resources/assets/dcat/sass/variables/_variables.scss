@@ -1,4 +1,7 @@
 
+// 禁用 Bootstrap 弃用警告
+$enable-deprecation-messages: false;
+
 // 继承
 @import "../../../sass/bootstrap/functions";
 
