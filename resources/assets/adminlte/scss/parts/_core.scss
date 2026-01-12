@@ -2,6 +2,9 @@
 // Part: Core
 //
 
+@import '../root';
+@import '../animation-effects';
+@import '../preloader';
 @import '../layout';
 @import '../main-header';
 @import '../brand';
@@ -10,3 +13,4 @@
 @import '../control-sidebar';
 @import '../dropdown';
 @import '../navs';
+@import '../pagination';
