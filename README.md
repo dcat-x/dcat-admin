@@ -1,6 +1,6 @@
 # Dcat Admin
 
-[![Tests](https://github.com/jqhph/dcat-admin/actions/workflows/tests.yml/badge.svg)](https://github.com/jqhph/dcat-admin/actions)
+[![Tests](https://github.com/dcat-x/dcat-admin/actions/workflows/tests.yml/badge.svg)](https://github.com/dcat-x/dcat-admin/actions)
 [![Latest Stable Version](https://poser.pugx.org/dcat-x/laravel-admin/v/stable)](https://packagist.org/packages/dcat-x/laravel-admin)
 [![Total Downloads](https://img.shields.io/packagist/dt/dcat-x/laravel-admin.svg)](https://packagist.org/packages/dcat-x/laravel-admin)
 [![PHP Version](https://img.shields.io/badge/php-8.2+-59a9f8.svg)](https://www.php.net/)
