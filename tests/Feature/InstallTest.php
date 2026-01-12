@@ -4,15 +4,26 @@ namespace Dcat\Admin\Tests\Feature;
 
 use Dcat\Admin\Admin;
 use Dcat\Admin\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * 安装功能测试.
  *
- * @group install
+ * 需要完整 Laravel 应用环境
  */
+#[Group('integration')]
 class InstallTest extends TestCase
 {
     protected $login = false;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        if (! function_exists('admin_path') || admin_path() === '') {
+            $this->markTestSkipped('需要完整 Laravel 应用环境');
+        }
+    }
 
     public function test_installed_directories()
     {
