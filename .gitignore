@@ -17,6 +17,7 @@ package-lock.json
 
 mix-manifest.json
 /pre-dist/
+/resources/pre-dist/
 /images/
 
 .DS_Store
