@@ -45,7 +45,7 @@ function dcatDistPath(path) {
  */
 const sassOptions = {
   quietDeps: true,
-  silenceDeprecations: ['import', 'global-builtin', 'color-functions', 'slash-div', 'legacy-js-api', 'if-function']
+  silenceDeprecations: ['import', 'global-builtin', 'color-functions', 'slash-div', 'legacy-js-api', 'if-function', 'abs-percent']
 };
 
 /*
