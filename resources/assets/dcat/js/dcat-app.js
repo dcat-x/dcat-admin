@@ -87,6 +87,14 @@ function listen(Dcat) {
         // layer弹窗设置
         layer.config({maxmin: true, moveOut: true, shade: false});
 
+        // 修复 Bootstrap 4 modal aria-hidden 警告
+        // 在 modal 隐藏前将焦点移出，避免 aria-hidden 与焦点冲突
+        $(document).on('hide.bs.modal', '.modal', function () {
+            if (document.activeElement && $.contains(this, document.activeElement)) {
+                document.activeElement.blur();
+            }
+        });
+
         //////////////////////////////////////////////////////////
 
         // 菜单点击选中效果
