@@ -32,6 +32,17 @@ Dcat Admin 只需很少的代码即可快速构建出一个功能完善的高颜
 - **丰富组件** - 图表、数据卡片、下拉菜单等
 - **文件上传** - 异步上传，支持分块多线程
 
+## 环境要求
+
+- PHP >= 8.2
+- Laravel >= 12.0
+
+## 版本兼容
+
+| Dcat Admin X | Laravel | PHP   |
+|--------------|---------|-------|
+| 1.x          | 12.x    | 8.2+  |
+
 ## 安装
 
 ```bash
@@ -47,6 +58,10 @@ php artisan admin:install
 
 访问 `http://localhost/admin`，使用 `admin` / `admin` 登录。
 
+## 从原版迁移
+
+如果你正在使用原版 [Dcat Admin](https://github.com/jqhph/dcat-admin)，请参考 [升级指南](docs/upgrade.md) 进行迁移。
+
 ## 文档
 
 - [中文文档](https://learnku.com/docs/dcat-admin)
@@ -58,7 +73,20 @@ composer install      # 安装依赖
 composer pint         # 代码格式化
 composer phpstan      # 静态分析
 composer test         # 运行测试
+composer ci           # 运行完整 CI 检查
 ```
+
+## 贡献
+
+请阅读 [贡献指南](CONTRIBUTING.md) 了解如何参与项目开发。
+
+## 安全漏洞
+
+如果你发现安全漏洞，请查看 [安全策略](SECURITY.md) 了解如何报告。
+
+## 变更日志
+
+请查看 [CHANGELOG](CHANGELOG.md) 了解版本变更。
 
 ## 鸣谢
 
@@ -70,6 +98,6 @@ composer test         # 运行测试
 | [AdminLTE](https://github.com/ColorlibHQ/AdminLTE) | 后台模板 |
 | [Bootstrap](https://getbootstrap.com/) | CSS 框架 |
 
-## License
+## 开源许可
 
 [MIT License](LICENSE)

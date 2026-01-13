@@ -25,6 +25,10 @@
             "homepage": "https://github.com/myxiaoao"
         }
     ],
+    "support": {
+        "issues": "https://github.com/dcat-x/dcat-admin/issues",
+        "source": "https://github.com/dcat-x/dcat-admin"
+    },
     "require": {
         "php": "^8.2",
         "laravel/framework": "^12.0",
@@ -56,8 +60,15 @@
     },
     "scripts": {
         "pint": "vendor/bin/pint",
+        "pint:test": "vendor/bin/pint --test",
         "phpstan": "vendor/bin/phpstan analyse",
-        "test": "vendor/bin/phpunit"
+        "test": "vendor/bin/phpunit",
+        "test:coverage": "vendor/bin/phpunit --coverage-html coverage",
+        "ci": [
+            "@pint:test",
+            "@phpstan",
+            "@test"
+        ]
     },
     "extra": {
         "laravel": {
@@ -65,5 +76,10 @@
                 "Dcat\\Admin\\AdminServiceProvider"
             ]
         }
-    }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }

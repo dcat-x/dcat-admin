@@ -1,2 +1,50 @@
+# Auto-detect text files and perform LF normalization
+* text=auto
+
+# Source files
+*.php text eol=lf
+*.blade.php text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.xml text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.md text eol=lf
+*.stub text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+
+# GitHub linguist
 resources/* linguist-vendored
-*.js linguist-language=php
+*.js linguist-vendored
+
+# Export ignore (these files will not be included in composer package)
+/.editorconfig export-ignore
+/.env.testing export-ignore
+/.github export-ignore
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/.phpunit.cache export-ignore
+/docs export-ignore
+/node_modules export-ignore
+/package.json export-ignore
+/package-lock.json export-ignore
+/phpstan.neon export-ignore
+/phpunit.xml export-ignore
+/phpunit.dusk.xml export-ignore
+/pint.json export-ignore
+/tests export-ignore
+/webpack.mix.js export-ignore
+CHANGELOG.md export-ignore
+CONTRIBUTING.md export-ignore
