@@ -7,14 +7,18 @@ export default class SweetAlert2 {
     constructor(Dcat) {
         let _this = this;
 
+        // 保存 Swal 引用
+        _this.swal = Swal;
+
+        // 绑定方法到实例
         Swal.success = _this.success.bind(_this);
         Swal.error = _this.error.bind(_this);
         Swal.info = _this.info.bind(_this);
         Swal.warning = _this.warning.bind(_this);
         Swal.confirm = _this.confirm.bind(_this);
 
-        w.swal = w.Swal = _this.swal = Dcat.swal = Swal;
-
+        // 全局暴露
+        w.swal = w.Swal = Dcat.swal = Swal;
         Dcat.confirm = Swal.confirm;
     }
 
