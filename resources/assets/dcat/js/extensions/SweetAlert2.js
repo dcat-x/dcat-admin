@@ -1,5 +1,5 @@
 
-import Swal from '../sweetalert/sweetalert2'
+import Swal from 'sweetalert2'
 
 let w = window;
 

@@ -17,6 +17,7 @@
         "resolve-url-loader": "^5.0",
         "rtlcss": "^4.3",
         "sass": "^1.83",
-        "sass-loader": "^16.0"
+        "sass-loader": "^16.0",
+        "sweetalert2": "^11.26.17"
     }
 }
