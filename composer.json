@@ -1,25 +1,28 @@
 {
     "name": "dcat-x/laravel-admin",
-    "description": "dcat admin",
+    "description": "A full-featured admin panel builder for Laravel",
     "type": "library",
     "keywords": [
-        "dcat",
         "laravel",
         "admin",
+        "dashboard",
+        "crud",
         "grid",
         "form",
-        "laravel admin"
+        "rbac"
     ],
     "homepage": "https://github.com/dcat-x/dcat-admin",
     "license": "MIT",
     "authors": [
         {
             "name": "jqh",
-            "email": "841324345@qq.com"
+            "email": "841324345@qq.com",
+            "homepage": "https://github.com/jqhph"
         },
         {
             "name": "Cooper",
-            "email": "myxiaoao@gmail.com"
+            "email": "myxiaoao@gmail.com",
+            "homepage": "https://github.com/myxiaoao"
         }
     ],
     "require": {
