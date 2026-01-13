@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.4] - 2026-01-13
+
+### Fixed
+
+- 降级 SweetAlert2 到 v9，修复 confirmButtonClass 等参数不兼容问题
+
 ## [1.0.3] - 2026-01-13
 
 ### Fixed
@@ -47,7 +53,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.0.3...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.0.4...HEAD
+[1.0.4]: https://github.com/dcat-x/dcat-admin/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/dcat-x/dcat-admin/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/dcat-x/dcat-admin/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/dcat-x/dcat-admin/compare/v1.0.0...v1.0.1
