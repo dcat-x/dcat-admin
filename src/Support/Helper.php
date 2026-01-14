@@ -49,22 +49,17 @@ class Helper
             $value = $value();
         }
 
-        if (is_array($value)) {
-        } elseif ($value instanceof Jsonable) {
-            $value = json_decode($value->toJson(), true);
-        } elseif ($value instanceof Arrayable) {
-            $value = $value->toArray();
-        } elseif (is_string($value)) {
-            $array = null;
-
-            try {
+        if (! is_array($value)) {
+            if ($value instanceof Jsonable) {
+                $value = json_decode($value->toJson(), true);
+            } elseif ($value instanceof Arrayable) {
+                $value = $value->toArray();
+            } elseif (is_string($value)) {
                 $array = json_decode($value, true);
-            } catch (\Throwable $e) {
+                $value = is_array($array) ? $array : explode(',', $value);
+            } else {
+                $value = (array) $value;
             }
-
-            $value = is_array($array) ? $array : explode(',', $value);
-        } else {
-            $value = (array) $value;
         }
 
         return $filter ? array_filter($value, function ($v) {

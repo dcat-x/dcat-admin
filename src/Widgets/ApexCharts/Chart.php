@@ -258,7 +258,7 @@ JS
 
     public function html()
     {
-        $hasSelector = $this->containerSelector ? true : false;
+        $hasSelector = (bool) $this->containerSelector;
 
         if (! $hasSelector) {
             // 没有指定ID，需要自动生成

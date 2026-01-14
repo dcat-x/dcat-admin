@@ -102,19 +102,17 @@ class Show implements Renderable
      */
     public function __construct($id = null, $model = null, ?\Closure $builder = null)
     {
-        switch (func_num_args()) {
-            case 1:
-            case 2:
-                if (is_scalar($id)) {
-                    $this->setKey($id);
-                } else {
-                    $builder = $model;
-                    $model = $id;
-                }
-                break;
-            default:
-                $this->setKey($id);
+        // 当传入1-2个参数且第一个参数不是标量时，重新分配参数
+        if (func_num_args() <= 2 && ! is_scalar($id)) {
+            $builder = $model;
+            $model = $id;
+            $id = null;
         }
+
+        if ($id !== null) {
+            $this->setKey($id);
+        }
+
         $this->rows = new Collection;
         $this->builder = $builder;
 

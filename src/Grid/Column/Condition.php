@@ -121,7 +121,7 @@ class Condition
             $condition = $this->call($condition);
         }
 
-        return $this->result = $condition ? true : false;
+        return $this->result = (bool) $condition;
     }
 
     public function getResult()

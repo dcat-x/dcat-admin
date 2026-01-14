@@ -508,19 +508,7 @@ class EloquentRepository extends Repository implements TreeRepository
      */
     public function moveOrderUp()
     {
-        $model = $this->model();
-
-        if (! $model instanceof Sortable) {
-            throw new RuntimeException(
-                sprintf(
-                    'The model "%s" must be a type of %s.',
-                    get_class($model),
-                    Sortable::class
-                )
-            );
-        }
-
-        return $model->moveOrderUp() ? true : false;
+        return (bool) $this->getSortableModel()->moveOrderUp();
     }
 
     /**
@@ -529,6 +517,18 @@ class EloquentRepository extends Repository implements TreeRepository
      * @return bool
      */
     public function moveOrderDown()
+    {
+        return (bool) $this->getSortableModel()->moveOrderDown();
+    }
+
+    /**
+     * 获取可排序模型.
+     *
+     * @return Sortable
+     *
+     * @throws RuntimeException
+     */
+    protected function getSortableModel()
     {
         $model = $this->model();
 
@@ -542,7 +542,7 @@ class EloquentRepository extends Repository implements TreeRepository
             );
         }
 
-        return $model->moveOrderDown() ? true : false;
+        return $model;
     }
 
     /**

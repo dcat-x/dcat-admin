@@ -28,7 +28,7 @@ trait HasTabs
 
     public function hasTab()
     {
-        return $this->tab ? true : false;
+        return (bool) $this->tab;
     }
 
     /**

@@ -59,7 +59,7 @@ trait HasQuickSearch
      */
     public function allowQuickSearch()
     {
-        return $this->quickSearch ? true : false;
+        return (bool) $this->quickSearch;
     }
 
     /**

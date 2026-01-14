@@ -171,7 +171,7 @@ class Builder implements FieldsCollection
      */
     public function hasWrapper()
     {
-        return $this->wrapper ? true : false;
+        return (bool) $this->wrapper;
     }
 
     /**

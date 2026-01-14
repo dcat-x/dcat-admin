@@ -84,7 +84,7 @@ class Condition
             $this->condition = $this->call($this->condition);
         }
 
-        return $this->result = $this->condition ? true : false;
+        return $this->result = (bool) $this->condition;
     }
 
     public function getResult()

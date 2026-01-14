@@ -149,7 +149,7 @@ JS;
 
         $this->addScript();
 
-        $onlyScopes = ((! $filters || $this->parent->option('filter') === false) && ! $scopres->isEmpty()) ? true : false;
+        $onlyScopes = (! $filters || $this->parent->option('filter') === false) && ! $scopres->isEmpty();
 
         $variables = [
             'scopes' => $scopres,
