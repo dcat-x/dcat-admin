@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.10] - 2026-01-14
+
+### Fixed
+
+- 修复筛选按钮在 gray 主题下样式被 `.btn-primary` 覆盖的问题
+
 ## [1.0.9] - 2026-01-14
 
 ### Changed
@@ -113,7 +119,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.0.9...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.0.10...HEAD
+[1.0.10]: https://github.com/dcat-x/dcat-admin/compare/v1.0.9...v1.0.10
 [1.0.9]: https://github.com/dcat-x/dcat-admin/compare/v1.0.8...v1.0.9
 [1.0.8]: https://github.com/dcat-x/dcat-admin/compare/v1.0.7...v1.0.8
 [1.0.7]: https://github.com/dcat-x/dcat-admin/compare/v1.0.6...v1.0.7
