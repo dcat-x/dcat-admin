@@ -28,6 +28,11 @@ class Actions extends AbstractDisplayer
     protected $prepends = [];
 
     /**
+     * @var array
+     */
+    protected $custom = [];
+
+    /**
      * Default actions.
      *
      * @var array
@@ -43,6 +48,136 @@ class Actions extends AbstractDisplayer
      * @var string
      */
     protected $resource;
+
+    /**
+     * Action button text and icon configuration.
+     */
+    protected string $quickEditText = '';
+
+    protected string $quickEditIcon = 'edit';
+
+    protected string $editText = '';
+
+    protected string $editIcon = 'edit-1';
+
+    protected string $viewText = '';
+
+    protected string $viewIcon = 'eye';
+
+    protected string $deleteText = '';
+
+    protected string $deleteIcon = 'trash';
+
+    /**
+     * Set quick edit button text.
+     *
+     * @return $this
+     */
+    public function setQuickEditText(string $val): static
+    {
+        $this->quickEditText = $val;
+
+        return $this;
+    }
+
+    /**
+     * Set quick edit button icon.
+     *
+     * @return $this
+     */
+    public function setQuickEditIcon(string $val): static
+    {
+        $this->quickEditIcon = $val;
+
+        return $this;
+    }
+
+    /**
+     * Set edit button text.
+     *
+     * @return $this
+     */
+    public function setEditText(string $val): static
+    {
+        $this->editText = $val;
+
+        return $this;
+    }
+
+    /**
+     * Set edit button icon.
+     *
+     * @return $this
+     */
+    public function setEditIcon(string $val): static
+    {
+        $this->editIcon = $val;
+
+        return $this;
+    }
+
+    /**
+     * Set view button text.
+     *
+     * @return $this
+     */
+    public function setViewText(string $val): static
+    {
+        $this->viewText = $val;
+
+        return $this;
+    }
+
+    /**
+     * Set view button icon.
+     *
+     * @return $this
+     */
+    public function setViewIcon(string $val): static
+    {
+        $this->viewIcon = $val;
+
+        return $this;
+    }
+
+    /**
+     * Set delete button text.
+     *
+     * @return $this
+     */
+    public function setDeleteText(string $val): static
+    {
+        $this->deleteText = $val;
+
+        return $this;
+    }
+
+    /**
+     * Set delete button icon.
+     *
+     * @return $this
+     */
+    public function setDeleteIcon(string $val): static
+    {
+        $this->deleteIcon = $val;
+
+        return $this;
+    }
+
+    /**
+     * Add a custom action.
+     *
+     * @param  string|Renderable|Action|Htmlable  $action
+     * @return $this
+     */
+    public function add($action): static
+    {
+        $this->prepareAction($action);
+
+        $this->custom[] = $action;
+
+        return $this;
+    }
 
     /**
      * Append a action.
@@ -218,6 +353,7 @@ class Actions extends AbstractDisplayer
 
         $prepends = array_map($toString, $this->prepends);
         $appends = array_map($toString, $this->appends);
+        $customs = array_map($toString, $this->custom);
 
         foreach ($this->actions as $action => $enable) {
             if ($enable) {
@@ -226,7 +362,7 @@ class Actions extends AbstractDisplayer
             }
         }
 
-        return implode('', array_merge($prepends, $appends));
+        return implode('', array_merge($prepends, $customs, $appends));
     }
 
     /**
@@ -238,6 +374,7 @@ class Actions extends AbstractDisplayer
     {
         $action = config('admin.grid.actions.view') ?: Show::class;
         $action = $action::make($this->getViewLabel());
+        $action->addHtmlClass(['mr-10px']);
 
         return $this->prepareAction($action);
     }
@@ -245,11 +382,11 @@ class Actions extends AbstractDisplayer
     /**
      * @return string
      */
-    protected function getViewLabel()
+    protected function getViewLabel(): string
     {
-        $label = trans('admin.show');
+        $label = $this->viewText ?: trans('admin.show');
 
-        return "<i title='{$label}' class=\"feather icon-eye grid-action-icon\"></i> &nbsp;";
+        return "<i title='{$label}' class=\"feather icon-{$this->viewIcon} grid-action-icon\"></i> {$this->viewText}";
     }
 
     /**
@@ -261,6 +398,7 @@ class Actions extends AbstractDisplayer
     {
         $action = config('admin.grid.actions.edit') ?: Edit::class;
         $action = $action::make($this->getEditLabel());
+        $action->addHtmlClass(['mr-10px']);
 
         return $this->prepareAction($action);
     }
@@ -268,11 +406,11 @@ class Actions extends AbstractDisplayer
     /**
      * @return string
      */
-    protected function getEditLabel()
+    protected function getEditLabel(): string
     {
-        $label = trans('admin.edit');
+        $label = $this->editText ?: trans('admin.edit');
 
-        return "<i title='{$label}' class=\"feather icon-edit-1 grid-action-icon\"></i> &nbsp;";
+        return "<i title='{$label}' class=\"feather icon-{$this->editIcon} grid-action-icon\"></i> {$this->editText}";
     }
 
     /**
@@ -282,6 +420,7 @@ class Actions extends AbstractDisplayer
     {
         $action = config('admin.grid.actions.quick_edit') ?: QuickEdit::class;
         $action = $action::make($this->getQuickEditLabel());
+        $action->addHtmlClass(['mr-10px']);
 
         return $this->prepareAction($action);
     }
@@ -289,11 +428,11 @@ class Actions extends AbstractDisplayer
     /**
      * @return string
      */
-    protected function getQuickEditLabel()
+    protected function getQuickEditLabel(): string
     {
-        $label = trans('admin.quick_edit');
+        $label = $this->quickEditText ?: trans('admin.quick_edit');
 
-        return "<i title='{$label}' class=\"feather icon-edit grid-action-icon\"></i> &nbsp;";
+        return "<i title='{$label}' class=\"feather icon-{$this->quickEditIcon} grid-action-icon\"></i> {$this->quickEditText}";
     }
 
     /**
@@ -305,6 +444,7 @@ class Actions extends AbstractDisplayer
     {
         $action = config('admin.grid.actions.delete') ?: Delete::class;
         $action = $action::make($this->getDeleteLabel());
+        $action->addHtmlClass(['mr-10px']);
 
         return $this->prepareAction($action);
     }
@@ -312,10 +452,10 @@ class Actions extends AbstractDisplayer
     /**
      * @return string
      */
-    protected function getDeleteLabel()
+    protected function getDeleteLabel(): string
     {
-        $label = trans('admin.delete');
+        $label = $this->deleteText ?: trans('admin.delete');
 
-        return "<i class=\"feather icon-trash grid-action-icon\" title='{$label}'></i> &nbsp;";
+        return "<i class=\"feather icon-{$this->deleteIcon} grid-action-icon\" title='{$label}'></i> {$this->deleteText}";
     }
 }
