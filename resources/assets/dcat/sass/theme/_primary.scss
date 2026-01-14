@@ -1,7 +1,9 @@
 // 设置主题颜色
+// Theme color is passed via webpack.mix.js as $theme-primary
+// If not defined, use default
 
-//$primary: $indigo;
-//$primary: #4e9876; // green
-//$primary: #6d8be6; // blue
-//$primary: #62a8ea; //blue-light
-$primary: #586cb1;
+// Set default value
+$theme-primary: #586cb1 !default;
+
+// Use theme-primary as primary color
+$primary: $theme-primary;

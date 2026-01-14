@@ -39,18 +39,33 @@ body.layout-color-gray {
   }
 
   // ============================================
-  // Primary Button Styles
+  // Primary Button Styles (override AdminLTE)
   // ============================================
   .btn-primary {
-    background-color: $gray-theme-header;
-    border-color: $gray-theme-header;
+    background-color: $gray-theme-header !important;
+    border-color: $gray-theme-header !important;
 
     &:hover,
     &:focus,
     &:active {
-      background-color: $gray-theme-header-hover;
-      border-color: $gray-theme-header-hover;
+      background-color: $gray-theme-header-hover !important;
+      border-color: $gray-theme-header-hover !important;
     }
+  }
+
+  // ============================================
+  // Link Colors (override AdminLTE blue links)
+  // ============================================
+  a {
+    color: $gray-theme-header;
+
+    &:hover {
+      color: $gray-theme-header-hover;
+    }
+  }
+
+  .text-primary {
+    color: $gray-theme-header !important;
   }
 
   // ============================================

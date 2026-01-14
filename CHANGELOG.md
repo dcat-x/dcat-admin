@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.13] - 2026-01-14
+
+### Fixed
+
+- 修复多主题编译时 `$primary` 颜色不随主题变化的问题
+- 所有主题（gray、blue、green、blue-light）现在正确使用各自的主题颜色
+
+### Changed
+
+- 重构 webpack.mix.js：通过 `additionalData` 注入 `$theme-primary` 变量实现动态主题颜色
+- 更新 `_primary.scss`：使用 `!default` 支持外部变量覆盖
+
 ## [1.0.12] - 2026-01-14
 
 ### Fixed
@@ -131,7 +143,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.0.12...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.0.13...HEAD
+[1.0.13]: https://github.com/dcat-x/dcat-admin/compare/v1.0.12...v1.0.13
 [1.0.12]: https://github.com/dcat-x/dcat-admin/compare/v1.0.11...v1.0.12
 [1.0.11]: https://github.com/dcat-x/dcat-admin/compare/v1.0.10...v1.0.11
 [1.0.10]: https://github.com/dcat-x/dcat-admin/compare/v1.0.9...v1.0.10
