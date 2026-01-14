@@ -1,0 +1,86 @@
+// ================================================================================================
+//  File Name: _gray.scss
+//  Description: Gray theme color overrides
+//  ----------------------------------------------------------------------------------------------
+//  This theme provides a modern dark header with neutral gray accent colors.
+//  Primary color: #030712 (near black)
+//  Header/Navbar: #171717 (dark gray)
+// ================================================================================================
+
+// Gray theme specific variables
+$gray-theme-primary: #030712;
+$gray-theme-header: #171717;
+$gray-theme-header-hover: #333333;
+$gray-theme-sidebar-text: #333;
+
+// ============================================
+// Header & Navbar - Dark Gray Style
+// ============================================
+body.layout-color-gray {
+  .header-navbar,
+  .navbar-header {
+    background-color: $gray-theme-header !important;
+  }
+
+  .header-navbar a,
+  .navbar-header a {
+    color: #fff;
+  }
+
+  .user-name {
+    color: #fff;
+  }
+
+  // ============================================
+  // Primary Background Override
+  // ============================================
+  .bg-primary {
+    background-color: $gray-theme-header !important;
+  }
+
+  // ============================================
+  // Primary Button Styles
+  // ============================================
+  .btn-primary {
+    background-color: $gray-theme-header;
+    border-color: $gray-theme-header;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: $gray-theme-header-hover;
+      border-color: $gray-theme-header-hover;
+    }
+  }
+
+  // ============================================
+  // Grid Selector
+  // ============================================
+  .grid-selector .wrap {
+    background-color: $gray-theme-header;
+  }
+
+  // ============================================
+  // Pagination Active State
+  // ============================================
+  .pagination .page-item.active .page-link {
+    background-color: $gray-theme-header;
+    border-color: $gray-theme-header;
+  }
+
+  // ============================================
+  // Sidebar Text Colors
+  // ============================================
+  .main-sidebar .nav-sidebar > .nav-link {
+    color: $gray-theme-sidebar-text;
+  }
+
+  [class*=sidebar-light-] .nav-sidebar > .nav-item > .nav-link,
+  [class*=sidebar-light-] .nav-sidebar > .nav-item:hover > .nav-link {
+    color: $gray-theme-sidebar-text;
+  }
+
+  .sidebar-light-primary .nav-item > .nav-link.active {
+    color: #000 !important;
+  }
+}

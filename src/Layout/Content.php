@@ -481,6 +481,12 @@ class Content implements Renderable
             $data['body_class'][] = 'horizontal-menu';
         }
 
+        // Add layout color class for theme-specific styles
+        $layoutColor = config('admin.layout.color');
+        if ($layoutColor && $layoutColor !== 'default') {
+            $data['body_class'][] = 'layout-color-'.$layoutColor;
+        }
+
         return [
             'theme' => $data['theme'],
             'sidebar_collapsed' => $data['sidebar_collapsed'],

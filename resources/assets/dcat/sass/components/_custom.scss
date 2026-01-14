@@ -1,12 +1,12 @@
 // ================================================================================================
 //  File Name: _custom.scss
-//  Description: Custom styles for enhanced UI/UX
+//  Description: Custom styles for enhanced UI/UX (theme-independent)
 //  ----------------------------------------------------------------------------------------------
 //  These styles provide a cleaner, more modern UI with:
 //  - Wider sidebar (210px)
 //  - Flat design (removed shadows)
-//  - Dark header theme
 //  - Optimized spacing and borders
+//  Note: Theme-specific colors are in theme/_gray.scss
 // ================================================================================================
 
 // ============================================
@@ -66,17 +66,10 @@
 
 .main-sidebar .nav-sidebar > .nav-link {
   font-weight: 400;
-  color: #333;
 }
 
 .sidebar-light-primary .nav-item > .nav-link.active {
-  color: #000 !important;
   font-weight: 500;
-}
-
-[class*=sidebar-light-] .nav-sidebar > .nav-item > .nav-link,
-[class*=sidebar-light-] .nav-sidebar > .nav-item:hover > .nav-link {
-  color: #333;
 }
 
 .main-sidebar .nav-treeview.nav .nav-item .nav-link {
@@ -164,31 +157,11 @@
 
 .navbar-right .navbar-nav li:hover {
   background: rgba(0, 0, 0, 0.05);
-  color: #f6f6f6;
 }
 
 .navbar-left a {
   padding-right: 20px;
   font-size: 15px;
-}
-
-// Dark Header Theme
-.header-navbar,
-.navbar-header {
-  background-color: #171717 !important;
-}
-
-.bg-primary {
-  background-color: #171717 !important;
-}
-
-.user-name {
-  color: #fff;
-}
-
-.header-navbar a,
-.navbar-header a {
-  color: #fff;
 }
 
 // ============================================
@@ -418,16 +391,6 @@ code,
   border: #dfdfdf solid 1px;
 }
 
-.btn-primary {
-  background-color: #171717;
-  border-color: #171717;
-}
-
-.btn-primary:hover {
-  background-color: #333333;
-  border-color: #333333;
-}
-
 .btn-primary.btn-outline {
   background-color: #fff;
 }
@@ -449,14 +412,6 @@ code,
 
 .grid-selector .wrap {
   box-shadow: none;
-  background-color: #171717;
-}
-
-// ============================================
-// Pagination Styles
-// ============================================
-.pagination .page-item.active .page-link {
-  background-color: #171717;
 }
 
 // ============================================
