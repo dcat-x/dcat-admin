@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.18] - 2026-01-14
+
+### Added
+
+- 为框架默认主题创建 SCSS 样式文件 (default, blue, blue-light)
+
+### Changed
+
+- 将 green 主题颜色更新为 Tailwind CSS green (#16a34a)
+- 简化 README.md，移除"环境要求"和"从原版迁移"章节
+
+### Fixed
+
+- 修复筛选按钮在 custom-data-table-header 内边框丢失的问题
+
 ## [1.0.17] - 2026-01-14
 
 ### Added
