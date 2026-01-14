@@ -14,9 +14,6 @@ class Fee extends Currency
 {
     /**
      * 设置 inputmask 选项，处理分/元转换.
-     *
-     * @param  array  $options  inputmask 配置选项
-     * @return $this
      */
     public function inputmask($options): static
     {
@@ -64,8 +61,6 @@ EOT;
 
     /**
      * 渲染组件.
-     *
-     * @return mixed
      */
     public function render(): mixed
     {

@@ -9,8 +9,6 @@ use Dcat\Admin\Grid\Actions\QuickEdit;
 use Dcat\Admin\Grid\Actions\Show;
 use Dcat\Admin\Grid\RowAction;
 use Dcat\Admin\Support\Helper;
-use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Traits\Macroable;
 
 class Actions extends AbstractDisplayer
@@ -70,8 +68,6 @@ class Actions extends AbstractDisplayer
 
     /**
      * Set quick edit button text.
-     *
-     * @return $this
      */
     public function setQuickEditText(string $val): static
     {
@@ -82,8 +78,6 @@ class Actions extends AbstractDisplayer
 
     /**
      * Set quick edit button icon.
-     *
-     * @return $this
      */
     public function setQuickEditIcon(string $val): static
     {
@@ -94,8 +88,6 @@ class Actions extends AbstractDisplayer
 
     /**
      * Set edit button text.
-     *
-     * @return $this
      */
     public function setEditText(string $val): static
     {
@@ -106,8 +98,6 @@ class Actions extends AbstractDisplayer
 
     /**
      * Set edit button icon.
-     *
-     * @return $this
      */
     public function setEditIcon(string $val): static
     {
@@ -118,8 +108,6 @@ class Actions extends AbstractDisplayer
 
     /**
      * Set view button text.
-     *
-     * @return $this
      */
     public function setViewText(string $val): static
     {
@@ -130,8 +118,6 @@ class Actions extends AbstractDisplayer
 
     /**
      * Set view button icon.
-     *
-     * @return $this
      */
     public function setViewIcon(string $val): static
     {
@@ -142,8 +128,6 @@ class Actions extends AbstractDisplayer
 
     /**
      * Set delete button text.
-     *
-     * @return $this
      */
     public function setDeleteText(string $val): static
     {
@@ -154,8 +138,6 @@ class Actions extends AbstractDisplayer
 
     /**
      * Set delete button icon.
-     *
-     * @return $this
      */
     public function setDeleteIcon(string $val): static
     {
@@ -166,9 +148,6 @@ class Actions extends AbstractDisplayer
 
     /**
      * Add a custom action.
-     *
-     * @param  string|Renderable|Action|Htmlable  $action
-     * @return $this
      */
     public function add($action): static
     {
@@ -181,9 +160,6 @@ class Actions extends AbstractDisplayer
 
     /**
      * Append a action.
-     *
-     * @param  string|Renderable|Action|Htmlable  $action
-     * @return $this
      */
     public function append($action)
     {
@@ -196,9 +172,6 @@ class Actions extends AbstractDisplayer
 
     /**
      * Prepend a action.
-     *
-     * @param  string|Renderable|Action|Htmlable  $action
-     * @return $this
      */
     public function prepend($action)
     {
@@ -209,10 +182,6 @@ class Actions extends AbstractDisplayer
         return $this;
     }
 
-    /**
-     * @param  mixed  $action
-     * @return mixed
-     */
     protected function prepareAction(&$action)
     {
         if ($action instanceof RowAction) {
@@ -231,8 +200,6 @@ class Actions extends AbstractDisplayer
 
     /**
      * Disable view action.
-     *
-     * @return $this
      */
     public function disableView(bool $disable = true)
     {
@@ -246,8 +213,6 @@ class Actions extends AbstractDisplayer
 
     /**
      * Disable delete.
-     *
-     * @return $this.
      */
     public function disableDelete(bool $disable = true)
     {
@@ -261,8 +226,6 @@ class Actions extends AbstractDisplayer
 
     /**
      * Disable edit.
-     *
-     * @return $this.
      */
     public function disableEdit(bool $disable = true)
     {
@@ -276,18 +239,12 @@ class Actions extends AbstractDisplayer
 
     /**
      * Disable quick edit.
-     *
-     * @return $this.
      */
     public function disableQuickEdit(bool $disable = true)
     {
         return $this->setAction('quickEdit', ! $disable);
     }
 
-    /**
-     * @param  bool  $disable
-     * @return $this
-     */
     protected function setAction(string $key, bool $value)
     {
         $this->actions[$key] = $value;
@@ -297,8 +254,6 @@ class Actions extends AbstractDisplayer
 
     /**
      * Set resource of current resource.
-     *
-     * @return $this
      */
     public function setResource($resource)
     {
@@ -309,18 +264,13 @@ class Actions extends AbstractDisplayer
 
     /**
      * Get resource of current resource.
-     *
-     * @return string
      */
     public function resource()
     {
         return $this->resource ?: parent::resource();
     }
 
-    /**
-     * @return void
-     */
-    protected function resetDefaultActions()
+    protected function resetDefaultActions(): void
     {
         $this->view($this->grid->option('view_button'));
         $this->edit($this->grid->option('edit_button'));
@@ -328,10 +278,7 @@ class Actions extends AbstractDisplayer
         $this->delete($this->grid->option('delete_button'));
     }
 
-    /**
-     * @return void
-     */
-    protected function call(array $callbacks = [])
+    protected function call(array $callbacks = []): void
     {
         foreach ($callbacks as $callback) {
             if ($callback instanceof \Closure) {
@@ -367,8 +314,6 @@ class Actions extends AbstractDisplayer
 
     /**
      * Render view action.
-     *
-     * @return string
      */
     protected function renderView()
     {
@@ -379,9 +324,6 @@ class Actions extends AbstractDisplayer
         return $this->prepareAction($action);
     }
 
-    /**
-     * @return string
-     */
     protected function getViewLabel(): string
     {
         $label = $this->viewText ?: trans('admin.show');
@@ -391,8 +333,6 @@ class Actions extends AbstractDisplayer
 
     /**
      * Render edit action.
-     *
-     * @return string
      */
     protected function renderEdit()
     {
@@ -403,9 +343,6 @@ class Actions extends AbstractDisplayer
         return $this->prepareAction($action);
     }
 
-    /**
-     * @return string
-     */
     protected function getEditLabel(): string
     {
         $label = $this->editText ?: trans('admin.edit');
@@ -413,9 +350,6 @@ class Actions extends AbstractDisplayer
         return "<i title='{$label}' class=\"feather icon-{$this->editIcon} grid-action-icon\"></i> {$this->editText}";
     }
 
-    /**
-     * @return string
-     */
     protected function renderQuickEdit()
     {
         $action = config('admin.grid.actions.quick_edit') ?: QuickEdit::class;
@@ -425,9 +359,6 @@ class Actions extends AbstractDisplayer
         return $this->prepareAction($action);
     }
 
-    /**
-     * @return string
-     */
     protected function getQuickEditLabel(): string
     {
         $label = $this->quickEditText ?: trans('admin.quick_edit');
@@ -437,8 +368,6 @@ class Actions extends AbstractDisplayer
 
     /**
      * Render delete action.
-     *
-     * @return string
      */
     protected function renderDelete()
     {
@@ -449,9 +378,6 @@ class Actions extends AbstractDisplayer
         return $this->prepareAction($action);
     }
 
-    /**
-     * @return string
-     */
     protected function getDeleteLabel(): string
     {
         $label = $this->deleteText ?: trans('admin.delete');

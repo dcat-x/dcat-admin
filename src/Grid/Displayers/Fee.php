@@ -12,10 +12,6 @@ class Fee extends AbstractDisplayer
 {
     /**
      * 显示格式化的金额.
-     *
-     * @param  string  $symbol  货币符号，默认为 $
-     * @param  int  $decimals  小数位数，默认为 2
-     * @return string
      */
     public function display(string $symbol = '$', int $decimals = 2): string
     {

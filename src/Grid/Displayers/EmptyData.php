@@ -12,9 +12,6 @@ class EmptyData extends AbstractDisplayer
 {
     /**
      * 显示数据，空值时显示占位符.
-     *
-     * @param  string  $placeholder  占位符，默认为 -
-     * @return mixed
      */
     public function display(string $placeholder = '-'): mixed
     {

@@ -15,10 +15,6 @@ class Rate extends AbstractField
 {
     /**
      * Render the rate value with suffix.
-     *
-     * @param  string  $suffix  Rate suffix (default: %)
-     * @param  int|null  $decimals  Decimal places (null to keep original)
-     * @return string
      */
     public function render(string $suffix = '%', ?int $decimals = null): string
     {

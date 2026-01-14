@@ -14,65 +14,46 @@ class OssDirectUpload extends File
 {
     /**
      * 视图模板.
-     *
-     * @var string
      */
     protected $view = 'admin::form.oss-direct-upload';
 
     /**
      * 最大文件大小（MB）.
-     *
-     * @var int
      */
     protected int $maxSizeMb = 500;
 
     /**
      * 分片大小（MB）.
-     *
-     * @var int
      */
     protected int $chunkSizeMb = 10;
 
     /**
      * 文件类型（file 或 image）.
-     *
-     * @var string
      */
     protected string $uploadType = 'file';
 
     /**
      * 自定义上传目录.
-     *
-     * @var string|null
      */
     protected ?string $uploadDirectory = null;
 
     /**
      * 允许的文件扩展名.
-     *
-     * @var string
      */
     protected string $acceptExtensions = '*';
 
     /**
      * 允许的 MIME 类型.
-     *
-     * @var string|null
      */
     protected ?string $acceptMimeTypes = null;
 
     /**
      * STS Token 获取地址.
-     *
-     * @var string|null
      */
     protected ?string $stsTokenUrl = null;
 
     /**
      * 设置最大文件大小（MB）.
-     *
-     * @param  int  $mb
-     * @return $this
      */
     public function maxSize(int $mb): static
     {
@@ -83,9 +64,6 @@ class OssDirectUpload extends File
 
     /**
      * 设置分片大小（MB）.
-     *
-     * @param  int  $mb
-     * @return $this
      */
     public function chunkSize(int $mb): static
     {
@@ -96,10 +74,6 @@ class OssDirectUpload extends File
 
     /**
      * 设置文件类型限制.
-     *
-     * @param  string  $extensions  允许的扩展名，如 'jpg,png,pdf'
-     * @param  string|null  $mimeTypes  允许的 MIME 类型
-     * @return $this
      */
     public function accept(string $extensions, ?string $mimeTypes = null): static
     {
@@ -111,9 +85,6 @@ class OssDirectUpload extends File
 
     /**
      * 设置上传类型.
-     *
-     * @param  string  $type  file 或 image
-     * @return $this
      */
     public function uploadType(string $type): static
     {
@@ -124,9 +95,6 @@ class OssDirectUpload extends File
 
     /**
      * 设置自定义上传目录.
-     *
-     * @param  string  $directory  自定义目录，例如: 'apk/android', 'documents/contracts'
-     * @return $this
      */
     public function directory(string $directory): static
     {
@@ -137,9 +105,6 @@ class OssDirectUpload extends File
 
     /**
      * 设置 STS Token 获取地址.
-     *
-     * @param  string  $url
-     * @return $this
      */
     public function stsTokenUrl(string $url): static
     {
@@ -150,8 +115,6 @@ class OssDirectUpload extends File
 
     /**
      * 渲染组件.
-     *
-     * @return mixed
      */
     public function render()
     {

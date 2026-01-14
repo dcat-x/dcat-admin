@@ -19,9 +19,6 @@ class EmptyData extends AbstractField
 
     /**
      * 设置占位符.
-     *
-     * @param  string  $placeholder
-     * @return $this
      */
     public function placeholder(string $placeholder): static
     {
@@ -32,8 +29,6 @@ class EmptyData extends AbstractField
 
     /**
      * 渲染显示.
-     *
-     * @return mixed
      */
     public function render(): mixed
     {

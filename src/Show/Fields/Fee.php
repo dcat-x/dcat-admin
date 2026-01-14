@@ -24,9 +24,6 @@ class Fee extends AbstractField
 
     /**
      * 设置货币符号.
-     *
-     * @param  string  $symbol
-     * @return $this
      */
     public function symbol(string $symbol): static
     {
@@ -37,9 +34,6 @@ class Fee extends AbstractField
 
     /**
      * 设置小数位数.
-     *
-     * @param  int  $decimals
-     * @return $this
      */
     public function decimals(int $decimals): static
     {
@@ -50,8 +44,6 @@ class Fee extends AbstractField
 
     /**
      * 渲染显示.
-     *
-     * @return string
      */
     public function render(): string
     {

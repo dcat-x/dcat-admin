@@ -11,30 +11,21 @@ class RefreshButton extends Widget
 {
     /**
      * 视图模板.
-     *
-     * @var string
      */
     protected $view = 'admin::widgets.refresh-button';
 
     /**
      * 图标类名.
-     *
-     * @var string
      */
     protected string $icon = 'feather icon-refresh-cw';
 
     /**
      * 提示文本.
-     *
-     * @var string|null
      */
     protected ?string $tooltip = null;
 
     /**
      * 设置图标.
-     *
-     * @param  string  $icon
-     * @return $this
      */
     public function icon(string $icon): static
     {
@@ -45,9 +36,6 @@ class RefreshButton extends Widget
 
     /**
      * 设置提示文本.
-     *
-     * @param  string  $tooltip
-     * @return $this
      */
     public function tooltip(string $tooltip): static
     {
@@ -58,8 +46,6 @@ class RefreshButton extends Widget
 
     /**
      * 获取视图变量.
-     *
-     * @return array
      */
     public function defaultVariables(): array
     {

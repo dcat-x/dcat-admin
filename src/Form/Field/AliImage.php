@@ -12,9 +12,6 @@ class AliImage extends Image
 {
     /**
      * 获取对象的签名 URL.
-     *
-     * @param  string  $path  OSS 对象路径
-     * @return string
      */
     public function objectUrl($path): string
     {

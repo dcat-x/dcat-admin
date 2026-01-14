@@ -575,7 +575,6 @@ if (! function_exists('money_formatter')) {
      *
      * @param  int|string|null  $fee  金额（分）
      * @param  int  $decimals  小数位数，默认为 2
-     * @return string
      */
     function money_formatter($fee, int $decimals = 2): string
     {
@@ -595,7 +594,6 @@ if (! function_exists('rate_formatter')) {
      *
      * @param  int|string|null  $rate  费率（万分之一）
      * @param  int  $decimals  小数位数，默认为 3
-     * @return string
      */
     function rate_formatter($rate, int $decimals = 3): string
     {
@@ -614,7 +612,6 @@ if (! function_exists('ali_sign_url')) {
      * @param  string|null  $path  文件路径
      * @param  int  $expireMinutes  过期时间（分钟），默认 60 分钟
      * @param  string|null  $disk  磁盘名称，默认使用配置中的 private_disk
-     * @return string
      */
     function ali_sign_url(?string $path, int $expireMinutes = 60, ?string $disk = null): string
     {

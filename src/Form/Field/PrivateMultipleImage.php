@@ -21,9 +21,6 @@ class PrivateMultipleImage extends MultipleImage
 
     /**
      * Set storage disk (override parent method to record disk name).
-     *
-     * @param  string  $disk
-     * @return $this
      */
     public function disk($disk)
     {
@@ -34,9 +31,6 @@ class PrivateMultipleImage extends MultipleImage
 
     /**
      * Get file access URL (override parent method).
-     *
-     * @param  string  $path
-     * @return string
      */
     public function objectUrl($path): string
     {
