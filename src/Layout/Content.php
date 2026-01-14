@@ -483,7 +483,7 @@ class Content implements Renderable
 
         // Add layout color class for theme-specific styles
         $layoutColor = config('admin.layout.color');
-        if ($layoutColor && $layoutColor !== 'default') {
+        if ($layoutColor) {
             $data['body_class'][] = 'layout-color-'.$layoutColor;
         }
 
