@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.14] - 2026-01-14
+
+### Changed
+
+- 移除按钮和组件阴影，实现扁平化设计
+- 禁用所有 SCSS 阴影变量（$shadow、$shadow-100 等）
+- 优化 `_modern.scss` 移除与 `_custom.scss` 冲突的样式
+- 减小圆角值以保持简洁风格
+
 ## [1.0.13] - 2026-01-14
 
 ### Fixed
@@ -143,7 +152,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.0.13...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.0.14...HEAD
+[1.0.14]: https://github.com/dcat-x/dcat-admin/compare/v1.0.13...v1.0.14
 [1.0.13]: https://github.com/dcat-x/dcat-admin/compare/v1.0.12...v1.0.13
 [1.0.12]: https://github.com/dcat-x/dcat-admin/compare/v1.0.11...v1.0.12
 [1.0.11]: https://github.com/dcat-x/dcat-admin/compare/v1.0.10...v1.0.11
