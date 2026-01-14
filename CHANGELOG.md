@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.17] - 2026-01-14
+
+### Added
+
+- 新增 19 个 Tailwind CSS 配色主题：slate, zinc, neutral, stone, red, orange, amber, yellow, lime, emerald, teal, cyan, sky, indigo, violet, purple, fuchsia, pink, rose
+- 在 `Color.php` 中添加主题颜色定义
+- 创建对应的 SCSS 主题样式文件
+- 更新 `webpack.mix.js` 和 `package.json` 构建配置
+
 ## [1.0.16] - 2026-01-14
 
 ### Changed
