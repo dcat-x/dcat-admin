@@ -316,15 +316,18 @@ table.custom-data-table.data-table tbody tr:hover {
   margin-bottom: 0.8rem;
 }
 
-.filter-button-group .btn {
-  background-color: whitesmoke;
-  border-color: whitesmoke;
-  color: #333333;
+.filter-button-group .btn,
+.filter-button-group .btn.btn-primary {
+  background-color: whitesmoke !important;
+  border-color: whitesmoke !important;
+  color: #333333 !important;
 }
 
-.filter-button-group .btn:hover {
-  background-color: #e5e5e5;
-  border-color: #e5e5e5;
+.filter-button-group .btn:hover,
+.filter-button-group .btn.btn-primary:hover {
+  background-color: #e5e5e5 !important;
+  border-color: #e5e5e5 !important;
+  color: #333333 !important;
 }
 
 // ============================================
