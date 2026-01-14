@@ -371,7 +371,7 @@ return [
     */
     'layout' => [
         // default, blue, blue-light, green, gray
-        'color' => 'default',
+        'color' => 'gray',
 
         // sidebar-separate
         'body_class' => [],

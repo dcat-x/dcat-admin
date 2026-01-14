@@ -316,8 +316,8 @@ return [
     | This value is the layout of admin pages.
     */
     'layout' => [
-        // default, blue, blue-light, green
-        'color' => 'default',
+        // default, blue, blue-light, green, gray
+        'color' => 'gray',
 
 		// sidebar-separate
         'body_class' => [],
