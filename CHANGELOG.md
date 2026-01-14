@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.8] - 2026-01-14
+
+### Added
+
+- 新增 Form 字段组件：Fee（金额分转元）、OssDirectUpload（阿里云 OSS 直传）、AliImage、AliMultipleImage、PrivateMultipleImage
+- 新增 Grid Displayer：Fee、EmptyData、Rate
+- 新增 Show Field：Fee、EmptyData、Rate
+- 新增 RefreshButton 刷新按钮组件
+- 新增阿里云 OSS 直传功能（OssController、AliyunStsService）
+- 新增 Gray 主题（深色 header 配色）
+- 新增 `_modern.scss` 现代化 UI 样式（shadcn 风格）：
+  - CSS 自定义属性系统（圆角、间距、过渡、阴影）
+  - 按钮变体：btn-ghost、btn-subtle
+  - Badge 变体：badge-outline、badge-soft
+  - 骨架屏加载动画（skeleton）
+  - 状态指示器、空状态组件
+  - 丰富的工具类：rounded-*、shadow-*、animate-*、gap-*、line-clamp-* 等
+- 新增辅助函数：money_formatter、rate_formatter、ali_sign_url
+
+### Changed
+
+- 优化 Grid Actions 组件：支持自定义文本/图标、add() 方法
+- 优化 bootstrap.stub 模板：添加 Grid/Form/Show 全局配置示例
+- 优化基础模板风格：
+  - sidebar.blade.php：移除阴影，优化 logo 显示
+  - navbar-user-panel.blade.php：简化用户面板
+  - login.blade.php：优化登录页样式
+- 将默认主题设置为 gray
+- `_custom.scss` 重构为主题无关样式
+
+### Fixed
+
+- 分离主题特定颜色到 `_gray.scss`，确保不影响其他主题
+
 ## [1.0.7] - 2026-01-13
 
 ### Fixed
@@ -71,7 +105,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.0.7...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.0.8...HEAD
+[1.0.8]: https://github.com/dcat-x/dcat-admin/compare/v1.0.7...v1.0.8
 [1.0.7]: https://github.com/dcat-x/dcat-admin/compare/v1.0.6...v1.0.7
 [1.0.6]: https://github.com/dcat-x/dcat-admin/compare/v1.0.5...v1.0.6
 [1.0.5]: https://github.com/dcat-x/dcat-admin/compare/v1.0.4...v1.0.5
