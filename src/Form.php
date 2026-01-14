@@ -92,6 +92,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @method Field\OssDirectUpload ossDirectUpload($column, $label = '')
  * @method Field\AliImage aliImage($column, $label = '')
  * @method Field\AliMultipleImage aliMultipleImage($column, $label = '')
+ * @method Field\PrivateMultipleImage privateMultipleImage($column, $label = '')
  */
 class Form implements Renderable
 {
@@ -180,6 +181,7 @@ class Form implements Renderable
         'ossDirectUpload' => Field\OssDirectUpload::class,
         'aliImage' => Field\AliImage::class,
         'aliMultipleImage' => Field\AliMultipleImage::class,
+        'privateMultipleImage' => Field\PrivateMultipleImage::class,
     ];
 
     /**
