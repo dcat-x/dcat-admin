@@ -13,7 +13,7 @@ require('dotenv').config();
  */
 const glob = require('glob')
 
-let theme = null;
+let theme = process.env.THEME || null;
 
 let distPath = mix.inProduction() ? 'resources/dist' : 'resources/pre-dist';
 

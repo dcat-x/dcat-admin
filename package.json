@@ -7,7 +7,11 @@
         "watch-poll": "mix watch -- --watch-options-poll=1000",
         "hot": "mix watch --hot",
         "prod": "npm run production",
-        "production": "mix --production"
+        "production": "mix --production",
+        "prod:blue": "cross-env THEME=blue npm run production",
+        "prod:green": "cross-env THEME=green npm run production",
+        "prod:blue-light": "cross-env THEME=blue-light npm run production",
+        "prod:all": "npm run prod && npm run prod:blue && npm run prod:green && npm run prod:blue-light"
     },
     "devDependencies": {
         "cross-env": "^7.0",
