@@ -79,11 +79,23 @@ class DropdownActions extends Actions
         return view($this->view, $actions);
     }
 
-    protected function getViewLabel() {}
+    protected function getViewLabel(): string
+    {
+        return '';
+    }
 
-    protected function getEditLabel() {}
+    protected function getEditLabel(): string
+    {
+        return '';
+    }
 
-    protected function getQuickEditLabel() {}
+    protected function getQuickEditLabel(): string
+    {
+        return '';
+    }
 
-    protected function getDeleteLabel() {}
+    protected function getDeleteLabel(): string
+    {
+        return '';
+    }
 }
