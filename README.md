@@ -32,11 +32,6 @@ Dcat Admin 只需很少的代码即可快速构建出一个功能完善的高颜
 - **丰富组件** - 图表、数据卡片、下拉菜单等
 - **文件上传** - 异步上传，支持分块多线程
 
-## 环境要求
-
-- PHP >= 8.2
-- Laravel >= 12.0
-
 ## 版本兼容
 
 | Dcat Admin X | Laravel | PHP   |
@@ -57,10 +52,6 @@ php artisan admin:install
 ```
 
 访问 `http://localhost/admin`，使用 `admin` / `admin` 登录。
-
-## 从原版迁移
-
-如果你正在使用原版 [Dcat Admin](https://github.com/jqhph/dcat-admin)，请参考 [升级指南](docs/upgrade.md) 进行迁移。
 
 ## 文档
 

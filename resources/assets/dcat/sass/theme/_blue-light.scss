@@ -1,0 +1,98 @@
+// ================================================================================================
+//  File Name: _blue-light.scss
+//  Description: Blue Light theme color overrides
+//  ----------------------------------------------------------------------------------------------
+//  Primary color: #62a8ea
+//  Header/Navbar: #4a9de0
+// ================================================================================================
+
+$blue-light-theme-primary: #62a8ea;
+$blue-light-theme-header: #4a9de0;
+$blue-light-theme-header-hover: #3a8dd0;
+$blue-light-theme-sidebar-text: #333;
+
+body.layout-color-blue-light {
+  .header-navbar,
+  .navbar-header {
+    background-color: $blue-light-theme-header !important;
+  }
+
+  .header-navbar a,
+  .navbar-header a {
+    color: #fff;
+  }
+
+  .user-name {
+    color: #fff;
+  }
+
+  .bg-primary {
+    background-color: $blue-light-theme-primary !important;
+    color: #fff !important;
+  }
+
+  .btn-primary {
+    background-color: $blue-light-theme-primary !important;
+    border-color: $blue-light-theme-primary !important;
+    color: #fff !important;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: $blue-light-theme-header !important;
+      border-color: $blue-light-theme-header !important;
+      color: #fff !important;
+    }
+  }
+
+  .btn-outline-primary,
+  .btn-primary.btn-outline {
+    background-color: transparent !important;
+    border-color: $blue-light-theme-primary !important;
+    color: $blue-light-theme-primary !important;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: $blue-light-theme-primary !important;
+      border-color: $blue-light-theme-primary !important;
+      color: #fff !important;
+    }
+  }
+
+  a {
+    color: $blue-light-theme-primary;
+
+    &:hover {
+      color: $blue-light-theme-header;
+    }
+  }
+
+  .text-primary {
+    color: $blue-light-theme-primary !important;
+  }
+
+  .grid-selector .wrap {
+    background-color: $blue-light-theme-primary;
+    color: #fff;
+  }
+
+  .pagination .page-item.active .page-link {
+    background-color: $blue-light-theme-primary;
+    border-color: $blue-light-theme-primary;
+    color: #fff;
+  }
+
+  .main-sidebar .nav-sidebar > .nav-link {
+    color: $blue-light-theme-sidebar-text;
+  }
+
+  [class*=sidebar-light-] .nav-sidebar > .nav-item > .nav-link,
+  [class*=sidebar-light-] .nav-sidebar > .nav-item:hover > .nav-link {
+    color: $blue-light-theme-sidebar-text;
+  }
+
+  .sidebar-light-primary .nav-item > .nav-link.active {
+    color: $blue-light-theme-header !important;
+  }
+}

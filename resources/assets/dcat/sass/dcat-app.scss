@@ -117,11 +117,12 @@ li {
 // dark mode
 @import "./theme/dark";
 
-// gray theme
-@import "./theme/gray";
-
-// Tailwind CSS themes
+// color themes
+@import "./theme/default";
+@import "./theme/blue";
+@import "./theme/blue-light";
 @import "./theme/slate";
+@import "./theme/gray";
 @import "./theme/zinc";
 @import "./theme/neutral";
 @import "./theme/stone";
@@ -130,6 +131,7 @@ li {
 @import "./theme/amber";
 @import "./theme/yellow";
 @import "./theme/lime";
+@import "./theme/green";
 @import "./theme/emerald";
 @import "./theme/teal";
 @import "./theme/cyan";

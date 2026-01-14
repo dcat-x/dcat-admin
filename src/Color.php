@@ -96,9 +96,9 @@ class Color
         ],
         'green' => [
             'colors' => [
-                'primary' => '#4e9876',
-                'primary-darker' => '#458769',
-                'link' => '#458769',
+                'primary' => '#16a34a',
+                'primary-darker' => '#15803d',
+                'link' => '#16a34a',
             ],
         ],
         'gray' => [

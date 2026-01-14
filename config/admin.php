@@ -370,9 +370,9 @@ return [
     | This value is the layout of admin pages.
     */
     'layout' => [
-        // default, blue, blue-light, green, gray
-        // Tailwind CSS: slate, zinc, neutral, stone, red, orange, amber, yellow,
-        //               lime, emerald, teal, cyan, sky, indigo, violet, purple, fuchsia, pink, rose
+        // default, blue, blue-light
+        // Tailwind CSS: slate, gray, zinc, neutral, stone, red, orange, amber, yellow,
+        //               lime, green, emerald, teal, cyan, sky, indigo, violet, purple, fuchsia, pink, rose
         'color' => 'gray',
 
         // sidebar-separate

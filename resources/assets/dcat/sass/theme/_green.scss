@@ -1,0 +1,98 @@
+// ================================================================================================
+//  File Name: _green.scss
+//  Description: Green theme color overrides (Tailwind CSS)
+//  ----------------------------------------------------------------------------------------------
+//  Primary color: #16a34a (green-600)
+//  Header/Navbar: #15803d (green-700)
+// ================================================================================================
+
+$green-theme-primary: #16a34a;
+$green-theme-header: #15803d;
+$green-theme-header-hover: #166534;
+$green-theme-sidebar-text: #333;
+
+body.layout-color-green {
+  .header-navbar,
+  .navbar-header {
+    background-color: $green-theme-header !important;
+  }
+
+  .header-navbar a,
+  .navbar-header a {
+    color: #fff;
+  }
+
+  .user-name {
+    color: #fff;
+  }
+
+  .bg-primary {
+    background-color: $green-theme-primary !important;
+    color: #fff !important;
+  }
+
+  .btn-primary {
+    background-color: $green-theme-primary !important;
+    border-color: $green-theme-primary !important;
+    color: #fff !important;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: $green-theme-header !important;
+      border-color: $green-theme-header !important;
+      color: #fff !important;
+    }
+  }
+
+  .btn-outline-primary,
+  .btn-primary.btn-outline {
+    background-color: transparent !important;
+    border-color: $green-theme-primary !important;
+    color: $green-theme-primary !important;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: $green-theme-primary !important;
+      border-color: $green-theme-primary !important;
+      color: #fff !important;
+    }
+  }
+
+  a {
+    color: $green-theme-primary;
+
+    &:hover {
+      color: $green-theme-header;
+    }
+  }
+
+  .text-primary {
+    color: $green-theme-primary !important;
+  }
+
+  .grid-selector .wrap {
+    background-color: $green-theme-primary;
+    color: #fff;
+  }
+
+  .pagination .page-item.active .page-link {
+    background-color: $green-theme-primary;
+    border-color: $green-theme-primary;
+    color: #fff;
+  }
+
+  .main-sidebar .nav-sidebar > .nav-link {
+    color: $green-theme-sidebar-text;
+  }
+
+  [class*=sidebar-light-] .nav-sidebar > .nav-item > .nav-link,
+  [class*=sidebar-light-] .nav-sidebar > .nav-item:hover > .nav-link {
+    color: $green-theme-sidebar-text;
+  }
+
+  .sidebar-light-primary .nav-item > .nav-link.active {
+    color: $green-theme-header !important;
+  }
+}

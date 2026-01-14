@@ -15,15 +15,14 @@ const glob = require('glob')
 
 let theme = process.env.THEME || null;
 
-// Theme color mappings
+// Theme color mappings (Tailwind CSS colors)
 const themeColors = {
   'default': '#586cb1',
-  'gray': '#171717',
   'blue': '#6d8be6',
-  'green': '#4e9876',
   'blue-light': '#62a8ea',
   // Tailwind CSS themes
   'slate': '#0f172a',
+  'gray': '#171717',
   'zinc': '#18181b',
   'neutral': '#171717',
   'stone': '#1c1917',
@@ -32,6 +31,7 @@ const themeColors = {
   'amber': '#d97706',
   'yellow': '#ca8a04',
   'lime': '#65a30d',
+  'green': '#16a34a',
   'emerald': '#059669',
   'teal': '#0d9488',
   'cyan': '#0891b2',
