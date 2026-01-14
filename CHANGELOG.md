@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.15] - 2026-01-14
+
+### Fixed
+
+- 修复 `DropdownActions` 方法返回类型与父类不兼容的问题
+- 修复 gray 主题按钮文字颜色丢失的问题
+- 修复 gray 主题 outline 按钮样式问题
+- 修复筛选按钮覆盖主题样式的问题
+
+### Changed
+
+- 更新页脚链接指向 dcat-x/dcat-admin 仓库
+
 ## [1.0.14] - 2026-01-14
 
 ### Changed
@@ -152,7 +165,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.0.14...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.0.15...HEAD
+[1.0.15]: https://github.com/dcat-x/dcat-admin/compare/v1.0.14...v1.0.15
 [1.0.14]: https://github.com/dcat-x/dcat-admin/compare/v1.0.13...v1.0.14
 [1.0.13]: https://github.com/dcat-x/dcat-admin/compare/v1.0.12...v1.0.13
 [1.0.12]: https://github.com/dcat-x/dcat-admin/compare/v1.0.11...v1.0.12
