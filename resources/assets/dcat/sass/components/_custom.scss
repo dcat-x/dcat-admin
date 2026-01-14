@@ -310,8 +310,8 @@ table.custom-data-table.data-table tbody tr:hover {
 // ============================================
 .filter-box {
   padding: 0.9rem !important;
-  border: 1px solid #eee;
-  border-radius: 0.25rem;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .filter-box .form-group {
