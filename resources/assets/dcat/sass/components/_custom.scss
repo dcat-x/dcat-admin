@@ -318,18 +318,7 @@ table.custom-data-table.data-table tbody tr:hover {
   margin-bottom: 0.8rem;
 }
 
-// Filter button styles (excluded .btn-primary to allow theme override)
-.filter-button-group .btn:not(.btn-primary) {
-  background-color: whitesmoke !important;
-  border-color: whitesmoke !important;
-  color: #333333 !important;
-}
-
-.filter-button-group .btn:not(.btn-primary):hover {
-  background-color: #e5e5e5 !important;
-  border-color: #e5e5e5 !important;
-  color: #333333 !important;
-}
+// Filter button group - uses btn-white, no additional styles needed
 
 // ============================================
 // Button Flat Design (Remove Shadows)
