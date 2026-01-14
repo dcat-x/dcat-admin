@@ -21,7 +21,27 @@ const themeColors = {
   'gray': '#171717',
   'blue': '#6d8be6',
   'green': '#4e9876',
-  'blue-light': '#62a8ea'
+  'blue-light': '#62a8ea',
+  // Tailwind CSS themes
+  'slate': '#0f172a',
+  'zinc': '#18181b',
+  'neutral': '#171717',
+  'stone': '#1c1917',
+  'red': '#dc2626',
+  'orange': '#ea580c',
+  'amber': '#d97706',
+  'yellow': '#ca8a04',
+  'lime': '#65a30d',
+  'emerald': '#059669',
+  'teal': '#0d9488',
+  'cyan': '#0891b2',
+  'sky': '#0284c7',
+  'indigo': '#4f46e5',
+  'violet': '#7c3aed',
+  'purple': '#9333ea',
+  'fuchsia': '#c026d3',
+  'pink': '#db2777',
+  'rose': '#e11d48'
 };
 
 // Get primary color based on theme

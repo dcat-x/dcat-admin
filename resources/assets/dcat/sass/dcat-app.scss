@@ -120,6 +120,27 @@ li {
 // gray theme
 @import "./theme/gray";
 
+// Tailwind CSS themes
+@import "./theme/slate";
+@import "./theme/zinc";
+@import "./theme/neutral";
+@import "./theme/stone";
+@import "./theme/red";
+@import "./theme/orange";
+@import "./theme/amber";
+@import "./theme/yellow";
+@import "./theme/lime";
+@import "./theme/emerald";
+@import "./theme/teal";
+@import "./theme/cyan";
+@import "./theme/sky";
+@import "./theme/indigo";
+@import "./theme/violet";
+@import "./theme/purple";
+@import "./theme/fuchsia";
+@import "./theme/pink";
+@import "./theme/rose";
+
 // modern UI enhancements (shadcn-inspired)
 @import "./components/modern";
 

@@ -371,6 +371,8 @@ return [
     */
     'layout' => [
         // default, blue, blue-light, green, gray
+        // Tailwind CSS: slate, zinc, neutral, stone, red, orange, amber, yellow,
+        //               lime, emerald, teal, cyan, sky, indigo, violet, purple, fuchsia, pink, rose
         'color' => 'gray',
 
         // sidebar-separate

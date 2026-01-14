@@ -1,0 +1,98 @@
+// ================================================================================================
+//  File Name: _amber.scss
+//  Description: Amber theme color overrides (Tailwind CSS)
+//  ----------------------------------------------------------------------------------------------
+//  Primary color: #d97706 (amber-600)
+//  Header/Navbar: #b45309 (amber-700)
+// ================================================================================================
+
+$amber-theme-primary: #d97706;
+$amber-theme-header: #b45309;
+$amber-theme-header-hover: #92400e;
+$amber-theme-sidebar-text: #333;
+
+body.layout-color-amber {
+  .header-navbar,
+  .navbar-header {
+    background-color: $amber-theme-header !important;
+  }
+
+  .header-navbar a,
+  .navbar-header a {
+    color: #fff;
+  }
+
+  .user-name {
+    color: #fff;
+  }
+
+  .bg-primary {
+    background-color: $amber-theme-primary !important;
+    color: #fff !important;
+  }
+
+  .btn-primary {
+    background-color: $amber-theme-primary !important;
+    border-color: $amber-theme-primary !important;
+    color: #fff !important;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: $amber-theme-header !important;
+      border-color: $amber-theme-header !important;
+      color: #fff !important;
+    }
+  }
+
+  .btn-outline-primary,
+  .btn-primary.btn-outline {
+    background-color: transparent !important;
+    border-color: $amber-theme-primary !important;
+    color: $amber-theme-primary !important;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: $amber-theme-primary !important;
+      border-color: $amber-theme-primary !important;
+      color: #fff !important;
+    }
+  }
+
+  a {
+    color: $amber-theme-primary;
+
+    &:hover {
+      color: $amber-theme-header;
+    }
+  }
+
+  .text-primary {
+    color: $amber-theme-primary !important;
+  }
+
+  .grid-selector .wrap {
+    background-color: $amber-theme-primary;
+    color: #fff;
+  }
+
+  .pagination .page-item.active .page-link {
+    background-color: $amber-theme-primary;
+    border-color: $amber-theme-primary;
+    color: #fff;
+  }
+
+  .main-sidebar .nav-sidebar > .nav-link {
+    color: $amber-theme-sidebar-text;
+  }
+
+  [class*=sidebar-light-] .nav-sidebar > .nav-item > .nav-link,
+  [class*=sidebar-light-] .nav-sidebar > .nav-item:hover > .nav-link {
+    color: $amber-theme-sidebar-text;
+  }
+
+  .sidebar-light-primary .nav-item > .nav-link.active {
+    color: $amber-theme-header !important;
+  }
+}

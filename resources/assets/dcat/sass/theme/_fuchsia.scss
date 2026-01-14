@@ -1,0 +1,98 @@
+// ================================================================================================
+//  File Name: _fuchsia.scss
+//  Description: Fuchsia theme color overrides (Tailwind CSS)
+//  ----------------------------------------------------------------------------------------------
+//  Primary color: #c026d3 (fuchsia-600)
+//  Header/Navbar: #a21caf (fuchsia-700)
+// ================================================================================================
+
+$fuchsia-theme-primary: #c026d3;
+$fuchsia-theme-header: #a21caf;
+$fuchsia-theme-header-hover: #86198f;
+$fuchsia-theme-sidebar-text: #333;
+
+body.layout-color-fuchsia {
+  .header-navbar,
+  .navbar-header {
+    background-color: $fuchsia-theme-header !important;
+  }
+
+  .header-navbar a,
+  .navbar-header a {
+    color: #fff;
+  }
+
+  .user-name {
+    color: #fff;
+  }
+
+  .bg-primary {
+    background-color: $fuchsia-theme-primary !important;
+    color: #fff !important;
+  }
+
+  .btn-primary {
+    background-color: $fuchsia-theme-primary !important;
+    border-color: $fuchsia-theme-primary !important;
+    color: #fff !important;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: $fuchsia-theme-header !important;
+      border-color: $fuchsia-theme-header !important;
+      color: #fff !important;
+    }
+  }
+
+  .btn-outline-primary,
+  .btn-primary.btn-outline {
+    background-color: transparent !important;
+    border-color: $fuchsia-theme-primary !important;
+    color: $fuchsia-theme-primary !important;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: $fuchsia-theme-primary !important;
+      border-color: $fuchsia-theme-primary !important;
+      color: #fff !important;
+    }
+  }
+
+  a {
+    color: $fuchsia-theme-primary;
+
+    &:hover {
+      color: $fuchsia-theme-header;
+    }
+  }
+
+  .text-primary {
+    color: $fuchsia-theme-primary !important;
+  }
+
+  .grid-selector .wrap {
+    background-color: $fuchsia-theme-primary;
+    color: #fff;
+  }
+
+  .pagination .page-item.active .page-link {
+    background-color: $fuchsia-theme-primary;
+    border-color: $fuchsia-theme-primary;
+    color: #fff;
+  }
+
+  .main-sidebar .nav-sidebar > .nav-link {
+    color: $fuchsia-theme-sidebar-text;
+  }
+
+  [class*=sidebar-light-] .nav-sidebar > .nav-item > .nav-link,
+  [class*=sidebar-light-] .nav-sidebar > .nav-item:hover > .nav-link {
+    color: $fuchsia-theme-sidebar-text;
+  }
+
+  .sidebar-light-primary .nav-item > .nav-link.active {
+    color: $fuchsia-theme-header !important;
+  }
+}

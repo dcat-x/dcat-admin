@@ -1,0 +1,98 @@
+// ================================================================================================
+//  File Name: _purple.scss
+//  Description: Purple theme color overrides (Tailwind CSS)
+//  ----------------------------------------------------------------------------------------------
+//  Primary color: #9333ea (purple-600)
+//  Header/Navbar: #7e22ce (purple-700)
+// ================================================================================================
+
+$purple-theme-primary: #9333ea;
+$purple-theme-header: #7e22ce;
+$purple-theme-header-hover: #6b21a8;
+$purple-theme-sidebar-text: #333;
+
+body.layout-color-purple {
+  .header-navbar,
+  .navbar-header {
+    background-color: $purple-theme-header !important;
+  }
+
+  .header-navbar a,
+  .navbar-header a {
+    color: #fff;
+  }
+
+  .user-name {
+    color: #fff;
+  }
+
+  .bg-primary {
+    background-color: $purple-theme-primary !important;
+    color: #fff !important;
+  }
+
+  .btn-primary {
+    background-color: $purple-theme-primary !important;
+    border-color: $purple-theme-primary !important;
+    color: #fff !important;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: $purple-theme-header !important;
+      border-color: $purple-theme-header !important;
+      color: #fff !important;
+    }
+  }
+
+  .btn-outline-primary,
+  .btn-primary.btn-outline {
+    background-color: transparent !important;
+    border-color: $purple-theme-primary !important;
+    color: $purple-theme-primary !important;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: $purple-theme-primary !important;
+      border-color: $purple-theme-primary !important;
+      color: #fff !important;
+    }
+  }
+
+  a {
+    color: $purple-theme-primary;
+
+    &:hover {
+      color: $purple-theme-header;
+    }
+  }
+
+  .text-primary {
+    color: $purple-theme-primary !important;
+  }
+
+  .grid-selector .wrap {
+    background-color: $purple-theme-primary;
+    color: #fff;
+  }
+
+  .pagination .page-item.active .page-link {
+    background-color: $purple-theme-primary;
+    border-color: $purple-theme-primary;
+    color: #fff;
+  }
+
+  .main-sidebar .nav-sidebar > .nav-link {
+    color: $purple-theme-sidebar-text;
+  }
+
+  [class*=sidebar-light-] .nav-sidebar > .nav-item > .nav-link,
+  [class*=sidebar-light-] .nav-sidebar > .nav-item:hover > .nav-link {
+    color: $purple-theme-sidebar-text;
+  }
+
+  .sidebar-light-primary .nav-item > .nav-link.active {
+    color: $purple-theme-header !important;
+  }
+}

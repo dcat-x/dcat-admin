@@ -1,0 +1,98 @@
+// ================================================================================================
+//  File Name: _zinc.scss
+//  Description: Zinc theme color overrides (Tailwind CSS)
+//  ----------------------------------------------------------------------------------------------
+//  Primary color: #09090b (zinc-950)
+//  Header/Navbar: #18181b (zinc-900)
+// ================================================================================================
+
+$zinc-theme-primary: #09090b;
+$zinc-theme-header: #18181b;
+$zinc-theme-header-hover: #27272a;
+$zinc-theme-sidebar-text: #3f3f46;
+
+body.layout-color-zinc {
+  .header-navbar,
+  .navbar-header {
+    background-color: $zinc-theme-header !important;
+  }
+
+  .header-navbar a,
+  .navbar-header a {
+    color: #fff;
+  }
+
+  .user-name {
+    color: #fff;
+  }
+
+  .bg-primary {
+    background-color: $zinc-theme-header !important;
+    color: #fff !important;
+  }
+
+  .btn-primary {
+    background-color: $zinc-theme-header !important;
+    border-color: $zinc-theme-header !important;
+    color: #fff !important;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: $zinc-theme-header-hover !important;
+      border-color: $zinc-theme-header-hover !important;
+      color: #fff !important;
+    }
+  }
+
+  .btn-outline-primary,
+  .btn-primary.btn-outline {
+    background-color: transparent !important;
+    border-color: $zinc-theme-header !important;
+    color: $zinc-theme-header !important;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: $zinc-theme-header !important;
+      border-color: $zinc-theme-header !important;
+      color: #fff !important;
+    }
+  }
+
+  a {
+    color: $zinc-theme-header;
+
+    &:hover {
+      color: $zinc-theme-header-hover;
+    }
+  }
+
+  .text-primary {
+    color: $zinc-theme-header !important;
+  }
+
+  .grid-selector .wrap {
+    background-color: $zinc-theme-header;
+    color: #fff;
+  }
+
+  .pagination .page-item.active .page-link {
+    background-color: $zinc-theme-header;
+    border-color: $zinc-theme-header;
+    color: #fff;
+  }
+
+  .main-sidebar .nav-sidebar > .nav-link {
+    color: $zinc-theme-sidebar-text;
+  }
+
+  [class*=sidebar-light-] .nav-sidebar > .nav-item > .nav-link,
+  [class*=sidebar-light-] .nav-sidebar > .nav-item:hover > .nav-link {
+    color: $zinc-theme-sidebar-text;
+  }
+
+  .sidebar-light-primary .nav-item > .nav-link.active {
+    color: #000 !important;
+  }
+}

@@ -108,6 +108,140 @@ class Color
                 'link' => '#030712',
             ],
         ],
+        // Tailwind CSS 配色主题
+        'slate' => [
+            'colors' => [
+                'primary' => '#020617',
+                'primary-darker' => '#020617',
+                'link' => '#0f172a',
+            ],
+        ],
+        'zinc' => [
+            'colors' => [
+                'primary' => '#09090b',
+                'primary-darker' => '#09090b',
+                'link' => '#18181b',
+            ],
+        ],
+        'neutral' => [
+            'colors' => [
+                'primary' => '#0a0a0a',
+                'primary-darker' => '#0a0a0a',
+                'link' => '#171717',
+            ],
+        ],
+        'stone' => [
+            'colors' => [
+                'primary' => '#0c0a09',
+                'primary-darker' => '#0c0a09',
+                'link' => '#1c1917',
+            ],
+        ],
+        'red' => [
+            'colors' => [
+                'primary' => '#dc2626',
+                'primary-darker' => '#b91c1c',
+                'link' => '#dc2626',
+            ],
+        ],
+        'orange' => [
+            'colors' => [
+                'primary' => '#ea580c',
+                'primary-darker' => '#c2410c',
+                'link' => '#ea580c',
+            ],
+        ],
+        'amber' => [
+            'colors' => [
+                'primary' => '#d97706',
+                'primary-darker' => '#b45309',
+                'link' => '#d97706',
+            ],
+        ],
+        'yellow' => [
+            'colors' => [
+                'primary' => '#ca8a04',
+                'primary-darker' => '#a16207',
+                'link' => '#ca8a04',
+            ],
+        ],
+        'lime' => [
+            'colors' => [
+                'primary' => '#65a30d',
+                'primary-darker' => '#4d7c0f',
+                'link' => '#65a30d',
+            ],
+        ],
+        'emerald' => [
+            'colors' => [
+                'primary' => '#059669',
+                'primary-darker' => '#047857',
+                'link' => '#059669',
+            ],
+        ],
+        'teal' => [
+            'colors' => [
+                'primary' => '#0d9488',
+                'primary-darker' => '#0f766e',
+                'link' => '#0d9488',
+            ],
+        ],
+        'cyan' => [
+            'colors' => [
+                'primary' => '#0891b2',
+                'primary-darker' => '#0e7490',
+                'link' => '#0891b2',
+            ],
+        ],
+        'sky' => [
+            'colors' => [
+                'primary' => '#0284c7',
+                'primary-darker' => '#0369a1',
+                'link' => '#0284c7',
+            ],
+        ],
+        'indigo' => [
+            'colors' => [
+                'primary' => '#4f46e5',
+                'primary-darker' => '#4338ca',
+                'link' => '#4f46e5',
+            ],
+        ],
+        'violet' => [
+            'colors' => [
+                'primary' => '#7c3aed',
+                'primary-darker' => '#6d28d9',
+                'link' => '#7c3aed',
+            ],
+        ],
+        'purple' => [
+            'colors' => [
+                'primary' => '#9333ea',
+                'primary-darker' => '#7e22ce',
+                'link' => '#9333ea',
+            ],
+        ],
+        'fuchsia' => [
+            'colors' => [
+                'primary' => '#c026d3',
+                'primary-darker' => '#a21caf',
+                'link' => '#c026d3',
+            ],
+        ],
+        'pink' => [
+            'colors' => [
+                'primary' => '#db2777',
+                'primary-darker' => '#be185d',
+                'link' => '#db2777',
+            ],
+        ],
+        'rose' => [
+            'colors' => [
+                'primary' => '#e11d48',
+                'primary-darker' => '#be123c',
+                'link' => '#e11d48',
+            ],
+        ],
     ];
 
     /**
