@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.11] - 2026-01-14
+
+### Fixed
+
+- 添加筛选区域边框样式（`border: 1px solid #eee`）
+
 ## [1.0.10] - 2026-01-14
 
 ### Fixed
@@ -119,7 +125,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.0.10...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.0.11...HEAD
+[1.0.11]: https://github.com/dcat-x/dcat-admin/compare/v1.0.10...v1.0.11
 [1.0.10]: https://github.com/dcat-x/dcat-admin/compare/v1.0.9...v1.0.10
 [1.0.9]: https://github.com/dcat-x/dcat-admin/compare/v1.0.8...v1.0.9
 [1.0.8]: https://github.com/dcat-x/dcat-admin/compare/v1.0.7...v1.0.8
