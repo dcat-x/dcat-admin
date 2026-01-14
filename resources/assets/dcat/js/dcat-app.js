@@ -95,6 +95,15 @@ function listen(Dcat) {
             }
         });
 
+        // 自动调整固定列表格高度
+        var minHeight = 600;
+        var height = ($(window).height() - 220);
+        height = height < minHeight ? minHeight : height;
+
+        $('.table-fixed-right, .table-fixed-left').each(function (k, v) {
+            $(v).css({'max-height': (($(v).data('height') || height) - 10) + 'px'});
+        });
+
         //////////////////////////////////////////////////////////
 
         // 菜单点击选中效果

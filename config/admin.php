@@ -370,7 +370,7 @@ return [
     | This value is the layout of admin pages.
     */
     'layout' => [
-        // default, blue, blue-light, green
+        // default, blue, blue-light, green, gray
         'color' => 'default',
 
         // sidebar-separate

@@ -1,0 +1,551 @@
+// ================================================================================================
+//  File Name: _custom.scss
+//  Description: Custom styles for enhanced UI/UX
+//  ----------------------------------------------------------------------------------------------
+//  These styles provide a cleaner, more modern UI with:
+//  - Wider sidebar (210px)
+//  - Flat design (removed shadows)
+//  - Dark header theme
+//  - Optimized spacing and borders
+// ================================================================================================
+
+// ============================================
+// Image Thumbnails
+// ============================================
+.img-thumbnail {
+  max-width: inherit;
+}
+
+// ============================================
+// Sidebar Width Override
+// ============================================
+.main-sidebar,
+.main-sidebar:before {
+  width: 210px;
+}
+
+.header-navbar.fixed-top {
+  left: 210px;
+}
+
+@media (min-width: 768px) {
+  body:not(.sidebar-mini-md) .content-wrapper,
+  body:not(.sidebar-mini-md) .main-footer,
+  body:not(.sidebar-mini-md) .main-header {
+    margin-left: 210px;
+  }
+
+  .header-navbar .navbar-container ul.nav li a.menu-toggle {
+    display: none;
+  }
+}
+
+// ============================================
+// Main Menu Enhancements
+// ============================================
+.main-menu .navbar-header .navbar-brand {
+  margin: 0;
+}
+
+.main-menu .navbar-header .navbar-brand img {
+  max-width: 100%;
+  max-height: 35px;
+}
+
+.main-menu .navbar-header {
+  padding: 0.1rem 1rem 0.1rem;
+}
+
+[class*=sidebar-light-] .nav-sidebar > .nav-item > .nav-link p i {
+  margin-top: 0 !important;
+}
+
+[class*=sidebar-light-] .nav-treeview > .nav-item > .nav-link i {
+  visibility: hidden;
+}
+
+.main-sidebar .nav-sidebar > .nav-link {
+  font-weight: 400;
+  color: #333;
+}
+
+.sidebar-light-primary .nav-item > .nav-link.active {
+  color: #000 !important;
+  font-weight: 500;
+}
+
+[class*=sidebar-light-] .nav-sidebar > .nav-item > .nav-link,
+[class*=sidebar-light-] .nav-sidebar > .nav-item:hover > .nav-link {
+  color: #333;
+}
+
+.main-sidebar .nav-treeview.nav .nav-item .nav-link {
+  padding: 7px 10px 7px 1.4em !important;
+}
+
+[class*=sidebar-light-] .nav-sidebar > .nav-item > .nav-link.active,
+[class*=sidebar-light-] .nav-treeview > .nav-item > .nav-link.active,
+[class*=sidebar-light-] .nav-treeview > .nav-item > .nav-link.active:hover {
+  background-color: #F5F5F5 !important;
+}
+
+[class*=sidebar-light-] .nav-sidebar > .nav-item > .nav-link:hover,
+[class*=sidebar-light-] .nav-treeview > .nav-item > .nav-link:hover {
+  background-color: #F5F5F5 !important;
+}
+
+// ============================================
+// Content Layout Adjustments
+// ============================================
+.content .content-wrapper {
+  padding: 5.2rem 1.5rem 2em;
+}
+
+.content-header h1 {
+  font-weight: 300;
+  font-size: 20px;
+}
+
+.content-header h1 small {
+  font-size: 13px;
+  font-weight: 300;
+}
+
+// ============================================
+// Navbar Styles
+// ============================================
+.navbar-container {
+  height: 50px;
+}
+
+.header-navbar .navbar-container ul.nav li a {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.header-navbar .navbar-container ul.nav li a.dropdown-user-link {
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 100%;
+}
+
+.header-navbar .navbar-container ul.nav li a.dropdown-user-link .user-name {
+  margin-bottom: 0;
+  margin-left: 0;
+}
+
+.header-navbar .navbar-container ul.nav li a.dropdown-user-link .user-nav {
+  flex-direction: row;
+  margin-right: 0;
+}
+
+.header-navbar .navbar-container .bookmark-wrapper ul.nav li > a.nav-link {
+  padding: 1.2rem .5rem;
+}
+
+.header-navbar .navbar-container {
+  display: flex;
+  padding-left: 1.6rem;
+}
+
+.header-navbar.navbar-with-menu .navbar-container {
+  display: flex;
+}
+
+.navbar-expand-lg .navbar-nav {
+  flex-direction: row;
+}
+
+.navbar-right .navbar-nav .nav-item {
+  align-items: center;
+  display: flex;
+  justify-items: center;
+}
+
+.navbar-right .navbar-nav li:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #f6f6f6;
+}
+
+.navbar-left a {
+  padding-right: 20px;
+  font-size: 15px;
+}
+
+// Dark Header Theme
+.header-navbar,
+.navbar-header {
+  background-color: #171717 !important;
+}
+
+.bg-primary {
+  background-color: #171717 !important;
+}
+
+.user-name {
+  color: #fff;
+}
+
+.header-navbar a,
+.navbar-header a {
+  color: #fff;
+}
+
+// ============================================
+// Card & Box Styles
+// ============================================
+.card-header .nav.nav-tabs {
+  margin-bottom: 0.6rem !important;
+}
+
+.dcat-box:not(.simple-grid > .dcat-box) {
+  background-color: #fff;
+  padding-top: 0.6rem;
+  padding-bottom: 0.8rem;
+  border-radius: 0.25rem;
+}
+
+.nav.nav-tabs .nav-item .nav-link {
+  padding-top: 10px;
+}
+
+.nav.nav-tabs .nav-item .nav-link.active:after {
+  background: #f5f5f5 !important;
+  height: 0;
+}
+
+// ============================================
+// Table Styles
+// ============================================
+table.data-table thead tr {
+  background-color: #fff;
+}
+
+.table-collapse .table-fixed th {
+  background-color: #fff;
+}
+
+.table-collapse .table.custom-data-table {
+  padding: 0;
+}
+
+.table-collapse .table-fixed-left .table.custom-data-table,
+.table-collapse .table-fixed-right .table.custom-data-table {
+  padding: 0;
+}
+
+.custom-data-table-header:not(.simple-grid .custom-data-table-header) {
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
+}
+
+table.data-table.complex-headers {
+  border-left: 0;
+  border-right: 0;
+}
+
+table.table-bordered.data-table td,
+table.table-bordered.data-table th:not(.complex-headers) {
+  border-left: 0;
+}
+
+table.table-bordered.data-table td:last-child,
+table.table-bordered.data-table th:last-child {
+  border-right: 0;
+}
+
+table.custom-data-table.data-table thead th {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+body:not(.dark-mode) .table-collapse {
+  margin-top: 0.1rem !important;
+}
+
+body:not(.dark-mode) .table-collapse .custom-data-table tbody td {
+  height: auto;
+  padding: 12px 8px;
+  line-height: 1.4;
+}
+
+body:not(.dark-mode) .table-collapse table.custom-data-table thead th.grid__actions__ {
+  padding-right: 1rem;
+}
+
+.table-collapse .custom-data-table.data-table tbody tr:last-child td {
+  border-radius: 0 !important;
+}
+
+.table-collapse .custom-data-table.data-table tbody tr:first-child td:first-child {
+  border-top-left-radius: 0 !important;
+}
+
+.table-collapse .custom-data-table.data-table tbody tr:first-child td:last-child {
+  border-top-right-radius: 0 !important;
+}
+
+table.custom-data-table.data-table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+// ============================================
+// Form & Input Styles
+// ============================================
+.input-group-sm > .custom-select,
+.input-group-sm > .form-control,
+.input-group-sm > .input-group-append > .btn,
+.input-group-sm > .input-group-append > .input-group-text,
+.input-group-sm > .input-group-prepend > .btn,
+.input-group-sm > .input-group-prepend > .input-group-text {
+  font-size: 12px;
+}
+
+.table-filter .form-control {
+  border: 1px solid #e5e7eb;
+}
+
+.form-control {
+  border-color: #e5e7eb;
+  color: #1f2937;
+}
+
+.input-group-text,
+.select2-container--default .select2-selection--single {
+  border-color: #e5e7eb !important;
+}
+
+.input-group-text {
+  font-size: 11px;
+}
+
+.custom-select {
+  -webkit-appearance: revert !important;
+  -moz-appearance: revert !important;
+}
+
+.input-group-prepend ~ .select2-container--default .select2-selection {
+  border-bottom-left-radius: 0 !important;
+  border-top-left-radius: 0 !important;
+}
+
+.display-form {
+  background-color: #f7f7f9 !important;
+}
+
+// ============================================
+// Filter Styles
+// ============================================
+.filter-box {
+  padding: 0.9rem !important;
+}
+
+.filter-box .form-group {
+  margin-bottom: 0.8rem;
+}
+
+.filter-button-group .btn {
+  background-color: whitesmoke;
+  border-color: whitesmoke;
+  color: #333333;
+}
+
+.filter-button-group .btn:hover {
+  background-color: #e5e5e5;
+  border-color: #e5e5e5;
+}
+
+// ============================================
+// Button Flat Design (Remove Shadows)
+// ============================================
+.btn,
+.btn-group,
+.btn-group .btn,
+.btn.btn-default,
+.btn.btn-white,
+.btn-light,
+.btn-light:focus,
+.btn-light:hover,
+.table-filter .form-control,
+body:not(.dark-mode) .table-collapse,
+.shadow-100,
+.btn-shadow.btn,
+.btn:focus,
+.btn:hover,
+.btn-shadow.btn:focus,
+.btn-shadow.btn:hover,
+.btn-default.active,
+.btn-default:focus,
+.btn-default:hover,
+.btn-custom.focus,
+.btn-custom:focus,
+.form-control:focus,
+.vs-radio-con input:checked ~ .vs-radio .vs-radio--circle,
+.box.box-solid.box-default,
+.shadow,
+.shadow-200,
+.toast-container > div,
+code,
+.btn.btn-trans,
+.btn-group .btn:not(.btn-white):hover,
+.btn-group.btn-shadow,
+.btn-custom:not(:disabled):not(.disabled).active:focus,
+.btn-custom:not(:disabled):not(.disabled):active:focus,
+.show > .btn-custom.dropdown-toggle:focus,
+.btn-outline-custom.focus,
+.btn-outline-custom:focus,
+.btn-cyan.focus,
+.btn-cyan:focus,
+.btn-cyan:not(:disabled):not(.disabled).active:focus,
+.btn-cyan:not(:disabled):not(.disabled):active:focus,
+.show > .btn-cyan.dropdown-toggle:focus,
+.btn-outline-cyan.focus,
+.btn-outline-cyan:focus,
+.btn-secondary,
+.btn-secondary:focus,
+.btn-secondary:hover,
+.header-navbar.navbar-shadow {
+  box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+}
+
+.btn {
+  border-radius: 0.325rem;
+}
+
+.btn.btn-default,
+.btn.btn-white {
+  border: #dfdfdf solid 1px;
+}
+
+.btn-primary {
+  background-color: #171717;
+  border-color: #171717;
+}
+
+.btn-primary:hover {
+  background-color: #333333;
+  border-color: #333333;
+}
+
+.btn-primary.btn-outline {
+  background-color: #fff;
+}
+
+.custom-data-table-header .btn {
+  border-width: 0;
+  line-height: 1.2;
+  height: auto;
+}
+
+// ============================================
+// Grid Selector Styles
+// ============================================
+.grid-selector {
+  margin-left: 0.8rem;
+  margin-right: 0.8rem;
+  width: auto;
+}
+
+.grid-selector .wrap {
+  box-shadow: none;
+  background-color: #171717;
+}
+
+// ============================================
+// Pagination Styles
+// ============================================
+.pagination .page-item.active .page-link {
+  background-color: #171717;
+}
+
+// ============================================
+// Background & Body Styles
+// ============================================
+html body,
+.body-bg,
+.content-wrapper {
+  background-color: #f8f8f8;
+}
+
+.bg-40 {
+  background-color: #f8f8f8 !important;
+}
+
+// ============================================
+// Scrollbar Styles
+// ============================================
+.ps__thumb-y {
+  background-color: transparent !important;
+}
+
+// ============================================
+// Toast Styles
+// ============================================
+.toast-container > div {
+  width: 500px;
+}
+
+.toast-top-right {
+  top: 62px;
+  right: 20px;
+}
+
+// ============================================
+// Modal Styles
+// ============================================
+.modal-form .modal-body {
+  padding-top: 0;
+}
+
+.modal-responsive-table .modal-body {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.modal-responsive-table .modal-body th,
+.modal-responsive-table .modal-body td {
+  white-space: nowrap;
+}
+
+// ============================================
+// Dialog Table Container
+// ============================================
+.dialog-table-container .btn-group-sm > div.btn,
+.dialog-table-container .btn-group-sm > .dialog-table-container span.btn,
+.dialog-table-container div.btn.btn-sm,
+.dialog-table-container span.btn.btn-sm {
+  border-bottom-left-radius: 0 !important;
+  border-top-left-radius: 0 !important;
+}
+
+.dialog-table-container > span > div {
+  border-bottom-left-radius: 0 !important;
+  border-top-left-radius: 0 !important;
+}
+
+// ============================================
+// Notice Content
+// ============================================
+.notice-content img {
+  max-width: 550px;
+}
+
+// ============================================
+// Utility Classes - Pixel-based Margins
+// ============================================
+.ml-5px {
+  margin-left: 5px;
+}
+
+.ml-10px {
+  margin-left: 10px;
+}
+
+.mr-5px {
+  margin-right: 5px;
+}
+
+.mr-10px {
+  margin-right: 10px;
+}

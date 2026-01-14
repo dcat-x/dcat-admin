@@ -101,6 +101,13 @@ class Color
                 'link' => '#458769',
             ],
         ],
+        'gray' => [
+            'colors' => [
+                'primary' => '#030712',
+                'primary-darker' => '#030712',
+                'link' => '#030712',
+            ],
+        ],
     ];
 
     /**
