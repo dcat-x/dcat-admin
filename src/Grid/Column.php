@@ -39,6 +39,8 @@ use Illuminate\Support\Traits\Macroable;
  * @method $this copyable()
  * @method $this orderable()
  * @method $this limit(int $limit = 100, string $end = '...')
+ * @method $this fee(string $symbol = '$', int $decimals = 2)
+ * @method $this emptyData(string $placeholder = '-')
  * @method $this ascii()
  * @method $this camel()
  * @method $this finish($cap)
@@ -96,6 +98,8 @@ class Column
         'editable' => Displayers\Input::class,
         'input' => Displayers\Input::class,
         'textarea' => Displayers\Textarea::class,
+        'fee' => Displayers\Fee::class,
+        'emptyData' => Displayers\EmptyData::class,
     ];
 
     /**

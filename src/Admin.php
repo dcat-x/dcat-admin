@@ -615,6 +615,13 @@ class Admin
             $router->get('render', 'RenderableController@handle')->name('render');
             $router->post('tinymce/upload', 'TinymceController@upload')->name('tinymce.upload');
             $router->post('editor-md/upload', 'EditorMDController@upload')->name('editor-md.upload');
+
+            // OSS direct upload routes (when enabled)
+            if (config('admin.upload.oss.enable', false)) {
+                $router->post('oss/sts-token', 'OssController@getStsToken')->name('oss.sts-token');
+                $router->post('oss/filename', 'OssController@generateFilename')->name('oss.filename');
+                $router->get('oss/proxy/{path}', 'OssController@privateImageProxy')->name('oss.proxy')->where('path', '.*');
+            }
         });
     }
 

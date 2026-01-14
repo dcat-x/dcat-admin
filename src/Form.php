@@ -88,6 +88,10 @@ use Symfony\Component\HttpFoundation\Response;
  * @method Field\MultipleSelectTable multipleSelectTable($column, $label = '')
  * @method Field\Button button(string $html = null)
  * @method Field\Autocomplete autocomplete($column, $label = '')
+ * @method Field\Fee fee($column, $label = '')
+ * @method Field\OssDirectUpload ossDirectUpload($column, $label = '')
+ * @method Field\AliImage aliImage($column, $label = '')
+ * @method Field\AliMultipleImage aliMultipleImage($column, $label = '')
  */
 class Form implements Renderable
 {
@@ -172,6 +176,10 @@ class Form implements Renderable
         'selectTable' => Field\SelectTable::class,
         'multipleSelectTable' => Field\MultipleSelectTable::class,
         'autocomplete' => Field\Autocomplete::class,
+        'fee' => Field\Fee::class,
+        'ossDirectUpload' => Field\OssDirectUpload::class,
+        'aliImage' => Field\AliImage::class,
+        'aliMultipleImage' => Field\AliMultipleImage::class,
     ];
 
     /**

@@ -270,6 +270,57 @@ return [
             'file' => 'files',
         ],
 
+        /*
+        |--------------------------------------------------------------------------
+        | Aliyun OSS Direct Upload Settings (optional)
+        |--------------------------------------------------------------------------
+        |
+        | Configuration for OSS direct upload feature.
+        | Required package: composer require alibabacloud/sts-20150401
+        |
+        | You can also configure these in config/filesystems.php under 'disks.oss'
+        |
+        */
+        'oss' => [
+            // Enable OSS direct upload feature
+            'enable' => env('ADMIN_OSS_ENABLE', false),
+
+            // OSS bucket name
+            'bucket' => env('OSS_BUCKET'),
+
+            // OSS endpoint (e.g., oss-cn-hangzhou.aliyuncs.com)
+            'endpoint' => env('OSS_ENDPOINT'),
+
+            // CDN domain for file access (optional)
+            'cdn_domain' => env('OSS_CDN_DOMAIN'),
+
+            // Private bucket disk name for signed URL generation
+            'private_disk' => env('OSS_PRIVATE_DISK', 'oss-private'),
+
+            // Signed URL expiration time in minutes
+            'signed_url_expire' => env('OSS_SIGNED_URL_EXPIRE', 60),
+
+            // Allowed upload directories (for security)
+            'allowed_directories' => [
+                'files',
+                'images',
+                'documents',
+                'videos',
+                'apk',
+                'app',
+            ],
+
+            // STS (Security Token Service) configuration
+            'sts' => [
+                'access_key_id' => env('OSS_ACCESS_KEY_ID'),
+                'access_key_secret' => env('OSS_ACCESS_KEY_SECRET'),
+                'role_arn' => env('OSS_STS_ROLE_ARN'),
+                'region_id' => env('OSS_STS_REGION_ID', 'cn-hangzhou'),
+                'duration' => env('OSS_STS_DURATION', 3600),
+                'policy' => env('OSS_STS_POLICY'),
+            ],
+        ],
+
     ],
 
     /*

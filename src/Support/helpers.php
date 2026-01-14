@@ -566,3 +566,74 @@ if (! function_exists('format_byte')) {
         return round($value, $dec).$prefix_arr[$i];
     }
 }
+
+if (! function_exists('money_formatter')) {
+    /**
+     * 格式化金额（分转元）.
+     *
+     * 将以"分"为单位存储的金额转换为格式化的"元"显示。
+     *
+     * @param  int|string|null  $fee  金额（分）
+     * @param  int  $decimals  小数位数，默认为 2
+     * @return string
+     */
+    function money_formatter($fee, int $decimals = 2): string
+    {
+        if ($fee === null || $fee === '') {
+            return number_format(0, $decimals, '.', '');
+        }
+
+        return number_format((float) bcdiv((string) $fee, '100', $decimals), $decimals, '.', '');
+    }
+}
+
+if (! function_exists('rate_formatter')) {
+    /**
+     * 格式化汇率/费率.
+     *
+     * 将以"万分之一"为单位存储的费率转换为格式化显示。
+     *
+     * @param  int|string|null  $rate  费率（万分之一）
+     * @param  int  $decimals  小数位数，默认为 3
+     * @return string
+     */
+    function rate_formatter($rate, int $decimals = 3): string
+    {
+        if ($rate === null || $rate === '') {
+            return number_format(0, $decimals, '.', '');
+        }
+
+        return number_format((float) bcdiv((string) $rate, '100', $decimals), $decimals, '.', '');
+    }
+}
+
+if (! function_exists('ali_sign_url')) {
+    /**
+     * 生成阿里云 OSS 私有文件的签名访问 URL.
+     *
+     * @param  string|null  $path  文件路径
+     * @param  int  $expireMinutes  过期时间（分钟），默认 60 分钟
+     * @param  string|null  $disk  磁盘名称，默认使用配置中的 private_disk
+     * @return string
+     */
+    function ali_sign_url(?string $path, int $expireMinutes = 60, ?string $disk = null): string
+    {
+        if (blank($path)) {
+            return '';
+        }
+
+        try {
+            $diskName = $disk ?? config('admin.upload.oss.private_disk', 'oss-private');
+            $storage = \Illuminate\Support\Facades\Storage::disk($diskName);
+
+            return $storage->temporaryUrl($path, now()->addMinutes($expireMinutes));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::warning('Failed to generate signed URL', [
+                'path' => $path,
+                'error' => $e->getMessage(),
+            ]);
+
+            return $path;
+        }
+    }
+}
