@@ -19,12 +19,20 @@
     .form-group .control-label {
         text-align: left;
     }
+    .toast-container {
+        top: 5%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 </style>
 
 <div class="login-page bg-40">
     <div class="login-box">
-        <div class="login-logo mb-2">
-            {{ config('admin.name') }}
+        <div class="login-logo mb-2" style="font-size:1.5rem">
+            {!! config('admin.logo') !!}
         </div>
         <div class="card">
             <div class="card-body login-card-body shadow-100">
@@ -106,11 +114,8 @@
                             @endif
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary float-right login-btn">
-
+                    <button type="submit" class="btn btn-primary btn-block login-btn">
                         {{ __('admin.login') }}
-                        &nbsp;
-                        <i class="feather icon-arrow-right"></i>
                     </button>
                 </form>
 
