@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.9] - 2026-01-14
+
+### Changed
+
+- 默认关闭面包屑导航（`enable_default_breadcrumb` 改为 `false`）
+- 优化前端打包配置：支持多主题打包（`npm run prod:all`）
+- 新增 gray 主题 CSS 文件
+
 ## [1.0.8] - 2026-01-14
 
 ### Added
@@ -105,7 +113,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.0.8...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.0.9...HEAD
+[1.0.9]: https://github.com/dcat-x/dcat-admin/compare/v1.0.8...v1.0.9
 [1.0.8]: https://github.com/dcat-x/dcat-admin/compare/v1.0.7...v1.0.8
 [1.0.7]: https://github.com/dcat-x/dcat-admin/compare/v1.0.6...v1.0.7
 [1.0.6]: https://github.com/dcat-x/dcat-admin/compare/v1.0.5...v1.0.6
