@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.16] - 2026-01-14
+
+### Changed
+
+- 将筛选按钮样式从 `btn-primary` 改为 `btn-white`，与重置按钮保持一致
+
 ## [1.0.15] - 2026-01-14
 
 ### Fixed
@@ -165,7 +171,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.0.15...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.0.16...HEAD
+[1.0.16]: https://github.com/dcat-x/dcat-admin/compare/v1.0.15...v1.0.16
 [1.0.15]: https://github.com/dcat-x/dcat-admin/compare/v1.0.14...v1.0.15
 [1.0.14]: https://github.com/dcat-x/dcat-admin/compare/v1.0.13...v1.0.14
 [1.0.13]: https://github.com/dcat-x/dcat-admin/compare/v1.0.12...v1.0.13
