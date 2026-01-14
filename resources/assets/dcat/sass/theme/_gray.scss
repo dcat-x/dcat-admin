@@ -56,6 +56,22 @@ body.layout-color-gray {
     }
   }
 
+  // Outline primary button
+  .btn-outline-primary,
+  .btn-primary.btn-outline {
+    background-color: transparent !important;
+    border-color: $gray-theme-header !important;
+    color: $gray-theme-header !important;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: $gray-theme-header !important;
+      border-color: $gray-theme-header !important;
+      color: #fff !important;
+    }
+  }
+
   // ============================================
   // Link Colors (override AdminLTE blue links)
   // ============================================
