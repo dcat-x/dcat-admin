@@ -10,6 +10,7 @@ use Dcat\Admin\Grid\Events\Fetching;
 use Dcat\Admin\Grid\Filter\AbstractFilter;
 use Dcat\Admin\Grid\Filter\Between;
 use Dcat\Admin\Grid\Filter\Date;
+use Dcat\Admin\Grid\Filter\DateRange;
 use Dcat\Admin\Grid\Filter\Day;
 use Dcat\Admin\Grid\Filter\EndWith;
 use Dcat\Admin\Grid\Filter\Equal;
@@ -30,8 +31,11 @@ use Dcat\Admin\Grid\Filter\NotEqual;
 use Dcat\Admin\Grid\Filter\NotIn;
 use Dcat\Admin\Grid\Filter\Scope;
 use Dcat\Admin\Grid\Filter\StartWith;
+use Dcat\Admin\Grid\Filter\Toggle;
 use Dcat\Admin\Grid\Filter\Where;
 use Dcat\Admin\Grid\Filter\WhereBetween;
+use Dcat\Admin\Grid\Filter\WhereNotNull;
+use Dcat\Admin\Grid\Filter\WhereNull;
 use Dcat\Admin\Grid\Filter\Year;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Traits\HasBuilderEvents;
@@ -68,6 +72,10 @@ use Illuminate\Support\Traits\Macroable;
  * @method Group group($column, $builder = null, $label = '')
  * @method Newline newline()
  * @method FindInSet findInSet($column, $label = '')
+ * @method WhereNull whereNull($column, $label = '')
+ * @method WhereNotNull whereNotNull($column, $label = '')
+ * @method DateRange dateRange($column, $label = '')
+ * @method Toggle toggle($column, $label = '')
  */
 class Filter implements Renderable
 {
@@ -111,6 +119,10 @@ class Filter implements Renderable
         'hidden' => Hidden::class,
         'newline' => Newline::class,
         'findInSet' => FindInSet::class,
+        'whereNull' => WhereNull::class,
+        'whereNotNull' => WhereNotNull::class,
+        'dateRange' => DateRange::class,
+        'toggle' => Toggle::class,
     ];
 
     /**
