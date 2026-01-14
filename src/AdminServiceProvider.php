@@ -112,6 +112,7 @@ class AdminServiceProvider extends ServiceProvider
         $this->compatibleBlade();
         $this->bootExtensions();
         $this->registerBladeDirective();
+        $this->registerBuiltinShowFields();
     }
 
     protected function aliasAdmin()
@@ -279,6 +280,24 @@ PHP;
                 Helper::deleteByValue($middleware, 'admin.permission', true);
             }
             $router->middlewareGroup($key, $middleware);
+        }
+    }
+
+    /**
+     * Register builtin Show Field extensions.
+     *
+     * @return void
+     */
+    protected function registerBuiltinShowFields()
+    {
+        $fields = [
+            'fee' => Show\Fields\Fee::class,
+            'emptyData' => Show\Fields\EmptyData::class,
+            'rate' => Show\Fields\Rate::class,
+        ];
+
+        foreach ($fields as $name => $class) {
+            Show\Field::extend($name, $class);
         }
     }
 }

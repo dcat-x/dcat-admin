@@ -41,6 +41,7 @@ use Illuminate\Support\Traits\Macroable;
  * @method $this limit(int $limit = 100, string $end = '...')
  * @method $this fee(string $symbol = '$', int $decimals = 2)
  * @method $this emptyData(string $placeholder = '-')
+ * @method $this rate(string $suffix = '%', ?int $decimals = null)
  * @method $this ascii()
  * @method $this camel()
  * @method $this finish($cap)
@@ -100,6 +101,7 @@ class Column
         'textarea' => Displayers\Textarea::class,
         'fee' => Displayers\Fee::class,
         'emptyData' => Displayers\EmptyData::class,
+        'rate' => Displayers\Rate::class,
     ];
 
     /**

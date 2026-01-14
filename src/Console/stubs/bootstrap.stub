@@ -1,16 +1,18 @@
 <?php
 
 use Dcat\Admin\Admin;
-use Dcat\Admin\Grid;
 use Dcat\Admin\Form;
-use Dcat\Admin\Grid\Filter;
+use Dcat\Admin\Grid;
+use Dcat\Admin\Layout\Navbar;
 use Dcat\Admin\Show;
+use Dcat\Admin\Widgets\RefreshButton;
 
 /**
  * Dcat-admin - admin builder based on Laravel.
+ *
  * @author jqh <https://github.com/jqhph>
  *
- * Bootstraper for Admin.
+ * Bootstrapper for Admin.
  *
  * Here you can remove builtin form field:
  *
@@ -22,5 +24,79 @@ use Dcat\Admin\Show;
  * Or require js and css assets:
  * Admin::css('/packages/prettydocs/css/styles.css');
  * Admin::js('/packages/prettydocs/js/main.js');
- *
  */
+
+/*
+|--------------------------------------------------------------------------
+| Register custom CSS/JS
+|--------------------------------------------------------------------------
+*/
+// Admin::css('/admin_assets/css/custom.css');
+// Admin::js('/admin_assets/js/custom.js');
+
+/*
+|--------------------------------------------------------------------------
+| Navbar configuration
+|--------------------------------------------------------------------------
+*/
+Admin::navbar(static function (Navbar $navbar) {
+    // Add refresh button to navbar
+    $navbar->right((new RefreshButton)->render());
+
+    // Add custom links
+    // $navbar->left('<a href="https://example.com" target="_blank">Website</a>');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Grid global configuration
+|--------------------------------------------------------------------------
+*/
+Grid::resolving(static function (Grid $grid) {
+    // Default sort by created_at descending
+    $grid->model()->latest('created_at');
+
+    // Disable unnecessary features
+    $grid->disableColumnSelector();
+    $grid->disableRowSelector();
+    $grid->disableViewButton();
+    $grid->disableRefreshButton();
+
+    // Filter configuration
+    $grid->filter(function (Grid\Filter $filter) {
+        $filter->panel();
+        $filter->withoutInputBorder();
+    });
+
+    // Expand filter by default
+    $grid->expandFilter();
+
+    // Tools style
+    $grid->toolsWithOutline(false);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Form global configuration
+|--------------------------------------------------------------------------
+*/
+Form::resolving(static function (Form $form) {
+    // Disable unnecessary checkboxes
+    $form->disableEditingCheck();
+    $form->disableCreatingCheck();
+    $form->disableViewCheck();
+
+    // Disable unnecessary buttons
+    $form->disableViewButton();
+    $form->disableDeleteButton();
+});
+
+/*
+|--------------------------------------------------------------------------
+| Show global configuration
+|--------------------------------------------------------------------------
+*/
+Show::resolving(static function (Show $show) {
+    $show->disableDeleteButton();
+    $show->disableEditButton();
+});
