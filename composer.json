@@ -68,7 +68,9 @@
             "@pint:test",
             "@phpstan",
             "@test"
-        ]
+        ],
+        "release": "php scripts/release.php",
+        "release:dry": "php scripts/release.php --dry-run"
     },
     "extra": {
         "laravel": {
