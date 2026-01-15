@@ -11,6 +11,7 @@
 - [快速开始](getting-started/quick-start.md)
 - [开发前必读](getting-started/notice.md)
 - [版本升级](getting-started/update.md)
+- [从原版升级](getting-started/upgrade-from-original.md)
 - [静态资源](getting-started/assets.md)
 - [主题与颜色](getting-started/theme.md)
 - [新增主题](getting-started/new-themes.md)
