@@ -120,6 +120,7 @@
 - [权限控制](advanced/permission.md)
 - [组织机构管理](advanced/department.md)
 - [数据权限控制](advanced/data-permission.md)
+- [权限系统升级指南](advanced/permission-upgrade.md)
 - [菜单](advanced/menu.md)
 - [帮助函数](advanced/function.md)
 - [新增辅助函数](advanced/new-helpers.md)
