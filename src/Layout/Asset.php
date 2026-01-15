@@ -181,8 +181,16 @@ class Asset
             'js' => '@admin/dcat/plugins/autocomplete/jquery.autocomplete.min.js',
         ],
         '@filament-forms' => [
-            'js' => '@admin/filament/js/filament-forms.js',
-            'css' => '@admin/filament/css/filament.css',
+            'js' => [
+                '@admin/filament/js/filament-support.js',
+                '@admin/filament/js/filament-schemas.js',
+                '@admin/filament/js/filament-forms.js',
+            ],
+            'css' => [
+                '@admin/filament/css/filament-support.css',
+                '@admin/filament/css/filament-forms.css',
+                '@admin/filament/css/filament.css',
+            ],
         ],
     ];
 
