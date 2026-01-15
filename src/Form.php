@@ -93,6 +93,8 @@ use Symfony\Component\HttpFoundation\Response;
  * @method Field\AliImage aliImage($column, $label = '')
  * @method Field\AliMultipleImage aliMultipleImage($column, $label = '')
  * @method Field\PrivateMultipleImage privateMultipleImage($column, $label = '')
+ * @method Field\Filament\RichEditor filamentRichEditor($column, $label = '')
+ * @method Field\Filament\LiveSelect filamentLiveSelect($column, $label = '')
  */
 class Form implements Renderable
 {
@@ -182,6 +184,8 @@ class Form implements Renderable
         'aliImage' => Field\AliImage::class,
         'aliMultipleImage' => Field\AliMultipleImage::class,
         'privateMultipleImage' => Field\PrivateMultipleImage::class,
+        'filamentRichEditor' => Field\Filament\RichEditor::class,
+        'filamentLiveSelect' => Field\Filament\LiveSelect::class,
     ];
 
     /**
