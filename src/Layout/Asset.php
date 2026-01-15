@@ -180,6 +180,10 @@ class Asset
         '@autocomplete' => [
             'js' => '@admin/dcat/plugins/autocomplete/jquery.autocomplete.min.js',
         ],
+        '@filament-forms' => [
+            'js' => '@admin/filament/js/filament-forms.js',
+            'css' => '@admin/filament/css/filament.css',
+        ],
     ];
 
     /**
