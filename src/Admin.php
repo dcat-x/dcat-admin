@@ -574,6 +574,16 @@ class Admin
                         $router->resource('auth/roles', 'RoleController');
                         $router->resource('auth/permissions', 'PermissionController');
                     }
+
+                    // 部门管理路由
+                    if (config('admin.department.enable', true)) {
+                        $router->resource('auth/departments', 'DepartmentController');
+                    }
+
+                    // 数据规则路由
+                    if (config('admin.data_permission.enable', true)) {
+                        $router->resource('auth/data-rules', 'DataRuleController');
+                    }
                 });
 
                 $router->resource('auth/extensions', 'Dcat\Admin\Http\Controllers\ExtensionController', ['only' => ['index', 'store', 'update']]);

@@ -98,6 +98,26 @@ class AdminTablesSeeder extends Seeder
                 'order' => 6,
                 'created_at' => $createdAt,
             ],
+            [
+                'id' => 7,
+                'name' => 'Departments',
+                'slug' => 'departments',
+                'http_method' => '',
+                'http_path' => '/auth/departments*',
+                'parent_id' => 1,
+                'order' => 7,
+                'created_at' => $createdAt,
+            ],
+            [
+                'id' => 8,
+                'name' => 'Data Rules',
+                'slug' => 'data-rules',
+                'http_method' => '',
+                'http_path' => '/auth/data-rules*',
+                'parent_id' => 1,
+                'order' => 8,
+                'created_at' => $createdAt,
+            ],
         ]);
 
         //        Role::first()->permissions()->save(Permission::first());
@@ -159,6 +179,22 @@ class AdminTablesSeeder extends Seeder
                 'title' => 'Extensions',
                 'icon' => '',
                 'uri' => 'auth/extensions',
+                'created_at' => $createdAt,
+            ],
+            [
+                'parent_id' => 2,
+                'order' => 8,
+                'title' => 'Departments',
+                'icon' => 'fa-sitemap',
+                'uri' => 'auth/departments',
+                'created_at' => $createdAt,
+            ],
+            [
+                'parent_id' => 2,
+                'order' => 9,
+                'title' => 'Data Rules',
+                'icon' => 'fa-shield',
+                'uri' => 'auth/data-rules',
                 'created_at' => $createdAt,
             ],
         ]);

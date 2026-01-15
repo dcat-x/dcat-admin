@@ -18,10 +18,17 @@ class Permission extends Model implements Sortable
             ModelTree::boot as treeBoot;
         }
 
+    // 权限类型常量
+    const TYPE_MENU = 1;
+
+    const TYPE_BUTTON = 2;
+
+    const TYPE_DATA = 3;
+
     /**
      * @var array
      */
-    protected $fillable = ['parent_id', 'name', 'slug', 'http_method', 'http_path'];
+    protected $fillable = ['parent_id', 'name', 'slug', 'http_method', 'http_path', 'type', 'permission_key', 'menu_id'];
 
     /**
      * @var array
@@ -70,6 +77,52 @@ class Permission extends Model implements Sortable
         $relatedModel = config('admin.database.menu_model');
 
         return $this->belongsToMany($relatedModel, $pivotTable, 'permission_id', 'menu_id')->withTimestamps();
+    }
+
+    /**
+     * 获取所属菜单
+     */
+    public function menu()
+    {
+        return $this->belongsTo(config('admin.database.menu_model'), 'menu_id');
+    }
+
+    /**
+     * 是否是按钮权限
+     */
+    public function isButtonPermission(): bool
+    {
+        return $this->type === self::TYPE_BUTTON;
+    }
+
+    /**
+     * 是否是菜单权限
+     */
+    public function isMenuPermission(): bool
+    {
+        return $this->type === self::TYPE_MENU;
+    }
+
+    /**
+     * 获取菜单的按钮权限
+     */
+    public static function getButtonPermissions(int $menuId)
+    {
+        return static::query()
+            ->where('menu_id', $menuId)
+            ->where('type', self::TYPE_BUTTON)
+            ->orderBy('order')
+            ->get();
+    }
+
+    /**
+     * 根据权限标识查找
+     */
+    public static function findByKey(string $key)
+    {
+        return static::query()
+            ->where('permission_key', $key)
+            ->first();
     }
 
     /**

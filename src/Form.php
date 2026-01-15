@@ -97,6 +97,7 @@ use Symfony\Component\HttpFoundation\Response;
 class Form implements Renderable
 {
     use Concerns\HandleCascadeFields;
+    use Concerns\HasDataPermission;
     use Concerns\HasEvents;
     use Concerns\HasFiles;
     use Concerns\HasRows;

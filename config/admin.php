@@ -252,6 +252,42 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | dcat-admin department setting
+    |--------------------------------------------------------------------------
+    |
+    */
+    'department' => [
+        // Whether enable department feature
+        'enable' => true,
+
+        // Whether user can belong to multiple departments
+        'user_multi_department' => true,
+
+        // Whether user inherits roles from department
+        'inherit_department_roles' => true,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | dcat-admin data permission setting
+    |--------------------------------------------------------------------------
+    |
+    */
+    'data_permission' => [
+        // Whether enable data permission
+        'enable' => true,
+
+        // System variables
+        'variables' => [
+            'user_id',
+            'department_id',
+            'department_path',
+            'department_ids',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | dcat-admin upload setting
     |--------------------------------------------------------------------------
     |
@@ -360,6 +396,17 @@ return [
         'settings_table' => 'admin_settings',
         'extensions_table' => 'admin_extensions',
         'extension_histories_table' => 'admin_extension_histories',
+
+        // Department tables
+        'departments_table' => 'admin_departments',
+        'departments_model' => Dcat\Admin\Models\Department::class,
+        'department_users_table' => 'admin_department_users',
+        'department_roles_table' => 'admin_department_roles',
+
+        // Data permission tables
+        'data_rules_table' => 'admin_data_rules',
+        'data_rules_model' => Dcat\Admin\Models\DataRule::class,
+        'role_data_rules_table' => 'admin_role_data_rules',
     ],
 
     /*

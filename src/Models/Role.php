@@ -70,6 +70,30 @@ class Role extends Model
     }
 
     /**
+     * 关联此角色的部门
+     */
+    public function departments(): BelongsToMany
+    {
+        $pivotTable = config('admin.database.department_roles_table', 'admin_department_roles');
+        $relatedModel = config('admin.database.departments_model', Department::class);
+
+        return $this->belongsToMany($relatedModel, $pivotTable, 'role_id', 'department_id')
+            ->withTimestamps();
+    }
+
+    /**
+     * 关联数据规则
+     */
+    public function dataRules(): BelongsToMany
+    {
+        $pivotTable = config('admin.database.role_data_rules_table', 'admin_role_data_rules');
+        $relatedModel = config('admin.database.data_rules_model', DataRule::class);
+
+        return $this->belongsToMany($relatedModel, $pivotTable, 'role_id', 'data_rule_id')
+            ->withTimestamps();
+    }
+
+    /**
      * Check user has permission.
      */
     public function can(?string $permission): bool
@@ -133,6 +157,10 @@ class Role extends Model
             $model->administrators()->detach();
 
             $model->permissions()->detach();
+
+            $model->departments()->detach();
+
+            $model->dataRules()->detach();
         });
     }
 }

@@ -12,6 +12,7 @@ use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Layout\Menu;
 use Dcat\Admin\Layout\Navbar;
 use Dcat\Admin\Layout\SectionManager;
+use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Support\Context;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Support\Setting;
@@ -19,6 +20,7 @@ use Dcat\Admin\Support\Translator;
 use Dcat\Admin\Support\WebUploader;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AdminServiceProvider extends ServiceProvider
@@ -112,6 +114,7 @@ class AdminServiceProvider extends ServiceProvider
         $this->compatibleBlade();
         $this->bootExtensions();
         $this->registerBladeDirective();
+        $this->registerGate();
         $this->registerBuiltinShowFields();
     }
 
@@ -255,6 +258,32 @@ class AdminServiceProvider extends ServiceProvider
             return <<<PHP
 <?php echo admin_color()->primary($amt); ?>
 PHP;
+        });
+    }
+
+    /**
+     * 注册 Laravel Gate 权限检查
+     */
+    protected function registerGate()
+    {
+        Gate::before(function ($user, $ability, $arguments) {
+            // 仅对后台管理员生效
+            if (! $user instanceof Administrator) {
+                return null;
+            }
+
+            // 超级管理员直接通过
+            if ($user->isAdministrator()) {
+                return true;
+            }
+
+            // 检查 permission_key（按钮权限）
+            if (method_exists($user, 'canPermissionKey') && $user->canPermissionKey($ability)) {
+                return true;
+            }
+
+            // 返回 null 继续其他检查
+            return null;
         });
     }
 

@@ -1,6 +1,13 @@
 # 权限控制
 
-`Dcat Admin`已经内置了`RBAC`权限控制模块，展开左侧边栏的`Auth`，下面有用户、角色、权限三项的管理面板，权限控制的使用如下：
+`Dcat Admin`已经内置了完善的`RBAC`权限控制模块，包括：
+
+- **菜单权限**：基于路由的访问控制
+- **按钮权限**：细粒度的操作权限控制
+- **数据权限**：行级、列级、表单字段级的数据访问控制
+- **组织机构**：部门层级管理与权限继承
+
+展开左侧边栏的`Auth`，下面有用户、角色、权限、部门、数据规则等管理面板，权限控制的使用如下：
 
 ### 路由控制
 
@@ -180,3 +187,155 @@ Route::group([
 这个原因可能是由于权限的`URL`路径配置错误导致的，正确的包含增删改查功能的`URL`配置应该是`auth/users*`这样的，如果你配置成了`auth/users/*`，那么就会提示无权访问。
 
 > 另外标签表单填写自定义URL有两种方法：一种是选中后按`删除键`进行更改；另一种是填写后按`空格键` + `回车键`。
+
+## 按钮权限
+
+按钮权限允许你对页面中的操作按钮进行细粒度的权限控制，比如新增、编辑、删除、导出等按钮。
+
+### 权限类型
+
+系统支持三种权限类型：
+
+| 类型 | 常量 | 说明 |
+|------|------|------|
+| 菜单权限 | `Permission::TYPE_MENU` (1) | 基于路由的访问控制 |
+| 按钮权限 | `Permission::TYPE_BUTTON` (2) | 页面操作按钮控制 |
+| 数据权限 | `Permission::TYPE_DATA` (3) | 数据访问控制 |
+
+### 创建按钮权限
+
+在权限管理页面创建按钮权限时，需要设置以下字段：
+
+- **类型**：选择"按钮权限"
+- **权限标识 (slug)**：唯一标识，如 `user-create`
+- **权限键 (permission_key)**：语义化键名，如 `user:create`
+- **关联菜单**：该按钮所属的菜单页面
+
+推荐使用 `资源:操作` 的格式命名权限键，例如：
+- `user:create` - 创建用户
+- `user:edit` - 编辑用户
+- `user:delete` - 删除用户
+- `order:export` - 导出订单
+
+### 使用按钮权限
+
+#### 方式一：使用 permission_key 检查
+
+```php
+use Dcat\Admin\Admin;
+
+// 检查用户是否有指定的权限键
+if (Admin::user()->canPermissionKey('user:create')) {
+    // 显示创建按钮
+}
+
+// 在 Grid 中使用
+$grid->actions(function ($actions) {
+    if (!Admin::user()->canPermissionKey('user:delete')) {
+        $actions->disableDelete();
+    }
+
+    if (!Admin::user()->canPermissionKey('user:edit')) {
+        $actions->disableEdit();
+    }
+});
+
+// 在工具栏中使用
+$grid->tools(function ($tools) {
+    if (!Admin::user()->canPermissionKey('user:export')) {
+        $tools->disableExport();
+    }
+});
+```
+
+#### 方式二：使用 Laravel Gate
+
+系统已集成 Laravel Gate，你可以使用标准的 Gate 方法进行权限检查：
+
+```php
+use Illuminate\Support\Facades\Gate;
+
+// 使用 Gate::allows
+if (Gate::allows('user:create')) {
+    // 有权限
+}
+
+// 使用 Gate::denies
+if (Gate::denies('user:delete')) {
+    // 无权限
+}
+
+// 在 Blade 模板中使用
+@can('user:create')
+    <button>创建用户</button>
+@endcan
+
+@cannot('user:delete')
+    <span>无删除权限</span>
+@endcannot
+```
+
+#### 方式三：使用辅助函数
+
+```php
+// 检查是否有权限
+if (admin_can('user:create')) {
+    // 显示按钮
+}
+
+// 检查是否无权限
+if (admin_cannot('user:delete')) {
+    // 隐藏按钮
+}
+```
+
+### 完整示例
+
+```php
+class UserController extends AdminController
+{
+    protected function grid()
+    {
+        return Grid::make(new User(), function (Grid $grid) {
+            $grid->column('id');
+            $grid->column('username');
+            $grid->column('name');
+
+            // 根据权限控制工具栏按钮
+            if (!Admin::user()->canPermissionKey('user:create')) {
+                $grid->disableCreateButton();
+            }
+
+            // 根据权限控制行操作
+            $grid->actions(function ($actions) {
+                if (!Admin::user()->canPermissionKey('user:view')) {
+                    $actions->disableView();
+                }
+                if (!Admin::user()->canPermissionKey('user:edit')) {
+                    $actions->disableEdit();
+                }
+                if (!Admin::user()->canPermissionKey('user:delete')) {
+                    $actions->disableDelete();
+                }
+            });
+
+            // 批量操作权限
+            if (!Admin::user()->canPermissionKey('user:batch-delete')) {
+                $grid->disableBatchDelete();
+            }
+        });
+    }
+}
+```
+
+## 组织机构
+
+组织机构功能允许你管理企业的部门层级结构，并支持基于部门的权限继承。
+
+详细文档请参考：[组织机构管理](department.md)
+
+## 数据权限
+
+数据权限提供了行级、列级、表单字段级的数据访问控制能力。
+
+详细文档请参考：[数据权限控制](data-permission.md)

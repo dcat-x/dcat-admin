@@ -20,7 +20,12 @@ class UserController extends AdminController
 
     protected function grid()
     {
-        return Grid::make(Administrator::with(['roles']), function (Grid $grid) {
+        $with = ['roles'];
+        if (config('admin.department.enable', true)) {
+            $with[] = 'departments';
+        }
+
+        return Grid::make(Administrator::with($with), function (Grid $grid) {
             $grid->column('id', 'ID')->sortable();
             $grid->column('username');
             $grid->column('name');
@@ -120,7 +125,12 @@ class UserController extends AdminController
 
     public function form()
     {
-        return Form::make(Administrator::with(['roles']), function (Form $form) {
+        $with = ['roles'];
+        if (config('admin.department.enable', true)) {
+            $with[] = 'departments';
+        }
+
+        return Form::make(Administrator::with($with), function (Form $form) {
             $userTable = config('admin.database.users_table');
 
             $connection = config('admin.database.connection');
@@ -166,6 +176,29 @@ class UserController extends AdminController
                     });
             }
 
+            if (config('admin.department.enable', true)) {
+                $departmentModel = config('admin.database.departments_model');
+
+                $form->multipleSelect('departments', trans('admin.departments'))
+                    ->options(function () use ($departmentModel) {
+                        return $departmentModel::query()
+                            ->where('status', 1)
+                            ->pluck('name', 'id');
+                    })
+                    ->customFormat(function ($v) {
+                        return array_column($v, 'id');
+                    })
+                    ->help(trans('admin.select_primary_department_tip'));
+
+                $form->select('primary_department_id', trans('admin.primary_department'))
+                    ->options(function () use ($departmentModel) {
+                        return $departmentModel::query()
+                            ->where('status', 1)
+                            ->pluck('name', 'id');
+                    })
+                    ->help(trans('admin.primary_department_help'));
+            }
+
             $form->display('created_at', trans('admin.created_at'));
             $form->display('updated_at', trans('admin.updated_at'));
 
@@ -179,6 +212,27 @@ class UserController extends AdminController
 
             if (! $form->password) {
                 $form->deleteInput('password');
+            }
+        })->saved(function (Form $form) {
+            // 处理主部门设置
+            if (config('admin.department.enable', true)) {
+                $primaryDepartmentId = $form->input('primary_department_id');
+                $departmentIds = $form->input('departments') ?: [];
+
+                if ($primaryDepartmentId && in_array($primaryDepartmentId, $departmentIds)) {
+                    $pivotTable = config('admin.database.department_users_table', 'admin_department_users');
+
+                    // 先将所有部门设为非主部门
+                    \Illuminate\Support\Facades\DB::table($pivotTable)
+                        ->where('user_id', $form->getKey())
+                        ->update(['is_primary' => 0]);
+
+                    // 设置主部门
+                    \Illuminate\Support\Facades\DB::table($pivotTable)
+                        ->where('user_id', $form->getKey())
+                        ->where('department_id', $primaryDepartmentId)
+                        ->update(['is_primary' => 1]);
+                }
             }
         });
     }

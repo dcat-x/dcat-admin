@@ -108,6 +108,25 @@ class PermissionController extends AdminController
                 ->updateRules(['required', "unique:{$connection}.{$permissionTable},slug,$id"]);
             $form->text('name', trans('admin.name'))->required();
 
+            $form->select('type', trans('admin.permission_type'))
+                ->options([
+                    1 => trans('admin.menu_permission'),
+                    2 => trans('admin.button_permission'),
+                    3 => trans('admin.data_permission'),
+                ])
+                ->default(1)
+                ->when(2, function (Form $form) {
+                    $menuModel = config('admin.database.menu_model');
+                    $form->select('menu_id', trans('admin.belong_menu'))
+                        ->options($menuModel::selectOptions())
+                        ->required();
+
+                    $form->text('permission_key', trans('admin.permission_key'))
+                        ->placeholder('例如: user:add, order:delete')
+                        ->required()
+                        ->help(trans('admin.permission_key_help'));
+                });
+
             $form->multipleSelect('http_method', trans('admin.http.method'))
                 ->options($this->getHttpMethodsOptions())
                 ->help(trans('admin.all_methods_if_empty'));

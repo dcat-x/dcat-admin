@@ -634,3 +634,29 @@ if (! function_exists('ali_sign_url')) {
         }
     }
 }
+
+if (! function_exists('admin_can')) {
+    /**
+     * 检查当前管理员是否有指定权限
+     */
+    function admin_can(string $ability): bool
+    {
+        $user = Admin::user();
+
+        if (! $user) {
+            return false;
+        }
+
+        return $user->can($ability);
+    }
+}
+
+if (! function_exists('admin_cannot')) {
+    /**
+     * 检查当前管理员是否没有指定权限
+     */
+    function admin_cannot(string $ability): bool
+    {
+        return ! admin_can($ability);
+    }
+}
