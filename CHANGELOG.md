@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-01-15
+
+### Added
+
+- 新增组织机构（部门）管理功能
+  - 树形部门结构管理
+  - 用户多部门归属支持
+  - 部门角色继承
+- 新增按钮权限功能
+  - permission_key 细粒度权限控制
+  - Laravel Gate 集成
+  - admin_can/admin_cannot 辅助函数
+- 新增数据权限功能
+  - 行级数据权限（过滤数据行）
+  - 列级数据权限（隐藏表格列）
+  - 表单字段权限（隐藏/禁用/只读）
+  - 系统变量支持：{user_id}、{department_id}、{department_path}、{department_ids}
+- 新增权限系统文档
+  - 组织机构管理文档
+  - 数据权限控制文档
+  - 权限系统升级指南
+- 新增权限系统单元测试（6个测试文件）
+
 ## [1.0.19] - 2026-01-14
 
 ### Fixed
@@ -201,7 +224,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.0.16...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/dcat-x/dcat-admin/compare/v1.0.19...v1.1.0
+[1.0.19]: https://github.com/dcat-x/dcat-admin/compare/v1.0.18...v1.0.19
+[1.0.18]: https://github.com/dcat-x/dcat-admin/compare/v1.0.17...v1.0.18
+[1.0.17]: https://github.com/dcat-x/dcat-admin/compare/v1.0.16...v1.0.17
 [1.0.16]: https://github.com/dcat-x/dcat-admin/compare/v1.0.15...v1.0.16
 [1.0.15]: https://github.com/dcat-x/dcat-admin/compare/v1.0.14...v1.0.15
 [1.0.14]: https://github.com/dcat-x/dcat-admin/compare/v1.0.13...v1.0.14
