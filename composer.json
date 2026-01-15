@@ -34,7 +34,9 @@
         "laravel/framework": "^12.0",
         "spatie/eloquent-sortable": "^4.0",
         "doctrine/dbal": "^4.0",
-        "dcat-x/easy-excel": "^1.0"
+        "dcat-x/easy-excel": "^1.0",
+        "livewire/livewire": "^3.0",
+        "filament/forms": "^3.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
