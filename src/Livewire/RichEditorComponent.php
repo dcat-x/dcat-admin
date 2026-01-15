@@ -5,7 +5,7 @@ namespace Dcat\Admin\Livewire;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Livewire\Component;
 
 class RichEditorComponent extends Component implements HasForms
@@ -41,10 +41,10 @@ class RichEditorComponent extends Component implements HasForms
         ]);
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 RichEditor::make('content')
                     ->hiddenLabel()
                     ->disabled($this->fieldDisabled)

@@ -5,7 +5,7 @@ namespace Dcat\Admin\Livewire;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Http;
 use Livewire\Component;
 
@@ -42,7 +42,7 @@ class LiveSelectComponent extends Component implements HasForms
         ]);
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
         $select = Select::make('value')
             ->hiddenLabel()
@@ -107,8 +107,8 @@ class LiveSelectComponent extends Component implements HasForms
             $select->placeholder($this->fieldConfig['placeholder']);
         }
 
-        return $form
-            ->schema([$select])
+        return $schema
+            ->components([$select])
             ->statePath('data');
     }
 

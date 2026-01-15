@@ -4,6 +4,7 @@ namespace Dcat\Admin\Tests;
 
 use Dcat\Admin\AdminServiceProvider;
 use Filament\Forms\FormsServiceProvider;
+use Filament\Schemas\SchemasServiceProvider;
 use Filament\Support\SupportServiceProvider;
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
@@ -15,6 +16,7 @@ abstract class TestCase extends BaseTestCase
         return [
             LivewireServiceProvider::class,
             SupportServiceProvider::class,
+            SchemasServiceProvider::class,
             FormsServiceProvider::class,
             AdminServiceProvider::class,
         ];
@@ -31,5 +33,16 @@ abstract class TestCase extends BaseTestCase
 
         // Set encryption key for Livewire testing
         $app['config']->set('app.key', 'base64:'.base64_encode(random_bytes(32)));
+
+        // Configure session for Livewire testing
+        $app['config']->set('session.driver', 'array');
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Share errors bag with views for Livewire/Filament testing
+        $this->app['view']->share('errors', new \Illuminate\Support\ViewErrorBag);
     }
 }
