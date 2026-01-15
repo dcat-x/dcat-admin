@@ -238,6 +238,13 @@ return [
     'select_primary_department_tip' => '选择用户所属部门',
     'primary_department_help' => '主部门用于数据权限判断',
     'status' => '状态',
+    'permission_type' => '权限类型',
+    'menu_permission' => '菜单权限',
+    'button_permission' => '按钮权限',
+    'data_permission' => '数据权限',
+    'belong_menu' => '所属菜单',
+    'permission_key' => '权限标识',
+    'permission_key_help' => '用于前端权限判断，格式如 user:add',
     'validation' => [
         'match' => '与 :attribute 不匹配。',
         'minlength' => ':attribute 字符长度不能少于 :min。',

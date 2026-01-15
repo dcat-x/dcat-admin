@@ -79,6 +79,17 @@ class Menu extends Model implements Sortable
     }
 
     /**
+     * 菜单下的按钮权限
+     */
+    public function buttonPermissions()
+    {
+        $permissionModel = config('admin.database.permissions_model');
+
+        return $this->hasMany($permissionModel, 'menu_id')
+            ->where('type', $permissionModel::TYPE_BUTTON);
+    }
+
+    /**
      * Get all elements.
      *
      * @return static[]|\Illuminate\Support\Collection

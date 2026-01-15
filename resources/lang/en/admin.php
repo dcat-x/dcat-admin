@@ -237,6 +237,13 @@ return [
     'select_primary_department_tip' => 'Select departments the user belongs to',
     'primary_department_help' => 'Primary department is used for data permission judgment',
     'status' => 'Status',
+    'permission_type' => 'Permission Type',
+    'menu_permission' => 'Menu Permission',
+    'button_permission' => 'Button Permission',
+    'data_permission' => 'Data Permission',
+    'belong_menu' => 'Belong Menu',
+    'permission_key' => 'Permission Key',
+    'permission_key_help' => 'Used for frontend permission check, e.g. user:add',
     'validation' => [
         'match' => 'The :attribute and :other must match.',
         'minlength' => 'The :attribute must be at least :min characters.',
