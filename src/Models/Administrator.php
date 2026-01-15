@@ -79,6 +79,80 @@ class Administrator extends Model implements AuthenticatableContract, Authorizab
     }
 
     /**
+     * 用户所属的部门（多对多）
+     */
+    public function departments(): BelongsToMany
+    {
+        $pivotTable = config('admin.database.department_users_table', 'admin_department_users');
+        $relatedModel = config('admin.database.departments_model', Department::class);
+
+        return $this->belongsToMany($relatedModel, $pivotTable, 'user_id', 'department_id')
+            ->withPivot('is_primary')
+            ->withTimestamps();
+    }
+
+    /**
+     * 用户的主部门
+     */
+    public function primaryDepartment()
+    {
+        return $this->departments()->wherePivot('is_primary', 1);
+    }
+
+    /**
+     * 获取用户的主部门 ID
+     */
+    public function getPrimaryDepartmentIdAttribute(): ?int
+    {
+        $primary = $this->primaryDepartment()->first();
+
+        return $primary ? $primary->id : null;
+    }
+
+    /**
+     * 获取用户所有部门的 ID（逗号分隔）
+     */
+    public function getDepartmentIdsAttribute(): string
+    {
+        return $this->departments()->pluck('id')->implode(',');
+    }
+
+    /**
+     * 获取通过部门继承的角色
+     */
+    public function getDepartmentRoles()
+    {
+        if (! config('admin.department.inherit_department_roles', true)) {
+            return collect();
+        }
+
+        $departmentIds = $this->departments()->pluck('id')->toArray();
+
+        if (empty($departmentIds)) {
+            return collect();
+        }
+
+        $roleModel = config('admin.database.roles_model');
+        $pivotTable = config('admin.database.department_roles_table', 'admin_department_roles');
+
+        return $roleModel::query()
+            ->join($pivotTable, 'role_id', '=', 'id')
+            ->whereIn('department_id', $departmentIds)
+            ->get();
+    }
+
+    /**
+     * 获取所有角色（直接角色 + 部门继承角色）
+     */
+    public function allRoles()
+    {
+        $directRoles = $this->roles;
+        $departmentRoles = $this->getDepartmentRoles();
+
+        return $directRoles->merge($departmentRoles)->unique('id');
+    }
+
+    /**
      * 判断是否允许查看菜单.
      *
      * @param  array|Menu  $menu

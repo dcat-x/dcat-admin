@@ -231,6 +231,13 @@ return [
     'invalid_extension_package' => '安装包异常',
     'copied' => '已复制',
     'auth_failed' => '账号或密码错误',
+    'departments' => '部门管理',
+    'department' => '部门',
+    'department_code' => '部门编码',
+    'primary_department' => '主部门',
+    'select_primary_department_tip' => '选择用户所属部门',
+    'primary_department_help' => '主部门用于数据权限判断',
+    'status' => '状态',
     'validation' => [
         'match' => '与 :attribute 不匹配。',
         'minlength' => ':attribute 字符长度不能少于 :min。',

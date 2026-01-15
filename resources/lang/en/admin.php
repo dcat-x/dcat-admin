@@ -230,6 +230,13 @@ return [
     'invalid_extension_package' => 'Invalid extension package !',
     'copied' => 'Copied',
     'auth_failed' => 'These credentials do not match our records.',
+    'departments' => 'Departments',
+    'department' => 'Department',
+    'department_code' => 'Department Code',
+    'primary_department' => 'Primary Department',
+    'select_primary_department_tip' => 'Select departments the user belongs to',
+    'primary_department_help' => 'Primary department is used for data permission judgment',
+    'status' => 'Status',
     'validation' => [
         'match' => 'The :attribute and :other must match.',
         'minlength' => 'The :attribute must be at least :min characters.',
