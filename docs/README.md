@@ -118,6 +118,8 @@
 - [区块 (Section)](advanced/section.md)
 - [动作以及表单响应](advanced/response.md)
 - [权限控制](advanced/permission.md)
+- [组织机构管理](advanced/department.md)
+- [数据权限控制](advanced/data-permission.md)
 - [菜单](advanced/menu.md)
 - [帮助函数](advanced/function.md)
 - [新增辅助函数](advanced/new-helpers.md)
