@@ -23,6 +23,7 @@ class Grid
     use Concerns\CanHidesColumns;
     use Concerns\HasActions;
     use Concerns\HasComplexHeaders;
+    use Concerns\HasDataPermission;
     use Concerns\HasEvents;
     use Concerns\HasExporter;
     use Concerns\HasFilter;
