@@ -5,7 +5,6 @@ namespace Dcat\Admin\Http\Controllers;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Http\Actions\Extensions\InstallFromLocal;
-use Dcat\Admin\Http\Actions\Extensions\Marketplace;
 use Dcat\Admin\Http\Displayers\Extensions;
 use Dcat\Admin\Http\Repositories\Extension;
 use Dcat\Admin\Layout\Content;
@@ -63,7 +62,6 @@ class ExtensionController extends Controller
             $grid->disableActions();
 
             $grid->tools([
-                new Marketplace,
                 new InstallFromLocal,
             ]);
 
