@@ -34,6 +34,10 @@
         "prod:all": "npm run prod && npm run prod:gray && npm run prod:blue && npm run prod:green && npm run prod:blue-light && npm run prod:slate && npm run prod:zinc && npm run prod:neutral && npm run prod:stone && npm run prod:red && npm run prod:orange && npm run prod:amber && npm run prod:yellow && npm run prod:lime && npm run prod:emerald && npm run prod:teal && npm run prod:cyan && npm run prod:sky && npm run prod:indigo && npm run prod:violet && npm run prod:purple && npm run prod:fuchsia && npm run prod:pink && npm run prod:rose"
     },
     "devDependencies": {
+        "@tailwindcss/forms": "^0.5.11",
+        "@tailwindcss/postcss": "^4.1.18",
+        "@tailwindcss/typography": "^0.5.19",
+        "autoprefixer": "^10.4.23",
         "cross-env": "^7.0",
         "dotenv": "^16.4",
         "glob": "^11.0",
@@ -42,6 +46,7 @@
         "rtlcss": "^4.3",
         "sass": "^1.83",
         "sass-loader": "^16.0",
-        "sweetalert2": "^9.17.4"
+        "sweetalert2": "^9.17.4",
+        "tailwindcss": "^4.1.18"
     }
 }

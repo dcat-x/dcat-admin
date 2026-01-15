@@ -110,3 +110,13 @@ mix.copy(dcatPath('sass/nunito.css'), `${distPath}/dcat/css/nunito.css`);
 // 打包所有 extra 里面的所有js和css
 mixAssetsDir('dcat/extra/*.js', (src, dest) => mix.js(src, dest));
 mixAssetsDir('dcat/extra/*.scss', (src, dest) => mix.sass(src, dest.replace('scss', 'css'), sassLoaderOptions));
+
+/*
+ |--------------------------------------------------------------------------
+ | Filament styles with prefix
+ |--------------------------------------------------------------------------
+ */
+mix.postCss('resources/assets/filament/filament.css', distPath + '/filament/css', [
+    require('@tailwindcss/postcss'),
+    require('autoprefixer'),
+]);

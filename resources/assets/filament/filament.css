@@ -1,0 +1,60 @@
+@import "tailwindcss" prefix(fil);
+
+/* Disable preflight to avoid style conflicts with AdminLTE */
+@layer base {
+    /* Filament component scope - minimal base styles */
+    .filament-scope {
+        /* Container for Filament components */
+    }
+}
+
+/* Custom theme configuration */
+@theme {
+    --color-danger-50: oklch(0.969 0.015 12.422);
+    --color-danger-100: oklch(0.941 0.03 12.58);
+    --color-danger-200: oklch(0.892 0.058 10.001);
+    --color-danger-300: oklch(0.81 0.117 11.638);
+    --color-danger-400: oklch(0.712 0.194 13.428);
+    --color-danger-500: oklch(0.645 0.246 16.439);
+    --color-danger-600: oklch(0.586 0.253 17.585);
+    --color-danger-700: oklch(0.514 0.222 16.935);
+    --color-danger-800: oklch(0.455 0.188 13.697);
+    --color-danger-900: oklch(0.41 0.159 10.272);
+    --color-danger-950: oklch(0.271 0.105 12.094);
+
+    --color-primary-50: oklch(0.97 0.014 254.604);
+    --color-primary-100: oklch(0.932 0.032 255.585);
+    --color-primary-200: oklch(0.882 0.059 254.128);
+    --color-primary-300: oklch(0.809 0.105 251.813);
+    --color-primary-400: oklch(0.707 0.165 254.624);
+    --color-primary-500: oklch(0.623 0.214 259.815);
+    --color-primary-600: oklch(0.546 0.245 262.881);
+    --color-primary-700: oklch(0.488 0.243 264.376);
+    --color-primary-800: oklch(0.424 0.199 265.638);
+    --color-primary-900: oklch(0.379 0.146 265.522);
+    --color-primary-950: oklch(0.282 0.091 267.935);
+
+    --color-success-50: oklch(0.962 0.044 156.743);
+    --color-success-100: oklch(0.925 0.084 155.995);
+    --color-success-200: oklch(0.863 0.142 154.773);
+    --color-success-300: oklch(0.792 0.184 152.287);
+    --color-success-400: oklch(0.723 0.191 149.579);
+    --color-success-500: oklch(0.637 0.177 147.719);
+    --color-success-600: oklch(0.557 0.163 145.596);
+    --color-success-700: oklch(0.492 0.14 144.572);
+    --color-success-800: oklch(0.43 0.117 144.695);
+    --color-success-900: oklch(0.386 0.096 144.551);
+    --color-success-950: oklch(0.266 0.065 145.902);
+
+    --color-warning-50: oklch(0.987 0.022 95.277);
+    --color-warning-100: oklch(0.962 0.059 95.617);
+    --color-warning-200: oklch(0.924 0.12 95.746);
+    --color-warning-300: oklch(0.879 0.169 91.605);
+    --color-warning-400: oklch(0.828 0.189 84.429);
+    --color-warning-500: oklch(0.769 0.188 70.08);
+    --color-warning-600: oklch(0.666 0.179 58.318);
+    --color-warning-700: oklch(0.555 0.163 48.998);
+    --color-warning-800: oklch(0.473 0.137 46.201);
+    --color-warning-900: oklch(0.414 0.112 45.904);
+    --color-warning-950: oklch(0.279 0.077 45.635);
+}
