@@ -113,6 +113,7 @@ class AdminServiceProvider extends ServiceProvider
         $this->bootExtensions();
         $this->registerBladeDirective();
         $this->registerBuiltinShowFields();
+        $this->registerLivewireComponents();
     }
 
     protected function aliasAdmin()
@@ -299,5 +300,20 @@ PHP;
         foreach ($fields as $name => $class) {
             Show\Field::extend($name, $class);
         }
+    }
+
+    /**
+     * Register Livewire components for Filament integration.
+     *
+     * @return void
+     */
+    protected function registerLivewireComponents()
+    {
+        if (! class_exists(\Livewire\Livewire::class)) {
+            return;
+        }
+
+        \Livewire\Livewire::component('dcat-admin::rich-editor', Livewire\RichEditorComponent::class);
+        \Livewire\Livewire::component('dcat-admin::live-select', Livewire\LiveSelectComponent::class);
     }
 }
