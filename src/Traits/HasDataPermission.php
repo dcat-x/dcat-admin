@@ -86,7 +86,7 @@ trait HasDataPermission
             $path = substr($path, strlen($prefix));
         }
 
-        $path = '/' . ltrim($path, '/');
+        $path = '/'.ltrim($path, '/');
 
         // 查找匹配的菜单
         $menuModel = config('admin.database.menu_model');

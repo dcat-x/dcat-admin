@@ -33,7 +33,7 @@ class DataPermission
             return collect();
         }
 
-        $cacheKey = $this->user->id . '_' . $menuId;
+        $cacheKey = $this->user->id.'_'.$menuId;
 
         if (isset(static::$rulesCache[$cacheKey])) {
             return static::$rulesCache[$cacheKey];
@@ -141,7 +141,7 @@ class DataPermission
                 break;
 
             case DataRule::CONDITION_LIKE:
-                $query->where($field, 'like', '%' . $value . '%');
+                $query->where($field, 'like', '%'.$value.'%');
                 break;
 
             case DataRule::CONDITION_IN:

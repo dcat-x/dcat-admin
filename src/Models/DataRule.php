@@ -13,23 +13,35 @@ class DataRule extends Model
 
     // 作用域常量
     const SCOPE_ROW = 'row';       // 行级权限
+
     const SCOPE_COLUMN = 'column'; // 列级权限
+
     const SCOPE_FORM = 'form';     // 表单字段权限
 
     // 值类型常量
     const VALUE_TYPE_FIXED = 'fixed';       // 固定值
+
     const VALUE_TYPE_VARIABLE = 'variable'; // 变量值
 
     // 条件常量
     const CONDITION_EQUAL = '=';
+
     const CONDITION_NOT_EQUAL = '!=';
+
     const CONDITION_GREATER = '>';
+
     const CONDITION_GREATER_EQUAL = '>=';
+
     const CONDITION_LESS = '<';
+
     const CONDITION_LESS_EQUAL = '<=';
+
     const CONDITION_LIKE = 'like';
+
     const CONDITION_IN = 'in';
+
     const CONDITION_NOT_IN = 'not_in';
+
     const CONDITION_BETWEEN = 'between';
 
     protected $fillable = [

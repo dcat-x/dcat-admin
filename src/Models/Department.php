@@ -73,7 +73,7 @@ class Department extends Model implements Sortable
         }
 
         return static::query()
-            ->where('path', 'like', $this->path . '%')
+            ->where('path', 'like', $this->path.'%')
             ->where('id', '!=', $this->id)
             ->pluck('id')
             ->toArray();
@@ -85,7 +85,7 @@ class Department extends Model implements Sortable
     public function getDescendantsWithSelf()
     {
         return static::query()
-            ->where('path', 'like', $this->path . '%')
+            ->where('path', 'like', $this->path.'%')
             ->get();
     }
 
@@ -103,10 +103,10 @@ class Department extends Model implements Sortable
     public function updatePath(): void
     {
         if ($this->parent_id == 0) {
-            $this->path = '/' . $this->id . '/';
+            $this->path = '/'.$this->id.'/';
         } else {
             $parent = static::find($this->parent_id);
-            $this->path = $parent ? $parent->path . $this->id . '/' : '/' . $this->id . '/';
+            $this->path = $parent ? $parent->path.$this->id.'/' : '/'.$this->id.'/';
         }
         $this->saveQuietly();
     }

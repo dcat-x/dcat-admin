@@ -143,7 +143,7 @@ class DataRuleController extends AdminController
     {
         $variables = DataRuleModel::getSystemVariables();
         $html = '<div class="table-responsive"><table class="table table-sm table-bordered">';
-        $html .= '<thead><tr><th>' . trans('admin.data_rule.variable') . '</th><th>' . trans('admin.description') . '</th></tr></thead><tbody>';
+        $html .= '<thead><tr><th>'.trans('admin.data_rule.variable').'</th><th>'.trans('admin.description').'</th></tr></thead><tbody>';
 
         foreach ($variables as $var => $desc) {
             $html .= "<tr><td><code>{$var}</code></td><td>{$desc}</td></tr>";

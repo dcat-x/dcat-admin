@@ -153,7 +153,7 @@ class DataRuleTest extends TestCase
 
         $fillable = [
             'menu_id', 'name', 'field', 'condition', 'value',
-            'value_type', 'scope', 'status', 'order'
+            'value_type', 'scope', 'status', 'order',
         ];
 
         foreach ($fillable as $attribute) {
