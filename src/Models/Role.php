@@ -82,6 +82,18 @@ class Role extends Model
     }
 
     /**
+     * 关联数据规则
+     */
+    public function dataRules(): BelongsToMany
+    {
+        $pivotTable = config('admin.database.role_data_rules_table', 'admin_role_data_rules');
+        $relatedModel = config('admin.database.data_rules_model', DataRule::class);
+
+        return $this->belongsToMany($relatedModel, $pivotTable, 'role_id', 'data_rule_id')
+            ->withTimestamps();
+    }
+
+    /**
      * Check user has permission.
      */
     public function can(?string $permission): bool
@@ -147,6 +159,8 @@ class Role extends Model
             $model->permissions()->detach();
 
             $model->departments()->detach();
+
+            $model->dataRules()->detach();
         });
     }
 }
