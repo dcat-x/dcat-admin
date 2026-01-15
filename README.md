@@ -55,7 +55,9 @@ php artisan admin:install
 
 ## 文档
 
-- [中文文档](https://learnku.com/docs/dcat-admin)
+- **[完整文档](docs/README.md)** - 查看详细的使用说明和 API 文档
+- [快速开始](docs/getting-started/quick-start.md) - 5 分钟快速上手
+- [常见问题](docs/getting-started/qa.md) - 解决常见使用问题
 
 ## 开发
 

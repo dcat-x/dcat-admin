@@ -1,6 +1,7 @@
 /vendor/
 /node_modules/
 /laravel-tests/
+/docs/plans/
 
 composer.lock
 package-lock.json
