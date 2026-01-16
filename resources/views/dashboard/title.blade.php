@@ -30,12 +30,10 @@
             <img class="avatar img-circle shadow mt-1" src="{{ admin_asset('@admin/images/logo.png') }}">
 
             <div class="text-center mb-1">
-                <h1 class="mb-3 mt-2 text-white">Dcat Admin</h1>
+                <h1 class="mb-3 mt-2 text-white">Dcat Admin X</h1>
                 <div class="links">
-                    <a href="https://github.com/jqhph/dcat-admin" target="_blank">Github</a>
-                    <a href="http://www.dcatadmin.com/" id="doc-link" target="_blank">{{ __('admin.documentation') }}</a>
-                    <a href="http://www.dcatadmin.com/" id="demo-link" target="_blank">{{ __('admin.extensions') }}</a>
-                    <a href="https://jqhph.github.io/dcat-admin/demo.html" id="demo-link" target="_blank">{{ __('admin.demo') }}</a>
+                    <a href="https://github.com/dcat-x/dcat-admin" target="_blank">Github</a>
+                    <a href="https://github.com/dcat-x/dcat-admin/tree/main/docs" target="_blank">{{ __('admin.documentation') }}</a>
                 </div>
             </div>
         </div>
