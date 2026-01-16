@@ -91,8 +91,15 @@ class DatabaseUpdater
             return;
         }
 
-        require_once $file;
+        // Support Laravel 8+ anonymous migration classes
+        // Anonymous migrations return the class instance directly
+        $result = require $file;
 
+        if (is_object($result)) {
+            return $result;
+        }
+
+        // Fall back to named class resolution for traditional migrations
         if ($class = $this->getClassFromFile($file)) {
             return new $class;
         }
