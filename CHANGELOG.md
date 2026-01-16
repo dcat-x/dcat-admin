@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.2] - 2026-01-16
+
+### Changed
+
+- 移除筛选按钮边框
+
 ## [1.1.1] - 2026-01-16
 
 ### Changed
@@ -230,7 +236,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.2...HEAD
+[1.1.2]: https://github.com/dcat-x/dcat-admin/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/dcat-x/dcat-admin/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/dcat-x/dcat-admin/compare/v1.0.19...v1.1.0
 [1.0.19]: https://github.com/dcat-x/dcat-admin/compare/v1.0.18...v1.0.19
