@@ -1,6 +1,6 @@
 <div class="btn-group filter-button-group dropdown" style="margin-right:3px">
     <button
-            class="btn btn-white {{ $btn_class }}"
+            class="btn btn-secondary {{ $btn_class }}"
             @if($only_scopes)data-toggle="dropdown"@endif
             @if($scopes->isNotEmpty()) style="border-right: 0" @endif
     >
@@ -16,7 +16,7 @@
             <li role="separator" class="dropdown-divider"></li>
             <li class="dropdown-item"><a href="{{ $url_no_scopes }}">{{ trans('admin.cancel') }}</a></li>
         </ul>
-        <button type="button" class="btn btn-white" data-toggle="dropdown" style="border-left: 0">
+        <button type="button" class="btn btn-secondary" data-toggle="dropdown" style="border-left: 0">
             @if($current_label) <span>{{ $current_label }}&nbsp;</span>@endif <i class="feather icon-chevron-down"></i>
         </button>
     @endif

@@ -309,6 +309,7 @@ table.custom-data-table.data-table tbody tr:hover {
 // Filter Styles
 // ============================================
 .filter-box {
+  margin-top: 0 !important;
   padding: 0.9rem !important;
   border: none !important;
   box-shadow: none !important;
@@ -317,8 +318,6 @@ table.custom-data-table.data-table tbody tr:hover {
 .filter-box .form-group {
   margin-bottom: 0.8rem;
 }
-
-// Filter button group - uses btn-white, no additional styles needed
 
 // ============================================
 // Button Flat Design (Remove Shadows)
