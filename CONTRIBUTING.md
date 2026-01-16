@@ -31,7 +31,7 @@ Bug 报告应包含：
 ### 1. Fork 并克隆仓库
 
 ```bash
-git clone https://github.com/your-username/dcat-admin.git
+git clone https://github.com/dcat-x/dcat-admin.git
 cd dcat-admin
 ```
 
