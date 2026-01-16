@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-01-16
+
+### Changed
+
+- 优化筛选按钮样式和间距
+
 ## [1.1.0] - 2026-01-15
 
 ### Added
@@ -224,7 +230,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/dcat-x/dcat-admin/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/dcat-x/dcat-admin/compare/v1.0.19...v1.1.0
 [1.0.19]: https://github.com/dcat-x/dcat-admin/compare/v1.0.18...v1.0.19
 [1.0.18]: https://github.com/dcat-x/dcat-admin/compare/v1.0.17...v1.0.18
