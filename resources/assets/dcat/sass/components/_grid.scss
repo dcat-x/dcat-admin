@@ -68,6 +68,11 @@
   margin-left: -1rem;
 }
 
+.right-side-filter-container .input-group-prepend .input-group-text {
+  min-width: 110px;
+  justify-content: flex-end;
+}
+
 // 快捷新增
 .quick-create {
   td {

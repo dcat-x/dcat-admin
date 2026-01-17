@@ -1,9 +1,9 @@
 @if($user)
 <li class="dropdown dropdown-user nav-item">
     <a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
-        <div class="user-nav d-sm-flex">
-            <span class="user-name text-bold-600">{{ $user->name }}</span>&nbsp;
-            <span class="fa fa-angle-down"></span>
+        <div class="user-nav d-sm-flex align-items-center">
+            <span class="user-name text-bold-600">{{ $user->name }}</span>
+            <i class="feather icon-chevron-down" style="font-size: 14px; margin-left: 5px; color: #fff;"></i>
         </div>
     </a>
     <div class="dropdown-menu dropdown-menu-right">

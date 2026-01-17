@@ -72,9 +72,17 @@ body.layout-color-fuchsia {
     color: $fuchsia-theme-primary !important;
   }
 
-  .grid-selector .wrap {
-    background-color: $fuchsia-theme-primary;
-    color: #fff;
+  .grid-selector .wrap a {
+    color: $fuchsia-theme-primary;
+
+    &:hover {
+      color: $fuchsia-theme-header;
+    }
+
+    &.active {
+      color: $fuchsia-theme-primary;
+      font-weight: bold;
+    }
   }
 
   .pagination .page-item.active .page-link {

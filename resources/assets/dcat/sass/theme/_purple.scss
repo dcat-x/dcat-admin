@@ -72,9 +72,17 @@ body.layout-color-purple {
     color: $purple-theme-primary !important;
   }
 
-  .grid-selector .wrap {
-    background-color: $purple-theme-primary;
-    color: #fff;
+  .grid-selector .wrap a {
+    color: $purple-theme-primary;
+
+    &:hover {
+      color: $purple-theme-header;
+    }
+
+    &.active {
+      color: $purple-theme-primary;
+      font-weight: bold;
+    }
   }
 
   .pagination .page-item.active .page-link {

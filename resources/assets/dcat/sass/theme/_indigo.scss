@@ -72,9 +72,17 @@ body.layout-color-indigo {
     color: $indigo-theme-primary !important;
   }
 
-  .grid-selector .wrap {
-    background-color: $indigo-theme-primary;
-    color: #fff;
+  .grid-selector .wrap a {
+    color: $indigo-theme-primary;
+
+    &:hover {
+      color: $indigo-theme-header;
+    }
+
+    &.active {
+      color: $indigo-theme-primary;
+      font-weight: bold;
+    }
   }
 
   .pagination .page-item.active .page-link {

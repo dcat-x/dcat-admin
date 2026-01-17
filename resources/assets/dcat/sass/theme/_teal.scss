@@ -72,9 +72,17 @@ body.layout-color-teal {
     color: $teal-theme-primary !important;
   }
 
-  .grid-selector .wrap {
-    background-color: $teal-theme-primary;
-    color: #fff;
+  .grid-selector .wrap a {
+    color: $teal-theme-primary;
+
+    &:hover {
+      color: $teal-theme-header;
+    }
+
+    &.active {
+      color: $teal-theme-primary;
+      font-weight: bold;
+    }
   }
 
   .pagination .page-item.active .page-link {

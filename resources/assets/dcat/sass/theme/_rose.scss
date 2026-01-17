@@ -72,9 +72,17 @@ body.layout-color-rose {
     color: $rose-theme-primary !important;
   }
 
-  .grid-selector .wrap {
-    background-color: $rose-theme-primary;
-    color: #fff;
+  .grid-selector .wrap a {
+    color: $rose-theme-primary;
+
+    &:hover {
+      color: $rose-theme-header;
+    }
+
+    &.active {
+      color: $rose-theme-primary;
+      font-weight: bold;
+    }
   }
 
   .pagination .page-item.active .page-link {

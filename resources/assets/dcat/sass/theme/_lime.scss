@@ -72,9 +72,17 @@ body.layout-color-lime {
     color: $lime-theme-primary !important;
   }
 
-  .grid-selector .wrap {
-    background-color: $lime-theme-primary;
-    color: #fff;
+  .grid-selector .wrap a {
+    color: $lime-theme-primary;
+
+    &:hover {
+      color: $lime-theme-header;
+    }
+
+    &.active {
+      color: $lime-theme-primary;
+      font-weight: bold;
+    }
   }
 
   .pagination .page-item.active .page-link {

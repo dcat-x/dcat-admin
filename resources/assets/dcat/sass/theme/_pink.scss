@@ -72,9 +72,17 @@ body.layout-color-pink {
     color: $pink-theme-primary !important;
   }
 
-  .grid-selector .wrap {
-    background-color: $pink-theme-primary;
-    color: #fff;
+  .grid-selector .wrap a {
+    color: $pink-theme-primary;
+
+    &:hover {
+      color: $pink-theme-header;
+    }
+
+    &.active {
+      color: $pink-theme-primary;
+      font-weight: bold;
+    }
   }
 
   .pagination .page-item.active .page-link {

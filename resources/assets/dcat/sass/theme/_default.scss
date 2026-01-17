@@ -72,9 +72,17 @@ body.layout-color-default {
     color: $default-theme-primary !important;
   }
 
-  .grid-selector .wrap {
-    background-color: $default-theme-primary;
-    color: #fff;
+  .grid-selector .wrap a {
+    color: $default-theme-primary;
+
+    &:hover {
+      color: $default-theme-header;
+    }
+
+    &.active {
+      color: $default-theme-primary;
+      font-weight: bold;
+    }
   }
 
   .pagination .page-item.active .page-link {

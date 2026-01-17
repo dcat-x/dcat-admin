@@ -72,8 +72,14 @@
   font-weight: 500;
 }
 
-.main-sidebar .nav-treeview.nav .nav-item .nav-link {
-  padding: 7px 10px 7px 1.4em !important;
+// Second level menu
+.main-sidebar .nav-treeview.nav > .nav-item > .nav-link {
+  padding: 7px 10px 7px 2.5rem !important;
+}
+
+// Third level menu
+.main-sidebar .nav-treeview .nav-treeview > .nav-item > .nav-link {
+  padding: 7px 10px 7px 4rem !important;
 }
 
 [class*=sidebar-light-] .nav-sidebar > .nav-item > .nav-link.active,
@@ -157,6 +163,47 @@
 
 .navbar-right .navbar-nav li:hover {
   background: rgba(0, 0, 0, 0.05);
+}
+
+// Notification dropdown fixes for 50px navbar
+.header-navbar .navbar-container ul.nav li a.nav-link-label {
+  padding: 0.9rem 0.8rem;
+  position: relative;
+}
+
+.header-navbar .navbar-container ul.nav li .badge.badge-up {
+  top: 4px;
+  right: 2px;
+}
+
+// Notification dropdown menu styles
+.header-navbar .dropdown-menu-media {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+
+  // Hide the default triangle arrow
+  &::before {
+    display: none;
+  }
+
+  .media-list .media {
+    .media-left {
+      margin-right: 1rem;
+
+      i {
+        font-size: 1.4rem;
+      }
+    }
+
+    .media-body {
+      flex: 1;
+
+      .media-heading {
+        margin-bottom: 0.25rem;
+        font-weight: 500;
+      }
+    }
+  }
 }
 
 .navbar-left a {

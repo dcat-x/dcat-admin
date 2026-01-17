@@ -72,9 +72,17 @@ body.layout-color-amber {
     color: $amber-theme-primary !important;
   }
 
-  .grid-selector .wrap {
-    background-color: $amber-theme-primary;
-    color: #fff;
+  .grid-selector .wrap a {
+    color: $amber-theme-primary;
+
+    &:hover {
+      color: $amber-theme-header;
+    }
+
+    &.active {
+      color: $amber-theme-primary;
+      font-weight: bold;
+    }
   }
 
   .pagination .page-item.active .page-link {

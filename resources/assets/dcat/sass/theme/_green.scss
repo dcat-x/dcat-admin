@@ -72,9 +72,17 @@ body.layout-color-green {
     color: $green-theme-primary !important;
   }
 
-  .grid-selector .wrap {
-    background-color: $green-theme-primary;
-    color: #fff;
+  .grid-selector .wrap a {
+    color: $green-theme-primary;
+
+    &:hover {
+      color: $green-theme-header;
+    }
+
+    &.active {
+      color: $green-theme-primary;
+      font-weight: bold;
+    }
   }
 
   .pagination .page-item.active .page-link {

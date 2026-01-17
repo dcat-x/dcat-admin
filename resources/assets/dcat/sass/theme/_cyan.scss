@@ -72,9 +72,17 @@ body.layout-color-cyan {
     color: $cyan-theme-primary !important;
   }
 
-  .grid-selector .wrap {
-    background-color: $cyan-theme-primary;
-    color: #fff;
+  .grid-selector .wrap a {
+    color: $cyan-theme-primary;
+
+    &:hover {
+      color: $cyan-theme-header;
+    }
+
+    &.active {
+      color: $cyan-theme-primary;
+      font-weight: bold;
+    }
   }
 
   .pagination .page-item.active .page-link {
