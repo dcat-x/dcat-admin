@@ -213,7 +213,7 @@ class VersionManager
             return $versions;
         }
 
-        return array_slice($versions, $position++);
+        return array_slice($versions, ++$position);
     }
 
     public function getFileVersions($name)

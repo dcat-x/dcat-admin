@@ -413,7 +413,7 @@ HTML;
             }
             $field->wrap(false);
 
-            return Dump::make($content);
+            return Dump::make($content)->runScript(false);
         });
     }
 

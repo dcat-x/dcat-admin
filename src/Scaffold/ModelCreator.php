@@ -76,6 +76,7 @@ class ModelCreator
             ->replaceDatetimeFormatter($stub)
             ->replaceTable($stub, $this->name)
             ->replaceTimestamp($stub, $timestamps)
+            ->replaceFillable($stub)
             ->replacePrimaryKey($stub, $keyName)
             ->replaceSpace($stub);
 
@@ -231,6 +232,163 @@ class ModelCreator
         $stub = str_replace('DummyTimestamp', $useTimestamps, $stub);
 
         return $this;
+    }
+
+    /**
+     * Replace fillable dummy.
+     *
+     * @param  string  $stub
+     * @return $this
+     */
+    protected function replaceFillable(&$stub)
+    {
+        $modelFillable = $this->formatFillableWithComments();
+        $stub = str_replace('DummyFillable', $modelFillable, $stub);
+
+        return $this;
+    }
+
+    /**
+     * 获取表的所有字段及其注释
+     *
+     * @return array
+     */
+    protected function getTableColumnsWithComments()
+    {
+        $fields = \DB::getSchemaBuilder()->getColumnListing($this->tableName);
+
+        // 获取字段和字段注释 兼容mysql,pgsql,sqlsrv,sqlite
+        $comments = $this->getColumnAndComment();
+        // 排除的字段
+        $excludedFields = ['id', 'created_at', 'updated_at', 'deleted_at', 'password'];
+
+        // 组合字段和注释
+        $result = [];
+        foreach ($fields as $column) {
+            // 跳过排除的字段
+            if (in_array($column, $excludedFields)) {
+                continue;
+            }
+            $result[$column] = $comments[$column] ?? null; // 如果字段没有注释，返回 null
+        }
+
+        return $result;
+    }
+
+    /**
+     * 获取字段和字段注释，兼容 MySQL、MariaDB、PostgreSQL、SQLite、SQL Server
+     *
+     * @return array
+     */
+    public function getColumnAndComment()
+    {
+        $tableName = $this->tableName;
+        $driver = \Illuminate\Support\Facades\DB::getDriverName();
+        $databaseName = config('database.connections.'.$driver.'.database');
+        $comments = [];
+
+        try {
+            switch ($driver) {
+                case 'mysql':
+                case 'mariadb':
+                    // MySQL/MariaDB
+                    $comments = \Illuminate\Support\Facades\DB::table('information_schema.columns')
+                        ->select('COLUMN_NAME as column_name', 'COLUMN_COMMENT as column_comment')
+                        ->where('TABLE_SCHEMA', $databaseName)
+                        ->where('TABLE_NAME', $tableName)
+                        ->get()
+                        ->pluck('column_comment', 'column_name')
+                        ->toArray();
+                    break;
+
+                case 'sqlite':
+                    // SQLite - 没有内置的注释系统
+                    $columns = \Illuminate\Support\Facades\DB::select("PRAGMA table_info('{$tableName}')");
+                    foreach ($columns as $column) {
+                        $comments[$column->name] = ''; // SQLite 不支持列注释
+                    }
+                    break;
+
+                case 'pgsql':
+                    // PostgreSQL
+                    $schema = config('database.connections.'.$driver.'.schema', 'public');
+                    $result = \Illuminate\Support\Facades\DB::select("
+                        SELECT
+                            a.attname as column_name,
+                            pg_catalog.col_description(a.attrelid, a.attnum) as column_comment
+                        FROM
+                            pg_catalog.pg_attribute a
+                        WHERE
+                            a.attrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname = '{$tableName}' AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = '{$schema}'))
+                            AND a.attnum > 0
+                            AND NOT a.attisdropped
+                        ORDER BY a.attnum
+                    ");
+
+                    foreach ($result as $row) {
+                        $comments[$row->column_name] = $row->column_comment;
+                    }
+                    break;
+
+                case 'sqlsrv':
+                    // SQL Server
+                    $result = \Illuminate\Support\Facades\DB::select("
+                        SELECT
+                            c.name as column_name,
+                            CAST(ep.value AS NVARCHAR(MAX)) as column_comment
+                        FROM
+                            sys.columns c
+                        LEFT JOIN
+                            sys.extended_properties ep ON ep.major_id = c.object_id AND ep.minor_id = c.column_id AND ep.name = 'MS_Description'
+                        WHERE
+                            c.object_id = OBJECT_ID('{$tableName}')
+                        ORDER BY
+                            c.column_id
+                    ");
+
+                    foreach ($result as $row) {
+                        $comments[$row->column_name] = $row->column_comment;
+                    }
+                    break;
+            }
+        } catch (\Exception $e) {
+            // 异常处理，返回空数组
+            $comments = [];
+        }
+
+        // 确保所有字段都有注释条目（即使为空）
+        $allColumns = \Illuminate\Support\Facades\Schema::getColumnListing($tableName);
+        foreach ($allColumns as $column) {
+            if (! array_key_exists($column, $comments)) {
+                $comments[$column] = '';
+            }
+        }
+
+        return $comments;
+    }
+
+    /**
+     * 将字段和注释转换为 protected $fillable 的形式
+     *
+     * @return string
+     */
+    protected function formatFillableWithComments()
+    {
+        $columnsWithComments = $this->getTableColumnsWithComments();
+        $fillable = [];
+
+        foreach ($columnsWithComments as $column => $comment) {
+            // 格式化每个字段和注释
+            $fillable[] = "'{$column}', // {$comment}";
+        }
+
+        // 拼接成 protected $fillable 的形式
+        $fillableString = "// 可以被批量赋值的属性 也方便查看表所有字段及注释\n";
+        $fillableString .= "    /** protected \$fillable = [\n";
+        $fillableString .= '        '.implode(" \n        ", $fillable)."\n";
+        $fillableString .= '    ]; */';
+
+        return $fillableString;
     }
 
     /**
