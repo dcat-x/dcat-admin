@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.5] - 2026-01-17
+
+### Changed
+
+- 优化多处 UI 样式和布局
+
+### Fixed
+
+- 修复多项 Bug 和兼容性改进
+
 ## [1.1.4] - 2026-01-16
 
 ### Changed
@@ -248,7 +258,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.4...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.5...HEAD
+[1.1.5]: https://github.com/dcat-x/dcat-admin/compare/v1.1.4...v1.1.5
 [1.1.4]: https://github.com/dcat-x/dcat-admin/compare/v1.1.3...v1.1.4
 [1.1.3]: https://github.com/dcat-x/dcat-admin/compare/v1.1.2...v1.1.3
 [1.1.2]: https://github.com/dcat-x/dcat-admin/compare/v1.1.1...v1.1.2
