@@ -37,13 +37,61 @@ class Permission
             return $next($request);
         }
 
-        if (! $user->allPermissions()->first(function ($permission) use ($request) {
+        // 检查基于权限 http_path 的访问控制
+        if ($user->allPermissions()->first(function ($permission) use ($request) {
             return $permission->shouldPassThrough($request);
         })) {
-            Checker::error();
+            return $next($request);
         }
 
+        // 检查基于角色绑定菜单的访问控制
+        if (config('admin.menu.role_bind_menu', true) && $this->checkMenuPermission($request, $user)) {
+            return $next($request);
+        }
+
+        Checker::error();
+
         return $next($request);
+    }
+
+    /**
+     * 检查基于菜单绑定角色的权限
+     */
+    protected function checkMenuPermission(Request $request, $user): bool
+    {
+        $path = '/'.trim($request->path(), '/');
+        $prefix = config('admin.route.prefix', 'admin');
+
+        // 移除前缀
+        if ($prefix && strpos($path, '/'.$prefix) === 0) {
+            $path = substr($path, strlen($prefix) + 1);
+        }
+
+        $path = ltrim($path, '/');
+
+        // 移除路径中的 ID 部分 (如 users/1/edit -> users/*/edit)
+        $pathPattern = preg_replace('/\/\d+/', '/*', $path);
+
+        $menuModel = config('admin.database.menu_model');
+        $menu = $menuModel::with('roles')->where(function ($query) use ($path, $pathPattern) {
+            $query->where('uri', $path)
+                ->orWhere('uri', $pathPattern)
+                ->orWhere('uri', 'like', $path.'%');
+        })->first();
+
+        if (! $menu) {
+            return false;
+        }
+
+        $menuRoles = $menu->roles->pluck('slug')->toArray();
+
+        // 如果菜单没有绑定角色，允许访问
+        if (empty($menuRoles)) {
+            return true;
+        }
+
+        // 检查用户角色是否在菜单绑定的角色中
+        return $user->inRoles($menuRoles);
     }
 
     /**
