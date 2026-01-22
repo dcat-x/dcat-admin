@@ -85,9 +85,9 @@ class Permission
 
         $menuRoles = $menu->roles->pluck('slug')->toArray();
 
-        // 如果菜单没有绑定角色，允许访问
+        // 如果菜单没有绑定角色，普通用户不允许访问
         if (empty($menuRoles)) {
-            return true;
+            return false;
         }
 
         // 检查用户角色是否在菜单绑定的角色中
