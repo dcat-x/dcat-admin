@@ -576,12 +576,12 @@ class Admin
                     }
 
                     // 部门管理路由
-                    if (config('admin.department.enable', true)) {
+                    if (config('admin.department.enable', false)) {
                         $router->resource('auth/departments', 'DepartmentController');
                     }
 
                     // 数据规则路由
-                    if (config('admin.data_permission.enable', true)) {
+                    if (config('admin.data_permission.enable', false)) {
                         $router->resource('auth/data-rules', 'DataRuleController');
                     }
                 });

@@ -69,7 +69,7 @@ trait HasDataPermission
      */
     public function applyFormFieldPermissions(): self
     {
-        if (! config('admin.data_permission.enable', true)) {
+        if (! config('admin.data_permission.enable', false)) {
             return $this;
         }
 

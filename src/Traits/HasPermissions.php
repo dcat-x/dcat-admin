@@ -142,7 +142,7 @@ trait HasPermissions
      */
     public function getDataRules(int $menuId)
     {
-        if (! config('admin.data_permission.enable', true)) {
+        if (! config('admin.data_permission.enable', false)) {
             return collect();
         }
 

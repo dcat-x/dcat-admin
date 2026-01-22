@@ -21,7 +21,7 @@ class UserController extends AdminController
     protected function grid()
     {
         $with = ['roles'];
-        if (config('admin.department.enable', true)) {
+        if (config('admin.department.enable', false)) {
             $with[] = 'departments';
         }
 
@@ -126,7 +126,7 @@ class UserController extends AdminController
     public function form()
     {
         $with = ['roles'];
-        if (config('admin.department.enable', true)) {
+        if (config('admin.department.enable', false)) {
             $with[] = 'departments';
         }
 
@@ -176,7 +176,7 @@ class UserController extends AdminController
                     });
             }
 
-            if (config('admin.department.enable', true)) {
+            if (config('admin.department.enable', false)) {
                 $departmentModel = config('admin.database.departments_model');
 
                 $form->multipleSelect('departments', trans('admin.departments'))
@@ -215,7 +215,7 @@ class UserController extends AdminController
             }
         })->saved(function (Form $form) {
             // 处理主部门设置
-            if (config('admin.department.enable', true)) {
+            if (config('admin.department.enable', false)) {
                 $primaryDepartmentId = $form->input('primary_department_id');
                 $departmentIds = $form->input('departments') ?: [];
 
