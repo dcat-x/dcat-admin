@@ -212,20 +212,38 @@ class Menu
      */
     protected function checkPermission($item)
     {
+        // 如果不启用角色绑定菜单功能，直接返回 true
+        if (! config('admin.menu.role_bind_menu', true)) {
+            return true;
+        }
+
         $permissionIds = $item['permission_id'] ?? null;
         $roles = array_column(Helper::array($item['roles'] ?? []), 'slug');
         $permissions = array_column(Helper::array($item['permissions'] ?? []), 'slug');
 
+        // 如果菜单没有绑定任何权限和角色，默认可见
         if (! $permissionIds && ! $roles && ! $permissions) {
             return true;
         }
 
         $user = Admin::user();
 
-        if (! $user || $user->visible($roles)) {
+        // 未登录用户不能查看需要权限的菜单
+        if (! $user) {
+            return false;
+        }
+
+        // 超级管理员可以查看所有菜单
+        if ($user->isAdministrator()) {
             return true;
         }
 
+        // 检查用户角色是否匹配菜单绑定的角色
+        if (! empty($roles) && $user->visible($roles)) {
+            return true;
+        }
+
+        // 检查用户是否有菜单绑定的权限
         foreach (array_merge(Helper::array($permissionIds), $permissions) as $permission) {
             if ($user->can($permission)) {
                 return true;
