@@ -258,7 +258,8 @@ return [
     */
     'department' => [
         // Whether enable department feature
-        'enable' => true,
+        // Set to true only if you have run the department migration
+        'enable' => false,
 
         // Whether user can belong to multiple departments
         'user_multi_department' => true,
@@ -275,7 +276,8 @@ return [
     */
     'data_permission' => [
         // Whether enable data permission
-        'enable' => true,
+        // Set to true only if you have run the data permission migration
+        'enable' => false,
 
         // System variables
         'variables' => [

@@ -158,9 +158,13 @@ class Role extends Model
 
             $model->permissions()->detach();
 
-            $model->departments()->detach();
+            if (config('admin.department.enable', false)) {
+                $model->departments()->detach();
+            }
 
-            $model->dataRules()->detach();
+            if (config('admin.data_permission.enable', false)) {
+                $model->dataRules()->detach();
+            }
         });
     }
 }
