@@ -215,6 +215,10 @@ class DataPermission
      */
     protected function getPrimaryDepartmentId()
     {
+        if (! config('admin.department.enable', false)) {
+            return null;
+        }
+
         if (! method_exists($this->user, 'primaryDepartment')) {
             return null;
         }
@@ -229,6 +233,10 @@ class DataPermission
      */
     protected function getDepartmentIds(): array
     {
+        if (! config('admin.department.enable', false)) {
+            return [];
+        }
+
         if (! method_exists($this->user, 'departments')) {
             return [];
         }
@@ -241,6 +249,10 @@ class DataPermission
      */
     protected function getPrimaryDepartmentPath()
     {
+        if (! config('admin.department.enable', false)) {
+            return null;
+        }
+
         if (! method_exists($this->user, 'primaryDepartment')) {
             return null;
         }

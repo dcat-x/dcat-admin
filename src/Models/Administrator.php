@@ -104,6 +104,10 @@ class Administrator extends Model implements AuthenticatableContract, Authorizab
      */
     public function getPrimaryDepartmentIdAttribute(): ?int
     {
+        if (! config('admin.department.enable', false)) {
+            return null;
+        }
+
         $primary = $this->primaryDepartment()->first();
 
         return $primary ? $primary->id : null;
@@ -114,6 +118,10 @@ class Administrator extends Model implements AuthenticatableContract, Authorizab
      */
     public function getDepartmentIdsAttribute(): string
     {
+        if (! config('admin.department.enable', false)) {
+            return '';
+        }
+
         return $this->departments()->pluck('id')->implode(',');
     }
 
@@ -122,7 +130,8 @@ class Administrator extends Model implements AuthenticatableContract, Authorizab
      */
     public function getDepartmentRoles()
     {
-        if (! config('admin.department.inherit_department_roles', true)) {
+        // 部门功能未启用或不继承部门角色时，返回空集合
+        if (! config('admin.department.enable', false) || ! config('admin.department.inherit_department_roles', true)) {
             return collect();
         }
 
