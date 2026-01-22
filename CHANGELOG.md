@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.13] - 2026-01-22
+
+### Fixed
+
+- 允许访问没有对应菜单的接口
+
 ## [1.1.12] - 2026-01-22
 
 ### Fixed
@@ -300,7 +306,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.12...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.13...HEAD
+[1.1.13]: https://github.com/dcat-x/dcat-admin/compare/v1.1.12...v1.1.13
 [1.1.12]: https://github.com/dcat-x/dcat-admin/compare/v1.1.11...v1.1.12
 [1.1.11]: https://github.com/dcat-x/dcat-admin/compare/v1.1.10...v1.1.11
 [1.1.10]: https://github.com/dcat-x/dcat-admin/compare/v1.1.9...v1.1.10
