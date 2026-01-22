@@ -73,14 +73,25 @@ class Permission
         $pathPattern = preg_replace('/\/\d+/', '/*', $path);
 
         $menuModel = config('admin.database.menu_model');
+
+        // 精确匹配或模式匹配
         $menu = $menuModel::with('roles')->where(function ($query) use ($path, $pathPattern) {
             $query->where('uri', $path)
-                ->orWhere('uri', $pathPattern)
-                ->orWhere('uri', 'like', $path.'%');
+                ->orWhere('uri', $pathPattern);
         })->first();
 
+        // 如果没有精确匹配，尝试前缀匹配（子路径）
         if (! $menu) {
-            return false;
+            $menu = $menuModel::with('roles')
+                ->whereRaw("? LIKE CONCAT(uri, '%')", [$path])
+                ->where('uri', '!=', '')
+                ->orderByRaw('LENGTH(uri) DESC')
+                ->first();
+        }
+
+        // 如果没有对应的菜单，允许访问（可能是 API 接口或异步请求）
+        if (! $menu) {
+            return true;
         }
 
         $menuRoles = $menu->roles->pluck('slug')->toArray();
