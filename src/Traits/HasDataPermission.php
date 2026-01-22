@@ -30,6 +30,11 @@ trait HasDataPermission
     {
         // 添加全局作用域
         static::addGlobalScope('data_permission', function (Builder $builder) {
+            // 数据权限功能未启用时跳过
+            if (! config('admin.data_permission.enable', false)) {
+                return;
+            }
+
             if (! static::$dataPermissionEnabled) {
                 return;
             }
