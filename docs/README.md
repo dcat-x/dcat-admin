@@ -112,6 +112,12 @@
 - [提示窗 (Tooltip)](widgets/tooltip.md)
 - [Markdown](widgets/markdown.md)
 - [卡片](widgets/box.md)
+- [表格](widgets/table.md)
+- [代码](widgets/code.md)
+- [终端输出](widgets/terminal.md)
+- [调试输出](widgets/dump.md)
+- [弹窗表格](widgets/dialog-table.md)
+- [暗黑模式切换器](widgets/dark-mode-switcher.md)
 
 ## 高级功能
 
