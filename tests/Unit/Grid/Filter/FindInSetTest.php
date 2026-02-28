@@ -1,0 +1,77 @@
+<?php
+
+namespace Dcat\Admin\Tests\Unit\Grid\Filter;
+
+use Dcat\Admin\Grid\Filter\FindInSet;
+use Dcat\Admin\Tests\TestCase;
+
+class FindInSetTest extends TestCase
+{
+    protected function makeFilter(string $column, string $label = ''): FindInSet
+    {
+        $filter = new FindInSet($column, $label);
+
+        $grid = $this->createMock(\Dcat\Admin\Grid::class);
+        $grid->method('makeName')->willReturnCallback(fn ($name) => $name);
+
+        $parentFilter = $this->createMock(\Dcat\Admin\Grid\Filter::class);
+        $parentFilter->method('grid')->willReturn($grid);
+
+        $filter->setParent($parentFilter);
+
+        return $filter;
+    }
+
+    public function test_constructor_sets_column_and_label(): void
+    {
+        $filter = new FindInSet('tags', 'Tags');
+        $this->assertEquals('tags', $filter->originalColumn());
+        $this->assertEquals('Tags', $filter->getLabel());
+    }
+
+    public function test_condition_returns_null_when_value_is_null(): void
+    {
+        $filter = $this->makeFilter('tags');
+        $result = $filter->condition(['other' => 'test']);
+
+        $this->assertNull($result);
+    }
+
+    public function test_condition_returns_where_with_closure(): void
+    {
+        $filter = $this->makeFilter('tags');
+        $condition = $filter->condition(['tags' => 'php']);
+
+        $this->assertIsArray($condition);
+        $this->assertArrayHasKey('where', $condition);
+        $this->assertIsCallable($condition['where'][0]);
+    }
+
+    public function test_condition_sets_value_and_input(): void
+    {
+        $filter = $this->makeFilter('tags');
+        $filter->condition(['tags' => 'laravel']);
+
+        $this->assertEquals('laravel', $filter->getValue());
+        $this->assertEquals('laravel', $filter->input);
+    }
+
+    public function test_condition_with_numeric_value(): void
+    {
+        $filter = $this->makeFilter('category_ids');
+        $condition = $filter->condition(['category_ids' => '5']);
+
+        $this->assertIsArray($condition);
+        $this->assertArrayHasKey('where', $condition);
+    }
+
+    public function test_condition_with_empty_string_returns_where(): void
+    {
+        $filter = $this->makeFilter('tags');
+        $condition = $filter->condition(['tags' => '']);
+
+        // Empty string is not null, condition should still be built
+        $this->assertIsArray($condition);
+        $this->assertArrayHasKey('where', $condition);
+    }
+}
