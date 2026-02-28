@@ -74,7 +74,11 @@ class AdminController extends Controller
             ->translation($this->translation())
             ->title($this->title())
             ->description($this->description()['index'] ?? trans('admin.list'))
-            ->body($this->grid());
+            ->body(
+                method_exists($this, 'customIndex')
+                    ? $this->customIndex()
+                    : $this->grid()
+            );
     }
 
     /**
@@ -89,7 +93,11 @@ class AdminController extends Controller
             ->translation($this->translation())
             ->title($this->title())
             ->description($this->description()['show'] ?? trans('admin.show'))
-            ->body($this->detail($id));
+            ->body(
+                method_exists($this, 'customShow')
+                    ? $this->customShow($id)
+                    : $this->detail($id)
+            );
     }
 
     /**
@@ -104,7 +112,11 @@ class AdminController extends Controller
             ->translation($this->translation())
             ->title($this->title())
             ->description($this->description()['edit'] ?? trans('admin.edit'))
-            ->body($this->form()->edit($id));
+            ->body(
+                method_exists($this, 'customEdit')
+                    ? $this->customEdit($id)
+                    : $this->form()->edit($id)
+            );
     }
 
     /**
@@ -118,7 +130,11 @@ class AdminController extends Controller
             ->translation($this->translation())
             ->title($this->title())
             ->description($this->description()['create'] ?? trans('admin.create'))
-            ->body($this->form());
+            ->body(
+                method_exists($this, 'customCreate')
+                    ? $this->customCreate()
+                    : $this->form()
+            );
     }
 
     /**
@@ -129,6 +145,10 @@ class AdminController extends Controller
      */
     public function update($id)
     {
+        if (method_exists($this, 'customUpdate')) {
+            return $this->customUpdate($id);
+        }
+
         return $this->form()->update($id);
     }
 
@@ -139,6 +159,10 @@ class AdminController extends Controller
      */
     public function store()
     {
+        if (method_exists($this, 'customStore')) {
+            return $this->customStore();
+        }
+
         return $this->form()->store();
     }
 
@@ -150,6 +174,10 @@ class AdminController extends Controller
      */
     public function destroy($id)
     {
+        if (method_exists($this, 'customDestroy')) {
+            return $this->customDestroy($id);
+        }
+
         return $this->form()->destroy($id);
     }
 }

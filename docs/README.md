@@ -128,4 +128,5 @@
 - [自定义登录认证](advanced/custom-authentication.md)
 - [自定义头部导航](advanced/custom-navbar.md)
 - [自定义图表](advanced/custom-chart.md)
+- [自定义页面视图](advanced/custom-view.md)
 - [多语言](advanced/trans.md)
