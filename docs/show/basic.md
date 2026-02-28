@@ -62,10 +62,14 @@ $show->avatar()->unescape()->as(function ($avatar) {
 ```
 
 ### 设置字段宽度
-字段宽度默认值为"3"，可以设置1-12之间的数字。
+字段宽度默认值为 field: 8、label: 2，可以设置1-12之间的数字。
 
 ```php
+// 设置字段宽度（标签宽度保持默认的 2）
 $show->created_at->width(4);
+
+// 同时设置标签宽度
+$show->created_at->width(4, 3);
 ```
 
 ### 修改面板的样式和标题
