@@ -268,7 +268,7 @@ $grid->column('content')->expand(function (Grid\Displayers\Expand $expand) {
 
 #### 异步加载
 
-> {tip} 更多用法请参考文档[异步加载](../lazy.md)
+> {tip} 更多用法请参考文档[异步加载](../widgets/lazy.md)
 
 定义渲染类，继承`Dcat\Admin\Support\LazyRenderable`
 
@@ -319,9 +319,9 @@ $grid->post->expand(function () {
 
 #### 异步加载工具表单
 
-定义[工具表单](../widgets-form.md)类如下
+定义[工具表单](../form/widgets-form.md)类如下
 
-> {tip} 更多用法请参考[异步加载](../lazy.md)
+> {tip} 更多用法请参考[异步加载](../widgets/lazy.md)
 
 ```php
 <?php
@@ -406,7 +406,7 @@ $grid->column('content')
 
 #### 异步加载
 
-> {tip}  关于异步加载的更具体用法，请参考文档[异步加载](../lazy.md)
+> {tip}  关于异步加载的更具体用法，请参考文档[异步加载](../widgets/lazy.md)
 
 定义渲染类，继承`Dcat\Admin\Support\LazyRenderable`
 
@@ -458,9 +458,9 @@ $grid->post->modal(function ($modal) {
 
 #### 异步加载工具表单
 
-定义[工具表单](../widgets-form.md)类如下
+定义[工具表单](../form/widgets-form.md)类如下
 
-> {tip} 更多用法请参考[异步加载](../lazy.md)
+> {tip} 更多用法请参考[异步加载](../widgets/lazy.md)
 
 ```php
 <?php

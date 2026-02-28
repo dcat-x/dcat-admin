@@ -228,7 +228,7 @@ $form->saving(function (Form $form) {
 
 > {tip} 此方法在`creating`、`editing`事件中均不可用。
 
-详细用法请参考文档 [动作和表单响应](../response.md) 章节。
+详细用法请参考文档 [动作和表单响应](../advanced/response.md) 章节。
 
 
 redirect（局部刷新/单页刷新）

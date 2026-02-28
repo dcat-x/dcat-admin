@@ -421,7 +421,7 @@ $filter->equal('user_id')
 
 定义渲染类如下，需要继承`Dcat\Admin\Grid\LazyRenderable`
 
-> {tip} 这里使用了数据表格异步加载功能，详细用法请参考[异步加载](../lazy.md)
+> {tip} 这里使用了数据表格异步加载功能，详细用法请参考[异步加载](../widgets/lazy.md)
 
 ```php
 <?php

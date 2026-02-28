@@ -192,7 +192,7 @@ class UserController extends AdminController
 
 `Dcat Admin` 构建页面并不直接依赖于`Model`，而是引入了数据仓库作为中间层，让页面的构建不再与数据的读写产生强耦合关系。
 
-数据仓库是`Dcat Admin`中对数据增删改查操作接口的具体实现，更详细用法请参考[数据仓库](../guide/repository.md)。
+数据仓库是`Dcat Admin`中对数据增删改查操作接口的具体实现，更详细用法请参考[数据仓库](../model-tree/repository.md)。
 
 > {tip} 如果你的数据来自`MySQL`，那么你也可以直接使用`Model`实例，底层会自动把`Model`转化为数据仓库实例。这里为了便于大家理解其中的概念，所以创建了数据仓库文件。
 

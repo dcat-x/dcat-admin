@@ -123,7 +123,7 @@ $grid->actions(function (Grid\Displayers\Actions $actions) {
 
 先定义行操作类继承`Dcat\Admin\Grid\RowAction`
 
-> {tip} 动作类更详细的用法，请参考[动作基本使用](../action.md)以及[数据表格动作](../action-grid.md)。
+> {tip} 动作类更详细的用法，请参考[动作基本使用](../action/basic.md)以及[数据表格动作](../action/grid.md)。
 
 ```php
 <?php
@@ -190,7 +190,7 @@ $grid->actions(function (Grid\Displayers\Actions $actions) {
 
 如果你的操作类需要与后台接口交互，则可以在你的操作类中加上`handle`方法，这样就可以很方便的在同一个类里面处理完所有逻辑
 
-> {tip} 动作类更详细的用法，请参考[动作基本使用](../action.md)以及[数据表格动作](../action-grid.md)。
+> {tip} 动作类更详细的用法，请参考[动作基本使用](../action/basic.md)以及[数据表格动作](../action/grid.md)。
 
 ```php
 <?php
@@ -293,4 +293,4 @@ $grid->actions(function (Grid\Displayers\Actions $actions) {
 
 ## 表单弹窗
 
-请参考文档[工具表单 - 弹窗](../widgets-form.md#modal)
+请参考文档[工具表单 - 弹窗](../form/widgets-form.md#modal)

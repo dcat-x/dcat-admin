@@ -2,7 +2,7 @@
 
 数据表格中所有使用到字段的地方都会自动读取语言包中的翻译。
 
-> {tip} 语言包的详细使用方法请参考<a>[多语言](../trans.md)</a>。
+> {tip} 语言包的详细使用方法请参考<a>[多语言](../advanced/trans.md)</a>。
 
 ### 语言包名称
 语言包名称需要与控制器名相对应，假如控制器名`UserProfileController`，则对应的语言包为`resources/lang/{当前语言}/user-profile.php`（需要转化为小写中划线风格）。

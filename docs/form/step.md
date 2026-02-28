@@ -4,7 +4,7 @@
 
 前往[https://github.com/dcat-admin/form-step](https://github.com/dcat-admin/form-step)下载分步表单扩展，然后安装并启用。
 
-> {tip} 扩展安装请参考文档[扩展基本使用](../extension-f.md)章节。
+> {tip} 扩展安装请参考文档[扩展基本使用](../extension/basic.md)章节。
 
 ## 简单示例
 

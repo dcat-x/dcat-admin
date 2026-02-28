@@ -1,7 +1,7 @@
 # 表格数据源
 
 
-数据仓库(`Repository`)是一个可以提供特定接口对数据进行读写操作的类，通过数据仓库的引入，可以让页面的构建不再关心数据读写功能的具体实现，开发者只需要实现特定的操作接口即可轻松切换数据源。关于数据仓库的详细用法请参考文档[数据仓库](../model-repository.md)。
+数据仓库(`Repository`)是一个可以提供特定接口对数据进行读写操作的类，通过数据仓库的引入，可以让页面的构建不再关心数据读写功能的具体实现，开发者只需要实现特定的操作接口即可轻松切换数据源。关于数据仓库的详细用法请参考文档[数据仓库](../model-tree/repository.md)。
 
 
 > {tip} 表格的数据是通过 `Dcat\Admin\Contracts\Repository::get` 接口获取的。
@@ -144,7 +144,7 @@ $grid = Grid::make(MovieModel::with('categories'), function (Grid $grid) {
 
 如果数据是来自外部的API，只需要覆写`Repository`中的`get`方法既可, 具体用法可参考下面的示例，采用`豆瓣电影`API获取并展示数据：
 
-> {tip} 需要注意的是分页和不分页的情况下`get`方法返回的参数值类型是不同的，具体使用可参考[数据仓库 - get](../model-repository.md#get)。
+> {tip} 需要注意的是分页和不分页的情况下`get`方法返回的参数值类型是不同的，具体使用可参考[数据仓库 - get](../model-tree/repository.md#get)。
 
 
 ```php
@@ -270,5 +270,5 @@ $quickSearch = $model->grid()->quickSearch()->value();
 
 如果来源数据需要执行比较复杂的SQL语句获取，那么有两个办法, 第一个办法就是上面的方法，覆盖掉`Repository`的`get`方法实现。
 
-> {tip} 需要注意的是分页和不分页的情况下`get`方法返回的参数值类型是不同的，具体使用可参考[数据仓库 - get](../model-repository.md#get)。
+> {tip} 需要注意的是分页和不分页的情况下`get`方法返回的参数值类型是不同的，具体使用可参考[数据仓库 - get](../model-tree/repository.md#get)。
 

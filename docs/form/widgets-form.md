@@ -99,7 +99,7 @@ $this->confirm('title', 'content');
 
 ### 响应方法
 
-参考 [动作以及表单响应](../response.md) 章节
+参考 [动作以及表单响应](../advanced/response.md) 章节
 
 
 ### 自定义表单保存的后续行为

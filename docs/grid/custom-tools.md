@@ -95,7 +95,7 @@ if (in_array($gender = request()->get('gender'), ['m', 'f'])) {
 
 如果你的工具按钮需要与后端API进行交互，则可以参考以下方式定义：
 
-> {tip} `AbstractTool`类是属于`Dcat\Admin\Actions\Action`的子类，本质也是动作类的一种，更详细用法请参考[动作类基本使用](../action.md)。
+> {tip} `AbstractTool`类是属于`Dcat\Admin\Actions\Action`的子类，本质也是动作类的一种，更详细用法请参考[动作类基本使用](../action/basic.md)。
 
 
 ```php
@@ -225,7 +225,7 @@ $grid->batchActions(function (Grid\Tools\BatchActions $batch) {
 
 先定义操作类`app/Admin/Extensions/Tools/ReleasePost.php`，继承`Dcat\Admin\Grid\BatchAction`：
 
-> {tip} `BatchAction`类是属于`Dcat\Admin\Actions\Action`的子类，本质也是动作类的一种，更详细用法请参考[动作类基本使用](../action.md)。
+> {tip} `BatchAction`类是属于`Dcat\Admin\Actions\Action`的子类，本质也是动作类的一种，更详细用法请参考[动作类基本使用](../action/basic.md)。
 
 ```php
 <?php
@@ -367,4 +367,4 @@ JS;
 
 ### 表单弹窗
 
-请参考文档[工具表单 - 弹窗](../widgets-form.md#modal)
+请参考文档[工具表单 - 弹窗](../form/widgets-form.md#modal)
