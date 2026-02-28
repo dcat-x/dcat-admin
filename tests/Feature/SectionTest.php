@@ -3,26 +3,15 @@
 namespace Dcat\Admin\Tests\Feature;
 
 use Dcat\Admin\Tests\TestCase;
-use PHPUnit\Framework\Attributes\Group;
 
-/**
- * Section功能测试.
- *
- * 需要完整 Laravel 应用环境
- */
-#[Group('integration')]
 class SectionTest extends TestCase
 {
-    protected $login = false;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        // 检查视图命名空间是否已注册
-        if (! $this->app['view']->exists('admin-tests::test')) {
-            $this->markTestSkipped('需要完整 Laravel 应用环境');
-        }
+        // 注册测试视图命名空间
+        $this->app['view']->addNamespace('admin-tests', __DIR__.'/../resources/views');
     }
 
     public function test_inject_values()

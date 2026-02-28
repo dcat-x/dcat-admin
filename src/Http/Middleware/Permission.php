@@ -50,8 +50,6 @@ class Permission
         }
 
         Checker::error();
-
-        return $next($request);
     }
 
     /**

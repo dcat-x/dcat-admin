@@ -6,6 +6,7 @@ use Dcat\Admin\Admin;
 use Dcat\Admin\Models\DataRule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
 
 class DataPermission
 {
@@ -15,9 +16,14 @@ class DataPermission
     protected $user;
 
     /**
-     * 数据规则缓存
+     * 数据规则缓存（请求级别）
      */
     protected static $rulesCache = [];
+
+    /**
+     * 缓存所属的请求哈希，用于检测跨请求
+     */
+    protected static $cacheRequestHash;
 
     public function __construct($user = null)
     {
@@ -31,6 +37,13 @@ class DataPermission
     {
         if (! $this->user) {
             return collect();
+        }
+
+        // 确保缓存在新请求时自动重置
+        $requestHash = spl_object_id(App::make('request'));
+        if (static::$cacheRequestHash !== $requestHash) {
+            static::$rulesCache = [];
+            static::$cacheRequestHash = $requestHash;
         }
 
         $cacheKey = $this->user->id.'_'.$menuId;
@@ -114,6 +127,28 @@ class DataPermission
         $field = $rule->field;
         $condition = $rule->condition;
         $value = $this->resolveValue($rule);
+
+        // 验证字段名仅包含合法的列名字符
+        if (! preg_match('/^[a-zA-Z_][a-zA-Z0-9_.]*$/', $field)) {
+            return;
+        }
+
+        $validConditions = [
+            DataRule::CONDITION_EQUAL,
+            DataRule::CONDITION_NOT_EQUAL,
+            DataRule::CONDITION_GREATER,
+            DataRule::CONDITION_GREATER_EQUAL,
+            DataRule::CONDITION_LESS,
+            DataRule::CONDITION_LESS_EQUAL,
+            DataRule::CONDITION_LIKE,
+            DataRule::CONDITION_IN,
+            DataRule::CONDITION_NOT_IN,
+            DataRule::CONDITION_BETWEEN,
+        ];
+
+        if (! in_array($condition, $validConditions, true)) {
+            return;
+        }
 
         switch ($condition) {
             case DataRule::CONDITION_EQUAL:

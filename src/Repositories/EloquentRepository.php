@@ -259,19 +259,9 @@ class EloquentRepository extends Repository implements TreeRepository
      */
     protected function wrapMySqlColumn($column)
     {
-        if (Str::contains($column, '`')) {
-            return $column;
-        }
+        $grammar = $this->model()->getConnection()->getQueryGrammar();
 
-        $columns = explode('.', $column);
-
-        foreach ($columns as &$column) {
-            if (! Str::contains($column, '`')) {
-                $column = "`{$column}`";
-            }
-        }
-
-        return implode('.', $columns);
+        return $grammar->wrap($column);
     }
 
     /**

@@ -338,7 +338,7 @@ trait UploadField
         }
 
         if (! $fieldRules = $this->getRules()) {
-            return false;
+            return null;
         }
 
         Arr::set($rules, $this->column, $fieldRules);
@@ -370,7 +370,11 @@ trait UploadField
      */
     public function destroyIfChanged($file)
     {
-        if (! $file || ! $this->original) {
+        if (! $this->original) {
+            return;
+        }
+
+        if (! $file) {
             return $this->destroy();
         }
 

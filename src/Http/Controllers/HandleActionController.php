@@ -45,6 +45,10 @@ class HandleActionController
         /** @var Action $action */
         $action = app($actionClass);
 
+        if (! $action instanceof Action) {
+            throw new AdminException("Action [{$actionClass}] must be an instance of ".Action::class.'.');
+        }
+
         if (! method_exists($action, 'handle')) {
             throw new AdminException("Action method {$actionClass}::handle() does not exist.");
         }

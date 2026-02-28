@@ -46,8 +46,8 @@ class ValueController
 
         $instance = app($key);
 
-        if (! method_exists($instance, 'handle')) {
-            throw new Exception("The method '{$key}::handle()' does not exist.");
+        if (! method_exists($instance, 'handle') || ! method_exists($instance, 'passesAuthorization')) {
+            throw new Exception("Class [{$key}] is not a valid value request handler.");
         }
 
         return $instance;

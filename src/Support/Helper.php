@@ -678,7 +678,7 @@ class Helper
             return strlen($namespace);
         }, SORT_REGULAR, true);
 
-        $prefix = explode($class, '\\')[0];
+        $prefix = explode('\\', $class)[0];
 
         if ($map->isEmpty()) {
             if (Str::startsWith($class, 'App\\')) {

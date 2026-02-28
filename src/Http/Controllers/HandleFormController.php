@@ -40,7 +40,13 @@ class HandleFormController
 
         $form->form();
 
-        return $this->getField($request, $form)->upload($this->file());
+        $field = $this->getField($request, $form);
+
+        if (! $field) {
+            return $this->responseErrorMessage('Field not found.');
+        }
+
+        return $field->upload($this->file());
     }
 
     /**
@@ -78,6 +84,10 @@ class HandleFormController
 
         $field = $this->getField($request, $form);
 
+        if (! $field) {
+            return $this->responseErrorMessage('Field not found.');
+        }
+
         $field->deleteFile($request->key);
 
         return $this->responseDeleted();
@@ -102,6 +112,10 @@ class HandleFormController
 
         /** @var Form $form */
         $form = app($formClass);
+
+        if (! $form instanceof Form) {
+            throw new AdminException("Form [{$formClass}] must be an instance of ".Form::class.'.');
+        }
 
         if (! method_exists($form, 'handle')) {
             throw new AdminException("Form method {$formClass}::handle() does not exist.");
