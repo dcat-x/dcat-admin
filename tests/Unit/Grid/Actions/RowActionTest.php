@@ -164,4 +164,48 @@ class RowActionTest extends TestCase
         $this->assertEquals('Remove', $ref1->getValue($actions));
         $this->assertEquals('trash-2', $ref2->getValue($actions));
     }
+
+    public function test_set_quick_edit_text(): void
+    {
+        $actions = $this->createActions();
+        $actions->setQuickEditText('Quick');
+
+        $ref = new \ReflectionProperty($actions, 'quickEditText');
+        $ref->setAccessible(true);
+
+        $this->assertEquals('Quick', $ref->getValue($actions));
+    }
+
+    public function test_set_quick_edit_icon(): void
+    {
+        $actions = $this->createActions();
+        $actions->setQuickEditIcon('zap');
+
+        $ref = new \ReflectionProperty($actions, 'quickEditIcon');
+        $ref->setAccessible(true);
+
+        $this->assertEquals('zap', $ref->getValue($actions));
+    }
+
+    public function test_set_edit_icon(): void
+    {
+        $actions = $this->createActions();
+        $actions->setEditIcon('pencil');
+
+        $ref = new \ReflectionProperty($actions, 'editIcon');
+        $ref->setAccessible(true);
+
+        $this->assertEquals('pencil', $ref->getValue($actions));
+    }
+
+    public function test_set_view_text(): void
+    {
+        $actions = $this->createActions();
+        $actions->setViewText('Detail');
+
+        $ref = new \ReflectionProperty($actions, 'viewText');
+        $ref->setAccessible(true);
+
+        $this->assertEquals('Detail', $ref->getValue($actions));
+    }
 }

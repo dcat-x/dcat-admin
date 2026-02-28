@@ -110,6 +110,33 @@ class BatchActionTest extends TestCase
         $this->assertStringStartsWith('.grid-batch-action-', $action->selectorPrefix);
     }
 
+    public function test_divider_adds_html_to_actions(): void
+    {
+        $batchActions = new BatchActions;
+        $initialCount = $this->getActionsCount($batchActions);
+
+        $batchActions->divider();
+
+        $ref = new \ReflectionProperty($batchActions, 'actions');
+        $ref->setAccessible(true);
+        $actions = $ref->getValue($batchActions);
+
+        $this->assertEquals($initialCount + 1, $actions->count());
+
+        // The divider adds an ActionDivider instance
+        $lastItem = $actions->last();
+        $this->assertInstanceOf(\Dcat\Admin\Grid\Tools\ActionDivider::class, $lastItem);
+    }
+
+    public function test_divider_returns_this(): void
+    {
+        $batchActions = new BatchActions;
+
+        $result = $batchActions->divider();
+
+        $this->assertSame($batchActions, $result);
+    }
+
     protected function getActionsCount(BatchActions $batchActions): int
     {
         $ref = new \ReflectionProperty($batchActions, 'actions');

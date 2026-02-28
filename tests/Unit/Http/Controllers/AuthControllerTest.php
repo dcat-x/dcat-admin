@@ -2,8 +2,13 @@
 
 namespace Dcat\Admin\Tests\Unit\Http\Controllers;
 
+use Dcat\Admin\Admin;
 use Dcat\Admin\Http\Controllers\AuthController;
+use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Lang;
 use Mockery;
 
 class AuthControllerTest extends TestCase
@@ -168,5 +173,225 @@ class AuthControllerTest extends TestCase
         $reflection->setAccessible(true);
 
         $this->assertEquals('username', $reflection->invoke($controller));
+    }
+
+    protected function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
+    }
+
+    public function test_get_failed_login_message_returns_translation_when_available(): void
+    {
+        Lang::shouldReceive('has')->with('admin.auth_failed')->once()->andReturn(true);
+        Lang::shouldReceive('get')->with('admin.auth_failed', [], null)->once()->andReturn('认证失败');
+
+        $controller = new AuthController;
+        $method = new \ReflectionMethod($controller, 'getFailedLoginMessage');
+        $method->setAccessible(true);
+
+        $result = $method->invoke($controller);
+
+        $this->assertSame('认证失败', $result);
+    }
+
+    public function test_get_failed_login_message_returns_default_when_no_translation(): void
+    {
+        Lang::shouldReceive('has')->with('admin.auth_failed')->once()->andReturn(false);
+
+        $controller = new AuthController;
+        $method = new \ReflectionMethod($controller, 'getFailedLoginMessage');
+        $method->setAccessible(true);
+
+        $result = $method->invoke($controller);
+
+        $this->assertSame('These credentials do not match our records.', $result);
+    }
+
+    public function test_get_redirect_path_returns_admin_root_by_default(): void
+    {
+        $controller = new AuthController;
+        $method = new \ReflectionMethod($controller, 'getRedirectPath');
+        $method->setAccessible(true);
+
+        $result = $method->invoke($controller);
+
+        $this->assertSame(admin_url('/'), $result);
+    }
+
+    public function test_get_login_returns_content_when_not_authenticated(): void
+    {
+        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard->shouldReceive('check')->once()->andReturn(false);
+
+        Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
+
+        $content = Mockery::mock(Content::class);
+        $content->shouldReceive('full')->once()->andReturnSelf();
+        $content->shouldReceive('body')->once()->andReturnSelf();
+
+        $controller = new AuthController;
+        $result = $controller->getLogin($content);
+
+        $this->assertSame($content, $result);
+    }
+
+    public function test_get_login_redirects_when_already_authenticated(): void
+    {
+        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard->shouldReceive('check')->once()->andReturn(true);
+
+        Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
+
+        $content = Mockery::mock(Content::class);
+
+        $controller = new AuthController;
+        $result = $controller->getLogin($content);
+
+        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $result);
+        $this->assertSame(admin_url('/'), $result->getTargetUrl());
+    }
+
+    public function test_get_logout_calls_guard_logout_and_invalidates_session(): void
+    {
+        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard->shouldReceive('logout')->once();
+
+        Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
+
+        $session = Mockery::mock(\Illuminate\Contracts\Session\Session::class);
+        $session->shouldReceive('invalidate')->once();
+
+        $request = Request::create('/auth/logout', 'GET');
+        $request->setLaravelSession($session);
+        $request->headers->remove('X-PJAX');
+
+        $controller = new AuthController;
+        $result = $controller->getLogout($request);
+
+        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $result);
+        $this->assertSame(admin_url('auth/login'), $result->getTargetUrl());
+    }
+
+    public function test_post_login_returns_error_when_validation_fails(): void
+    {
+        $request = Request::create('/auth/login', 'POST', [
+            'username' => '',
+            'password' => '',
+        ]);
+        $request->headers->set('X-Requested-With', 'XMLHttpRequest');
+        $this->app->instance('request', $request);
+
+        $controller = new AuthController;
+        $result = $controller->postLogin($request);
+
+        $this->assertInstanceOf(\Illuminate\Http\JsonResponse::class, $result);
+
+        $data = $result->getData(true);
+        $this->assertNotEmpty($data);
+    }
+
+    public function test_post_login_returns_error_when_authentication_fails(): void
+    {
+        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard->shouldReceive('attempt')
+            ->with(['username' => 'admin', 'password' => 'wrong'], false)
+            ->once()
+            ->andReturn(false);
+
+        Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
+
+        $request = Request::create('/auth/login', 'POST', [
+            'username' => 'admin',
+            'password' => 'wrong',
+        ]);
+        $request->headers->set('X-Requested-With', 'XMLHttpRequest');
+        $this->app->instance('request', $request);
+
+        $controller = new AuthController;
+        $result = $controller->postLogin($request);
+
+        $this->assertInstanceOf(\Illuminate\Http\JsonResponse::class, $result);
+
+        $data = $result->getData(true);
+        $this->assertNotEmpty($data);
+    }
+
+    public function test_guard_returns_admin_guard(): void
+    {
+        $controller = new AuthController;
+        $method = new \ReflectionMethod($controller, 'guard');
+        $method->setAccessible(true);
+
+        $result = $method->invoke($controller);
+        $expected = Admin::guard();
+
+        $this->assertSame($expected, $result);
+    }
+
+    public function test_get_setting_method_exists_and_accepts_content(): void
+    {
+        $controller = new AuthController;
+        $method = new \ReflectionMethod($controller, 'getSetting');
+
+        $this->assertTrue($method->isPublic());
+        $this->assertCount(1, $method->getParameters());
+        $this->assertSame('content', $method->getParameters()[0]->getName());
+    }
+
+    public function test_put_setting_method_exists(): void
+    {
+        $controller = new AuthController;
+
+        $this->assertTrue(method_exists($controller, 'putSetting'));
+
+        $method = new \ReflectionMethod($controller, 'putSetting');
+        $this->assertTrue($method->isPublic());
+    }
+
+    public function test_setting_form_returns_form_instance(): void
+    {
+        $this->app['config']->set('admin.database.users_model', \Dcat\Admin\Models\Administrator::class);
+
+        $user = Mockery::mock(\Dcat\Admin\Models\Administrator::class)->makePartial();
+        $user->shouldReceive('getKey')->andReturn(1);
+
+        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard->shouldReceive('user')->andReturn($user);
+
+        Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
+
+        $controller = new AuthController;
+        $method = new \ReflectionMethod($controller, 'settingForm');
+        $method->setAccessible(true);
+
+        $result = $method->invoke($controller);
+
+        $this->assertInstanceOf(\Dcat\Admin\Form::class, $result);
+    }
+
+    public function test_send_login_response_regenerates_session(): void
+    {
+        $session = Mockery::mock(\Illuminate\Contracts\Session\Session::class);
+        $session->shouldReceive('regenerate')->once();
+        $session->shouldReceive('previousUrl')->andReturn(null);
+
+        $request = Request::create('/auth/login', 'POST');
+        $request->setLaravelSession($session);
+        $this->app->instance('request', $request);
+
+        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard->shouldReceive('user')->andReturn(null);
+
+        Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
+
+        $controller = new AuthController;
+        $method = new \ReflectionMethod($controller, 'sendLoginResponse');
+        $method->setAccessible(true);
+
+        $result = $method->invoke($controller, $request);
+
+        // sendLoginResponse returns a response; session regenerate should have been called
+        $this->assertNotNull($result);
     }
 }
