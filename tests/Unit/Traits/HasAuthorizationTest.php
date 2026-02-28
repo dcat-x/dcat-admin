@@ -1,0 +1,96 @@
+<?php
+
+namespace Dcat\Admin\Tests\Unit\Traits;
+
+use Dcat\Admin\Tests\TestCase;
+use Dcat\Admin\Traits\HasAuthorization;
+
+class HasAuthorizationTest extends TestCase
+{
+    public function test_authorize_returns_true_by_default(): void
+    {
+        $obj = new class
+        {
+            use HasAuthorization;
+        };
+
+        $reflection = new \ReflectionMethod($obj, 'authorize');
+        $result = $reflection->invoke($obj, null);
+
+        $this->assertTrue($result);
+    }
+
+    public function test_authorize_can_be_overridden_to_return_false(): void
+    {
+        $obj = new class
+        {
+            use HasAuthorization;
+
+            protected function authorize($user): bool
+            {
+                return $user !== null;
+            }
+        };
+
+        $reflection = new \ReflectionMethod($obj, 'authorize');
+
+        $this->assertFalse($reflection->invoke($obj, null));
+    }
+
+    public function test_authorize_override_with_user(): void
+    {
+        $obj = new class
+        {
+            use HasAuthorization;
+
+            protected function authorize($user): bool
+            {
+                return $user !== null;
+            }
+        };
+
+        $reflection = new \ReflectionMethod($obj, 'authorize');
+        $mockUser = new \stdClass;
+
+        $this->assertTrue($reflection->invoke($obj, $mockUser));
+    }
+
+    public function test_failed_authorization_aborts_with_403(): void
+    {
+        $obj = new class
+        {
+            use HasAuthorization;
+        };
+
+        $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+
+        $obj->failedAuthorization();
+    }
+
+    public function test_failed_authorization_status_code_is_403(): void
+    {
+        $obj = new class
+        {
+            use HasAuthorization;
+        };
+
+        try {
+            $obj->failedAuthorization();
+            $this->fail('Expected HttpException was not thrown.');
+        } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
+            $this->assertSame(403, $e->getStatusCode());
+        }
+    }
+
+    public function test_trait_methods_exist(): void
+    {
+        $obj = new class
+        {
+            use HasAuthorization;
+        };
+
+        $this->assertTrue(method_exists($obj, 'passesAuthorization'));
+        $this->assertTrue(method_exists($obj, 'authorize'));
+        $this->assertTrue(method_exists($obj, 'failedAuthorization'));
+    }
+}

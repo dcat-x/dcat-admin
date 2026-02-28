@@ -1,0 +1,102 @@
+<?php
+
+namespace Dcat\Admin\Tests\Unit\Grid\Filter\Presenter;
+
+use Dcat\Admin\Grid\Filter\AbstractFilter;
+use Dcat\Admin\Grid\Filter\Presenter\DateTime;
+use Dcat\Admin\Tests\TestCase;
+use ReflectionProperty;
+
+class DateTimeTest extends TestCase
+{
+    protected function makeDateTime(array $options = []): DateTime
+    {
+        return new DateTime($options);
+    }
+
+    protected function attachFilter(DateTime $dt): void
+    {
+        $filter = $this->createMock(AbstractFilter::class);
+        $filter->method('column')->willReturn('created_at');
+        $filter->group = null;
+
+        $dt->setParent($filter);
+    }
+
+    public function test_constructor_sets_default_format(): void
+    {
+        $dt = $this->makeDateTime();
+
+        $ref = new ReflectionProperty($dt, 'options');
+        $ref->setAccessible(true);
+        $options = $ref->getValue($dt);
+
+        $this->assertEquals('YYYY-MM-DD HH:mm:ss', $options['format']);
+    }
+
+    public function test_constructor_with_custom_format(): void
+    {
+        $dt = $this->makeDateTime(['format' => 'YYYY-MM-DD']);
+
+        $ref = new ReflectionProperty($dt, 'options');
+        $ref->setAccessible(true);
+        $options = $ref->getValue($dt);
+
+        $this->assertEquals('YYYY-MM-DD', $options['format']);
+    }
+
+    public function test_constructor_sets_locale_from_config(): void
+    {
+        $dt = $this->makeDateTime();
+
+        $ref = new ReflectionProperty($dt, 'options');
+        $ref->setAccessible(true);
+        $options = $ref->getValue($dt);
+
+        $this->assertArrayHasKey('locale', $options);
+        $this->assertEquals(config('app.locale'), $options['locale']);
+    }
+
+    public function test_constructor_with_custom_locale(): void
+    {
+        $dt = $this->makeDateTime(['locale' => 'zh-CN']);
+
+        $ref = new ReflectionProperty($dt, 'options');
+        $ref->setAccessible(true);
+        $options = $ref->getValue($dt);
+
+        $this->assertEquals('zh-CN', $options['locale']);
+    }
+
+    public function test_constructor_preserves_extra_options(): void
+    {
+        $dt = $this->makeDateTime(['minDate' => '2020-01-01', 'maxDate' => '2025-12-31']);
+
+        $ref = new ReflectionProperty($dt, 'options');
+        $ref->setAccessible(true);
+        $options = $ref->getValue($dt);
+
+        $this->assertEquals('2020-01-01', $options['minDate']);
+        $this->assertEquals('2025-12-31', $options['maxDate']);
+        $this->assertArrayHasKey('format', $options);
+    }
+
+    public function test_default_variables_contains_options_and_group(): void
+    {
+        $dt = $this->makeDateTime();
+        $this->attachFilter($dt);
+
+        $vars = $dt->defaultVariables();
+
+        $this->assertArrayHasKey('options', $vars);
+        $this->assertArrayHasKey('group', $vars);
+        $this->assertIsArray($vars['options']);
+    }
+
+    public function test_view_returns_datetime_view(): void
+    {
+        $dt = $this->makeDateTime();
+
+        $this->assertEquals('admin::filter.datetime', $dt->view());
+    }
+}
