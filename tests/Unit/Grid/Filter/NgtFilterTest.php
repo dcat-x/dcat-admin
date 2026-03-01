@@ -1,0 +1,87 @@
+<?php
+
+namespace Dcat\Admin\Tests\Unit\Grid\Filter;
+
+use Dcat\Admin\Grid\Filter\AbstractFilter;
+use Dcat\Admin\Grid\Filter\Ngt;
+use Dcat\Admin\Tests\TestCase;
+
+class NgtFilterTest extends TestCase
+{
+    protected function getProtectedProperty(object $object, string $property)
+    {
+        $reflection = new \ReflectionProperty($object, $property);
+        $reflection->setAccessible(true);
+
+        return $reflection->getValue($object);
+    }
+
+    protected function makeFilter(string $column, string $label = ''): Ngt
+    {
+        $filter = new Ngt($column, $label);
+
+        $grid = $this->createMock(\Dcat\Admin\Grid::class);
+        $grid->method('makeName')->willReturnCallback(fn ($name) => $name);
+
+        $parentFilter = $this->createMock(\Dcat\Admin\Grid\Filter::class);
+        $parentFilter->method('grid')->willReturn($grid);
+
+        $filter->setParent($parentFilter);
+
+        return $filter;
+    }
+
+    public function test_extends_abstract_filter(): void
+    {
+        $filter = $this->makeFilter('price');
+
+        $this->assertInstanceOf(AbstractFilter::class, $filter);
+    }
+
+    public function test_view_property_is_filter_gt(): void
+    {
+        $filter = $this->makeFilter('price');
+
+        $this->assertEquals('admin::filter.gt', $this->getProtectedProperty($filter, 'view'));
+    }
+
+    public function test_condition_returns_less_than_or_equal_where(): void
+    {
+        $filter = $this->makeFilter('price', 'Price');
+
+        $condition = $filter->condition(['price' => '100']);
+
+        $this->assertIsArray($condition);
+        $this->assertArrayHasKey('where', $condition);
+        $this->assertEquals(['price', '<=', '100'], $condition['where']);
+    }
+
+    public function test_condition_returns_null_when_value_is_null(): void
+    {
+        $filter = $this->makeFilter('price', 'Price');
+
+        $condition = $filter->condition(['other' => 'value']);
+
+        $this->assertNull($condition);
+    }
+
+    public function test_condition_sets_value_property(): void
+    {
+        $filter = $this->makeFilter('price', 'Price');
+
+        $filter->condition(['price' => '50']);
+
+        $this->assertEquals('50', $filter->getValue());
+    }
+
+    public function test_condition_with_numeric_value(): void
+    {
+        $filter = $this->makeFilter('amount', 'Amount');
+
+        $condition = $filter->condition(['amount' => '999']);
+
+        $this->assertIsArray($condition);
+        $this->assertEquals('<=', $condition['where'][1]);
+        $this->assertEquals('999', $condition['where'][2]);
+    }
+}
