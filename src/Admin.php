@@ -31,7 +31,7 @@ class Admin
     use HasAssets;
     use HasHtml;
 
-    const VERSION = '1.1.15';
+    const VERSION = '1.1.16';
 
     const SECTION = [
         // 往 <head> 标签内输入内容
