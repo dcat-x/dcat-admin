@@ -226,7 +226,6 @@ export default class Helpers {
 
             layer.open({
                 type: 1,
-                shade: 0.2,
                 title: false,
                 maxmin: false,
                 shadeClose: true,

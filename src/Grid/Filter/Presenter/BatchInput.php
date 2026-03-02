@@ -296,7 +296,6 @@ class BatchInput extends Presenter
             title: '<b>' + cfg.batchTitle + '</b>',
             area: ['500px', 'auto'],
             offset: '100px',
-            shade: [0.3, '#000'],
             content: content,
             btn: false,
             shadeClose: true,

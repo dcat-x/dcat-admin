@@ -85,7 +85,7 @@ function listen(Dcat) {
         Dcat.NP.configure({parent: '.app-content'});
 
         // layer弹窗设置
-        layer.config({maxmin: true, moveOut: true, shade: false});
+        layer.config({maxmin: true, moveOut: true, shade: [0.3, '#000']});
 
         // 修复 Bootstrap 4 modal aria-hidden 警告
         // 在 modal 隐藏前将焦点移出，避免 aria-hidden 与焦点冲突
