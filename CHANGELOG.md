@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.20] - 2026-03-02
+
+### Fixed
+
+- 修复子菜单项 active 状态下 padding 对齐问题
+
 ## [1.1.19] - 2026-03-02
 
 ### Added
@@ -351,7 +357,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.19...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.20...HEAD
+[1.1.20]: https://github.com/dcat-x/dcat-admin/compare/v1.1.19...v1.1.20
 [1.1.19]: https://github.com/dcat-x/dcat-admin/compare/v1.1.18...v1.1.19
 [1.1.18]: https://github.com/dcat-x/dcat-admin/compare/v1.1.17...v1.1.18
 [1.1.17]: https://github.com/dcat-x/dcat-admin/compare/v1.1.16...v1.1.17
