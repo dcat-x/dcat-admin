@@ -307,5 +307,6 @@ return [
         'invalid_count' => ':count invalid',
         'searching' => 'Searching...',
         'clear' => 'Clear',
+        'example' => "Example:\nuser1@example.com\nuser2@example.com, user3@example.com",
     ],
 ];

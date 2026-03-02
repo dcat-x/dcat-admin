@@ -138,6 +138,13 @@ class BatchInputTest extends TestCase
         $this->assertEquals('', $this->getProtectedProperty($batch, 'itemLabel'));
     }
 
+    public function test_default_batch_placeholder_is_empty(): void
+    {
+        $batch = $this->makeBatchInput();
+
+        $this->assertEquals('', $this->getProtectedProperty($batch, 'batchPlaceholder'));
+    }
+
     public function test_default_query_field_is_keywords(): void
     {
         $batch = $this->makeBatchInput();
@@ -314,6 +321,22 @@ class BatchInputTest extends TestCase
         $this->assertEquals('phone', $this->getProtectedProperty($batch, 'itemLabel'));
     }
 
+    public function test_batch_placeholder_is_fluent(): void
+    {
+        $batch = $this->makeBatchInput();
+
+        $this->assertSame($batch, $batch->batchPlaceholder('Enter emails...'));
+    }
+
+    public function test_batch_placeholder_sets_value(): void
+    {
+        $batch = $this->makeBatchInput();
+
+        $batch->batchPlaceholder('Enter phone numbers...');
+
+        $this->assertEquals('Enter phone numbers...', $this->getProtectedProperty($batch, 'batchPlaceholder'));
+    }
+
     public function test_query_field_is_fluent(): void
     {
         $batch = $this->makeBatchInput();
@@ -381,6 +404,7 @@ class BatchInputTest extends TestCase
             ->batchMax(50)
             ->validationPattern('^\d+$', 'Numbers only')
             ->itemLabel('ID')
+            ->batchPlaceholder('Enter IDs here...')
             ->queryField('ids')
             ->model('App\\Models\\User', 'id', 'name');
 
@@ -388,6 +412,7 @@ class BatchInputTest extends TestCase
         $this->assertEquals('Search...', $this->getProtectedProperty($batch, 'placeholder'));
         $this->assertEquals('Batch Lookup', $this->getProtectedProperty($batch, 'batchTitle'));
         $this->assertEquals(50, $this->getProtectedProperty($batch, 'batchMax'));
+        $this->assertEquals('Enter IDs here...', $this->getProtectedProperty($batch, 'batchPlaceholder'));
         $this->assertEquals('ids', $this->getProtectedProperty($batch, 'queryField'));
     }
 

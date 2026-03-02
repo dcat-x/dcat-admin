@@ -50,6 +50,7 @@
             idx = layer.open({
                 type: 1,
                 area: options.area,
+                shade: [0.3, '#000'],
                 content: tpl,
                 title: title,
                 success: function (a, idx) {

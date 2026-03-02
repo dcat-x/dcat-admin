@@ -33,6 +33,8 @@ class BatchInput extends Presenter
 
     protected string $itemLabel = '';
 
+    protected string $batchPlaceholder = '';
+
     protected string $queryField = 'keywords';
 
     protected ?string $model = null;
@@ -133,6 +135,18 @@ class BatchInput extends Presenter
     }
 
     /**
+     * 设置批量弹窗 textarea 的 placeholder.
+     *
+     * @return $this
+     */
+    public function batchPlaceholder(string $placeholder)
+    {
+        $this->batchPlaceholder = $placeholder;
+
+        return $this;
+    }
+
+    /**
      * 设置 AJAX 提交的字段名.
      *
      * @return $this
@@ -210,6 +224,7 @@ class BatchInput extends Presenter
             'validationPattern' => $this->validationPattern,
             'validationMessage' => $this->validationMessage,
             'itemLabel' => $this->itemLabel ?: trans('admin.batch_input.item'),
+            'batchPlaceholder' => $this->batchPlaceholder ?: trans('admin.batch_input.example'),
             'queryField' => $this->queryField,
             'initItems' => $this->resolveDisplayItems(),
             'lang' => [
@@ -280,7 +295,7 @@ class BatchInput extends Presenter
                 '<i class="' + cfg.batchIcon + '" style="margin-right:6px;color:#999;"></i>' +
                 cfg.batchDescription +
             '</div>' +
-            '<textarea id="batch-textarea-' + id + '" style="width:100%;height:200px;border:1px solid #dcdfe6;border-radius:4px;padding:12px;font-size:13px;line-height:1.8;resize:vertical;color:#333;" placeholder=""></textarea>' +
+            '<textarea id="batch-textarea-' + id + '" style="width:100%;height:200px;border:1px solid #dcdfe6;border-radius:4px;padding:12px;font-size:13px;line-height:1.8;resize:vertical;color:#333;" placeholder="' + cfg.batchPlaceholder.replace(/"/g, '&quot;') + '"></textarea>' +
             '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-bottom:16px;border-bottom:1px solid #f0f0f0;">' +
                 '<span id="batch-stats-' + id + '" style="font-size:13px;color:#999;">' + cfg.lang.identified.replace(':count', '0') + '</span>' +
                 '<a href="javascript:void(0)" id="batch-clear-' + id + '" style="font-size:13px;color:#ff4d4f;text-decoration:none;">' + cfg.lang.clear + '</a>' +
@@ -297,6 +312,7 @@ class BatchInput extends Presenter
             area: ['500px', 'auto'],
             offset: '100px',
             content: content,
+            shade: [0.3, '#000'],
             btn: false,
             shadeClose: true,
             success: function(layero) {

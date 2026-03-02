@@ -308,5 +308,6 @@ return [
         'invalid_count' => ':count 个格式无效',
         'searching' => '查询中...',
         'clear' => '清空',
+        'example' => "例如：\nuser1@example.com\nuser2@example.com, user3@example.com",
     ],
 ];

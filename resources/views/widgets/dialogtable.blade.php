@@ -49,6 +49,7 @@
             title: $(_title).html(),
             area: area,
             offset: offset,
+            shade: [0.3, '#000'],
             maxmin: {{ $maxmin }},
             resize: {{ $resize }},
             content: $(_temp).html(),

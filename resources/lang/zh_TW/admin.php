@@ -242,5 +242,6 @@ return [
         'invalid_count' => ':count 個格式無效',
         'searching' => '查詢中...',
         'clear' => '清除',
+        'example' => "例如：\nuser1@example.com\nuser2@example.com, user3@example.com",
     ],
 ];
