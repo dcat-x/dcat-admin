@@ -73,12 +73,14 @@
 }
 
 // Second level menu
-.main-sidebar .nav-treeview.nav > .nav-item > .nav-link {
+.main-sidebar .nav-treeview.nav > .nav-item > .nav-link,
+.main-sidebar .nav-treeview.nav > .nav-item > .nav-link.active {
   padding: 7px 10px 7px 2.5rem !important;
 }
 
 // Third level menu
-.main-sidebar .nav-treeview .nav-treeview > .nav-item > .nav-link {
+.main-sidebar .nav-treeview .nav-treeview > .nav-item > .nav-link,
+.main-sidebar .nav-treeview .nav-treeview > .nav-item > .nav-link.active {
   padding: 7px 10px 7px 4rem !important;
 }
 
