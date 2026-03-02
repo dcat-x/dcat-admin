@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.18] - 2026-03-02
+
+### Added
+
+- 新增 BatchInput 批量输入过滤器，支持单条搜索与批量导入
+
+### Fixed
+
+- 统一 layer 弹窗遮罩配置为 shade: [0.3, '#000']
+
 ## [1.1.17] - 2026-03-02
 
 ### Changed
@@ -335,7 +345,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.17...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.18...HEAD
+[1.1.18]: https://github.com/dcat-x/dcat-admin/compare/v1.1.17...v1.1.18
 [1.1.17]: https://github.com/dcat-x/dcat-admin/compare/v1.1.16...v1.1.17
 [1.1.16]: https://github.com/dcat-x/dcat-admin/compare/v1.1.15...v1.1.16
 [1.1.15]: https://github.com/dcat-x/dcat-admin/compare/v1.1.14...v1.1.15
