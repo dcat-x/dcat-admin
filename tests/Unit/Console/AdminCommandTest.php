@@ -1,0 +1,118 @@
+<?php
+
+namespace Dcat\Admin\Tests\Unit\Console;
+
+use Dcat\Admin\Console\AdminCommand;
+use Dcat\Admin\Tests\TestCase;
+use Illuminate\Console\Command;
+use Mockery;
+
+class AdminCommandTest extends TestCase
+{
+    protected function tearDown(): void
+    {
+        Mockery::close();
+
+        parent::tearDown();
+    }
+
+    public function test_class_exists(): void
+    {
+        $this->assertTrue(class_exists(AdminCommand::class));
+    }
+
+    public function test_extends_illuminate_console_command(): void
+    {
+        $this->assertTrue(is_subclass_of(AdminCommand::class, Command::class));
+    }
+
+    public function test_signature_default_value(): void
+    {
+        $ref = new \ReflectionProperty(AdminCommand::class, 'signature');
+        $defaultValue = $ref->getDefaultValue();
+
+        $this->assertEquals('admin', $defaultValue);
+    }
+
+    public function test_description_default_value(): void
+    {
+        $ref = new \ReflectionProperty(AdminCommand::class, 'description');
+        $defaultValue = $ref->getDefaultValue();
+
+        $this->assertEquals('List all admin commands', $defaultValue);
+    }
+
+    public function test_has_static_logo_property(): void
+    {
+        $this->assertTrue(property_exists(AdminCommand::class, 'logo'));
+
+        $ref = new \ReflectionProperty(AdminCommand::class, 'logo');
+
+        $this->assertTrue($ref->isPublic());
+        $this->assertTrue($ref->isStatic());
+    }
+
+    public function test_logo_is_ascii_art_string(): void
+    {
+        $this->assertIsString(AdminCommand::$logo);
+        $this->assertNotEmpty(AdminCommand::$logo);
+        // The logo is ASCII art that visually renders "DCAT ADMIN"
+        $this->assertStringContainsString('____', AdminCommand::$logo);
+        $this->assertStringContainsString('/', AdminCommand::$logo);
+    }
+
+    public function test_logo_contains_multiple_lines(): void
+    {
+        $lines = explode("\n", AdminCommand::$logo);
+
+        $this->assertGreaterThan(3, count($lines));
+    }
+
+    public function test_has_required_methods(): void
+    {
+        $methods = [
+            'handle',
+            'listAdminCommands',
+            'getColumnWidth',
+            'strlen',
+        ];
+
+        foreach ($methods as $method) {
+            $this->assertTrue(
+                method_exists(AdminCommand::class, $method),
+                "AdminCommand should have method '{$method}'"
+            );
+        }
+    }
+
+    public function test_strlen_is_public_static(): void
+    {
+        $ref = new \ReflectionMethod(AdminCommand::class, 'strlen');
+
+        $this->assertTrue($ref->isPublic());
+        $this->assertTrue($ref->isStatic());
+    }
+
+    public function test_strlen_with_ascii_string(): void
+    {
+        $result = AdminCommand::strlen('hello');
+
+        $this->assertIsInt($result);
+        $this->assertEquals(5, $result);
+    }
+
+    public function test_strlen_with_empty_string(): void
+    {
+        $result = AdminCommand::strlen('');
+
+        $this->assertIsInt($result);
+        $this->assertEquals(0, $result);
+    }
+
+    public function test_handle_is_public(): void
+    {
+        $ref = new \ReflectionMethod(AdminCommand::class, 'handle');
+
+        $this->assertTrue($ref->isPublic());
+    }
+}
