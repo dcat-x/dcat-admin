@@ -480,6 +480,86 @@ $filter->in('user_id')
 
 
 
+<a name="batchInput"></a>
+### 批量输入 (batchInput)
+
+批量输入过滤器适用于需要通过多个值进行批量查询的场景，如根据一批用户ID、手机号、邮箱等进行查找。支持单条回车搜索和批量弹窗导入两种模式。
+
+基本用法：
+
+```php
+$filter->in('user_id')->batchInput('/api/user-lookup');
+```
+
+后端接口需要接收 POST 请求，返回格式如下：
+
+```json
+{
+    "status": true,
+    "data": {
+        "matched_count": 3,
+        "matched": {
+            "1": "张三",
+            "2": "李四",
+            "5": "王五"
+        }
+    }
+}
+```
+
+#### 配置回显模型
+
+通过 `model` 方法可以配置回显模型，使页面刷新后已选中的标签能正确显示：
+
+```php
+$filter->in('user_id')
+    ->batchInput('/api/user-lookup')
+    ->model(\App\Models\User::class, 'id', 'name');
+```
+
+#### 设置验证规则
+
+通过 `validationPattern` 方法可以设置 JS 正则表达式来验证输入内容：
+
+```php
+$filter->in('email')
+    ->batchInput('/api/email-lookup')
+    ->validationPattern('^[\\w.-]+@[\\w.-]+\\.\\w+$', '请输入正确的邮箱格式');
+```
+
+#### 完整配置示例
+
+```php
+$filter->in('phone')
+    ->batchInput('/api/phone-lookup')
+    ->placeholder('输入手机号回车搜索...')
+    ->batchTitle('批量导入手机号')
+    ->batchDescription('输入手机号，支持换行、逗号、分号分隔')
+    ->batchIcon('feather icon-phone')
+    ->batchButtonText('批量导入')
+    ->batchMax(200)
+    ->validationPattern('^1[3-9]\\d{9}$', '请输入正确的手机号')
+    ->itemLabel('手机号')
+    ->queryField('phones')
+    ->model(\App\Models\User::class, 'id', 'phone');
+```
+
+#### 可用方法
+
+| 方法 | 说明 | 默认值 |
+|---|---|---|
+| `placeholder($text)` | 输入框占位文本 | `输入关键词回车搜索...` |
+| `batchTitle($title)` | 批量弹窗标题 | `批量查询` |
+| `batchDescription($desc)` | 批量弹窗描述文字 | `输入内容，支持换行、逗号、分号分隔，可直接粘贴` |
+| `batchIcon($icon)` | 弹窗描述区图标 | `feather icon-list` |
+| `batchButtonText($text)` | 批量按钮文字 | `批量` |
+| `batchMax($max)` | 最大允许条数 | `100` |
+| `validationPattern($pattern, $msg)` | JS 正则验证 | 无 |
+| `itemLabel($label)` | 项目标签（用于提示文案） | `条记录` |
+| `queryField($field)` | AJAX 提交的字段名 | `keywords` |
+| `model($class, $key, $text)` | 回显模型配置 | 无 |
+
+
 <a name="select"></a>
 ### select
 ```php

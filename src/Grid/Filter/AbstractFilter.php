@@ -339,6 +339,16 @@ abstract class AbstractFilter
     }
 
     /**
+     * Batch input filter.
+     *
+     * @return Filter\Presenter\BatchInput
+     */
+    public function batchInput(string $lookupUrl)
+    {
+        return $this->setPresenter(new Filter\Presenter\BatchInput($lookupUrl));
+    }
+
+    /**
      * @param  array  $options
      * @return Radio
      */
