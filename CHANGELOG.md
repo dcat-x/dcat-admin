@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.19] - 2026-03-02
+
+### Added
+
+- BatchInput 新增 batchPlaceholder 方法，layer.open 显式设置 shade
+
 ## [1.1.18] - 2026-03-02
 
 ### Added
@@ -345,7 +351,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.18...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.19...HEAD
+[1.1.19]: https://github.com/dcat-x/dcat-admin/compare/v1.1.18...v1.1.19
 [1.1.18]: https://github.com/dcat-x/dcat-admin/compare/v1.1.17...v1.1.18
 [1.1.17]: https://github.com/dcat-x/dcat-admin/compare/v1.1.16...v1.1.17
 [1.1.16]: https://github.com/dcat-x/dcat-admin/compare/v1.1.15...v1.1.16
