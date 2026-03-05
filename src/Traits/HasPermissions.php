@@ -21,6 +21,31 @@ trait HasPermissions
     protected ?array $permissionIds = null;
 
     /**
+     * permission_key 缓存
+     */
+    protected ?array $permissionKeys = null;
+
+    /**
+     * 用户角色集合缓存
+     */
+    protected ?Collection $userRolesCache = null;
+
+    /**
+     * 用户角色 slug 缓存
+     */
+    protected ?array $userRoleSlugs = null;
+
+    /**
+     * 用户角色 id 缓存
+     */
+    protected ?array $userRoleIds = null;
+
+    /**
+     * 用户角色 id（字符串）缓存
+     */
+    protected ?array $userRoleIdStrings = null;
+
+    /**
      * Get all permissions of user.
      *
      * @return mixed
@@ -87,11 +112,8 @@ trait HasPermissions
      */
     public function isRole(string $role): bool
     {
-        /* @var Collection $roles */
-        $roles = $this->getUserRoles();
-
-        return $roles->pluck('slug')->contains($role) ?:
-            $roles->pluck('id')->contains($role);
+        return in_array($role, $this->getUserRoleSlugs(), true)
+            || in_array((string) $role, $this->getUserRoleIdStrings(), true);
     }
 
     /**
@@ -102,13 +124,11 @@ trait HasPermissions
      */
     public function inRoles($roles = []): bool
     {
-        /* @var Collection $all */
-        $all = $this->getUserRoles();
-
         $roles = Helper::array($roles);
+        $roleStrings = array_map('strval', $roles);
 
-        return $all->pluck('slug')->intersect($roles)->isNotEmpty() ?:
-            $all->pluck('id')->intersect($roles)->isNotEmpty();
+        return ! empty(array_intersect($this->getUserRoleSlugs(), $roles))
+            || ! empty(array_intersect($this->getUserRoleIdStrings(), $roleStrings));
     }
 
     /**
@@ -136,11 +156,7 @@ trait HasPermissions
             return true;
         }
 
-        $permissions = $this->allPermissions();
-
-        return $permissions->contains(function ($permission) use ($key) {
-            return $permission->permission_key === $key;
-        });
+        return in_array($key, $this->getPermissionKeys(), true);
     }
 
     /**
@@ -204,10 +220,55 @@ trait HasPermissions
 
     protected function getUserRoles(): Collection
     {
-        if (method_exists($this, 'allRoles')) {
-            return $this->allRoles();
+        if ($this->userRolesCache !== null) {
+            return $this->userRolesCache;
         }
 
-        return $this->roles;
+        if (method_exists($this, 'allRoles')) {
+            return $this->userRolesCache = $this->allRoles();
+        }
+
+        return $this->userRolesCache = $this->roles;
+    }
+
+    protected function getPermissionKeys(): array
+    {
+        if ($this->permissionKeys !== null) {
+            return $this->permissionKeys;
+        }
+
+        return $this->permissionKeys = $this->allPermissions()
+            ->pluck('permission_key')
+            ->filter(function ($value) {
+                return $value !== null && $value !== '';
+            })
+            ->all();
+    }
+
+    protected function getUserRoleSlugs(): array
+    {
+        if ($this->userRoleSlugs !== null) {
+            return $this->userRoleSlugs;
+        }
+
+        return $this->userRoleSlugs = $this->getUserRoles()->pluck('slug')->all();
+    }
+
+    protected function getUserRoleIds(): array
+    {
+        if ($this->userRoleIds !== null) {
+            return $this->userRoleIds;
+        }
+
+        return $this->userRoleIds = $this->getUserRoles()->pluck('id')->all();
+    }
+
+    protected function getUserRoleIdStrings(): array
+    {
+        if ($this->userRoleIdStrings !== null) {
+            return $this->userRoleIdStrings;
+        }
+
+        return $this->userRoleIdStrings = array_map('strval', $this->getUserRoleIds());
     }
 }

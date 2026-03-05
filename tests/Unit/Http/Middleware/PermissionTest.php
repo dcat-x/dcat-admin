@@ -283,6 +283,41 @@ class PermissionTest extends TestCase
         $this->assertSame(1, FakeMenuPermissionQueryForMiddlewareTest::$fallbackGetCalls);
     }
 
+    public function test_find_matched_menu_fallback_respects_segment_boundary(): void
+    {
+        FakeMenuPermissionQueryForMiddlewareTest::$exactResult = null;
+        FakeMenuPermissionQueryForMiddlewareTest::$fallbackResult = [
+            (object) ['id' => 1, 'uri' => 'order', 'roles' => collect()],
+            (object) ['id' => 2, 'uri' => 'orders', 'roles' => collect()],
+        ];
+        $this->app->instance('request', Request::create('/admin/orders/export', 'GET'));
+
+        $middleware = new TestablePermissionMiddleware;
+        $matched = $middleware->callFindMatchedMenu('orders/export', 'orders/export');
+
+        $this->assertNotNull($matched);
+        $this->assertSame(2, $matched->id);
+    }
+
+    public function test_find_matched_menu_reuses_prefix_candidates_in_same_segment(): void
+    {
+        FakeMenuPermissionQueryForMiddlewareTest::$exactResult = null;
+        FakeMenuPermissionQueryForMiddlewareTest::$fallbackResult = [
+            (object) ['id' => 1, 'uri' => 'orders', 'roles' => collect()],
+            (object) ['id' => 2, 'uri' => 'orders/history', 'roles' => collect()],
+        ];
+        $this->app->instance('request', Request::create('/admin/orders/history', 'GET'));
+
+        $middleware = new TestablePermissionMiddleware;
+
+        $first = $middleware->callFindMatchedMenu('orders/history/export', 'orders/history/export');
+        $second = $middleware->callFindMatchedMenu('orders/stat', 'orders/stat');
+
+        $this->assertNotNull($first);
+        $this->assertNotNull($second);
+        $this->assertSame(1, FakeMenuPermissionQueryForMiddlewareTest::$fallbackGetCalls);
+    }
+
     public function test_handle_allows_when_no_menu_matched(): void
     {
         $this->app['config']->set('admin.permission.enable', true);

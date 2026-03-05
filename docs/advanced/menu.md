@@ -52,6 +52,8 @@ php artisan admin:menu-cache
 
 - 使用多后台（`multi_app`）时，建议在部署后统一执行一次 `admin:menu-cache`，确保各应用菜单缓存一致。
 
+> 更多性能建议可参考：[性能与缓存](performance.md)
+
 ### 通过Menu::add接口动态添加菜单
 `Dcat Admin`还提供了通过数组的方式在代码中即时添加菜单。
 

@@ -25,11 +25,11 @@ class Permission
     protected static $menuPermissionCache = [];
 
     /**
-     * 菜单前缀匹配候选缓存（请求级）
+     * 菜单前缀匹配候选缓存（请求级，按首段分组）
      *
-     * @var array<int, mixed>|null
+     * @var array<string, array<int, mixed>>
      */
-    protected static $menuPrefixCandidates;
+    protected static $menuPrefixCandidates = [];
 
     /**
      * 缓存所属的请求哈希，用于检测跨请求
@@ -154,10 +154,10 @@ class Permission
         $matched = null;
         $matchedUriLength = -1;
 
-        foreach ($this->getPrefixCandidates() as $candidate) {
+        foreach ($this->getPrefixCandidates($path) as $candidate) {
             $uri = trim((string) ($candidate->uri ?? ''), '/');
 
-            if ($uri === '' || ! str_starts_with($path, $uri)) {
+            if ($uri === '' || ! $this->matchesPathPrefix($path, $uri)) {
                 continue;
             }
 
@@ -171,20 +171,42 @@ class Permission
         return $matched;
     }
 
+    protected function matchesPathPrefix(string $path, string $uri): bool
+    {
+        if (! str_starts_with($path, $uri)) {
+            return false;
+        }
+
+        $uriLength = strlen($uri);
+        $pathLength = strlen($path);
+
+        if ($pathLength === $uriLength) {
+            return true;
+        }
+
+        return $path[$uriLength] === '/';
+    }
+
     /**
      * @return iterable<mixed>
      */
-    protected function getPrefixCandidates(): iterable
+    protected function getPrefixCandidates(string $path): iterable
     {
-        if (static::$menuPrefixCandidates !== null) {
-            return static::$menuPrefixCandidates;
+        $segment = strtok($path, '/');
+        $cacheKey = $segment ?: '*';
+
+        if (array_key_exists($cacheKey, static::$menuPrefixCandidates)) {
+            return static::$menuPrefixCandidates[$cacheKey];
         }
 
         $menuModel = config('admin.database.menu_model');
+        $query = $menuModel::with('roles')->where('uri', '!=', '');
 
-        return static::$menuPrefixCandidates = $menuModel::with('roles')
-            ->where('uri', '!=', '')
-            ->get();
+        if ($segment) {
+            $query->where('uri', 'like', $segment.'%');
+        }
+
+        return static::$menuPrefixCandidates[$cacheKey] = $query->get()->all();
     }
 
     protected function refreshRequestCacheIfNeeded(): void
@@ -197,7 +219,7 @@ class Permission
 
         static::$cacheRequestHash = $requestHash;
         static::$menuPermissionCache = [];
-        static::$menuPrefixCandidates = null;
+        static::$menuPrefixCandidates = [];
     }
 
     /**

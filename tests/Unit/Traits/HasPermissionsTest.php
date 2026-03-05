@@ -35,6 +35,8 @@ class FakeInheritedRoleUserForHasPermissionsTest
 
     public $roles;
 
+    public int $allRolesCalls = 0;
+
     public function __construct()
     {
         $this->roles = collect();
@@ -42,10 +44,39 @@ class FakeInheritedRoleUserForHasPermissionsTest
 
     public function allRoles(): \Illuminate\Support\Collection
     {
+        $this->allRolesCalls++;
+
         return collect([
             (object) ['id' => 8, 'slug' => 'editor'],
             (object) ['id' => 9, 'slug' => 'auditor'],
         ]);
+    }
+}
+
+class FakePermissionKeyCacheUserForHasPermissionsTest
+{
+    use HasPermissions;
+
+    public int $allPermissionsCalls = 0;
+
+    public function getKeyName(): string
+    {
+        return 'id';
+    }
+
+    public function isAdministrator(): bool
+    {
+        return false;
+    }
+
+    public function allPermissions(): \Illuminate\Support\Collection
+    {
+        $this->allPermissionsCalls++;
+
+        return collect([
+            (object) ['id' => 1, 'slug' => 'users.index', 'permission_key' => 'user:view'],
+            (object) ['id' => 2, 'slug' => 'users.edit', 'permission_key' => 'user:edit'],
+        ])->keyBy('id');
     }
 }
 
@@ -207,5 +238,24 @@ class HasPermissionsTest extends TestCase
         $this->assertTrue($user->inRoles(['8']));
         $this->assertTrue($user->inRoles(['auditor', 'manager']));
         $this->assertFalse($user->inRoles(['manager']));
+    }
+
+    public function test_can_permission_key_uses_cached_key_map(): void
+    {
+        $user = new FakePermissionKeyCacheUserForHasPermissionsTest;
+
+        $this->assertTrue($user->canPermissionKey('user:view'));
+        $this->assertFalse($user->canPermissionKey('user:delete'));
+        $this->assertSame(1, $user->allPermissionsCalls);
+    }
+
+    public function test_role_checks_reuse_cached_roles(): void
+    {
+        $user = new FakeInheritedRoleUserForHasPermissionsTest;
+
+        $this->assertTrue($user->isRole('editor'));
+        $this->assertTrue($user->inRoles(['auditor']));
+        $this->assertTrue($user->isRole('9'));
+        $this->assertSame(1, $user->allRolesCalls);
     }
 }
