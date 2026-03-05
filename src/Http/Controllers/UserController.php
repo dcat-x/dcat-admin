@@ -31,12 +31,13 @@ class UserController extends AdminController
             $grid->column('name');
 
             if (config('admin.permission.enable')) {
-                $grid->column('roles')->pluck('name')->label('primary', 3);
+                $roleColumn = $grid->column('roles')->pluck('name');
+                call_user_func([$roleColumn, 'label'], 'primary', 3);
 
                 $permissionModel = config('admin.database.permissions_model');
                 $roleModel = config('admin.database.roles_model');
                 $nodes = (new $permissionModel)->allNodes();
-                $grid->column('permissions')
+                $permissionColumn = $grid->column('permissions')
                     ->if(function () {
                         return ! $this->roles->isEmpty();
                     })
@@ -48,9 +49,10 @@ class UserController extends AdminController
                                 $tree->checkAll();
                             }
                         }
-                    })
-                    ->else()
-                    ->display('');
+                    });
+
+                call_user_func([$permissionColumn, 'else']);
+                $permissionColumn->display('');
             }
 
             $grid->column('created_at');

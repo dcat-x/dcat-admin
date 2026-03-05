@@ -16,8 +16,6 @@ use Dcat\Admin\Support\Composer;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Traits\HasAssets;
 use Dcat\Admin\Traits\HasHtml;
-use Dcat\Admin\Traits\HasPermissions;
-use Illuminate\Auth\GuardHelpers;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -135,7 +133,7 @@ class Admin
     /**
      * 获取登录用户模型.
      *
-     * @return Model|Authenticatable|HasPermissions
+     * @return Model|Authenticatable|null
      */
     public static function user()
     {
@@ -143,7 +141,7 @@ class Admin
     }
 
     /**
-     * @return \Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard|GuardHelpers
+     * @return \Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard
      */
     public static function guard()
     {
@@ -169,7 +167,7 @@ class Admin
      */
     public static function pjax(bool $value = true)
     {
-        static::context()->pjaxContainerId = $value ? static::$defaultPjaxContainerId : false;
+        static::context()->pjaxContainerId = $value ? self::$defaultPjaxContainerId : false;
     }
 
     /**
@@ -195,7 +193,7 @@ class Admin
             return;
         }
 
-        return $id ?: static::$defaultPjaxContainerId;
+        return $id ?: self::$defaultPjaxContainerId;
     }
 
     /**
@@ -225,7 +223,7 @@ class Admin
     /**
      * 创建数据仓库实例.
      *
-     * @param  string|Repository|Model|Builder  $value
+     * @param  string|Repository|Model|Builder  $repository
      * @return Repository
      */
     public static function repository($repository, array $args = [])

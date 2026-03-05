@@ -168,7 +168,7 @@ trait ImageField
             // We merge original name + thumbnail name + extension
             $path = $path.'-'.$name.'.'.$ext;
 
-            /** @var \Intervention\Image\Image $image */
+            /** @var object $image */
             $image = InterventionImage::make($file);
 
             $action = $size[2] ?? 'resize';

@@ -579,7 +579,6 @@ class Grid
     }
 
     /**
-     * @param  \Closure  $closure
      * @return Grid\Tools\RowSelector
      */
     public function rowSelector()

@@ -151,7 +151,13 @@ trait CanHidesColumns
 
         array_push($visible, Grid\Column::SELECT_COLUMN_NAME, Grid\Column::ACTION_COLUMN_NAME);
 
-        return optional($this->getComplexHeaders())->filter(function ($column) use ($visible) {
+        $headers = $this->getComplexHeaders();
+
+        if (! $headers) {
+            return $headers;
+        }
+
+        return $headers->filter(function ($column) use ($visible) {
             return in_array($column->getName(), $visible);
         });
     }

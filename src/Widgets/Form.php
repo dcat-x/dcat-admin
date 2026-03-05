@@ -738,7 +738,6 @@ HTML;
     }
 
     /**
-     * @param  bool  $disable
      * @return $this
      */
     public function ajax(bool $value = true)

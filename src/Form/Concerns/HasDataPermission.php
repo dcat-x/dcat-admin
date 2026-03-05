@@ -3,6 +3,7 @@
 namespace Dcat\Admin\Form\Concerns;
 
 use Dcat\Admin\Admin;
+use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Models\DataRule;
 use Dcat\Admin\Support\DataPermission;
 
@@ -73,6 +74,7 @@ trait HasDataPermission
             return $this;
         }
 
+        /** @var Administrator|null $user */
         $user = Admin::user();
 
         if (! $user || $user->isAdministrator()) {

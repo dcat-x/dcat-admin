@@ -103,8 +103,6 @@ class Autocomplete extends Text
     /**
      * Load options from ajax results.
      *
-     * @param  string|null  $valueField
-     * @param  string|null  $groupField
      * @return $this
      */
     public function ajax(string $url, string $valueField = '', string $groupField = '')

@@ -17,9 +17,9 @@ class TinymceController
 
         $newName = $this->generateNewName($file);
 
-        $disk->putFileAs($dir, $file, $newName);
+        call_user_func([$disk, 'putFileAs'], $dir, $file, $newName);
 
-        return ['location' => $disk->url("{$dir}/$newName")];
+        return ['location' => call_user_func([$disk, 'url'], "{$dir}/$newName")];
     }
 
     protected function generateNewName(UploadedFile $file)

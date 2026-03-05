@@ -30,7 +30,7 @@ class ValueController
     }
 
     /**
-     * @return \Dcat\Admin\Traits\InteractsWithApi
+     * @return object
      *
      * @throws Exception
      */

@@ -25,9 +25,9 @@ class ComplexHeader extends Widget
     protected $label;
 
     /**
-     * @var array
+     * @var Collection
      */
-    protected $columnNames = [];
+    protected $columnNames;
 
     /**
      * @var array

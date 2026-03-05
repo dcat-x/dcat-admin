@@ -26,9 +26,6 @@ class DateTime extends Presenter
         $this->options = $this->getOptions($options);
     }
 
-    /**
-     * @return mixed
-     */
     protected function getOptions(array $options): array
     {
         $options['format'] = Arr::get($options, 'format', $this->format);

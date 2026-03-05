@@ -549,7 +549,9 @@ JS;
                 'header' => $this->renderHeader(),
                 'content' => $this->renderContent(),
             ],
-            (array) optional($this->chart)->valueResult()
+            $this->chart && method_exists($this->chart, 'valueResult')
+                ? (array) call_user_func([$this->chart, 'valueResult'])
+                : []
         );
     }
 }

@@ -40,7 +40,6 @@ trait HasHtml
 
     /**
      * @param  string|\Illuminate\Contracts\Support\Renderable  $content
-     * @param  array  $data
      * @return array ['html' => $html, 'script' => $script]
      *
      * @throws \Throwable

@@ -43,7 +43,8 @@ class Setting extends Fluent
     /**
      * 设置配置信息.
      *
-     * @param  array  $data
+     * @param  string|array  $key
+     * @param  mixed  $value
      * @return $this
      */
     public function set($key, $value = null)

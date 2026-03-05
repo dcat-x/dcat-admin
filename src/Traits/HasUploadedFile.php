@@ -67,7 +67,7 @@ trait HasUploadedFile
      * 删除文件并响应返回值.
      *
      * @param  \Illuminate\Contracts\Filesystem\Filesystem|FilesystemAdapter  $disk
-     * @param string|null
+     * @param  string|null  $path
      * @return \Illuminate\Http\JsonResponse
      */
     public function deleteFileAndResponse($disk = null, $path = null)

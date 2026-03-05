@@ -415,7 +415,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
     /**
      * 设置数据查询回调.
      *
-     * @param  \Closure|null  $query
+     * @param  \Closure|null  $queryCallback
      * @return $this
      */
     public function withQuery($queryCallback)

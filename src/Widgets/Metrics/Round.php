@@ -154,7 +154,6 @@ class Round extends RadialBar
     /**
      * 设置图标 dataLabel name 的Y轴偏移量.
      *
-     * @param  mixed  $size
      * @return $this
      */
     public function chartLabelNameOffsetY(int $offset)
@@ -176,7 +175,6 @@ class Round extends RadialBar
     /**
      * 设置图标 dataLabel value 的Y轴偏移量.
      *
-     * @param  mixed  $size
      * @return $this
      */
     public function chartLabelValueOffsetY(int $offset)

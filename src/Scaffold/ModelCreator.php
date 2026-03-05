@@ -167,7 +167,6 @@ class ModelCreator
      * Replace datetimeFormatter dummy.
      *
      * @param  string  $stub
-     * @param  bool  $softDeletes
      * @return $this
      */
     protected function replaceDatetimeFormatter(&$stub)

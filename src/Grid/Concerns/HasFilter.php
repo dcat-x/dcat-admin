@@ -30,7 +30,6 @@ trait HasFilter
     /**
      * Process the grid filter.
      *
-     * @param  bool  $toArray
      * @return Collection
      */
     public function processFilter()

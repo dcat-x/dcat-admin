@@ -13,7 +13,7 @@ class DataPermission
     /**
      * 当前用户
      */
-    protected $user;
+    protected ?object $user;
 
     /**
      * 用户所有部门ID缓存（实例级）
@@ -295,7 +295,9 @@ class DataPermission
             return $this->departmentIdsCache;
         }
 
-        return $this->departmentIdsCache = $this->user->departments->pluck('id')->toArray();
+        $departments = call_user_func([$this->user, 'departments'])->get();
+
+        return $this->departmentIdsCache = $departments->pluck('id')->toArray();
     }
 
     /**

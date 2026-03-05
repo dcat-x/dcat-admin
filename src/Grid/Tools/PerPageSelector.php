@@ -52,7 +52,7 @@ class PerPageSelector implements Renderable
     /**
      * Get options for selector.
      *
-     * @return static
+     * @return \Illuminate\Support\Collection
      */
     public function getOptions()
     {

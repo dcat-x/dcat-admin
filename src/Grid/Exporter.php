@@ -8,7 +8,7 @@ use Dcat\Admin\Grid\Exporters\ExporterInterface;
 /**
  * @mixin Grid\Exporters\AbstractExporter
  *
- * @method mixed export
+ * @method mixed export()
  */
 class Exporter
 {
@@ -200,8 +200,8 @@ class Exporter
     /**
      * Format query for export url.
      *
-     * @param  int  $scope
-     * @param  null  $args
+     * @param  string  $scope
+     * @param  string|null  $args
      * @return array
      */
     public function formatExportQuery($scope = '', $args = null)

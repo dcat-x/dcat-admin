@@ -216,6 +216,16 @@ class RepositoryTest extends TestCase
             {
                 return [];
             }
+
+            public function moveOrderUp()
+            {
+                return true;
+            }
+
+            public function moveOrderDown()
+            {
+                return true;
+            }
         };
     }
 }

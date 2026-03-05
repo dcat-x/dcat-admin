@@ -10,7 +10,6 @@ class Ngt extends Equal
      * Add a binding to the query.
      *
      * @param  string  $value
-     * @param  Model|null  $model
      */
     public function addBinding($value, Model $model)
     {

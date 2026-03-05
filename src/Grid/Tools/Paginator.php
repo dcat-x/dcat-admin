@@ -70,7 +70,7 @@ class Paginator implements Renderable
     /**
      * Get range infomation of paginator.
      *
-     * @return string|\Symfony\Component\Translation\TranslatorInterface
+     * @return string
      */
     protected function paginationRanger()
     {

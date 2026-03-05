@@ -79,4 +79,14 @@ class Extension extends Repository
     {
         return [];
     }
+
+    public function moveOrderUp()
+    {
+        return true;
+    }
+
+    public function moveOrderDown()
+    {
+        return true;
+    }
 }

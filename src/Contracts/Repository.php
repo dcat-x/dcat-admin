@@ -101,4 +101,18 @@ interface Repository
      * @return array|\Illuminate\Contracts\Support\Arrayable
      */
     public function deleting(Form $form);
+
+    /**
+     * 向上移动排序.
+     *
+     * @return int|bool
+     */
+    public function moveOrderUp();
+
+    /**
+     * 向下移动排序.
+     *
+     * @return int|bool
+     */
+    public function moveOrderDown();
 }

@@ -742,7 +742,6 @@ class Helper
      * 设置查询条件.
      *
      * @param  mixed  $model
-     * @param mixed array $params
      * @return void
      */
     public static function withQueryCondition($model, ?string $column, string $query, array $params)
@@ -765,7 +764,6 @@ class Helper
      * 设置关联关系查询条件.
      *
      * @param  mixed  $model
-     * @param  mixed  ...$params
      * @return void
      */
     public static function withRelationQuery($model, ?string $column, string $query, array $params)

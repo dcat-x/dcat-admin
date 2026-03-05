@@ -100,7 +100,7 @@ class Radio extends Widget
     /**
      * 设置选中的选项.
      *
-     * @param  string  $id
+     * @param  mixed  $option
      * @return $this
      */
     public function check($option)

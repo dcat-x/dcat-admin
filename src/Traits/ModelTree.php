@@ -197,9 +197,9 @@ trait ModelTree
             return $this;
         }
 
-        $swapWithModel = $this->buildSortQuery()
-            ->limit(1)
-            ->ordered()
+        $query = $this->buildSortQuery()->limit(1);
+
+        $swapWithModel = call_user_func([$query, 'ordered'])
             ->where($orderColumnName, '>', $this->$orderColumnName)
             ->where($parentColumnName, $this->$parentColumnName)
             ->first();
@@ -216,9 +216,9 @@ trait ModelTree
         $orderColumnName = $this->determineOrderColumnName();
         $parentColumnName = $this->getParentColumn();
 
-        $swapWithModel = $this->buildSortQuery()
-            ->limit(1)
-            ->ordered('desc')
+        $query = $this->buildSortQuery()->limit(1);
+
+        $swapWithModel = call_user_func([$query, 'ordered'], 'desc')
             ->where($orderColumnName, '<', $this->$orderColumnName)
             ->where($parentColumnName, $this->$parentColumnName)
             ->first();
@@ -257,9 +257,9 @@ trait ModelTree
     {
         $parentColumnName = $this->getParentColumn();
 
-        $firstModel = $this->buildSortQuery()
-            ->limit(1)
-            ->ordered()
+        $query = $this->buildSortQuery()->limit(1);
+
+        $firstModel = call_user_func([$query, 'ordered'])
             ->where($parentColumnName, $this->$parentColumnName)
             ->first();
 
@@ -349,7 +349,7 @@ trait ModelTree
         parent::boot();
 
         static::saving(function (Model $branch) {
-            $parentColumn = $branch->getParentColumn();
+            $parentColumn = call_user_func([$branch, 'getParentColumn']);
 
             if (
                 $branch->getKey()

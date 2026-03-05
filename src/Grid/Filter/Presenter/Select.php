@@ -292,7 +292,6 @@ class Select extends Presenter
      * Get form element class.
      *
      * @param  string  $target
-     * @return mixed
      */
     protected function getClass($target): string
     {

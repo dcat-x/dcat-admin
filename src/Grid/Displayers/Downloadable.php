@@ -14,12 +14,12 @@ class Downloadable extends AbstractDisplayer
                 return '';
             }
 
-            if (url()->isValidUrl($value)) {
+            if (filter_var($value, FILTER_VALIDATE_URL)) {
                 $src = $value;
             } elseif ($server) {
                 $src = rtrim($server, '/').'/'.ltrim($value, '/');
             } else {
-                $src = Storage::disk($disk ?: config('admin.upload.disk'))->url($value);
+                $src = call_user_func([Storage::disk($disk ?: config('admin.upload.disk')), 'url'], $value);
             }
 
             $name = Helper::basename($value);

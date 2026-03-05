@@ -171,7 +171,7 @@ class Panel implements Renderable
     /**
      * Fill fields to panel.
      *
-     * @param []Field $fields
+     * @param  Field[]  $fields
      * @return $this
      */
     public function fill($fields)

@@ -310,7 +310,7 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * Create a new exporter instance.
      *
-     * @param  \Closure|array  $closure
+     * @param  \Closure|array|null  $builder
      */
     public static function make($builder = null)
     {

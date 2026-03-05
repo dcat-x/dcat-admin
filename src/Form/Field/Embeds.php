@@ -270,7 +270,7 @@ class Embeds extends Field implements FieldsCollection
     /**
      * 根据字段名称查找字段.
      *
-     * @param  string  $column
+     * @param  string  $name
      * @return Field|null
      */
     public function field($name)

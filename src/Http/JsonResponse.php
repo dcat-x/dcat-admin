@@ -117,7 +117,6 @@ class JsonResponse implements Arrayable
     /**
      * 显示 错误 信息弹窗.
      *
-     * @param  bool  $alert
      * @return $this
      */
     public function error(?string $message)

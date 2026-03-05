@@ -132,7 +132,6 @@ class Field implements Renderable
     }
 
     /**
-     * @param  int  $width
      * @return $this|array
      */
     public function width(int $field, int $label = 2)
@@ -219,7 +218,7 @@ class Field implements Renderable
             $path = Helper::array($path);
 
             return collect($path)->transform(function ($path) use ($server, $width, $height) {
-                if (url()->isValidUrl($path)) {
+                if (filter_var($path, FILTER_VALIDATE_URL)) {
                     $src = $path;
                 } elseif ($server) {
                     $src = rtrim($server, '/').'/'.ltrim($path, '/');
@@ -227,7 +226,7 @@ class Field implements Renderable
                     $disk = config('admin.upload.disk');
 
                     if (config("filesystems.disks.{$disk}")) {
-                        $src = Storage::disk($disk)->url($path);
+                        $src = call_user_func([Storage::disk($disk), 'url'], $path);
                     } else {
                         return '';
                     }
@@ -263,14 +262,14 @@ class Field implements Renderable
 
                 $size = $url = '';
 
-                if (url()->isValidUrl($path)) {
+                if (filter_var($path, FILTER_VALIDATE_URL)) {
                     $url = $path;
                 } elseif ($server) {
                     $url = $server.$path;
                 } else {
                     $storage = Storage::disk(config('admin.upload.disk'));
                     if ($storage->exists($path)) {
-                        $url = $storage->url($path);
+                        $url = call_user_func([$storage, 'url'], $path);
                         $size = ($storage->size($path) / 1000).'KB';
                     }
                 }

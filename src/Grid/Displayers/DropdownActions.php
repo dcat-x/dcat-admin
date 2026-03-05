@@ -59,7 +59,7 @@ class DropdownActions extends Actions
     }
 
     /**
-     * @param  \Closure[]  $callback
+     * @param  \Closure[]  $callbacks
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function display(array $callbacks = [])

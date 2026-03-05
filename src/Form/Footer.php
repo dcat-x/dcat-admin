@@ -45,7 +45,7 @@ class Footer implements Renderable
     /**
      * Default checked.
      *
-     * @var arrays
+     * @var array
      */
     protected $defaultcheckeds = ['view' => false, 'continue_editing' => false, 'continue_creating' => false];
 
@@ -195,7 +195,13 @@ class Footer implements Renderable
             return;
         }
 
-        return (new Checkbox('after-save', $options))->check($checked)->inline()->circle(true);
+        $checkbox = (new Checkbox('after-save', $options))->check($checked)->inline();
+
+        if (method_exists($checkbox, 'circle')) {
+            $checkbox->circle(true);
+        }
+
+        return $checkbox;
     }
 
     /**

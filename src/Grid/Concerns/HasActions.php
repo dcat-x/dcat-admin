@@ -168,7 +168,6 @@ trait HasActions
     /**
      * Show view action.
      *
-     * @param  bool  $disable
      * @return $this
      */
     public function showViewButton(bool $val = true)
@@ -191,7 +190,6 @@ trait HasActions
     /**
      * Show delete button.
      *
-     * @param  bool  $disable
      * @return $this
      */
     public function showDeleteButton(bool $val = true)

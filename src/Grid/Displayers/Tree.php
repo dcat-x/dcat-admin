@@ -48,7 +48,8 @@ JS;
         $icon = '<i class="fa fa-angle-right"></i>';
         $repository = $this->grid->model()->repository();
         $parentColumn = $repository->getParentColumn();
-        $num = $repository->model()->where($parentColumn, $key)->count();
+        $model = call_user_func([$repository, 'model']);
+        $num = $model->where($parentColumn, $key)->count();
         if (empty($num)) {
             $icon = '';
         }
@@ -66,8 +67,13 @@ EOT;
 
         $showNextPage = $this->grid->allowPagination();
         if (! $model->showAllChildrenNodes() && $showNextPage) {
+            $paginator = $model->paginator();
+            $lastPage = method_exists($paginator, 'lastPage')
+                ? (int) call_user_func([$paginator, 'lastPage'])
+                : 1;
+
             $showNextPage =
-                $model->getCurrentChildrenPage() < $model->paginator()->lastPage()
+                $model->getCurrentChildrenPage() < $lastPage
                 && $model->buildData()->count() == $model->getPerPage();
         }
 

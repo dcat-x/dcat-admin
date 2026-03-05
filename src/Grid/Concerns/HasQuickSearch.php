@@ -30,7 +30,7 @@ trait HasQuickSearch
     protected $quickSearch;
 
     /**
-     * @param array|string|\Closure
+     * @param  array|string|\Closure|null  $search
      * @return Tools\QuickSearch
      */
     public function quickSearch($search = null)

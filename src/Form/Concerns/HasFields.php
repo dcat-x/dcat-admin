@@ -92,7 +92,7 @@ trait HasFields
     /**
      * Reject Fields.
      *
-     * @param [type] $reject
+     * @param  callable  $reject
      * @return void
      */
     public function rejectFields($reject)
@@ -119,8 +119,7 @@ trait HasFields
     {
         $fields = [];
         foreach ($this->fields() as $field) {
-            if ($field instanceof FieldsCollection) {
-                /** @var Field $field */
+            if ($field instanceof FieldsCollection && method_exists($field, 'mergedFields')) {
                 $fields = array_merge($fields, $field->mergedFields());
             } else {
                 $fields[] = $field;

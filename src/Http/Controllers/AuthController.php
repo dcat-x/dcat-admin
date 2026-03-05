@@ -7,7 +7,6 @@ use Dcat\Admin\Form;
 use Dcat\Admin\Http\Repositories\Administrator;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Traits\HasFormResponse;
-use Illuminate\Auth\GuardHelpers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Lang;
@@ -143,9 +142,9 @@ class AuthController extends Controller
             return false;
         }
 
-        return $this->guard()
-            ->getProvider()
-            ->validateCredentials($user, ['password' => $oldPassword]);
+        $provider = call_user_func([$this->guard(), 'getProvider']);
+
+        return $provider->validateCredentials($user, ['password' => $oldPassword]);
     }
 
     /**
@@ -207,7 +206,7 @@ class AuthController extends Controller
     }
 
     /**
-     * @return string|\Symfony\Component\Translation\TranslatorInterface
+     * @return string
      */
     protected function getFailedLoginMessage()
     {
@@ -257,7 +256,7 @@ class AuthController extends Controller
     /**
      * Get the guard to be used during authentication.
      *
-     * @return \Illuminate\Contracts\Auth\StatefulGuard|GuardHelpers
+     * @return \Illuminate\Contracts\Auth\StatefulGuard
      */
     protected function guard()
     {

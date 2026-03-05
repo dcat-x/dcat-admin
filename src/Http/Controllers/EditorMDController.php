@@ -17,9 +17,9 @@ class EditorMDController
 
         $newName = $this->generateNewName($file);
 
-        $disk->putFileAs($dir, $file, $newName);
+        call_user_func([$disk, 'putFileAs'], $dir, $file, $newName);
 
-        return ['success' => 1, 'url' => $disk->url("{$dir}/$newName")];
+        return ['success' => 1, 'url' => call_user_func([$disk, 'url'], "{$dir}/$newName")];
     }
 
     protected function generateNewName(UploadedFile $file)

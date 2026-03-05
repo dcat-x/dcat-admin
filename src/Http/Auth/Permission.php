@@ -4,6 +4,7 @@ namespace Dcat\Admin\Http\Auth;
 
 use Dcat\Admin\Admin;
 use Dcat\Admin\Layout\Content;
+use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Contracts\Support\Arrayable;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,7 +33,10 @@ class Permission
             return true;
         }
 
-        if (Admin::user()->cannot($permission)) {
+        /** @var Administrator|null $user */
+        $user = Admin::user();
+
+        if ($user && $user->cannot($permission)) {
             static::error();
         }
     }
@@ -49,7 +53,10 @@ class Permission
             return true;
         }
 
-        if (! Admin::user()->inRoles($roles)) {
+        /** @var Administrator|null $user */
+        $user = Admin::user();
+
+        if (! $user || ! $user->inRoles($roles)) {
             static::error();
         }
     }
@@ -76,7 +83,10 @@ class Permission
             return true;
         }
 
-        if (Admin::user()->inRoles($roles)) {
+        /** @var Administrator|null $user */
+        $user = Admin::user();
+
+        if ($user && $user->inRoles($roles)) {
             static::error();
         }
     }
@@ -110,7 +120,10 @@ class Permission
     {
         $roleModel = config('admin.database.roles_model');
 
-        return ! config('admin.permission.enable') || Admin::user()->isRole($roleModel::ADMINISTRATOR);
+        /** @var Administrator|null $user */
+        $user = Admin::user();
+
+        return ! config('admin.permission.enable') || ($user && $user->isRole($roleModel::ADMINISTRATOR));
     }
 
     /**

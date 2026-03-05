@@ -144,7 +144,7 @@ class Tree implements Renderable
     /**
      * Menu constructor.
      *
-     * @param  Model|TreeRepository|string|null  $model
+     * @param  Model|TreeRepository|string|null  $repository
      */
     public function __construct($repository = null, ?\Closure $callback = null)
     {
@@ -494,8 +494,6 @@ class Tree implements Renderable
 
     /**
      * Return all items of the tree.
-     *
-     * @param  array  $items
      */
     public function getItems()
     {
@@ -530,7 +528,7 @@ class Tree implements Renderable
      */
     public function getKeyName()
     {
-        return $this->repository->getKeyName();
+        return $this->repository->getPrimaryKeyColumn();
     }
 
     /**

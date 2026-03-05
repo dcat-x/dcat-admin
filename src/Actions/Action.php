@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 /**
  * Class Action.
  *
- * @method string href
+ * @method string href()
  */
 abstract class Action implements Renderable
 {
@@ -142,7 +142,6 @@ abstract class Action implements Renderable
     /**
      * 生成选择器.
      *
-     * @param  string  $prefix
      * @return string
      */
     public function makeSelector()

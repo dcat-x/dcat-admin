@@ -47,8 +47,6 @@ trait HasPermissions
 
     /**
      * Get all permissions of user.
-     *
-     * @return mixed
      */
     public function allPermissions(): Collection
     {
@@ -57,7 +55,9 @@ trait HasPermissions
         }
 
         // 获取所有角色（直接 + 部门继承）
-        $allRoles = method_exists($this, 'allRoles') ? $this->allRoles() : $this->roles;
+        $allRoles = method_exists($this, 'allRoles')
+            ? collect($this->allRoles())
+            : $this->roles;
 
         return $this->allPermissions =
             $allRoles
@@ -68,8 +68,6 @@ trait HasPermissions
 
     /**
      * Check if user has permission.
-     *
-     * @param  array|mixed  $arguments
      */
     public function can($ability, $paramters = []): bool
     {
@@ -95,8 +93,6 @@ trait HasPermissions
 
     /**
      * Check if user is administrator.
-     *
-     * @return mixed
      */
     public function isAdministrator(): bool
     {
@@ -107,8 +103,6 @@ trait HasPermissions
 
     /**
      * Check if user is $role.
-     *
-     * @return mixed
      */
     public function isRole(string $role): bool
     {
@@ -120,7 +114,6 @@ trait HasPermissions
      * Check if user in $roles.
      *
      * @param  string|array|Arrayable  $roles
-     * @return mixed
      */
     public function inRoles($roles = []): bool
     {
@@ -169,8 +162,8 @@ trait HasPermissions
         }
 
         $roleIds = method_exists($this, 'allRoles')
-            ? $this->allRoles()->pluck('id')->toArray()
-            : $this->roles->pluck('id')->toArray();
+            ? collect($this->allRoles())->pluck('id')->toArray()
+            : collect($this->roles)->pluck('id')->toArray();
 
         if (empty($roleIds)) {
             return collect();
@@ -225,7 +218,7 @@ trait HasPermissions
         }
 
         if (method_exists($this, 'allRoles')) {
-            return $this->userRolesCache = $this->allRoles();
+            return $this->userRolesCache = collect($this->allRoles());
         }
 
         return $this->userRolesCache = $this->roles;

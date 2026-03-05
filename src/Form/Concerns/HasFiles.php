@@ -118,7 +118,6 @@ trait HasFiles
     /**
      * 删除文件.
      *
-     * @param  UploadFieldInterface|Field  $field
      * @param  array  $input
      */
     protected function deleteFile(UploadFieldInterface $field, $input = null)
@@ -128,10 +127,10 @@ trait HasFiles
                 is_string($input)
                 || (is_array($input) && ! Arr::isAssoc($input))
             ) {
-                $input = [$field->column() => $input];
+                $input = [call_user_func([$field, 'column']) => $input];
             }
 
-            $field->setOriginal($input);
+            call_user_func([$field, 'setOriginal'], $input);
         }
 
         if ($this->callFileDeleting($field) === false) {
@@ -203,7 +202,9 @@ trait HasFiles
                 $input[$input['_column']] = '';
             } else {
                 [$relation, $relationKey] = $input['_relation'];
-                $keyName = $this->builder()->field($relation)->getKeyName();
+                $relationField = $this->builder()->field($relation);
+                /** @var Field\HasMany $relationField */
+                $keyName = $relationField->getKeyName();
 
                 $input[$relation] = [
                     $relationKey => [

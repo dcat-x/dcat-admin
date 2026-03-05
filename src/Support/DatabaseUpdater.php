@@ -34,9 +34,9 @@ class DatabaseUpdater
 
         $this->transaction(function () use ($object, $callback) {
             if ($object instanceof Migration) {
-                $object->up();
+                call_user_func([$object, 'up']);
             } elseif ($object instanceof Seeder) {
-                $object->run();
+                call_user_func([$object, 'run']);
             }
 
             $callback && $callback();
@@ -64,7 +64,7 @@ class DatabaseUpdater
 
         $this->transaction(function () use ($object, $callback) {
             if ($object instanceof Migration) {
-                $object->down();
+                call_user_func([$object, 'down']);
             }
 
             $callback && $callback();

@@ -389,7 +389,6 @@ class Field implements Renderable
 
     /**
      * @param  string  $key
-     * @param  Fluent|null  $dataremoveField
      */
     protected function callCustomFormatter($key = 'value', ?Fluent $data = null)
     {

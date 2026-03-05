@@ -68,7 +68,7 @@ class Administrator extends Model implements AuthenticatableContract, Authorizab
 
         if ($avatar) {
             if (! URL::isValidUrl($avatar)) {
-                $avatar = Storage::disk(config('admin.upload.disk'))->url($avatar);
+                $avatar = call_user_func([Storage::disk(config('admin.upload.disk')), 'url'], $avatar);
             }
 
             return $avatar;
@@ -168,7 +168,7 @@ class Administrator extends Model implements AuthenticatableContract, Authorizab
             return $this->allRolesCache;
         }
 
-        $directRoles = $this->roles;
+        $directRoles = collect($this->roles);
         $departmentRoles = $this->getDepartmentRoles();
 
         return $this->allRolesCache = $directRoles->merge($departmentRoles)->unique('id');

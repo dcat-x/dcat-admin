@@ -106,10 +106,14 @@ trait HasTree
         $this->allowedTreeQuery = false;
 
         return $this->filterQueryBy(function ($query) {
+            $parentColumn = $this->repository
+                ? call_user_func([$this->repository, 'getParentColumn'])
+                : null;
+
             if (
                 $query['method'] === 'where'
                 && $query['arguments']
-                && $query['arguments'][0] === optional($this->repository)->getParentColumn()
+                && $query['arguments'][0] === $parentColumn
             ) {
                 return false;
             }
@@ -150,7 +154,7 @@ trait HasTree
             Admin::html(
                 <<<HTML
 <next-page class="hidden">{$nextPage}</next-page>
-<last-page class="hidden">{$this->paginator()->lastPage()}</last-page>
+<last-page class="hidden">{$this->resolveLastPage()}</last-page>
 HTML
             );
         }
@@ -266,7 +270,7 @@ HTML
         $repository = $this->grid->model()->repository();
 
         if ($repository instanceof EloquentRepository) {
-            return $repository->model()->getDefaultParentId();
+            return call_user_func([$repository->model(), 'getDefaultParentId']);
         }
 
         return 0;
@@ -296,5 +300,16 @@ HTML
     public function showAllChildrenNodes()
     {
         return $this->showAllChildrenNodes;
+    }
+
+    protected function resolveLastPage(): int
+    {
+        $paginator = $this->paginator();
+
+        if (method_exists($paginator, 'lastPage')) {
+            return (int) call_user_func([$paginator, 'lastPage']);
+        }
+
+        return 1;
     }
 }

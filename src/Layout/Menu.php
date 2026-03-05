@@ -3,6 +3,7 @@
 namespace Dcat\Admin\Layout;
 
 use Dcat\Admin\Admin;
+use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Support\Facades\Lang;
 
@@ -196,6 +197,8 @@ class Menu
      */
     protected function userCanSeeMenu($item)
     {
+        /** @var Administrator|null $user */
+        /** @var Administrator|null $user */
         $user = Admin::user();
 
         if (! $user || ! method_exists($user, 'canSeeMenu')) {
@@ -220,7 +223,7 @@ class Menu
         $user = Admin::user();
 
         // 未登录用户不能查看菜单
-        if (! $user) {
+        if (! $user instanceof Administrator) {
             return false;
         }
 
@@ -275,7 +278,7 @@ class Menu
     public function getPath($uri)
     {
         return $uri
-            ? (url()->isValidUrl($uri) ? $uri : admin_base_path($uri))
+            ? (filter_var($uri, FILTER_VALIDATE_URL) ? $uri : admin_base_path($uri))
             : $uri;
     }
 

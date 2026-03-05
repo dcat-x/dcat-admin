@@ -273,7 +273,9 @@ abstract class GeneratorCommand extends Command
     {
         $stub = $this->files->get($this->getStub());
 
-        return $this->replaceNamespace($stub, $name)->replaceClass($stub, $name);
+        $this->replaceNamespace($stub, $name);
+
+        return $this->replaceClass($stub, $name);
     }
 
     /**

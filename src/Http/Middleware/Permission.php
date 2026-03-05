@@ -5,6 +5,7 @@ namespace Dcat\Admin\Http\Middleware;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Exception\RuntimeException;
 use Dcat\Admin\Http\Auth\Permission as Checker;
+use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -44,6 +45,7 @@ class Permission
      */
     public function handle(Request $request, \Closure $next, ...$args)
     {
+        /** @var Administrator|null $user */
         $user = Admin::user();
 
         if (

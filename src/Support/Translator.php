@@ -81,7 +81,7 @@ class Translator
     {
         $method = $this->getTranslateMethod();
 
-        if ($this->translator->has($key)) {
+        if (call_user_func([$this->translator, 'has'], $key)) {
             return $this->translator->$method($key, $replace, $locale);
         }
 
@@ -93,7 +93,7 @@ class Translator
             array_unshift($arr, 'global');
             $key = implode('.', $arr);
 
-            if (! $this->translator->has($key)) {
+            if (! call_user_func([$this->translator, 'has'], $key)) {
                 return end($arr);
             }
 

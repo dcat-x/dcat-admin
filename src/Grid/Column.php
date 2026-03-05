@@ -322,7 +322,6 @@ class Column
     /**
      * Get column attributes.
      *
-     * @param  string  $name
      * @return mixed
      */
     public function getAttributes()

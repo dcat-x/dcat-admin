@@ -118,7 +118,7 @@ abstract class AbstractDisplayer
      * Get translation.
      *
      * @param  string  $text
-     * @return string|\Symfony\Component\Translation\TranslatorInterface
+     * @return string
      */
     protected function trans($text)
     {

@@ -52,7 +52,7 @@ trait WebUploader
     }
 
     /**
-     * @param  int|null  $size  kb
+     * @param  int  $size  kb
      * @return $this
      */
     public function chunkSize(int $size)
@@ -204,7 +204,11 @@ trait WebUploader
      */
     protected function setUpDefaultOptions()
     {
-        $key = optional($this->form)->getKey();
+        $key = null;
+
+        if ($this->form && method_exists($this->form, 'getKey')) {
+            $key = call_user_func([$this->form, 'getKey']);
+        }
 
         $defaultOptions = [
             'name' => WebUploaderHelper::FILE_NAME,

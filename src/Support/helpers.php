@@ -1,6 +1,7 @@
 <?php
 
 use Dcat\Admin\Admin;
+use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\Support\Renderable;
@@ -249,7 +250,7 @@ if (! function_exists('admin_url')) {
      */
     function admin_url($path = '', $parameters = [], $secure = null)
     {
-        if (url()->isValidUrl($path)) {
+        if (filter_var($path, FILTER_VALIDATE_URL)) {
             return $path;
         }
 
@@ -443,7 +444,7 @@ if (! function_exists('admin_view')) {
 
 if (! function_exists('admin_script')) {
     /**
-     * @param  string  $js
+     * @param  string  $script
      * @return void
      */
     function admin_script($script, bool $direct = false)
@@ -623,7 +624,7 @@ if (! function_exists('ali_sign_url')) {
             $diskName = $disk ?? config('admin.upload.oss.private_disk', 'oss-private');
             $storage = \Illuminate\Support\Facades\Storage::disk($diskName);
 
-            return $storage->temporaryUrl($path, now()->addMinutes($expireMinutes));
+            return call_user_func([$storage, 'temporaryUrl'], $path, now()->addMinutes($expireMinutes));
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::warning('Failed to generate signed URL', [
                 'path' => $path,
@@ -641,6 +642,7 @@ if (! function_exists('admin_can')) {
      */
     function admin_can(string $ability): bool
     {
+        /** @var Administrator|null $user */
         $user = Admin::user();
 
         if (! $user) {

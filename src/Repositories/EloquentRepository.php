@@ -379,7 +379,7 @@ class EloquentRepository extends Repository implements TreeRepository
         $query = $this->newQuery();
 
         if ($this->isSoftDeletes) {
-            $query->withTrashed();
+            call_user_func([$query, 'withTrashed']);
         }
 
         $this->model = $query
@@ -399,7 +399,7 @@ class EloquentRepository extends Repository implements TreeRepository
         $query = $this->newQuery();
 
         if ($this->isSoftDeletes) {
-            $query->withTrashed();
+            call_user_func([$query, 'withTrashed']);
         }
 
         $this->model = $query
@@ -498,7 +498,7 @@ class EloquentRepository extends Repository implements TreeRepository
      */
     public function moveOrderUp()
     {
-        return (bool) $this->getSortableModel()->moveOrderUp();
+        return (bool) call_user_func([$this->getSortableModel(), 'moveOrderUp']);
     }
 
     /**
@@ -508,7 +508,7 @@ class EloquentRepository extends Repository implements TreeRepository
      */
     public function moveOrderDown()
     {
-        return (bool) $this->getSortableModel()->moveOrderDown();
+        return (bool) call_user_func([$this->getSortableModel(), 'moveOrderDown']);
     }
 
     /**
@@ -553,7 +553,7 @@ class EloquentRepository extends Repository implements TreeRepository
 
             $data = $model->toArray();
 
-            if ($this->isSoftDeletes && $model->trashed()) {
+            if ($this->isSoftDeletes && call_user_func([$model, 'trashed'])) {
                 $form->deleteFiles($data, true);
                 $model->forceDelete();
 
@@ -578,7 +578,7 @@ class EloquentRepository extends Repository implements TreeRepository
         $query = $this->newQuery();
 
         if ($this->isSoftDeletes) {
-            $query->withTrashed();
+            call_user_func([$query, 'withTrashed']);
         }
 
         $id = $form->getKey();
@@ -643,18 +643,18 @@ class EloquentRepository extends Repository implements TreeRepository
      */
     public function saveOrder($tree = [], $parentId = 0)
     {
-        $this->model()->saveOrder($tree, $parentId);
+        call_user_func([$this->model(), 'saveOrder'], $tree, $parentId);
     }
 
     /**
      * 设置数据查询回调.
      *
-     * @param  \Closure|null  $query
+     * @param  \Closure|null  $queryCallback
      * @return $this
      */
     public function withQuery($queryCallback)
     {
-        $this->model()->withQuery($queryCallback);
+        call_user_func([$this->model(), 'withQuery'], $queryCallback);
 
         return $this;
     }
@@ -672,7 +672,7 @@ class EloquentRepository extends Repository implements TreeRepository
             });
         }
 
-        return $this->model()->toTree();
+        return call_user_func([$this->model(), 'toTree']);
     }
 
     /**

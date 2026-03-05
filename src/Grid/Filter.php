@@ -297,7 +297,7 @@ class Filter implements Renderable
      * Get input data.
      *
      * @param  string  $key
-     * @param  null  $value
+     * @param  mixed  $default
      * @return array|mixed
      */
     public function input($key = null, $default = null)
@@ -744,7 +744,11 @@ class Filter implements Renderable
         $filters = collect($this->filters);
 
         /** @var Collection $columns */
-        $columns = $filters->map->getElementName()->flatten();
+        $columns = $filters
+            ->map(function ($filter) {
+                return (array) $filter->getElementName();
+            })
+            ->flatten();
 
         $columns->push(
             $this->grid()->model()->getPageName()

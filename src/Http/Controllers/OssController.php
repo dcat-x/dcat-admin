@@ -170,7 +170,7 @@ class OssController extends AdminController
             $diskName = config('admin.upload.oss.private_disk', 'oss-private');
             $disk = Storage::disk($diskName);
             $expireMinutes = config('admin.upload.oss.signed_url_expire', 60);
-            $signedUrl = $disk->temporaryUrl($path, now()->addMinutes($expireMinutes));
+            $signedUrl = call_user_func([$disk, 'temporaryUrl'], $path, now()->addMinutes($expireMinutes));
 
             return redirect()->away($signedUrl);
         } catch (Exception $e) {

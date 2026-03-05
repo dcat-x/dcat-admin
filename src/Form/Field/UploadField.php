@@ -199,9 +199,9 @@ trait UploadField
         $this->prepareFile($file);
 
         if (! is_null($this->storagePermission)) {
-            $result = $this->getStorage()->putFileAs($this->getDirectory(), $file, $this->name, $this->storagePermission);
+            $result = call_user_func([$this->getStorage(), 'putFileAs'], $this->getDirectory(), $file, $this->name, $this->storagePermission);
         } else {
-            $result = $this->getStorage()->putFileAs($this->getDirectory(), $file, $this->name);
+            $result = call_user_func([$this->getStorage(), 'putFileAs'], $this->getDirectory(), $file, $this->name);
         }
 
         if ($result) {
@@ -387,7 +387,7 @@ trait UploadField
     /**
      * Destroy files.
      *
-     * @param  string|array  $path
+     * @param  string|array  $paths
      */
     public function deleteFile($paths)
     {
@@ -405,7 +405,7 @@ trait UploadField
             if ($storage->exists($path)) {
                 $storage->delete($path);
             } else {
-                $prefix = $storage->url('');
+                $prefix = call_user_func([$storage, 'url'], '');
                 $path = str_replace($prefix, '', $path);
 
                 if ($storage->exists($path)) {
@@ -469,7 +469,7 @@ trait UploadField
             return $path;
         }
 
-        return $this->getStorage()->url($path);
+        return call_user_func([$this->getStorage(), 'url'], $path);
     }
 
     /**

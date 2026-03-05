@@ -61,7 +61,7 @@ class Code extends Markdown
      *
      * @param  string  $file
      * @param  int  $lineNumber
-     * @param  int  $padding
+     * @param  int  $context
      * @return $this
      */
     public function section($file, $lineNumber = 1, $context = 5)

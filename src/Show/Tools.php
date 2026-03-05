@@ -203,7 +203,7 @@ class Tools implements Renderable
     {
         $url = $this->resource();
 
-        return url()->isValidUrl($url) ? $url : '/'.trim($url, '/');
+        return filter_var($url, FILTER_VALIDATE_URL) ? $url : '/'.trim($url, '/');
     }
 
     /**

@@ -40,7 +40,7 @@ class Expand extends AbstractDisplayer
         } elseif (is_string($callbackOrButton) && is_subclass_of($callbackOrButton, LazyRenderable::class)) {
             $html = '<div style="min-height: 150px"></div>';
 
-            $renderable = $callbackOrButton::make();
+            $renderable = call_user_func([$callbackOrButton, 'make']);
 
             $remoteUrl = $renderable->getUrl();
         } elseif ($callbackOrButton && is_string($callbackOrButton)) {

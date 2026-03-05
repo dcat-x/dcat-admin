@@ -292,7 +292,7 @@ class Form implements Renderable
     /**
      * Create a new form instance.
      *
-     * @param  Repository|Model|\Illuminate\Database\Eloquent\Builder|string  $model
+     * @param  Repository|Model|\Illuminate\Database\Eloquent\Builder|string  $repository
      */
     public function __construct($repository = null, ?Closure $callback = null, ?Request $request = null)
     {
@@ -744,7 +744,6 @@ class Form implements Renderable
     /**
      * Handle orderable update.
      *
-     * @param  int  $id
      * @return Response
      */
     protected function handleOrderable(array $input = [])
@@ -770,7 +769,7 @@ class Form implements Renderable
      * Handle update.
      *
      * @param  string|null  $redirectTo
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse||Response
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|Response
      */
     public function update(
         $id,

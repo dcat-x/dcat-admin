@@ -55,7 +55,6 @@ class Bootstrap
     }
 
     /**
-     * @param  \Illuminate\Http\Request
      * @return void
      */
     protected function storeCurrentUrl(Request $request)

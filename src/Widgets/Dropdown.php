@@ -99,7 +99,6 @@ class Dropdown extends Widget
     /**
      * Set the button style.
      *
-     * @param  string  $class
      * @return $this
      */
     public function buttonStyle(?string $style)
@@ -129,7 +128,6 @@ class Dropdown extends Widget
     /**
      * Show divider.
      *
-     * @param  string  $class
      * @return $this
      */
     public function divider()
@@ -142,7 +140,6 @@ class Dropdown extends Widget
     /**
      * Applies the callback to the elements of the options.
      *
-     * @param  string  $class
      * @return $this
      */
     public function map(\Closure $builder)

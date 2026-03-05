@@ -187,13 +187,13 @@ class WebUploader
      * @param  string  $tmpDir
      * @param  string  $newFilename
      */
-    protected function putTempFileContent($path, $tmpDir, $newFileame)
+    protected function putTempFileContent($path, $tmpDir, $newFilename)
     {
         $out = fopen($path, 'wb');
 
         if (flock($out, LOCK_EX)) {
             for ($index = 0; $index < $this->chunks; $index++) {
-                $partPath = "{$tmpDir}/{$newFileame}.{$index}.part";
+                $partPath = "{$tmpDir}/{$newFilename}.{$index}.part";
                 if (! $in = @fopen($partPath, 'rb')) {
                     break;
                 }

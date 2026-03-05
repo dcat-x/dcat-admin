@@ -82,7 +82,7 @@ class MenuController extends AdminController
                 $payload = "<i class='fa {$branch['icon']}'></i>&nbsp;<strong>{$branch['title']}</strong>";
 
                 if (! isset($branch['children'])) {
-                    if (url()->isValidUrl($branch['uri'])) {
+                    if (filter_var($branch['uri'], FILTER_VALIDATE_URL)) {
                         $uri = $branch['uri'];
                     } else {
                         $uri = admin_base_path($branch['uri']);
