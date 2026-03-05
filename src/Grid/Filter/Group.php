@@ -253,7 +253,7 @@ class Group extends AbstractFilter
         $group = Arr::get($inputs, "{$this->sanitizeId()}_group");
 
         if ($this->group->isEmpty()) {
-            call_user_func($this->builder, $this);
+            $this->invokeGroupBuilder();
         }
 
         if ($query = $this->group->get($group)) {
@@ -313,9 +313,14 @@ JS;
         $this->injectScript();
 
         if ($this->builder && $this->group->isEmpty()) {
-            call_user_func($this->builder, $this);
+            $this->invokeGroupBuilder();
         }
 
         return parent::render();
+    }
+
+    protected function invokeGroupBuilder(): void
+    {
+        ($this->builder)($this);
     }
 }

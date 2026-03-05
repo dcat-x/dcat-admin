@@ -9,7 +9,7 @@ class Link extends AbstractDisplayer
         if ($href instanceof \Closure) {
             $href = $href->bindTo($this->row);
 
-            $href = call_user_func($href, $this->value);
+            $href = $href($this->value);
         } else {
             $href = $href ?: $this->value;
         }

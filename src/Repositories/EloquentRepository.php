@@ -379,7 +379,7 @@ class EloquentRepository extends Repository implements TreeRepository
         $query = $this->newQuery();
 
         if ($this->isSoftDeletes) {
-            call_user_func([$query, 'withTrashed']);
+            $this->applyWithTrashed($query);
         }
 
         $this->model = $query
@@ -399,7 +399,7 @@ class EloquentRepository extends Repository implements TreeRepository
         $query = $this->newQuery();
 
         if ($this->isSoftDeletes) {
-            call_user_func([$query, 'withTrashed']);
+            $this->applyWithTrashed($query);
         }
 
         $this->model = $query
@@ -498,7 +498,7 @@ class EloquentRepository extends Repository implements TreeRepository
      */
     public function moveOrderUp()
     {
-        return (bool) call_user_func([$this->getSortableModel(), 'moveOrderUp']);
+        return $this->callSortable('moveOrderUp');
     }
 
     /**
@@ -508,7 +508,7 @@ class EloquentRepository extends Repository implements TreeRepository
      */
     public function moveOrderDown()
     {
-        return (bool) call_user_func([$this->getSortableModel(), 'moveOrderDown']);
+        return $this->callSortable('moveOrderDown');
     }
 
     /**
@@ -553,7 +553,7 @@ class EloquentRepository extends Repository implements TreeRepository
 
             $data = $model->toArray();
 
-            if ($this->isSoftDeletes && call_user_func([$model, 'trashed'])) {
+            if ($this->isSoftDeletes && $this->isTrashed($model)) {
                 $form->deleteFiles($data, true);
                 $model->forceDelete();
 
@@ -578,7 +578,7 @@ class EloquentRepository extends Repository implements TreeRepository
         $query = $this->newQuery();
 
         if ($this->isSoftDeletes) {
-            call_user_func([$query, 'withTrashed']);
+            $this->applyWithTrashed($query);
         }
 
         $id = $form->getKey();
@@ -643,7 +643,7 @@ class EloquentRepository extends Repository implements TreeRepository
      */
     public function saveOrder($tree = [], $parentId = 0)
     {
-        call_user_func([$this->model(), 'saveOrder'], $tree, $parentId);
+        $this->callModelMethod('saveOrder', [$tree, $parentId]);
     }
 
     /**
@@ -654,7 +654,7 @@ class EloquentRepository extends Repository implements TreeRepository
      */
     public function withQuery($queryCallback)
     {
-        call_user_func([$this->model(), 'withQuery'], $queryCallback);
+        $this->callModelMethod('withQuery', [$queryCallback]);
 
         return $this;
     }
@@ -672,7 +672,7 @@ class EloquentRepository extends Repository implements TreeRepository
             });
         }
 
-        return call_user_func([$this->model(), 'toTree']);
+        return $this->callModelMethod('toTree');
     }
 
     /**
@@ -685,6 +685,26 @@ class EloquentRepository extends Repository implements TreeRepository
         }
 
         return $this->model()->newQuery();
+    }
+
+    protected function applyWithTrashed($query): void
+    {
+        call_user_func([$query, 'withTrashed']);
+    }
+
+    protected function callSortable(string $method): bool
+    {
+        return (bool) call_user_func([$this->getSortableModel(), $method]);
+    }
+
+    protected function isTrashed($model): bool
+    {
+        return (bool) call_user_func([$model, 'trashed']);
+    }
+
+    protected function callModelMethod(string $method, array $arguments = [])
+    {
+        return call_user_func([$this->model(), $method], ...$arguments);
     }
 
     /**

@@ -21,7 +21,7 @@ class HandleActionController
         if (! $action->passesAuthorization()) {
             $response = $action->failedAuthorization();
         } else {
-            $response = call_user_func([$action, 'handle'], $request);
+            $response = $this->handleAction($action, $request);
         }
 
         return $response instanceof Response ? $response->send() : $response;
@@ -54,5 +54,10 @@ class HandleActionController
         }
 
         return $action;
+    }
+
+    protected function handleAction(Action $action, Request $request)
+    {
+        return call_user_func([$action, 'handle'], $request);
     }
 }

@@ -41,7 +41,7 @@ trait HasBuilderEvents
                 unset($listeners[$k]);
             }
 
-            call_user_func($callback, $this, ...$params);
+            $callback($this, ...$params);
         }
 
         $context[$key] = $listeners;

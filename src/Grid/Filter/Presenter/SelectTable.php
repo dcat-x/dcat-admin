@@ -141,7 +141,7 @@ class SelectTable extends Presenter
         $value = Helper::array($this->value());
 
         if ($this->options instanceof \Closure) {
-            $this->options = call_user_func($this->options, $value, $this);
+            $this->options = ($this->options)($value, $this);
         }
 
         $values = [];

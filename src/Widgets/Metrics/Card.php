@@ -550,7 +550,7 @@ JS;
                 'content' => $this->renderContent(),
             ],
             $this->chart && method_exists($this->chart, 'valueResult')
-                ? (array) call_user_func([$this->chart, 'valueResult'])
+                ? (array) $this->chart->valueResult()
                 : []
         );
     }

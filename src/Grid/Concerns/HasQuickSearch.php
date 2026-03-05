@@ -110,7 +110,7 @@ trait HasQuickSearch
 
         if ($this->search instanceof \Closure) {
             return $this->model()->where(function ($q) use ($query) {
-                return call_user_func($this->search, $q, $query);
+                return $this->invokeQuickSearchCallback($q, $query);
             });
         }
 
@@ -129,6 +129,11 @@ trait HasQuickSearch
         } elseif (is_null($this->search)) {
             $this->addWhereBindings($query);
         }
+    }
+
+    protected function invokeQuickSearchCallback($queryBuilder, string $query)
+    {
+        return ($this->search)($queryBuilder, $query);
     }
 
     /**

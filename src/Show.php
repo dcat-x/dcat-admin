@@ -646,7 +646,7 @@ class Show implements Renderable
         $model = $this->model();
 
         if (is_callable($this->builder)) {
-            call_user_func($this->builder, $this);
+            $this->invokeShowBuilder();
         }
 
         if ($this->fields->isEmpty()) {
@@ -668,6 +668,11 @@ class Show implements Renderable
         ];
 
         return view($this->view, $data)->render();
+    }
+
+    protected function invokeShowBuilder(): void
+    {
+        ($this->builder)($this);
     }
 
     /**

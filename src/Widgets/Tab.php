@@ -114,7 +114,7 @@ class Tab extends Widget
     {
         if (is_array($links[0])) {
             foreach ($links as $link) {
-                call_user_func([$this, 'dropDown'], $link);
+                $this->dropDown($link);
             }
 
             return $this;

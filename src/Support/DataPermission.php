@@ -54,12 +54,7 @@ class DataPermission
             return collect();
         }
 
-        // 确保缓存在新请求时自动重置
-        $requestHash = spl_object_id(App::make('request'));
-        if (static::$cacheRequestHash !== $requestHash) {
-            static::$rulesCache = [];
-            static::$cacheRequestHash = $requestHash;
-        }
+        $this->initializeRequestCache();
 
         $cacheKey = $this->user->id.'_'.$menuId;
 
@@ -265,11 +260,7 @@ class DataPermission
      */
     protected function getPrimaryDepartmentId()
     {
-        if (! config('admin.department.enable', false)) {
-            return null;
-        }
-
-        if (! method_exists($this->user, 'primaryDepartment')) {
+        if (! $this->canUsePrimaryDepartment()) {
             return null;
         }
 
@@ -283,11 +274,7 @@ class DataPermission
      */
     protected function getDepartmentIds(): array
     {
-        if (! config('admin.department.enable', false)) {
-            return [];
-        }
-
-        if (! method_exists($this->user, 'departments')) {
+        if (! $this->canUseDepartmentList()) {
             return [];
         }
 
@@ -305,11 +292,7 @@ class DataPermission
      */
     protected function getPrimaryDepartmentPath()
     {
-        if (! config('admin.department.enable', false)) {
-            return null;
-        }
-
-        if (! method_exists($this->user, 'primaryDepartment')) {
+        if (! $this->canUsePrimaryDepartment()) {
             return null;
         }
 
@@ -383,5 +366,28 @@ class DataPermission
         $this->primaryDepartmentCache = $this->user->primaryDepartment()->first();
 
         return $this->primaryDepartmentCache;
+    }
+
+    protected function initializeRequestCache(): void
+    {
+        $requestHash = spl_object_id(App::make('request'));
+        if (static::$cacheRequestHash !== $requestHash) {
+            static::$rulesCache = [];
+            static::$cacheRequestHash = $requestHash;
+        }
+    }
+
+    protected function canUsePrimaryDepartment(): bool
+    {
+        return config('admin.department.enable', false)
+            && $this->user
+            && method_exists($this->user, 'primaryDepartment');
+    }
+
+    protected function canUseDepartmentList(): bool
+    {
+        return config('admin.department.enable', false)
+            && $this->user
+            && method_exists($this->user, 'departments');
     }
 }

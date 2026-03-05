@@ -170,7 +170,7 @@ class OssController extends AdminController
             $diskName = config('admin.upload.oss.private_disk', 'oss-private');
             $disk = Storage::disk($diskName);
             $expireMinutes = config('admin.upload.oss.signed_url_expire', 60);
-            $signedUrl = call_user_func([$disk, 'temporaryUrl'], $path, now()->addMinutes($expireMinutes));
+            $signedUrl = $this->temporaryUrl($disk, $path, $expireMinutes);
 
             return redirect()->away($signedUrl);
         } catch (Exception $e) {
@@ -181,5 +181,10 @@ class OssController extends AdminController
 
             return response()->json(['error' => 'Failed to generate URL'], 500);
         }
+    }
+
+    protected function temporaryUrl($disk, string $path, int $expireMinutes): string
+    {
+        return (string) call_user_func([$disk, 'temporaryUrl'], $path, now()->addMinutes($expireMinutes));
     }
 }

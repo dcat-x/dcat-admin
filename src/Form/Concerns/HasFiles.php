@@ -127,10 +127,10 @@ trait HasFiles
                 is_string($input)
                 || (is_array($input) && ! Arr::isAssoc($input))
             ) {
-                $input = [call_user_func([$field, 'column']) => $input];
+                $input = [$this->getUploadFieldColumn($field) => $input];
             }
 
-            call_user_func([$field, 'setOriginal'], $input);
+            $this->setUploadFieldOriginal($field, $input);
         }
 
         if ($this->callFileDeleting($field) === false) {
@@ -227,5 +227,15 @@ trait HasFiles
         $this->request->replace($input);
 
         return $input;
+    }
+
+    protected function getUploadFieldColumn(UploadFieldInterface $field): string
+    {
+        return (string) call_user_func([$field, 'column']);
+    }
+
+    protected function setUploadFieldOriginal(UploadFieldInterface $field, array $input): void
+    {
+        call_user_func([$field, 'setOriginal'], $input);
     }
 }

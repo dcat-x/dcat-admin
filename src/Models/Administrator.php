@@ -68,13 +68,20 @@ class Administrator extends Model implements AuthenticatableContract, Authorizab
 
         if ($avatar) {
             if (! URL::isValidUrl($avatar)) {
-                $avatar = call_user_func([Storage::disk(config('admin.upload.disk')), 'url'], $avatar);
+                $avatar = $this->resolveStorageUrl(config('admin.upload.disk'), $avatar);
             }
 
             return $avatar;
         }
 
         return admin_asset(config('admin.default_avatar') ?: '@admin/images/default-avatar.jpg');
+    }
+
+    protected function resolveStorageUrl(?string $disk, string $path): string
+    {
+        $storage = Storage::disk($disk);
+
+        return (string) call_user_func([$storage, 'url'], $path);
     }
 
     /**

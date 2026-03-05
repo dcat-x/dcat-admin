@@ -66,7 +66,7 @@ class ArrayField extends HasMany
 
         $form->setResolvingFieldCallbacks($this->resolvingFieldCallbacks);
 
-        call_user_func($this->builder, $form);
+        $this->invokeNestedBuilder($form);
 
         $hidden = $form->hidden(NestedForm::REMOVE_FLAG_NAME)->default(0)->addElementClass(NestedForm::REMOVE_FLAG_CLASS);
 
@@ -74,5 +74,10 @@ class ArrayField extends HasMany
         $form->layout()->appendToLastColumn($hidden);
 
         return $form;
+    }
+
+    protected function invokeNestedBuilder(NestedForm $form): void
+    {
+        ($this->builder)($form);
     }
 }

@@ -439,7 +439,7 @@ class Model
         }
 
         if ($this->builder && is_callable($this->builder)) {
-            $results = call_user_func($this->builder, $this);
+            $results = $this->invokeDataBuilder($this->builder);
         } else {
             $results = $this->repository->get($this);
         }
@@ -554,7 +554,7 @@ class Model
             }
 
             if (is_callable($method)) {
-                return call_user_func($method, $query, $k);
+                return $this->invokeQueryFilterCallback($method, $query, $k);
             }
 
             return true;
@@ -589,7 +589,7 @@ class Model
     {
         $this->queries = $this->queries->reject(function ($query) use ($method) {
             if (is_callable($method)) {
-                return call_user_func($method, $query);
+                return $this->invokeQueryRejectCallback($method, $query);
             }
 
             return in_array($query['method'], (array) $method, true);
@@ -711,5 +711,20 @@ class Model
         $this->data = null;
         $this->model = null;
         $this->initQueries();
+    }
+
+    protected function invokeDataBuilder(callable $builder)
+    {
+        return $builder($this);
+    }
+
+    protected function invokeQueryFilterCallback(callable $method, array $query, int $index): bool
+    {
+        return (bool) $method($query, $index);
+    }
+
+    protected function invokeQueryRejectCallback(callable $method, array $query): bool
+    {
+        return (bool) $method($query);
     }
 }

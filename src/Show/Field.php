@@ -216,20 +216,25 @@ class Field implements Renderable
             }
 
             $path = Helper::array($path);
+            $storage = null;
 
-            return collect($path)->transform(function ($path) use ($server, $width, $height) {
+            if (! $server) {
+                $disk = config('admin.upload.disk');
+
+                if (! config("filesystems.disks.{$disk}")) {
+                    return '';
+                }
+
+                $storage = Storage::disk($disk);
+            }
+
+            return collect($path)->transform(function ($path) use ($server, $width, $height, $storage) {
                 if (filter_var($path, FILTER_VALIDATE_URL)) {
                     $src = $path;
                 } elseif ($server) {
                     $src = rtrim($server, '/').'/'.ltrim($path, '/');
                 } else {
-                    $disk = config('admin.upload.disk');
-
-                    if (config("filesystems.disks.{$disk}")) {
-                        $src = call_user_func([Storage::disk($disk), 'url'], $path);
-                    } else {
-                        return '';
-                    }
+                    $src = $this->resolveStorageUrl($storage, $path);
                 }
 
                 return "<img data-action='preview-img' src='$src' style='max-width:{$width}px;max-height:{$height}px' class='img' />";
@@ -254,8 +259,9 @@ class Field implements Renderable
             }
 
             $path = Helper::array($path);
+            $storage = $server ? null : Storage::disk(config('admin.upload.disk'));
 
-            $list = collect($path)->transform(function ($path) use ($server, $field) {
+            $list = collect($path)->transform(function ($path) use ($server, $field, $storage) {
                 $name = Helper::basename($path);
 
                 $field->wrap(false);
@@ -267,9 +273,8 @@ class Field implements Renderable
                 } elseif ($server) {
                     $url = $server.$path;
                 } else {
-                    $storage = Storage::disk(config('admin.upload.disk'));
                     if ($storage->exists($path)) {
-                        $url = call_user_func([$storage, 'url'], $path);
+                        $url = $this->resolveStorageUrl($storage, $path);
                         $size = ($storage->size($path) / 1000).'KB';
                     }
                 }
@@ -298,6 +303,11 @@ HTML;
 
             return "<ul class=\"mailbox-attachments clearfix\">{$list}</ul>";
         });
+    }
+
+    protected function resolveStorageUrl($storage, string $path): string
+    {
+        return (string) call_user_func([$storage, 'url'], $path);
     }
 
     /**

@@ -211,7 +211,7 @@ class Content implements Renderable
     {
         if ($content instanceof Closure) {
             $row = new Row;
-            call_user_func($content, $row);
+            $this->invokeRowBuilder($content, $row);
             $this->addRow($row);
         } else {
             $this->addRow(new Row($content));
@@ -227,7 +227,7 @@ class Content implements Renderable
     {
         if ($content instanceof Closure) {
             $row = new Row;
-            call_user_func($content, $row);
+            $this->invokeRowBuilder($content, $row);
             $this->prependRow($row);
         } else {
             $this->prependRow(new Row($content));
@@ -239,6 +239,11 @@ class Content implements Renderable
     protected function prependRow(Row $row)
     {
         array_unshift($this->rows, $row);
+    }
+
+    protected function invokeRowBuilder(Closure $content, Row $row): void
+    {
+        $content($row);
     }
 
     /**

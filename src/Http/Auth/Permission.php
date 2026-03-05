@@ -33,8 +33,7 @@ class Permission
             return true;
         }
 
-        /** @var Administrator|null $user */
-        $user = Admin::user();
+        $user = static::currentUser();
 
         if ($user && $user->cannot($permission)) {
             static::error();
@@ -53,8 +52,7 @@ class Permission
             return true;
         }
 
-        /** @var Administrator|null $user */
-        $user = Admin::user();
+        $user = static::currentUser();
 
         if (! $user || ! $user->inRoles($roles)) {
             static::error();
@@ -83,8 +81,7 @@ class Permission
             return true;
         }
 
-        /** @var Administrator|null $user */
-        $user = Admin::user();
+        $user = static::currentUser();
 
         if ($user && $user->inRoles($roles)) {
             static::error();
@@ -120,8 +117,7 @@ class Permission
     {
         $roleModel = config('admin.database.roles_model');
 
-        /** @var Administrator|null $user */
-        $user = Admin::user();
+        $user = static::currentUser();
 
         return ! config('admin.permission.enable') || ($user && $user->isRole($roleModel::ADMINISTRATOR));
     }
@@ -132,5 +128,13 @@ class Permission
     public static function registerErrorHandler(\Closure $callback)
     {
         static::$errorHandler = $callback;
+    }
+
+    protected static function currentUser(): ?Administrator
+    {
+        /** @var Administrator|null $user */
+        $user = Admin::user();
+
+        return $user;
     }
 }

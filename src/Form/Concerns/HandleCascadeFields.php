@@ -13,7 +13,7 @@ trait HandleCascadeFields
     {
         $this->pushField($group = new Field\CascadeGroup($dependency));
 
-        call_user_func($closure, $this);
+        $closure($this);
 
         $this->html($group->end())->plain();
 

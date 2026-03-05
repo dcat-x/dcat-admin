@@ -48,7 +48,7 @@ JS;
         $icon = '<i class="fa fa-angle-right"></i>';
         $repository = $this->grid->model()->repository();
         $parentColumn = $repository->getParentColumn();
-        $model = call_user_func([$repository, 'model']);
+        $model = $this->resolveRepositoryModel($repository);
         $num = $model->where($parentColumn, $key)->count();
         if (empty($num)) {
             $icon = '';
@@ -67,10 +67,7 @@ EOT;
 
         $showNextPage = $this->grid->allowPagination();
         if (! $model->showAllChildrenNodes() && $showNextPage) {
-            $paginator = $model->paginator();
-            $lastPage = method_exists($paginator, 'lastPage')
-                ? (int) call_user_func([$paginator, 'lastPage'])
-                : 1;
+            $lastPage = $this->resolvePaginatorLastPage($model->paginator());
 
             $showNextPage =
                 $model->getCurrentChildrenPage() < $lastPage
@@ -78,5 +75,19 @@ EOT;
         }
 
         return $showNextPage;
+    }
+
+    protected function resolveRepositoryModel($repository)
+    {
+        return call_user_func([$repository, 'model']);
+    }
+
+    protected function resolvePaginatorLastPage($paginator): int
+    {
+        if (method_exists($paginator, 'lastPage')) {
+            return (int) call_user_func([$paginator, 'lastPage']);
+        }
+
+        return 1;
     }
 }

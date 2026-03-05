@@ -45,7 +45,7 @@ class Row implements Renderable
 
         $this->fields = new Collection;
 
-        call_user_func($this->callback, $this);
+        ($this->callback)($this);
     }
 
     /**

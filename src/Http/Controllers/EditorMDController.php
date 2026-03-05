@@ -17,9 +17,9 @@ class EditorMDController
 
         $newName = $this->generateNewName($file);
 
-        call_user_func([$disk, 'putFileAs'], $dir, $file, $newName);
+        $this->putFileAs($disk, $dir, $file, $newName);
 
-        return ['success' => 1, 'url' => call_user_func([$disk, 'url'], "{$dir}/$newName")];
+        return ['success' => 1, 'url' => $this->diskUrl($disk, "{$dir}/$newName")];
     }
 
     protected function generateNewName(UploadedFile $file)
@@ -35,5 +35,15 @@ class EditorMDController
         $disk = request()->get('disk') ?: config('admin.upload.disk');
 
         return Storage::disk($disk);
+    }
+
+    protected function putFileAs($disk, string $dir, UploadedFile $file, string $name): void
+    {
+        call_user_func([$disk, 'putFileAs'], $dir, $file, $name);
+    }
+
+    protected function diskUrl($disk, string $path): string
+    {
+        return (string) call_user_func([$disk, 'url'], $path);
     }
 }

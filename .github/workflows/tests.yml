@@ -6,16 +6,61 @@ on:
   pull_request:
     branches: [main, master, '*.x']
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  quality:
+    runs-on: ubuntu-latest
+    name: Quality (PHP 8.3)
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
+          coverage: none
+          cache: composer
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Run Pint
+        run: vendor/bin/pint --test
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse
+
   tests:
     runs-on: ubuntu-latest
+    needs: quality
 
     strategy:
       fail-fast: true
       matrix:
-        php: ['8.2', '8.3', '8.4']
+        include:
+          - php: '8.2'
+            suite: 'tests'
+            label: 'full'
+          - php: '8.4'
+            suite: 'tests'
+            label: 'full'
+          - php: '8.3'
+            suite: 'tests/Unit/Actions tests/Unit/Console tests/Unit/Contracts tests/Unit/Exception tests/Unit/Extend tests/Unit/Form'
+            label: 'unit-a'
+          - php: '8.3'
+            suite: 'tests/Unit/Grid tests/Unit/Http'
+            label: 'unit-gh'
+          - php: '8.3'
+            suite: 'tests/Feature tests/Unit/ApplicationTest.php tests/Unit/AdminTest.php tests/Unit/ColorTest.php tests/Unit/FormTest.php tests/Unit/GridTest.php tests/Unit/AdminServiceProviderTest.php tests/Unit/ShowTest.php tests/Unit/Layout tests/Unit/Models tests/Unit/Octane tests/Unit/Repositories tests/Unit/Scaffold tests/Unit/Services tests/Unit/Show tests/Unit/Support tests/Unit/Traits tests/Unit/Tree tests/Unit/Widgets'
+            label: 'unit-misc'
 
-    name: PHP ${{ matrix.php }}
+    name: PHP ${{ matrix.php }} / ${{ matrix.label }}
 
     steps:
       - name: Checkout code
@@ -27,15 +72,10 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
           coverage: none
+          cache: composer
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
 
-      - name: Run Pint
-        run: vendor/bin/pint --test
-
-      - name: Run PHPStan
-        run: vendor/bin/phpstan analyse
-
       - name: Run tests
-        run: vendor/bin/phpunit
+        run: vendor/bin/phpunit ${{ matrix.suite }}

@@ -106,9 +106,7 @@ trait HasTree
         $this->allowedTreeQuery = false;
 
         return $this->filterQueryBy(function ($query) {
-            $parentColumn = $this->repository
-                ? call_user_func([$this->repository, 'getParentColumn'])
-                : null;
+            $parentColumn = $this->getRepositoryParentColumn();
 
             if (
                 $query['method'] === 'where'
@@ -270,7 +268,7 @@ HTML
         $repository = $this->grid->model()->repository();
 
         if ($repository instanceof EloquentRepository) {
-            return call_user_func([$repository->model(), 'getDefaultParentId']);
+            return $this->resolveRepositoryDefaultParentId($repository);
         }
 
         return 0;
@@ -306,6 +304,25 @@ HTML
     {
         $paginator = $this->paginator();
 
+        return $this->resolvePaginatorLastPage($paginator);
+    }
+
+    protected function getRepositoryParentColumn(): ?string
+    {
+        if (! $this->repository) {
+            return null;
+        }
+
+        return (string) call_user_func([$this->repository, 'getParentColumn']);
+    }
+
+    protected function resolveRepositoryDefaultParentId(EloquentRepository $repository)
+    {
+        return call_user_func([$repository->model(), 'getDefaultParentId']);
+    }
+
+    protected function resolvePaginatorLastPage($paginator): int
+    {
         if (method_exists($paginator, 'lastPage')) {
             return (int) call_user_func([$paginator, 'lastPage']);
         }

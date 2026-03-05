@@ -44,6 +44,6 @@ class PrivateMultipleImage extends MultipleImage
             return admin_url('dcat-api/oss/proxy/'.ltrim($path, '/'));
         }
 
-        return call_user_func([$this->getStorage(), 'url'], $path);
+        return $this->storageUrl($path);
     }
 }

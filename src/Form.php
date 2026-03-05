@@ -1541,9 +1541,14 @@ class Form implements Renderable
      */
     public function footer(Closure $callback)
     {
-        call_user_func($callback, $this->builder->footer());
+        $this->invokeFooterBuilder($callback);
 
         return $this;
+    }
+
+    protected function invokeFooterBuilder(Closure $callback): void
+    {
+        $callback($this->builder->footer());
     }
 
     /**

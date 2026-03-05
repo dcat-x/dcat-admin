@@ -607,6 +607,11 @@ if (! function_exists('rate_formatter')) {
 }
 
 if (! function_exists('ali_sign_url')) {
+    function admin_storage_temporary_url($storage, string $path, int $expireMinutes): string
+    {
+        return (string) call_user_func([$storage, 'temporaryUrl'], $path, now()->addMinutes($expireMinutes));
+    }
+
     /**
      * 生成阿里云 OSS 私有文件的签名访问 URL.
      *
@@ -624,7 +629,7 @@ if (! function_exists('ali_sign_url')) {
             $diskName = $disk ?? config('admin.upload.oss.private_disk', 'oss-private');
             $storage = \Illuminate\Support\Facades\Storage::disk($diskName);
 
-            return call_user_func([$storage, 'temporaryUrl'], $path, now()->addMinutes($expireMinutes));
+            return admin_storage_temporary_url($storage, $path, $expireMinutes);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::warning('Failed to generate signed URL', [
                 'path' => $path,

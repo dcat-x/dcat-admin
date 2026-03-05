@@ -14,17 +14,23 @@ class Image extends AbstractDisplayer
             $this->value = $this->value->toArray();
         }
         $this->value = Helper::array($this->value);
+        $storage = $server ? null : Storage::disk(config('admin.upload.disk'));
 
-        return collect((array) $this->value)->filter()->map(function ($path) use ($server, $width, $height) {
+        return collect((array) $this->value)->filter()->map(function ($path) use ($server, $width, $height, $storage) {
             if (filter_var($path, FILTER_VALIDATE_URL) || mb_strpos($path, 'data:image') === 0) {
                 $src = $path;
             } elseif ($server) {
                 $src = rtrim($server, '/').'/'.ltrim($path, '/');
             } else {
-                $src = call_user_func([Storage::disk(config('admin.upload.disk')), 'url'], $path);
+                $src = $this->resolveStorageUrl($storage, $path);
             }
 
             return "<img data-action='preview-img' src='$src' style='max-width:{$width}px;max-height:{$height}px;cursor:pointer' class='img img-thumbnail' />";
         })->implode('&nbsp;');
+    }
+
+    protected function resolveStorageUrl($storage, string $path): string
+    {
+        return (string) call_user_func([$storage, 'url'], $path);
     }
 }

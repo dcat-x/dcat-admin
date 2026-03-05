@@ -226,12 +226,17 @@ class Select extends Field
     protected function formatOptions()
     {
         if ($this->options instanceof \Closure) {
-            $this->options = $this->options->bindTo($this->values());
-
-            $this->options(call_user_func($this->options, $this->value(), $this));
+            $this->options($this->resolveOptionsFromClosure($this->options));
         }
 
         $this->options = array_filter($this->options, 'strlen');
+    }
+
+    protected function resolveOptionsFromClosure(\Closure $options)
+    {
+        $options = $options->bindTo($this->values());
+
+        return $options($this->value(), $this);
     }
 
     /**

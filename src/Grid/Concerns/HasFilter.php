@@ -55,7 +55,7 @@ trait HasFilter
             return $this->filter;
         }
 
-        call_user_func($callback, $this->filter);
+        $this->invokeFilterBuilder($callback);
 
         return $this;
     }
@@ -128,6 +128,11 @@ trait HasFilter
     public function showFilterButton(bool $val = true)
     {
         return $this->disableFilterButton(! $val);
+    }
+
+    protected function invokeFilterBuilder(Closure $callback): void
+    {
+        $callback($this->filter);
     }
 
     protected function addFilterScript()

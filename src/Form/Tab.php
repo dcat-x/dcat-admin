@@ -54,7 +54,7 @@ class Tab
      */
     public function append($title, \Closure $content, bool $active = false, ?string $id = null)
     {
-        call_user_func($content, $this->form);
+        $this->invokeTabBuilder($content);
 
         $fields = $this->collectFields();
         $layout = $this->collectColumnLayout();
@@ -64,6 +64,11 @@ class Tab
         $this->tabs->push(compact('id', 'title', 'fields', 'active', 'layout'));
 
         return $this;
+    }
+
+    protected function invokeTabBuilder(\Closure $content): void
+    {
+        $content($this->form);
     }
 
     /**

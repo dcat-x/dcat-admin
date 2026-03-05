@@ -506,10 +506,15 @@ class Grid
     public function callBuilder()
     {
         if ($this->builder && ! $this->built) {
-            call_user_func($this->builder, $this);
+            $this->invokeGridBuilder();
         }
 
         $this->built = true;
+    }
+
+    protected function invokeGridBuilder(): void
+    {
+        ($this->builder)($this);
     }
 
     /**

@@ -199,9 +199,9 @@ trait UploadField
         $this->prepareFile($file);
 
         if (! is_null($this->storagePermission)) {
-            $result = call_user_func([$this->getStorage(), 'putFileAs'], $this->getDirectory(), $file, $this->name, $this->storagePermission);
+            $result = $this->storagePutFileAs($this->getDirectory(), $file, $this->name, $this->storagePermission);
         } else {
-            $result = call_user_func([$this->getStorage(), 'putFileAs'], $this->getDirectory(), $file, $this->name);
+            $result = $this->storagePutFileAs($this->getDirectory(), $file, $this->name);
         }
 
         if ($result) {
@@ -405,7 +405,7 @@ trait UploadField
             if ($storage->exists($path)) {
                 $storage->delete($path);
             } else {
-                $prefix = call_user_func([$storage, 'url'], '');
+                $prefix = $this->storageUrl('', $storage);
                 $path = str_replace($prefix, '', $path);
 
                 if ($storage->exists($path)) {
@@ -469,7 +469,7 @@ trait UploadField
             return $path;
         }
 
-        return call_user_func([$this->getStorage(), 'url'], $path);
+        return $this->storageUrl($path);
     }
 
     /**
@@ -480,5 +480,23 @@ trait UploadField
         $this->storagePermission = $permission;
 
         return $this;
+    }
+
+    protected function storagePutFileAs(string $directory, UploadedFile $file, string $name, ?string $permission = null)
+    {
+        $storage = $this->getStorage();
+
+        if ($permission !== null) {
+            return call_user_func([$storage, 'putFileAs'], $directory, $file, $name, $permission);
+        }
+
+        return call_user_func([$storage, 'putFileAs'], $directory, $file, $name);
+    }
+
+    protected function storageUrl(string $path, $storage = null): string
+    {
+        $storage = $storage ?: $this->getStorage();
+
+        return call_user_func([$storage, 'url'], $path);
     }
 }

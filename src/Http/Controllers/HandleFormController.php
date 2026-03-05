@@ -23,7 +23,7 @@ class HandleFormController
             return $form->failedAuthorization();
         }
 
-        call_user_func([$form, 'form']);
+        $this->buildForm($form);
 
         if ($errors = $form->validate($request)) {
             return $form->validationErrorsResponse($errors);
@@ -31,14 +31,14 @@ class HandleFormController
 
         $input = $form->sanitize($request->all());
 
-        return $this->sendResponse(call_user_func([$form, 'handle'], $input));
+        return $this->sendResponse($this->handleForm($form, $input));
     }
 
     public function uploadFile(Request $request)
     {
         $form = $this->resolveForm($request);
 
-        call_user_func([$form, 'form']);
+        $this->buildForm($form);
 
         $field = $this->getField($request, $form);
 
@@ -80,7 +80,7 @@ class HandleFormController
     {
         $form = $this->resolveForm($request);
 
-        call_user_func([$form, 'form']);
+        $this->buildForm($form);
 
         $field = $this->getField($request, $form);
 
@@ -131,5 +131,15 @@ class HandleFormController
         }
 
         return $response;
+    }
+
+    protected function buildForm(Form $form): void
+    {
+        call_user_func([$form, 'form']);
+    }
+
+    protected function handleForm(Form $form, array $input)
+    {
+        return call_user_func([$form, 'handle'], $input);
     }
 }

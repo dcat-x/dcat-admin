@@ -9,7 +9,9 @@ class Downloadable extends AbstractDisplayer
 {
     public function display($server = '', $disk = null)
     {
-        return collect(Helper::array($this->value))->filter()->map(function ($value) use ($server, $disk) {
+        $storage = $server ? null : Storage::disk($disk ?: config('admin.upload.disk'));
+
+        return collect(Helper::array($this->value))->filter()->map(function ($value) use ($server, $storage) {
             if (empty($value)) {
                 return '';
             }
@@ -19,7 +21,7 @@ class Downloadable extends AbstractDisplayer
             } elseif ($server) {
                 $src = rtrim($server, '/').'/'.ltrim($value, '/');
             } else {
-                $src = call_user_func([Storage::disk($disk ?: config('admin.upload.disk')), 'url'], $value);
+                $src = $this->resolveStorageUrl($storage, $value);
             }
 
             $name = Helper::basename($value);
@@ -30,5 +32,10 @@ class Downloadable extends AbstractDisplayer
 </a>
 HTML;
         })->implode('<br>');
+    }
+
+    protected function resolveStorageUrl($storage, string $path): string
+    {
+        return (string) call_user_func([$storage, 'url'], $path);
     }
 }

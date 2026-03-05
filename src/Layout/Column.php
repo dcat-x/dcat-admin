@@ -31,7 +31,7 @@ class Column implements Renderable
         $width = $this->normalizeWidth($width);
 
         if ($content instanceof \Closure) {
-            call_user_func($content, $this);
+            $this->invokeColumnBuilder($content);
         } else {
             $this->append($content);
         }
@@ -78,10 +78,20 @@ class Column implements Renderable
         } else {
             $row = new Row;
 
-            call_user_func($content, $row);
+            $this->invokeRowBuilder($content, $row);
         }
 
         return $this->append($row);
+    }
+
+    protected function invokeColumnBuilder(\Closure $content): void
+    {
+        $content($this);
+    }
+
+    protected function invokeRowBuilder(\Closure $content, Row $row): void
+    {
+        $content($row);
     }
 
     /**

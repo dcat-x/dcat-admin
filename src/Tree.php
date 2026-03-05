@@ -157,7 +157,7 @@ class Tree implements Renderable
         $this->setUpTools();
 
         if ($callback instanceof \Closure) {
-            call_user_func($callback, $this);
+            $callback($this);
         }
 
         $this->callResolving();
@@ -565,7 +565,7 @@ class Tree implements Renderable
         }
 
         if ($callback instanceof \Closure) {
-            call_user_func($callback, $this->tools);
+            $callback($this->tools);
 
             return $this;
         }

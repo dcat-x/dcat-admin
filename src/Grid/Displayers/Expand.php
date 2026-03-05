@@ -40,7 +40,7 @@ class Expand extends AbstractDisplayer
         } elseif (is_string($callbackOrButton) && is_subclass_of($callbackOrButton, LazyRenderable::class)) {
             $html = '<div style="min-height: 150px"></div>';
 
-            $renderable = call_user_func([$callbackOrButton, 'make']);
+            $renderable = $this->makeLazyRenderable($callbackOrButton);
 
             $remoteUrl = $renderable->getUrl();
         } elseif ($callbackOrButton && is_string($callbackOrButton)) {
@@ -65,5 +65,10 @@ class Expand extends AbstractDisplayer
         static::$counter++;
 
         return $this->grid->makeName($key.'-'.static::$counter);
+    }
+
+    protected function makeLazyRenderable(string $class): LazyRenderable
+    {
+        return $class::make();
     }
 }

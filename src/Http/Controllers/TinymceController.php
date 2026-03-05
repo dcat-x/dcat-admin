@@ -17,9 +17,9 @@ class TinymceController
 
         $newName = $this->generateNewName($file);
 
-        call_user_func([$disk, 'putFileAs'], $dir, $file, $newName);
+        $this->putFileAs($disk, $dir, $file, $newName);
 
-        return ['location' => call_user_func([$disk, 'url'], "{$dir}/$newName")];
+        return ['location' => $this->diskUrl($disk, "{$dir}/$newName")];
     }
 
     protected function generateNewName(UploadedFile $file)
@@ -35,5 +35,15 @@ class TinymceController
         $disk = request()->get('disk') ?: config('admin.upload.disk');
 
         return Storage::disk($disk);
+    }
+
+    protected function putFileAs($disk, string $dir, UploadedFile $file, string $name): void
+    {
+        call_user_func([$disk, 'putFileAs'], $dir, $file, $name);
+    }
+
+    protected function diskUrl($disk, string $path): string
+    {
+        return (string) call_user_func([$disk, 'url'], $path);
     }
 }
