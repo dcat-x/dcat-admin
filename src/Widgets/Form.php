@@ -249,7 +249,7 @@ class Form implements Renderable
 
     protected function initPayload()
     {
-        if ($payload = \request(static::LAZY_PAYLOAD_NAME)) {
+        if (($payload = \request(static::LAZY_PAYLOAD_NAME)) && method_exists($this, 'payload')) {
             $this->payload(json_decode($payload, true) ?? []);
         }
     }
@@ -730,7 +730,7 @@ HTML;
      */
     public function setCurrentUrl($url)
     {
-        if ($this instanceof LazyRenderable) {
+        if ($this instanceof LazyRenderable && method_exists($this, 'payload')) {
             $this->payload([static::CURRENT_URL_NAME => $url]);
         }
 

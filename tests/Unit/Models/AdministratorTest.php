@@ -9,6 +9,7 @@ use Dcat\Admin\Tests\TestCase;
 use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Collection;
 
 class AdministratorTest extends TestCase
 {
@@ -109,5 +110,34 @@ class AdministratorTest extends TestCase
         $admin = new Administrator;
 
         $this->assertNull($admin->primary_department_id);
+    }
+
+    public function test_all_roles_is_cached_for_repeated_calls(): void
+    {
+        $admin = new class extends Administrator
+        {
+            public int $departmentRoleCalls = 0;
+
+            public function getDepartmentRoles()
+            {
+                $this->departmentRoleCalls++;
+
+                return collect([
+                    (object) ['id' => 2, 'slug' => 'editor'],
+                ]);
+            }
+        };
+
+        $admin->setRelation('roles', collect([
+            (object) ['id' => 1, 'slug' => 'administrator'],
+        ]));
+
+        $first = $admin->allRoles();
+        $second = $admin->allRoles();
+
+        $this->assertInstanceOf(Collection::class, $first);
+        $this->assertCount(2, $first);
+        $this->assertSame($first->pluck('id')->all(), $second->pluck('id')->all());
+        $this->assertSame(1, $admin->departmentRoleCalls);
     }
 }

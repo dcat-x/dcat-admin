@@ -231,7 +231,7 @@ HTML;
             $this->disableDelete();
         }
 
-        if (empty($tools)) {
+        if (! $tools || ! $tools->count()) {
             return '';
         }
 

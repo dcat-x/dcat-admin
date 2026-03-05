@@ -9,6 +9,7 @@ use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 
@@ -26,6 +27,16 @@ class Administrator extends Model implements AuthenticatableContract, Authorizab
     const DEFAULT_ID = 1;
 
     protected $fillable = ['username', 'password', 'name', 'avatar'];
+
+    /**
+     * 部门角色缓存
+     */
+    protected ?Collection $departmentRolesCache = null;
+
+    /**
+     * 所有角色缓存（直接角色 + 部门角色）
+     */
+    protected ?Collection $allRolesCache = null;
 
     /**
      * Create a new Eloquent model instance.
@@ -122,7 +133,7 @@ class Administrator extends Model implements AuthenticatableContract, Authorizab
             return '';
         }
 
-        return $this->departments()->pluck('id')->implode(',');
+        return implode(',', $this->resolveDepartmentIds());
     }
 
     /**
@@ -130,24 +141,22 @@ class Administrator extends Model implements AuthenticatableContract, Authorizab
      */
     public function getDepartmentRoles()
     {
+        if ($this->departmentRolesCache !== null) {
+            return $this->departmentRolesCache;
+        }
+
         // 部门功能未启用或不继承部门角色时，返回空集合
         if (! config('admin.department.enable', false) || ! config('admin.department.inherit_department_roles', true)) {
-            return collect();
+            return $this->departmentRolesCache = collect();
         }
 
-        $departmentIds = $this->departments()->pluck('id')->toArray();
+        $departmentIds = $this->resolveDepartmentIds();
 
         if (empty($departmentIds)) {
-            return collect();
+            return $this->departmentRolesCache = collect();
         }
 
-        $roleModel = config('admin.database.roles_model');
-        $pivotTable = config('admin.database.department_roles_table', 'admin_department_roles');
-
-        return $roleModel::query()
-            ->join($pivotTable, 'role_id', '=', 'id')
-            ->whereIn('department_id', $departmentIds)
-            ->get();
+        return $this->departmentRolesCache = $this->queryDepartmentRolesByIds($departmentIds);
     }
 
     /**
@@ -155,10 +164,14 @@ class Administrator extends Model implements AuthenticatableContract, Authorizab
      */
     public function allRoles()
     {
+        if ($this->allRolesCache !== null) {
+            return $this->allRolesCache;
+        }
+
         $directRoles = $this->roles;
         $departmentRoles = $this->getDepartmentRoles();
 
-        return $directRoles->merge($departmentRoles)->unique('id');
+        return $this->allRolesCache = $directRoles->merge($departmentRoles)->unique('id');
     }
 
     /**
@@ -170,5 +183,21 @@ class Administrator extends Model implements AuthenticatableContract, Authorizab
     public function canSeeMenu($menu)
     {
         return true;
+    }
+
+    protected function resolveDepartmentIds(): array
+    {
+        return $this->departments()->pluck('id')->toArray();
+    }
+
+    protected function queryDepartmentRolesByIds(array $departmentIds): Collection
+    {
+        $roleModel = config('admin.database.roles_model');
+        $pivotTable = config('admin.database.department_roles_table', 'admin_department_roles');
+
+        return $roleModel::query()
+            ->join($pivotTable, 'role_id', '=', 'id')
+            ->whereIn('department_id', $departmentIds)
+            ->get();
     }
 }

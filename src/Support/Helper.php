@@ -252,7 +252,7 @@ class Helper
 
             $methods = array_map('strtoupper', explode(',', $methods));
 
-            if (! empty($methods) && ! in_array($request->method(), $methods)) {
+            if (! in_array($request->method(), $methods)) {
                 return false;
             }
         }
@@ -799,7 +799,7 @@ class Helper
                 $value = htmlentities($value ?? '');
             });
         } else {
-            $item = htmlentities($item ?? '');
+            $item = htmlentities((string) $item);
         }
 
         return $item;

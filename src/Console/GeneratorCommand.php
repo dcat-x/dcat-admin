@@ -112,7 +112,10 @@ abstract class GeneratorCommand extends Command
     {
         parent::__construct();
 
-        if (in_array(CreatesMatchingTest::class, class_uses_recursive($this))) {
+        if (
+            in_array(CreatesMatchingTest::class, class_uses_recursive($this))
+            && method_exists($this, 'addTestOptions')
+        ) {
             $this->addTestOptions();
         }
 
@@ -168,7 +171,10 @@ abstract class GeneratorCommand extends Command
 
         $this->info($this->type.' created successfully.');
 
-        if (in_array(CreatesMatchingTest::class, class_uses_recursive($this))) {
+        if (
+            in_array(CreatesMatchingTest::class, class_uses_recursive($this))
+            && method_exists($this, 'handleTestCreation')
+        ) {
             $this->handleTestCreation($path);
         }
     }

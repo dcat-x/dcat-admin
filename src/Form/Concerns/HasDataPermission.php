@@ -147,10 +147,15 @@ trait HasDataPermission
             $this->setDataPermissionMenuId($menuId);
         }
 
-        // 在表单构建后应用权限
-        $this->built(function () {
+        if (method_exists($this, 'built')) {
+            // 在表单构建后应用权限（兼容含 built 事件的实现）
+            $this->built(function () {
+                $this->applyFormFieldPermissions();
+            });
+        } else {
+            // 当前实现无 built 事件时，直接应用
             $this->applyFormFieldPermissions();
-        });
+        }
 
         return $this;
     }

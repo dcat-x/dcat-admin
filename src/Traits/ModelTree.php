@@ -362,7 +362,7 @@ trait ModelTree
             if (Request::has(Tree::SAVE_ORDER_NAME)) {
                 $order = Request::input(Tree::SAVE_ORDER_NAME);
 
-                Request::offsetUnset(Tree::SAVE_ORDER_NAME);
+                request()->offsetUnset(Tree::SAVE_ORDER_NAME);
 
                 Tree::make(new static)->saveOrder($order);
 

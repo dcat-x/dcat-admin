@@ -58,11 +58,13 @@ trait HasExporter
      */
     public function handleExportRequest($forceExport = false)
     {
+        $scope = request($this->exporter()->getQueryName());
+
         if (
             $this->exported
             || (
                 (! $this->allowExporter()
-                    || ! $scope = request($this->exporter()->getQueryName()))
+                    || ! $scope)
                 && ! $forceExport
             )
         ) {

@@ -60,9 +60,7 @@ trait HasUploadedFile
      */
     public function deleteFile($disk = null, $path = null)
     {
-        $disk = $disk ?: $this->disk();
-
-        return $disk->delete($path ?: request()->key);
+        return $this->doDeleteFile($disk, $path);
     }
 
     /**
@@ -74,9 +72,20 @@ trait HasUploadedFile
      */
     public function deleteFileAndResponse($disk = null, $path = null)
     {
-        $this->deleteFile($disk, $path);
+        $this->doDeleteFile($disk, $path);
 
         return $this->responseDeleted();
+    }
+
+    protected function doDeleteFile($disk = null, $path = null): bool
+    {
+        if (! $disk) {
+            $disk = Storage::disk(config('admin.upload.disk'));
+        } elseif (is_string($disk)) {
+            $disk = Storage::disk($disk);
+        }
+
+        return $disk->delete($path ?: request()->key);
     }
 
     /**

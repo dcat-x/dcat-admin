@@ -1,5 +1,5 @@
 parameters:
-    level: 0
+    level: 1
     paths:
         - src
     excludePaths:
@@ -15,4 +15,5 @@ parameters:
         - '#Access to undefined constant#'
         - '#has invalid type#'
         - '#is not covariant with#'
+        - '#Call to an undefined static method Dcat\\Admin\\Models\\[A-Za-z0-9_]+::(where|find|first|create|insert|truncate|pluck)\(\).#'
     reportUnmatchedIgnoredErrors: false
