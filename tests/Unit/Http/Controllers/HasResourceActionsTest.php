@@ -4,79 +4,111 @@ namespace Dcat\Admin\Tests\Unit\Http\Controllers;
 
 use Dcat\Admin\Http\Controllers\HasResourceActions;
 use Dcat\Admin\Tests\TestCase;
-use Mockery;
 
 class HasResourceActionsTest extends TestCase
 {
-    protected function tearDown(): void
+    public function test_update_proxies_to_form_update_with_same_id(): void
     {
-        parent::tearDown();
-        Mockery::close();
+        $controller = new class
+        {
+            use HasResourceActions;
+
+            public object $formMock;
+
+            public function __construct()
+            {
+                $this->formMock = new class
+                {
+                    public ?int $updatedId = null;
+
+                    public function update($id)
+                    {
+                        $this->updatedId = $id;
+
+                        return 'updated-'.$id;
+                    }
+                };
+            }
+
+            protected function form()
+            {
+                return $this->formMock;
+            }
+        };
+
+        $result = $controller->update(7);
+
+        $this->assertSame('updated-7', $result);
+        $this->assertSame(7, $controller->formMock->updatedId);
     }
 
-    public function test_trait_exists(): void
+    public function test_store_proxies_to_form_store(): void
     {
-        $this->assertTrue(trait_exists(HasResourceActions::class));
+        $controller = new class
+        {
+            use HasResourceActions;
+
+            public object $formMock;
+
+            public function __construct()
+            {
+                $this->formMock = new class
+                {
+                    public bool $stored = false;
+
+                    public function store()
+                    {
+                        $this->stored = true;
+
+                        return 'stored';
+                    }
+                };
+            }
+
+            protected function form()
+            {
+                return $this->formMock;
+            }
+        };
+
+        $result = $controller->store();
+
+        $this->assertSame('stored', $result);
+        $this->assertTrue($controller->formMock->stored);
     }
 
-    public function test_method_update_exists(): void
+    public function test_destroy_proxies_to_form_destroy_with_same_id(): void
     {
-        $this->assertTrue(method_exists(HasResourceActions::class, 'update'));
-    }
+        $controller = new class
+        {
+            use HasResourceActions;
 
-    public function test_method_store_exists(): void
-    {
-        $this->assertTrue(method_exists(HasResourceActions::class, 'store'));
-    }
+            public object $formMock;
 
-    public function test_method_destroy_exists(): void
-    {
-        $this->assertTrue(method_exists(HasResourceActions::class, 'destroy'));
-    }
+            public function __construct()
+            {
+                $this->formMock = new class
+                {
+                    public ?int $destroyedId = null;
 
-    public function test_update_is_public(): void
-    {
-        $ref = new \ReflectionMethod(HasResourceActions::class, 'update');
+                    public function destroy($id)
+                    {
+                        $this->destroyedId = $id;
 
-        $this->assertTrue($ref->isPublic());
-    }
+                        return 'destroyed-'.$id;
+                    }
+                };
+            }
 
-    public function test_update_has_one_parameter(): void
-    {
-        $ref = new \ReflectionMethod(HasResourceActions::class, 'update');
-        $params = $ref->getParameters();
+            protected function form()
+            {
+                return $this->formMock;
+            }
+        };
 
-        $this->assertCount(1, $params);
-        $this->assertEquals('id', $params[0]->getName());
-    }
+        $result = $controller->destroy(11);
 
-    public function test_store_is_public(): void
-    {
-        $ref = new \ReflectionMethod(HasResourceActions::class, 'store');
-
-        $this->assertTrue($ref->isPublic());
-    }
-
-    public function test_store_has_no_parameters(): void
-    {
-        $ref = new \ReflectionMethod(HasResourceActions::class, 'store');
-
-        $this->assertCount(0, $ref->getParameters());
-    }
-
-    public function test_destroy_is_public(): void
-    {
-        $ref = new \ReflectionMethod(HasResourceActions::class, 'destroy');
-
-        $this->assertTrue($ref->isPublic());
-    }
-
-    public function test_destroy_has_one_parameter(): void
-    {
-        $ref = new \ReflectionMethod(HasResourceActions::class, 'destroy');
-        $params = $ref->getParameters();
-
-        $this->assertCount(1, $params);
-        $this->assertEquals('id', $params[0]->getName());
+        $this->assertSame('destroyed-11', $result);
+        $this->assertSame(11, $controller->formMock->destroyedId);
     }
 }

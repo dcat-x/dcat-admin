@@ -2,20 +2,17 @@
 
 namespace Dcat\Admin\Tests\Unit\Http\Controllers;
 
+use Dcat\Admin\Form;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Http\Controllers\DepartmentController;
+use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Models\Department as DepartmentModel;
 use Dcat\Admin\Tests\TestCase;
+use Dcat\Admin\Tree;
 use Mockery;
 
 class DepartmentControllerTest extends TestCase
 {
-    protected function tearDown(): void
-    {
-        Mockery::close();
-        parent::tearDown();
-    }
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -26,64 +23,54 @@ class DepartmentControllerTest extends TestCase
         $this->app['config']->set('admin.database.connection', 'testing');
     }
 
+    protected function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
+    }
+
     public function test_controller_extends_admin_controller(): void
     {
-        $controller = new DepartmentController;
-
-        $this->assertInstanceOf(AdminController::class, $controller);
+        $this->assertInstanceOf(AdminController::class, new DepartmentController);
     }
 
-    public function test_title_returns_translated_departments_string(): void
+    public function test_title_returns_departments_translation(): void
     {
         $controller = new DepartmentController;
 
-        $result = $controller->title();
-
-        $this->assertEquals(trans('admin.departments'), $result);
-        $this->assertIsString($result);
+        $this->assertSame(trans('admin.departments'), $controller->title());
     }
 
-    public function test_title_method_is_public(): void
+    public function test_index_builds_content_with_row_callback_body(): void
     {
-        $reflection = new \ReflectionMethod(DepartmentController::class, 'title');
+        $content = Mockery::mock(Content::class);
+        $content->shouldReceive('title')->once()->andReturnSelf();
+        $content->shouldReceive('description')->once()->andReturnSelf();
+        $content->shouldReceive('body')->once()->with(Mockery::type(\Closure::class))->andReturnSelf();
 
-        $this->assertTrue($reflection->isPublic());
+        $controller = new DepartmentController;
+        $result = $controller->index($content);
+
+        $this->assertSame($content, $result);
     }
 
-    public function test_index_method_exists_and_is_public(): void
+    public function test_tree_view_returns_tree_instance(): void
     {
-        $this->assertTrue(method_exists(DepartmentController::class, 'index'));
+        $controller = new class extends DepartmentController
+        {
+            public function exposeTreeView(): Tree
+            {
+                return $this->treeView();
+            }
+        };
 
-        $reflection = new \ReflectionMethod(DepartmentController::class, 'index');
-        $this->assertTrue($reflection->isPublic());
+        $this->assertInstanceOf(Tree::class, $controller->exposeTreeView());
     }
 
-    public function test_index_method_accepts_content_parameter(): void
+    public function test_form_returns_form_instance(): void
     {
-        $reflection = new \ReflectionMethod(DepartmentController::class, 'index');
-        $parameters = $reflection->getParameters();
+        $controller = new DepartmentController;
 
-        $this->assertCount(1, $parameters);
-        $this->assertEquals('content', $parameters[0]->getName());
-
-        $type = $parameters[0]->getType();
-        $this->assertNotNull($type);
-        $this->assertEquals(\Dcat\Admin\Layout\Content::class, $type->getName());
-    }
-
-    public function test_tree_view_method_exists_and_is_protected(): void
-    {
-        $this->assertTrue(method_exists(DepartmentController::class, 'treeView'));
-
-        $reflection = new \ReflectionMethod(DepartmentController::class, 'treeView');
-        $this->assertTrue($reflection->isProtected());
-    }
-
-    public function test_form_method_exists_and_is_public(): void
-    {
-        $this->assertTrue(method_exists(DepartmentController::class, 'form'));
-
-        $reflection = new \ReflectionMethod(DepartmentController::class, 'form');
-        $this->assertTrue($reflection->isPublic());
+        $this->assertInstanceOf(Form::class, $controller->form());
     }
 }

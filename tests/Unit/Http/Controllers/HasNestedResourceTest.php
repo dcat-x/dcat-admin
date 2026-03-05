@@ -3,143 +3,124 @@
 namespace Dcat\Admin\Tests\Unit\Http\Controllers;
 
 use Dcat\Admin\Http\Controllers\HasNestedResource;
+use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Tests\TestCase;
-use Mockery;
+use Illuminate\Http\Request;
 
 class HasNestedResourceTest extends TestCase
 {
-    protected function tearDown(): void
+    public function test_show_and_edit_proxy_to_parent_with_nested_resource_id(): void
     {
-        parent::tearDown();
-        Mockery::close();
+        $controller = new class extends FakeNestedParentController
+        {
+            use HasNestedResource;
+        };
+
+        $controller->setNestedResourceId(123);
+        $content = $this->mockContent();
+
+        $showResult = $controller->show(999, $content);
+        $editResult = $controller->edit(888, $content);
+
+        $this->assertSame('show-123', $showResult);
+        $this->assertSame('edit-123', $editResult);
+        $this->assertSame(123, $controller->parentShowId);
+        $this->assertSame(123, $controller->parentEditId);
     }
 
-    public function test_trait_exists(): void
+    public function test_update_and_destroy_proxy_to_parent_with_nested_resource_id(): void
     {
-        $this->assertTrue(trait_exists(HasNestedResource::class));
+        $controller = new class extends FakeNestedParentController
+        {
+            use HasNestedResource;
+        };
+
+        $controller->setNestedResourceId(55);
+
+        $updateResult = $controller->update(1);
+        $destroyResult = $controller->destroy(2);
+
+        $this->assertSame('update-55', $updateResult);
+        $this->assertSame('destroy-55', $destroyResult);
+        $this->assertSame(55, $controller->parentUpdateId);
+        $this->assertSame(55, $controller->parentDestroyId);
     }
 
-    public function test_method_show_exists(): void
+    public function test_get_nested_resource_id_reads_request_parameter_with_route_name(): void
     {
-        $this->assertTrue(method_exists(HasNestedResource::class, 'show'));
+        $request = Request::create('/nested', 'GET', ['child_id' => '789']);
+        $request->setRouteResolver(function () {
+            return new class
+            {
+                public function parameterNames(): array
+                {
+                    return ['parent_id', 'child_id'];
+                }
+            };
+        });
+        $this->app->instance('request', $request);
+
+        $controller = new class extends FakeNestedParentController
+        {
+            use HasNestedResource;
+        };
+
+        $this->assertSame('789', $controller->getNestedResourceId());
     }
 
-    public function test_method_edit_exists(): void
+    public function test_get_route_parameter_name_can_be_set_explicitly(): void
     {
-        $this->assertTrue(method_exists(HasNestedResource::class, 'edit'));
+        $controller = new class extends FakeNestedParentController
+        {
+            use HasNestedResource;
+        };
+
+        $controller->setRouteParameterName('member_id');
+
+        $this->assertSame('member_id', $controller->getRouteParameterName());
     }
 
-    public function test_method_update_exists(): void
+    protected function mockContent(): Content
     {
-        $this->assertTrue(method_exists(HasNestedResource::class, 'update'));
+        return $this->createMock(Content::class);
+    }
+}
+
+class FakeNestedParentController
+{
+    public $parentShowId;
+
+    public $parentEditId;
+
+    public $parentUpdateId;
+
+    public $parentDestroyId;
+
+    public function show($id, Content $content)
+    {
+        $this->parentShowId = $id;
+
+        return 'show-'.$id;
     }
 
-    public function test_method_destroy_exists(): void
+    public function edit($id, Content $content)
     {
-        $this->assertTrue(method_exists(HasNestedResource::class, 'destroy'));
+        $this->parentEditId = $id;
+
+        return 'edit-'.$id;
     }
 
-    public function test_method_get_nested_resource_id_exists(): void
+    public function update($id)
     {
-        $this->assertTrue(method_exists(HasNestedResource::class, 'getNestedResourceId'));
+        $this->parentUpdateId = $id;
+
+        return 'update-'.$id;
     }
 
-    public function test_method_set_nested_resource_id_exists(): void
+    public function destroy($id)
     {
-        $this->assertTrue(method_exists(HasNestedResource::class, 'setNestedResourceId'));
-    }
+        $this->parentDestroyId = $id;
 
-    public function test_method_get_route_parameter_name_exists(): void
-    {
-        $this->assertTrue(method_exists(HasNestedResource::class, 'getRouteParameterName'));
-    }
-
-    public function test_method_set_route_parameter_name_exists(): void
-    {
-        $this->assertTrue(method_exists(HasNestedResource::class, 'setRouteParameterName'));
-    }
-
-    public function test_nested_resource_id_property_exists(): void
-    {
-        $ref = new \ReflectionClass(HasNestedResource::class);
-
-        $this->assertTrue($ref->hasProperty('nestedResourceId'));
-    }
-
-    public function test_nested_resource_id_property_is_protected(): void
-    {
-        $ref = new \ReflectionProperty(HasNestedResource::class, 'nestedResourceId');
-
-        $this->assertTrue($ref->isProtected());
-    }
-
-    public function test_route_parameter_name_property_exists(): void
-    {
-        $ref = new \ReflectionClass(HasNestedResource::class);
-
-        $this->assertTrue($ref->hasProperty('routeParameterName'));
-    }
-
-    public function test_route_parameter_name_property_is_protected(): void
-    {
-        $ref = new \ReflectionProperty(HasNestedResource::class, 'routeParameterName');
-
-        $this->assertTrue($ref->isProtected());
-    }
-
-    public function test_show_is_public(): void
-    {
-        $ref = new \ReflectionMethod(HasNestedResource::class, 'show');
-
-        $this->assertTrue($ref->isPublic());
-    }
-
-    public function test_edit_is_public(): void
-    {
-        $ref = new \ReflectionMethod(HasNestedResource::class, 'edit');
-
-        $this->assertTrue($ref->isPublic());
-    }
-
-    public function test_update_is_public(): void
-    {
-        $ref = new \ReflectionMethod(HasNestedResource::class, 'update');
-
-        $this->assertTrue($ref->isPublic());
-    }
-
-    public function test_destroy_is_public(): void
-    {
-        $ref = new \ReflectionMethod(HasNestedResource::class, 'destroy');
-
-        $this->assertTrue($ref->isPublic());
-    }
-
-    public function test_get_nested_resource_id_is_public(): void
-    {
-        $ref = new \ReflectionMethod(HasNestedResource::class, 'getNestedResourceId');
-
-        $this->assertTrue($ref->isPublic());
-    }
-
-    public function test_set_nested_resource_id_is_public(): void
-    {
-        $ref = new \ReflectionMethod(HasNestedResource::class, 'setNestedResourceId');
-
-        $this->assertTrue($ref->isPublic());
-    }
-
-    public function test_get_route_parameter_name_is_public(): void
-    {
-        $ref = new \ReflectionMethod(HasNestedResource::class, 'getRouteParameterName');
-
-        $this->assertTrue($ref->isPublic());
-    }
-
-    public function test_set_route_parameter_name_is_public(): void
-    {
-        $ref = new \ReflectionMethod(HasNestedResource::class, 'setRouteParameterName');
-
-        $this->assertTrue($ref->isPublic());
+        return 'destroy-'.$id;
     }
 }

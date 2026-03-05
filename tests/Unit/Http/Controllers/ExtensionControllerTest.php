@@ -2,104 +2,60 @@
 
 namespace Dcat\Admin\Tests\Unit\Http\Controllers;
 
+use Dcat\Admin\Form;
+use Dcat\Admin\Grid;
 use Dcat\Admin\Http\Controllers\ExtensionController;
-use Dcat\Admin\Http\Controllers\HasResourceActions;
+use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Tests\TestCase;
-use Illuminate\Routing\Controller;
 use Mockery;
 
 class ExtensionControllerTest extends TestCase
 {
     protected function tearDown(): void
     {
-        parent::tearDown();
         Mockery::close();
+        parent::tearDown();
     }
 
-    public function test_class_exists(): void
+    public function test_index_builds_content_with_grid_body(): void
     {
-        $this->assertTrue(class_exists(ExtensionController::class));
+        $content = Mockery::mock(Content::class);
+        $content->shouldReceive('title')->once()->andReturnSelf();
+        $content->shouldReceive('description')->once()->andReturnSelf();
+        $content->shouldReceive('body')->once()->with(Mockery::type(Grid::class))->andReturnSelf();
+
+        $controller = new ExtensionController;
+        $result = $controller->index($content);
+
+        $this->assertSame($content, $result);
     }
 
-    public function test_is_subclass_of_illuminate_controller(): void
+    public function test_form_returns_form_instance(): void
     {
-        $this->assertTrue(is_subclass_of(ExtensionController::class, Controller::class));
+        $controller = new ExtensionController;
+
+        $this->assertInstanceOf(Form::class, $controller->form());
     }
 
-    public function test_uses_has_resource_actions_trait(): void
+    public function test_grid_builder_returns_grid_instance(): void
     {
-        $traits = class_uses_recursive(ExtensionController::class);
+        $controller = new class extends ExtensionController
+        {
+            public function exposeGrid(): Grid
+            {
+                return $this->grid();
+            }
+        };
 
-        $this->assertArrayHasKey(HasResourceActions::class, $traits);
+        $this->assertInstanceOf(Grid::class, $controller->exposeGrid());
     }
 
-    public function test_uses_has_resource_actions_trait_via_reflection(): void
+    public function test_create_extension_returns_preformatted_output_string(): void
     {
-        $ref = new \ReflectionClass(ExtensionController::class);
-        $traitNames = array_map(function (\ReflectionClass $trait) {
-            return $trait->getName();
-        }, $ref->getTraits());
+        $controller = new ExtensionController;
+        $result = $controller->createExtension('vendor/demo', 'Demo\\Package', 2);
 
-        $this->assertContains(HasResourceActions::class, $traitNames);
-    }
-
-    public function test_method_index_exists(): void
-    {
-        $this->assertTrue(method_exists(ExtensionController::class, 'index'));
-    }
-
-    public function test_method_grid_exists(): void
-    {
-        $this->assertTrue(method_exists(ExtensionController::class, 'grid'));
-    }
-
-    public function test_method_form_exists(): void
-    {
-        $this->assertTrue(method_exists(ExtensionController::class, 'form'));
-    }
-
-    public function test_index_is_public(): void
-    {
-        $ref = new \ReflectionMethod(ExtensionController::class, 'index');
-
-        $this->assertTrue($ref->isPublic());
-    }
-
-    public function test_grid_is_protected(): void
-    {
-        $ref = new \ReflectionMethod(ExtensionController::class, 'grid');
-
-        $this->assertTrue($ref->isProtected());
-    }
-
-    public function test_form_is_public(): void
-    {
-        $ref = new \ReflectionMethod(ExtensionController::class, 'form');
-
-        $this->assertTrue($ref->isPublic());
-    }
-
-    public function test_inherits_update_from_trait(): void
-    {
-        $this->assertTrue(method_exists(ExtensionController::class, 'update'));
-    }
-
-    public function test_inherits_store_from_trait(): void
-    {
-        $this->assertTrue(method_exists(ExtensionController::class, 'store'));
-    }
-
-    public function test_inherits_destroy_from_trait(): void
-    {
-        $this->assertTrue(method_exists(ExtensionController::class, 'destroy'));
-    }
-
-    public function test_index_accepts_content_parameter(): void
-    {
-        $ref = new \ReflectionMethod(ExtensionController::class, 'index');
-        $params = $ref->getParameters();
-
-        $this->assertCount(1, $params);
-        $this->assertEquals('content', $params[0]->getName());
+        $this->assertStringContainsString('<pre', $result);
+        $this->assertStringContainsString('text-white', $result);
     }
 }

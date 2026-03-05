@@ -5,33 +5,42 @@ namespace Dcat\Admin\Tests\Unit\Http\Actions\Extensions;
 use Dcat\Admin\Grid\RowAction;
 use Dcat\Admin\Http\Actions\Extensions\Disable;
 use Dcat\Admin\Tests\TestCase;
-use Mockery;
 
 class DisableTest extends TestCase
 {
-    protected function tearDown(): void
+    public function test_title_contains_disable_text(): void
     {
-        Mockery::close();
-        parent::tearDown();
+        $action = new Disable;
+
+        $this->assertInstanceOf(RowAction::class, $action);
+        $this->assertStringContainsString(trans('admin.disable'), $action->title());
     }
 
-    public function test_class_exists(): void
+    public function test_handle_disables_extension_and_returns_refresh_response(): void
     {
-        $this->assertTrue(class_exists(Disable::class));
-    }
+        $manager = new class
+        {
+            public ?string $name = null;
 
-    public function test_is_subclass_of_row_action(): void
-    {
-        $this->assertTrue(is_subclass_of(Disable::class, RowAction::class));
-    }
+            public ?bool $enabled = null;
 
-    public function test_title_method_exists(): void
-    {
-        $this->assertTrue(method_exists(Disable::class, 'title'));
-    }
+            public function enable($name, bool $enabled): void
+            {
+                $this->name = $name;
+                $this->enabled = $enabled;
+            }
+        };
 
-    public function test_handle_method_exists(): void
-    {
-        $this->assertTrue(method_exists(Disable::class, 'handle'));
+        $this->app->instance('admin.extend', $manager);
+
+        $action = new Disable;
+        $action->setKey('demo-ext');
+
+        $response = $action->handle()->toArray();
+
+        $this->assertSame('demo-ext', $manager->name);
+        $this->assertFalse($manager->enabled);
+        $this->assertTrue($response['status']);
+        $this->assertSame('refresh', $response['data']['then']['action']);
     }
 }

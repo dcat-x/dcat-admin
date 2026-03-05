@@ -4,88 +4,98 @@ namespace Dcat\Admin\Tests\Unit\Http\Controllers;
 
 use Dcat\Admin\Http\Controllers\EditorMDController;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Mockery;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class EditorMDControllerTest extends TestCase
 {
     protected function tearDown(): void
     {
-        parent::tearDown();
         Mockery::close();
+        parent::tearDown();
     }
 
-    public function test_class_exists(): void
+    public function test_upload_stores_file_and_returns_expected_url_payload(): void
     {
-        $this->assertTrue(class_exists(EditorMDController::class));
+        $file = $this->makeUploadedFile('editor-image.jpg', 'editor-content');
+        $disk = Mockery::mock(FilesystemAdapter::class);
+
+        $disk->shouldReceive('putFileAs')->once()->with('articles', Mockery::type(\Illuminate\Http\UploadedFile::class), 'fixed-name.jpg');
+        $disk->shouldReceive('url')->once()->with('articles/fixed-name.jpg')->andReturn('https://cdn.example.com/articles/fixed-name.jpg');
+
+        $controller = new class($disk) extends EditorMDController
+        {
+            public function __construct(private FilesystemAdapter $mockDisk) {}
+
+            protected function disk(): FilesystemAdapter
+            {
+                return $this->mockDisk;
+            }
+
+            protected function generateNewName(UploadedFile $file)
+            {
+                return 'fixed-name.jpg';
+            }
+        };
+
+        $request = Request::create('/editor/upload', 'POST', ['dir' => '/articles/']);
+        $request->files->set('editormd-image-file', $file);
+
+        $result = $controller->upload($request);
+
+        $this->assertSame(1, $result['success']);
+        $this->assertSame('https://cdn.example.com/articles/fixed-name.jpg', $result['url']);
+
+        @unlink($file->getPathname());
     }
 
-    public function test_method_upload_exists(): void
+    public function test_generate_new_name_uses_original_name_hash_and_extension(): void
     {
-        $this->assertTrue(method_exists(EditorMDController::class, 'upload'));
+        $file = Mockery::mock(UploadedFile::class);
+        $file->shouldReceive('getClientOriginalName')->andReturn('avatar.png');
+        $file->shouldReceive('getClientOriginalExtension')->andReturn('png');
+
+        $controller = new class extends EditorMDController
+        {
+            public function exposeGenerateNewName(UploadedFile $file)
+            {
+                return $this->generateNewName($file);
+            }
+        };
+
+        $generated = $controller->exposeGenerateNewName($file);
+
+        $this->assertStringEndsWith('.png', $generated);
+        $this->assertStringStartsWith(md5('avatar.png'), $generated);
     }
 
-    public function test_method_generate_new_name_exists(): void
+    public function test_disk_resolves_from_request_disk_parameter(): void
     {
-        $this->assertTrue(method_exists(EditorMDController::class, 'generateNewName'));
+        $adapter = Mockery::mock(FilesystemAdapter::class);
+        Storage::shouldReceive('disk')->once()->with('oss-private')->andReturn($adapter);
+
+        $request = Request::create('/editor/upload', 'POST', ['disk' => 'oss-private']);
+        $this->app->instance('request', $request);
+
+        $controller = new class extends EditorMDController
+        {
+            public function exposeDisk(): FilesystemAdapter
+            {
+                return $this->disk();
+            }
+        };
+
+        $this->assertSame($adapter, $controller->exposeDisk());
     }
 
-    public function test_method_disk_exists(): void
+    protected function makeUploadedFile(string $name, string $content): UploadedFile
     {
-        $this->assertTrue(method_exists(EditorMDController::class, 'disk'));
-    }
+        $path = tempnam(sys_get_temp_dir(), 'dcat_test_');
+        file_put_contents($path, $content);
 
-    public function test_upload_is_public(): void
-    {
-        $ref = new \ReflectionMethod(EditorMDController::class, 'upload');
-
-        $this->assertTrue($ref->isPublic());
-    }
-
-    public function test_generate_new_name_is_protected(): void
-    {
-        $ref = new \ReflectionMethod(EditorMDController::class, 'generateNewName');
-
-        $this->assertTrue($ref->isProtected());
-    }
-
-    public function test_disk_is_protected(): void
-    {
-        $ref = new \ReflectionMethod(EditorMDController::class, 'disk');
-
-        $this->assertTrue($ref->isProtected());
-    }
-
-    public function test_upload_accepts_request_parameter(): void
-    {
-        $ref = new \ReflectionMethod(EditorMDController::class, 'upload');
-        $params = $ref->getParameters();
-
-        $this->assertCount(1, $params);
-        $this->assertEquals('request', $params[0]->getName());
-    }
-
-    public function test_upload_request_parameter_is_typed(): void
-    {
-        $ref = new \ReflectionMethod(EditorMDController::class, 'upload');
-        $params = $ref->getParameters();
-
-        $this->assertNotNull($params[0]->getType());
-        $this->assertEquals('Illuminate\Http\Request', $params[0]->getType()->getName());
-    }
-
-    public function test_generate_new_name_accepts_uploaded_file_parameter(): void
-    {
-        $ref = new \ReflectionMethod(EditorMDController::class, 'generateNewName');
-        $params = $ref->getParameters();
-
-        $this->assertCount(1, $params);
-        $this->assertEquals('file', $params[0]->getName());
-    }
-
-    public function test_disk_has_no_parameters(): void
-    {
-        $ref = new \ReflectionMethod(EditorMDController::class, 'disk');
-
-        $this->assertCount(0, $ref->getParameters());
+        return new UploadedFile($path, $name, null, null, true);
     }
 }

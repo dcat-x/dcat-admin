@@ -15,11 +15,21 @@ class AliMultipleImage extends MultipleImage
      */
     public function objectUrl($path): string
     {
-        if (function_exists('ali_sign_url')) {
-            return ali_sign_url($path);
+        $url = $this->resolveAliSignUrl($path);
+        if ($url !== null) {
+            return $url;
         }
 
         // 如果没有定义 ali_sign_url 函数，返回原路径
         return $path;
+    }
+
+    protected function resolveAliSignUrl($path): ?string
+    {
+        if (! function_exists('ali_sign_url')) {
+            return null;
+        }
+
+        return ali_sign_url($path);
     }
 }

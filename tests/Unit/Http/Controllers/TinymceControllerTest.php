@@ -4,88 +4,97 @@ namespace Dcat\Admin\Tests\Unit\Http\Controllers;
 
 use Dcat\Admin\Http\Controllers\TinymceController;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Mockery;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class TinymceControllerTest extends TestCase
 {
     protected function tearDown(): void
     {
-        parent::tearDown();
         Mockery::close();
+        parent::tearDown();
     }
 
-    public function test_class_exists(): void
+    public function test_upload_stores_file_and_returns_expected_location_payload(): void
     {
-        $this->assertTrue(class_exists(TinymceController::class));
+        $file = $this->makeUploadedFile('doc-image.png', 'tinymce-content');
+        $disk = Mockery::mock(FilesystemAdapter::class);
+
+        $disk->shouldReceive('putFileAs')->once()->with('docs', Mockery::type(\Illuminate\Http\UploadedFile::class), 'fixed-name.png');
+        $disk->shouldReceive('url')->once()->with('docs/fixed-name.png')->andReturn('https://cdn.example.com/docs/fixed-name.png');
+
+        $controller = new class($disk) extends TinymceController
+        {
+            public function __construct(private FilesystemAdapter $mockDisk) {}
+
+            protected function disk(): FilesystemAdapter
+            {
+                return $this->mockDisk;
+            }
+
+            protected function generateNewName(UploadedFile $file)
+            {
+                return 'fixed-name.png';
+            }
+        };
+
+        $request = Request::create('/tinymce/upload', 'POST', ['dir' => '/docs/']);
+        $request->files->set('file', $file);
+
+        $result = $controller->upload($request);
+
+        $this->assertSame('https://cdn.example.com/docs/fixed-name.png', $result['location']);
+
+        @unlink($file->getPathname());
     }
 
-    public function test_method_upload_exists(): void
+    public function test_generate_new_name_uses_original_name_hash_and_extension(): void
     {
-        $this->assertTrue(method_exists(TinymceController::class, 'upload'));
+        $file = Mockery::mock(UploadedFile::class);
+        $file->shouldReceive('getClientOriginalName')->andReturn('manual.pdf');
+        $file->shouldReceive('getClientOriginalExtension')->andReturn('pdf');
+
+        $controller = new class extends TinymceController
+        {
+            public function exposeGenerateNewName(UploadedFile $file)
+            {
+                return $this->generateNewName($file);
+            }
+        };
+
+        $generated = $controller->exposeGenerateNewName($file);
+
+        $this->assertStringEndsWith('.pdf', $generated);
+        $this->assertStringStartsWith(md5('manual.pdf'), $generated);
     }
 
-    public function test_method_generate_new_name_exists(): void
+    public function test_disk_resolves_from_request_disk_parameter(): void
     {
-        $this->assertTrue(method_exists(TinymceController::class, 'generateNewName'));
+        $adapter = Mockery::mock(FilesystemAdapter::class);
+        Storage::shouldReceive('disk')->once()->with('oss-public')->andReturn($adapter);
+
+        $request = Request::create('/tinymce/upload', 'POST', ['disk' => 'oss-public']);
+        $this->app->instance('request', $request);
+
+        $controller = new class extends TinymceController
+        {
+            public function exposeDisk(): FilesystemAdapter
+            {
+                return $this->disk();
+            }
+        };
+
+        $this->assertSame($adapter, $controller->exposeDisk());
     }
 
-    public function test_method_disk_exists(): void
+    protected function makeUploadedFile(string $name, string $content): UploadedFile
     {
-        $this->assertTrue(method_exists(TinymceController::class, 'disk'));
-    }
+        $path = tempnam(sys_get_temp_dir(), 'dcat_test_');
+        file_put_contents($path, $content);
 
-    public function test_upload_is_public(): void
-    {
-        $ref = new \ReflectionMethod(TinymceController::class, 'upload');
-
-        $this->assertTrue($ref->isPublic());
-    }
-
-    public function test_generate_new_name_is_protected(): void
-    {
-        $ref = new \ReflectionMethod(TinymceController::class, 'generateNewName');
-
-        $this->assertTrue($ref->isProtected());
-    }
-
-    public function test_disk_is_protected(): void
-    {
-        $ref = new \ReflectionMethod(TinymceController::class, 'disk');
-
-        $this->assertTrue($ref->isProtected());
-    }
-
-    public function test_upload_accepts_request_parameter(): void
-    {
-        $ref = new \ReflectionMethod(TinymceController::class, 'upload');
-        $params = $ref->getParameters();
-
-        $this->assertCount(1, $params);
-        $this->assertEquals('request', $params[0]->getName());
-    }
-
-    public function test_upload_request_parameter_is_typed(): void
-    {
-        $ref = new \ReflectionMethod(TinymceController::class, 'upload');
-        $params = $ref->getParameters();
-
-        $this->assertNotNull($params[0]->getType());
-        $this->assertEquals('Illuminate\Http\Request', $params[0]->getType()->getName());
-    }
-
-    public function test_generate_new_name_accepts_uploaded_file_parameter(): void
-    {
-        $ref = new \ReflectionMethod(TinymceController::class, 'generateNewName');
-        $params = $ref->getParameters();
-
-        $this->assertCount(1, $params);
-        $this->assertEquals('file', $params[0]->getName());
-    }
-
-    public function test_disk_has_no_parameters(): void
-    {
-        $ref = new \ReflectionMethod(TinymceController::class, 'disk');
-
-        $this->assertCount(0, $ref->getParameters());
+        return new UploadedFile($path, $name, null, null, true);
     }
 }

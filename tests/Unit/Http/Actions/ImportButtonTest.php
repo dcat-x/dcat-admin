@@ -4,34 +4,38 @@ namespace Dcat\Admin\Tests\Unit\Http\Actions;
 
 use Dcat\Admin\Grid\RowAction;
 use Dcat\Admin\Http\Actions\ImportButton;
+use Dcat\Admin\Layout\Asset;
 use Dcat\Admin\Tests\TestCase;
-use Mockery;
 
 class ImportButtonTest extends TestCase
 {
-    protected function tearDown(): void
+    public function test_render_outputs_button_with_key_and_import_text(): void
     {
-        Mockery::close();
-        parent::tearDown();
+        $this->app->instance('admin.asset', new Asset);
+
+        $action = new ImportButton;
+        $action->setKey('demo-ext');
+
+        $html = $action->render();
+
+        $this->assertInstanceOf(RowAction::class, $action);
+        $this->assertStringContainsString('class="import-extension"', $html);
+        $this->assertStringContainsString('data-id="demo-ext"', $html);
+        $this->assertStringContainsString(trans('admin.import'), $html);
     }
 
-    public function test_class_exists(): void
+    public function test_render_registers_import_script(): void
     {
-        $this->assertTrue(class_exists(ImportButton::class));
-    }
+        $asset = new Asset;
+        $this->app->instance('admin.asset', $asset);
 
-    public function test_is_subclass_of_row_action(): void
-    {
-        $this->assertTrue(is_subclass_of(ImportButton::class, RowAction::class));
-    }
+        $action = new ImportButton;
+        $action->setKey('demo-ext');
+        $action->render();
 
-    public function test_render_method_exists(): void
-    {
-        $this->assertTrue(method_exists(ImportButton::class, 'render'));
-    }
-
-    public function test_setup_script_method_exists(): void
-    {
-        $this->assertTrue(method_exists(ImportButton::class, 'setupScript'));
+        $this->assertNotEmpty($asset->script);
+        $script = implode("\n", $asset->script);
+        $this->assertStringContainsString('.import-extension', $script);
+        $this->assertStringContainsString('helpers/extensions/import', $script);
     }
 }

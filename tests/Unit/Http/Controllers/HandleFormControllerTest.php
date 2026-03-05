@@ -25,7 +25,13 @@ class HandleFormControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->controller = new HandleFormController;
+        $this->controller = new class extends HandleFormController
+        {
+            public function exposeGetField(Request $request, $form)
+            {
+                return $this->getField($request, $form);
+            }
+        };
     }
 
     public function test_throws_exception_when_form_param_missing(): void
@@ -73,10 +79,7 @@ class HandleFormControllerTest extends TestCase
         // StubWidgetForm 没有字段定义，任何字段名查找都应返回 null
         $form = new StubWidgetForm;
 
-        $getFieldRef = new \ReflectionMethod($this->controller, 'getField');
-        $getFieldRef->setAccessible(true);
-
-        $field = $getFieldRef->invoke($this->controller, $request, $form);
+        $field = $this->controller->exposeGetField($request, $form);
         $this->assertNull($field, 'getField should return null for nonexistent column');
     }
 
@@ -91,19 +94,29 @@ class HandleFormControllerTest extends TestCase
 
         $form = new StubWidgetForm;
 
-        $getFieldRef = new \ReflectionMethod($this->controller, 'getField');
-        $getFieldRef->setAccessible(true);
-
         // 关联字段不存在时也应返回 null
-        $field = $getFieldRef->invoke($this->controller, $request, $form);
+        $field = $this->controller->exposeGetField($request, $form);
         $this->assertNull($field, 'getField should return null for nonexistent relation');
     }
 
-    public function test_controller_has_required_methods(): void
+    public function test_upload_file_throws_exception_when_form_param_missing(): void
     {
-        $this->assertTrue(method_exists($this->controller, 'handle'));
-        $this->assertTrue(method_exists($this->controller, 'uploadFile'));
-        $this->assertTrue(method_exists($this->controller, 'destroyFile'));
+        $request = Request::create('/handle-form/upload', 'POST', []);
+
+        $this->expectException(AdminException::class);
+        $this->expectExceptionMessage('Invalid form request.');
+
+        $this->controller->uploadFile($request);
+    }
+
+    public function test_destroy_file_throws_exception_when_form_param_missing(): void
+    {
+        $request = Request::create('/handle-form/destroy', 'POST', []);
+
+        $this->expectException(AdminException::class);
+        $this->expectExceptionMessage('Invalid form request.');
+
+        $this->controller->destroyFile($request);
     }
 }
 

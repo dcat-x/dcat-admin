@@ -44,73 +44,50 @@ class RoleControllerTest extends TestCase
         $this->assertIsString($result);
     }
 
-    public function test_title_method_is_public(): void
+    public function test_grid_returns_grid_instance(): void
     {
-        $reflection = new \ReflectionMethod(RoleController::class, 'title');
-        $this->assertTrue($reflection->isPublic());
+        $controller = new class extends RoleController
+        {
+            public function exposeGrid(): \Dcat\Admin\Grid
+            {
+                return $this->grid();
+            }
+        };
+
+        $this->assertInstanceOf(\Dcat\Admin\Grid::class, $controller->exposeGrid());
     }
 
-    public function test_grid_method_exists_and_is_protected(): void
+    public function test_form_returns_form_instance(): void
     {
-        $this->assertTrue(method_exists(RoleController::class, 'grid'));
-
-        $reflection = new \ReflectionMethod(RoleController::class, 'grid');
-        $this->assertTrue($reflection->isProtected());
+        $controller = new RoleController;
+        $this->assertInstanceOf(\Dcat\Admin\Form::class, $controller->form());
     }
 
-    public function test_detail_method_exists_and_is_protected(): void
+    public function test_destroy_delegates_to_form_destroy_for_non_admin_role_id(): void
     {
-        $this->assertTrue(method_exists(RoleController::class, 'detail'));
+        $controller = new class extends RoleController
+        {
+            public ?int $destroyedId = null;
 
-        $reflection = new \ReflectionMethod(RoleController::class, 'detail');
-        $this->assertTrue($reflection->isProtected());
-    }
+            public function form()
+            {
+                return new class($this)
+                {
+                    public function __construct(private object $controller) {}
 
-    public function test_detail_method_accepts_id_parameter(): void
-    {
-        $reflection = new \ReflectionMethod(RoleController::class, 'detail');
-        $parameters = $reflection->getParameters();
+                    public function destroy($id): string
+                    {
+                        $this->controller->destroyedId = (int) $id;
 
-        $this->assertCount(1, $parameters);
-        $this->assertEquals('id', $parameters[0]->getName());
-    }
+                        return 'destroyed-'.$id;
+                    }
+                };
+            }
+        };
 
-    public function test_form_method_is_public(): void
-    {
-        $reflection = new \ReflectionMethod(RoleController::class, 'form');
-        $this->assertTrue($reflection->isPublic());
-    }
+        $result = $controller->destroy(2);
 
-    public function test_destroy_method_is_public(): void
-    {
-        $reflection = new \ReflectionMethod(RoleController::class, 'destroy');
-        $this->assertTrue($reflection->isPublic());
-    }
-
-    public function test_destroy_method_accepts_id_parameter(): void
-    {
-        $reflection = new \ReflectionMethod(RoleController::class, 'destroy');
-        $parameters = $reflection->getParameters();
-
-        $this->assertCount(1, $parameters);
-        $this->assertEquals('id', $parameters[0]->getName());
-    }
-
-    public function test_index_method_inherited_from_admin_controller(): void
-    {
-        $reflection = new \ReflectionMethod(RoleController::class, 'index');
-        $this->assertEquals(AdminController::class, $reflection->getDeclaringClass()->getName());
-    }
-
-    public function test_show_method_inherited_from_admin_controller(): void
-    {
-        $reflection = new \ReflectionMethod(RoleController::class, 'show');
-        $this->assertEquals(AdminController::class, $reflection->getDeclaringClass()->getName());
-    }
-
-    public function test_edit_method_inherited_from_admin_controller(): void
-    {
-        $reflection = new \ReflectionMethod(RoleController::class, 'edit');
-        $this->assertEquals(AdminController::class, $reflection->getDeclaringClass()->getName());
+        $this->assertSame('destroyed-2', $result);
+        $this->assertSame(2, $controller->destroyedId);
     }
 }

@@ -4,80 +4,76 @@ namespace Dcat\Admin\Tests\Unit\Services;
 
 use Dcat\Admin\Services\AliyunStsService;
 use Dcat\Admin\Tests\TestCase;
-use Mockery;
 
 class AliyunStsServiceTest extends TestCase
 {
-    protected function tearDown(): void
+    public function test_get_oss_config_prefers_admin_config_and_normalizes_endpoint(): void
     {
-        Mockery::close();
-        parent::tearDown();
-    }
+        $this->app['config']->set('admin.upload.oss', [
+            'bucket' => 'admin-bucket',
+            'endpoint' => 'https://oss-cn-hangzhou.aliyuncs.com',
+            'cdn_domain' => 'https://cdn.example.com',
+        ]);
+        $this->app['config']->set('filesystems.disks.oss', [
+            'bucket' => 'fs-bucket',
+            'endpoint' => 'https://oss-cn-shanghai.aliyuncs.com',
+            'cdnDomain' => null,
+        ]);
 
-    public function test_class_exists(): void
-    {
-        $this->assertTrue(class_exists(AliyunStsService::class));
-    }
-
-    public function test_method_get_sts_token_exists(): void
-    {
-        $this->assertTrue(method_exists(AliyunStsService::class, 'getStsToken'));
-    }
-
-    public function test_method_get_oss_config_exists(): void
-    {
-        $this->assertTrue(method_exists(AliyunStsService::class, 'getOssConfig'));
-    }
-
-    public function test_get_sts_token_is_public(): void
-    {
-        $reflection = new \ReflectionMethod(AliyunStsService::class, 'getStsToken');
-        $this->assertTrue($reflection->isPublic());
-    }
-
-    public function test_get_oss_config_is_public(): void
-    {
-        $reflection = new \ReflectionMethod(AliyunStsService::class, 'getOssConfig');
-        $this->assertTrue($reflection->isPublic());
-    }
-
-    public function test_get_sts_token_accepts_nullable_string_parameter(): void
-    {
-        $reflection = new \ReflectionMethod(AliyunStsService::class, 'getStsToken');
-        $parameters = $reflection->getParameters();
-
-        $this->assertCount(1, $parameters);
-        $this->assertEquals('uploadDir', $parameters[0]->getName());
-        $this->assertTrue($parameters[0]->allowsNull());
-        $this->assertTrue($parameters[0]->isOptional());
-    }
-
-    public function test_get_oss_config_returns_array(): void
-    {
-        $reflection = new \ReflectionMethod(AliyunStsService::class, 'getOssConfig');
-        $returnType = $reflection->getReturnType();
-
-        $this->assertNotNull($returnType);
-        $this->assertEquals('array', $returnType->getName());
-    }
-
-    public function test_get_oss_config_result(): void
-    {
         $service = new AliyunStsService;
         $config = $service->getOssConfig();
 
-        $this->assertIsArray($config);
-        $this->assertArrayHasKey('region', $config);
-        $this->assertArrayHasKey('bucket', $config);
-        $this->assertArrayHasKey('endpoint', $config);
-        $this->assertArrayHasKey('cdn_domain', $config);
+        $this->assertSame('admin-bucket', $config['bucket']);
+        $this->assertSame('oss-cn-hangzhou.aliyuncs.com', $config['endpoint']);
+        $this->assertSame('oss-cn-hangzhou', $config['region']);
+        $this->assertSame('https://cdn.example.com', $config['cdn_domain']);
     }
 
-    public function test_generate_upload_policy_is_protected(): void
+    public function test_get_oss_config_falls_back_to_filesystem_config(): void
     {
-        $this->assertTrue(method_exists(AliyunStsService::class, 'generateUploadPolicy'));
+        $this->app['config']->set('admin.upload.oss', []);
+        $this->app['config']->set('filesystems.disks.oss', [
+            'bucket' => 'fs-bucket',
+            'endpoint' => 'http://oss-cn-shenzhen.aliyuncs.com',
+            'cdnDomain' => 'https://cdn.fs.example.com',
+        ]);
 
-        $reflection = new \ReflectionMethod(AliyunStsService::class, 'generateUploadPolicy');
-        $this->assertTrue($reflection->isProtected());
+        $service = new AliyunStsService;
+        $config = $service->getOssConfig();
+
+        $this->assertSame('fs-bucket', $config['bucket']);
+        $this->assertSame('oss-cn-shenzhen.aliyuncs.com', $config['endpoint']);
+        $this->assertSame('oss-cn-shenzhen', $config['region']);
+        $this->assertSame('https://cdn.fs.example.com', $config['cdn_domain']);
+    }
+
+    public function test_generate_upload_policy_restricts_upload_directory_when_provided(): void
+    {
+        $service = new class extends AliyunStsService
+        {
+            public function exposeGenerateUploadPolicy(string $bucket, ?string $uploadDir = null): string
+            {
+                return $this->generateUploadPolicy($bucket, $uploadDir);
+            }
+        };
+
+        $policy = $service->exposeGenerateUploadPolicy('my-bucket', 'images/2026/03/05/');
+        $decoded = json_decode($policy, true);
+
+        $this->assertSame('Allow', $decoded['Statement'][0]['Effect']);
+        $this->assertSame('oss:PutObject', $decoded['Statement'][0]['Action'][0]);
+        $this->assertSame('acs:oss:*:*:my-bucket/images/2026/03/05/*', $decoded['Statement'][0]['Resource'][0]);
+    }
+
+    public function test_get_sts_token_throws_exception_when_runtime_dependencies_or_config_are_not_ready(): void
+    {
+        $service = new AliyunStsService;
+
+        try {
+            $service->getStsToken('images/');
+            $this->fail('Expected exception was not thrown.');
+        } catch (\Exception $e) {
+            $this->assertStringContainsString('STS', $e->getMessage());
+        }
     }
 }

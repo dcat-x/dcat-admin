@@ -13,6 +13,47 @@ use Mockery;
 
 class AuthControllerTest extends TestCase
 {
+    protected function makeController(): AuthController
+    {
+        return new class extends AuthController
+        {
+            public function exposeValidateCredentialsWhenUpdatingPassword()
+            {
+                return $this->validateCredentialsWhenUpdatingPassword();
+            }
+
+            public function exposeUsername(): string
+            {
+                return $this->username();
+            }
+
+            public function exposeFailedLoginMessage(): string
+            {
+                return $this->getFailedLoginMessage();
+            }
+
+            public function exposeRedirectPath(): string
+            {
+                return $this->getRedirectPath();
+            }
+
+            public function exposeGuard()
+            {
+                return $this->guard();
+            }
+
+            public function exposeSettingForm()
+            {
+                return $this->settingForm();
+            }
+
+            public function exposeSendLoginResponse(Request $request)
+            {
+                return $this->sendLoginResponse($request);
+            }
+        };
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -30,9 +71,7 @@ class AuthControllerTest extends TestCase
 
     public function test_validate_returns_true_when_no_new_password(): void
     {
-        $controller = new AuthController;
-        $reflection = new \ReflectionMethod($controller, 'validateCredentialsWhenUpdatingPassword');
-        $reflection->setAccessible(true);
+        $controller = $this->makeController();
 
         // 模拟请求中没有新密码
         $request = \Illuminate\Http\Request::create('/auth/setting', 'PUT', [
@@ -51,7 +90,7 @@ class AuthControllerTest extends TestCase
 
         \Illuminate\Support\Facades\Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
 
-        $result = $reflection->invoke($controller);
+        $result = $controller->exposeValidateCredentialsWhenUpdatingPassword();
 
         // 没有新密码时应返回 true（跳过验证）
         $this->assertTrue($result);
@@ -59,9 +98,7 @@ class AuthControllerTest extends TestCase
 
     public function test_validate_returns_true_when_new_password_matches_current(): void
     {
-        $controller = new AuthController;
-        $reflection = new \ReflectionMethod($controller, 'validateCredentialsWhenUpdatingPassword');
-        $reflection->setAccessible(true);
+        $controller = $this->makeController();
 
         $currentPasswordPlain = 'current_password';
         $currentPasswordHash = password_hash($currentPasswordPlain, PASSWORD_BCRYPT);
@@ -82,7 +119,7 @@ class AuthControllerTest extends TestCase
 
         \Illuminate\Support\Facades\Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
 
-        $result = $reflection->invoke($controller);
+        $result = $controller->exposeValidateCredentialsWhenUpdatingPassword();
 
         // 新密码与当前密码相同时，password_verify 返回 true，方法应返回 true
         $this->assertTrue($result);
@@ -90,9 +127,7 @@ class AuthControllerTest extends TestCase
 
     public function test_validate_returns_false_when_different_password_and_no_old_password(): void
     {
-        $controller = new AuthController;
-        $reflection = new \ReflectionMethod($controller, 'validateCredentialsWhenUpdatingPassword');
-        $reflection->setAccessible(true);
+        $controller = $this->makeController();
 
         $currentPasswordHash = password_hash('current_password', PASSWORD_BCRYPT);
 
@@ -112,7 +147,7 @@ class AuthControllerTest extends TestCase
 
         \Illuminate\Support\Facades\Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
 
-        $result = $reflection->invoke($controller);
+        $result = $controller->exposeValidateCredentialsWhenUpdatingPassword();
 
         // 新密码不同 + 无旧密码 → 返回 false
         $this->assertFalse($result);
@@ -120,9 +155,7 @@ class AuthControllerTest extends TestCase
 
     public function test_validate_delegates_to_provider_when_old_password_provided(): void
     {
-        $controller = new AuthController;
-        $reflection = new \ReflectionMethod($controller, 'validateCredentialsWhenUpdatingPassword');
-        $reflection->setAccessible(true);
+        $controller = $this->makeController();
 
         $currentPasswordHash = password_hash('current_password', PASSWORD_BCRYPT);
 
@@ -149,30 +182,111 @@ class AuthControllerTest extends TestCase
 
         \Illuminate\Support\Facades\Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
 
-        $result = $reflection->invoke($controller);
+        $result = $controller->exposeValidateCredentialsWhenUpdatingPassword();
 
         // 应委托给 provider 验证旧密码
         $this->assertTrue($result);
     }
 
-    public function test_controller_has_required_methods(): void
+    public function test_get_setting_returns_content_with_form_edit_body(): void
     {
-        $controller = new AuthController;
+        $user = Mockery::mock(\Dcat\Admin\Models\Administrator::class)->makePartial();
+        $user->shouldReceive('getKey')->andReturn(1);
 
-        $this->assertTrue(method_exists($controller, 'getLogin'));
-        $this->assertTrue(method_exists($controller, 'postLogin'));
-        $this->assertTrue(method_exists($controller, 'getLogout'));
-        $this->assertTrue(method_exists($controller, 'getSetting'));
-        $this->assertTrue(method_exists($controller, 'putSetting'));
+        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard->shouldReceive('user')->andReturn($user);
+        Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
+
+        $form = Mockery::mock(\Dcat\Admin\Form::class);
+        $form->shouldReceive('tools')->andReturnSelf();
+        $form->shouldReceive('edit')->with(1)->andReturn('form-body');
+
+        $controller = new class($form) extends AuthController
+        {
+            public function __construct(private $mockForm) {}
+
+            protected function settingForm()
+            {
+                return $this->mockForm;
+            }
+        };
+
+        $content = Mockery::mock(Content::class);
+        $content->shouldReceive('title')->once()->andReturnSelf();
+        $content->shouldReceive('body')->once()->with('form-body')->andReturnSelf();
+
+        $result = $controller->getSetting($content);
+
+        $this->assertSame($content, $result);
+    }
+
+    public function test_put_setting_returns_form_update_response_when_validation_passes(): void
+    {
+        $user = Mockery::mock(\Dcat\Admin\Models\Administrator::class)->makePartial();
+        $user->shouldReceive('getKey')->andReturn(8);
+
+        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard->shouldReceive('user')->andReturn($user);
+        Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
+
+        $form = Mockery::mock(\Dcat\Admin\Form::class);
+        $form->shouldReceive('update')->once()->with(8)->andReturn('updated-response');
+        $form->shouldReceive('responseValidationMessages')->never();
+
+        $controller = new class($form) extends AuthController
+        {
+            public function __construct(private $mockForm) {}
+
+            protected function settingForm()
+            {
+                return $this->mockForm;
+            }
+
+            protected function validateCredentialsWhenUpdatingPassword()
+            {
+                return true;
+            }
+        };
+
+        $this->assertSame('updated-response', $controller->putSetting());
+    }
+
+    public function test_put_setting_adds_validation_message_when_old_password_invalid(): void
+    {
+        $user = Mockery::mock(\Dcat\Admin\Models\Administrator::class)->makePartial();
+        $user->shouldReceive('getKey')->andReturn(9);
+
+        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard->shouldReceive('user')->andReturn($user);
+        Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
+
+        $form = Mockery::mock(\Dcat\Admin\Form::class);
+        $form->shouldReceive('responseValidationMessages')->once()->with('old_password', trans('admin.old_password_error'));
+        $form->shouldReceive('update')->once()->with(9)->andReturn('updated-with-validation-message');
+
+        $controller = new class($form) extends AuthController
+        {
+            public function __construct(private $mockForm) {}
+
+            protected function settingForm()
+            {
+                return $this->mockForm;
+            }
+
+            protected function validateCredentialsWhenUpdatingPassword()
+            {
+                return false;
+            }
+        };
+
+        $this->assertSame('updated-with-validation-message', $controller->putSetting());
     }
 
     public function test_username_returns_username(): void
     {
-        $controller = new AuthController;
-        $reflection = new \ReflectionMethod($controller, 'username');
-        $reflection->setAccessible(true);
+        $controller = $this->makeController();
 
-        $this->assertEquals('username', $reflection->invoke($controller));
+        $this->assertEquals('username', $controller->exposeUsername());
     }
 
     protected function tearDown(): void
@@ -186,11 +300,8 @@ class AuthControllerTest extends TestCase
         Lang::shouldReceive('has')->with('admin.auth_failed')->once()->andReturn(true);
         Lang::shouldReceive('get')->with('admin.auth_failed', [], null)->once()->andReturn('认证失败');
 
-        $controller = new AuthController;
-        $method = new \ReflectionMethod($controller, 'getFailedLoginMessage');
-        $method->setAccessible(true);
-
-        $result = $method->invoke($controller);
+        $controller = $this->makeController();
+        $result = $controller->exposeFailedLoginMessage();
 
         $this->assertSame('认证失败', $result);
     }
@@ -199,22 +310,16 @@ class AuthControllerTest extends TestCase
     {
         Lang::shouldReceive('has')->with('admin.auth_failed')->once()->andReturn(false);
 
-        $controller = new AuthController;
-        $method = new \ReflectionMethod($controller, 'getFailedLoginMessage');
-        $method->setAccessible(true);
-
-        $result = $method->invoke($controller);
+        $controller = $this->makeController();
+        $result = $controller->exposeFailedLoginMessage();
 
         $this->assertSame('These credentials do not match our records.', $result);
     }
 
     public function test_get_redirect_path_returns_admin_root_by_default(): void
     {
-        $controller = new AuthController;
-        $method = new \ReflectionMethod($controller, 'getRedirectPath');
-        $method->setAccessible(true);
-
-        $result = $method->invoke($controller);
+        $controller = $this->makeController();
+        $result = $controller->exposeRedirectPath();
 
         $this->assertSame(admin_url('/'), $result);
     }
@@ -319,34 +424,11 @@ class AuthControllerTest extends TestCase
 
     public function test_guard_returns_admin_guard(): void
     {
-        $controller = new AuthController;
-        $method = new \ReflectionMethod($controller, 'guard');
-        $method->setAccessible(true);
-
-        $result = $method->invoke($controller);
+        $controller = $this->makeController();
+        $result = $controller->exposeGuard();
         $expected = Admin::guard();
 
         $this->assertSame($expected, $result);
-    }
-
-    public function test_get_setting_method_exists_and_accepts_content(): void
-    {
-        $controller = new AuthController;
-        $method = new \ReflectionMethod($controller, 'getSetting');
-
-        $this->assertTrue($method->isPublic());
-        $this->assertCount(1, $method->getParameters());
-        $this->assertSame('content', $method->getParameters()[0]->getName());
-    }
-
-    public function test_put_setting_method_exists(): void
-    {
-        $controller = new AuthController;
-
-        $this->assertTrue(method_exists($controller, 'putSetting'));
-
-        $method = new \ReflectionMethod($controller, 'putSetting');
-        $this->assertTrue($method->isPublic());
     }
 
     public function test_setting_form_returns_form_instance(): void
@@ -361,11 +443,8 @@ class AuthControllerTest extends TestCase
 
         Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
 
-        $controller = new AuthController;
-        $method = new \ReflectionMethod($controller, 'settingForm');
-        $method->setAccessible(true);
-
-        $result = $method->invoke($controller);
+        $controller = $this->makeController();
+        $result = $controller->exposeSettingForm();
 
         $this->assertInstanceOf(\Dcat\Admin\Form::class, $result);
     }
@@ -385,11 +464,8 @@ class AuthControllerTest extends TestCase
 
         Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
 
-        $controller = new AuthController;
-        $method = new \ReflectionMethod($controller, 'sendLoginResponse');
-        $method->setAccessible(true);
-
-        $result = $method->invoke($controller, $request);
+        $controller = $this->makeController();
+        $result = $controller->exposeSendLoginResponse($request);
 
         // sendLoginResponse returns a response; session regenerate should have been called
         $this->assertNotNull($result);

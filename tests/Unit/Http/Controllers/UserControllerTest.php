@@ -6,16 +6,9 @@ use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Http\Controllers\UserController;
 use Dcat\Admin\Models\Administrator as AdministratorModel;
 use Dcat\Admin\Tests\TestCase;
-use Mockery;
 
 class UserControllerTest extends TestCase
 {
-    protected function tearDown(): void
-    {
-        Mockery::close();
-        parent::tearDown();
-    }
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -47,74 +40,51 @@ class UserControllerTest extends TestCase
         $this->assertIsString($result);
     }
 
-    public function test_title_method_is_public(): void
+    public function test_grid_returns_grid_instance(): void
     {
-        $reflection = new \ReflectionMethod(UserController::class, 'title');
-        $this->assertTrue($reflection->isPublic());
+        $controller = new class extends UserController
+        {
+            public function exposeGrid(): \Dcat\Admin\Grid
+            {
+                return $this->grid();
+            }
+        };
+
+        $this->assertInstanceOf(\Dcat\Admin\Grid::class, $controller->exposeGrid());
     }
 
-    public function test_grid_method_exists_and_is_protected(): void
+    public function test_form_returns_form_instance(): void
     {
-        $this->assertTrue(method_exists(UserController::class, 'grid'));
-
-        $reflection = new \ReflectionMethod(UserController::class, 'grid');
-        $this->assertTrue($reflection->isProtected());
+        $controller = new UserController;
+        $this->assertInstanceOf(\Dcat\Admin\Form::class, $controller->form());
     }
 
-    public function test_detail_method_exists_and_is_protected(): void
+    public function test_destroy_delegates_to_form_destroy_for_non_default_user_id(): void
     {
-        $this->assertTrue(method_exists(UserController::class, 'detail'));
+        $controller = new class extends UserController
+        {
+            public ?int $destroyedId = null;
 
-        $reflection = new \ReflectionMethod(UserController::class, 'detail');
-        $this->assertTrue($reflection->isProtected());
-    }
+            public function form()
+            {
+                return new class($this)
+                {
+                    public function __construct(private object $controller) {}
 
-    public function test_detail_method_accepts_id_parameter(): void
-    {
-        $reflection = new \ReflectionMethod(UserController::class, 'detail');
-        $parameters = $reflection->getParameters();
+                    public function destroy($id): string
+                    {
+                        $this->controller->destroyedId = (int) $id;
 
-        $this->assertCount(1, $parameters);
-        $this->assertEquals('id', $parameters[0]->getName());
-    }
+                        return 'destroyed-'.$id;
+                    }
+                };
+            }
+        };
 
-    public function test_form_method_is_public(): void
-    {
-        $reflection = new \ReflectionMethod(UserController::class, 'form');
-        $this->assertTrue($reflection->isPublic());
-    }
+        $result = $controller->destroy(2);
 
-    public function test_destroy_method_is_public(): void
-    {
-        $reflection = new \ReflectionMethod(UserController::class, 'destroy');
-        $this->assertTrue($reflection->isPublic());
-    }
-
-    public function test_destroy_method_overrides_parent(): void
-    {
-        $reflection = new \ReflectionMethod(UserController::class, 'destroy');
-        $this->assertEquals(UserController::class, $reflection->getDeclaringClass()->getName());
-    }
-
-    public function test_destroy_method_accepts_id_parameter(): void
-    {
-        $reflection = new \ReflectionMethod(UserController::class, 'destroy');
-        $parameters = $reflection->getParameters();
-
-        $this->assertCount(1, $parameters);
-        $this->assertEquals('id', $parameters[0]->getName());
-    }
-
-    public function test_index_method_inherited_from_admin_controller(): void
-    {
-        $reflection = new \ReflectionMethod(UserController::class, 'index');
-        $this->assertEquals(AdminController::class, $reflection->getDeclaringClass()->getName());
-    }
-
-    public function test_show_method_inherited_from_admin_controller(): void
-    {
-        $reflection = new \ReflectionMethod(UserController::class, 'show');
-        $this->assertEquals(AdminController::class, $reflection->getDeclaringClass()->getName());
+        $this->assertSame('destroyed-2', $result);
+        $this->assertSame(2, $controller->destroyedId);
     }
 
     public function test_controller_references_default_id_constant(): void
@@ -122,15 +92,30 @@ class UserControllerTest extends TestCase
         $this->assertEquals(1, AdministratorModel::DEFAULT_ID);
     }
 
-    public function test_grid_method_declared_in_user_controller(): void
+    public function test_index_and_show_are_callable(): void
     {
-        $reflection = new \ReflectionMethod(UserController::class, 'grid');
-        $this->assertEquals(UserController::class, $reflection->getDeclaringClass()->getName());
+        $controller = new UserController;
+
+        $this->assertTrue(is_callable([$controller, 'index']));
+        $this->assertTrue(is_callable([$controller, 'show']));
     }
 
-    public function test_form_method_declared_in_user_controller(): void
+    public function test_grid_and_form_can_be_exposed_from_subclass(): void
     {
-        $reflection = new \ReflectionMethod(UserController::class, 'form');
-        $this->assertEquals(UserController::class, $reflection->getDeclaringClass()->getName());
+        $controller = new class extends UserController
+        {
+            public function exposeGrid(): \Dcat\Admin\Grid
+            {
+                return $this->grid();
+            }
+
+            public function exposeForm(): \Dcat\Admin\Form
+            {
+                return $this->form();
+            }
+        };
+
+        $this->assertInstanceOf(\Dcat\Admin\Grid::class, $controller->exposeGrid());
+        $this->assertInstanceOf(\Dcat\Admin\Form::class, $controller->exposeForm());
     }
 }

@@ -5,33 +5,60 @@ namespace Dcat\Admin\Tests\Unit\Http\Actions\Extensions;
 use Dcat\Admin\Grid\RowAction;
 use Dcat\Admin\Http\Actions\Extensions\Update;
 use Dcat\Admin\Tests\TestCase;
-use Mockery;
+use Illuminate\Support\Fluent;
 
 class UpdateTest extends TestCase
 {
-    protected function tearDown(): void
+    public function test_title_uses_latest_version_from_row_extension(): void
     {
-        Mockery::close();
-        parent::tearDown();
+        $extension = new class
+        {
+            public function getLocalLatestVersion(): string
+            {
+                return '2.1.0';
+            }
+        };
+
+        $action = new Update;
+        $action->setRow(new Fluent(['extension' => $extension]));
+
+        $this->assertInstanceOf(RowAction::class, $action);
+        $this->assertStringStartsWith('<b>', $action->title());
+        $this->assertStringEndsWith('</b>', $action->title());
     }
 
-    public function test_class_exists(): void
+    public function test_handle_updates_extension_and_returns_refresh_response_with_notes(): void
     {
-        $this->assertTrue(class_exists(Update::class));
-    }
+        $manager = new class
+        {
+            public array $notes = ['note-1', 'note-2'];
 
-    public function test_is_subclass_of_row_action(): void
-    {
-        $this->assertTrue(is_subclass_of(Update::class, RowAction::class));
-    }
+            public ?string $updatedKey = null;
 
-    public function test_title_method_exists(): void
-    {
-        $this->assertTrue(method_exists(Update::class, 'title'));
-    }
+            public function updateManager()
+            {
+                return $this;
+            }
 
-    public function test_handle_method_exists(): void
-    {
-        $this->assertTrue(method_exists(Update::class, 'handle'));
+            public function update($key)
+            {
+                $this->updatedKey = $key;
+
+                return $this;
+            }
+        };
+
+        $this->app->instance('admin.extend', $manager);
+
+        $action = new Update;
+        $action->setKey('demo-ext');
+
+        $response = $action->handle()->toArray();
+
+        $this->assertSame('demo-ext', $manager->updatedKey);
+        $this->assertTrue($response['status']);
+        $this->assertSame('refresh', $response['data']['then']['action']);
+        $this->assertStringContainsString('note-1', $response['data']['message']);
+        $this->assertStringContainsString('note-2', $response['data']['message']);
     }
 }

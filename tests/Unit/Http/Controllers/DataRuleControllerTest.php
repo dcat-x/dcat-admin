@@ -31,52 +31,49 @@ class DataRuleControllerTest extends TestCase
 
     public function test_title_returns_translated_data_rule_title(): void
     {
-        $controller = new DataRuleController;
+        $controller = new class extends DataRuleController
+        {
+            public function exposeTitle(): string
+            {
+                return $this->title();
+            }
+        };
 
-        $reflection = new \ReflectionMethod($controller, 'title');
-        $reflection->setAccessible(true);
-
-        $result = $reflection->invoke($controller);
+        $result = $controller->exposeTitle();
         $this->assertEquals(trans('admin.data_rule.title'), $result);
         $this->assertIsString($result);
     }
 
-    public function test_grid_method_exists_and_is_protected(): void
+    public function test_grid_returns_grid_instance(): void
     {
-        $this->assertTrue(method_exists(DataRuleController::class, 'grid'));
+        $controller = new class extends DataRuleController
+        {
+            public function exposeGrid(): \Dcat\Admin\Grid
+            {
+                return $this->grid();
+            }
+        };
 
-        $reflection = new \ReflectionMethod(DataRuleController::class, 'grid');
-        $this->assertTrue($reflection->isProtected());
+        $this->assertInstanceOf(\Dcat\Admin\Grid::class, $controller->exposeGrid());
     }
 
-    public function test_detail_method_exists_and_is_protected(): void
+    public function test_form_returns_form_instance(): void
     {
-        $this->assertTrue(method_exists(DataRuleController::class, 'detail'));
-
-        $reflection = new \ReflectionMethod(DataRuleController::class, 'detail');
-        $this->assertTrue($reflection->isProtected());
-
-        $params = $reflection->getParameters();
-        $this->assertCount(1, $params);
-        $this->assertEquals('id', $params[0]->getName());
-    }
-
-    public function test_form_method_exists_and_is_public(): void
-    {
-        $this->assertTrue(method_exists(DataRuleController::class, 'form'));
-
-        $reflection = new \ReflectionMethod(DataRuleController::class, 'form');
-        $this->assertTrue($reflection->isPublic());
+        $controller = new DataRuleController;
+        $this->assertInstanceOf(\Dcat\Admin\Form::class, $controller->form());
     }
 
     public function test_get_variables_html_returns_html_table(): void
     {
-        $controller = new DataRuleController;
+        $controller = new class extends DataRuleController
+        {
+            public function exposeVariablesHtml(): string
+            {
+                return $this->getVariablesHtml();
+            }
+        };
 
-        $reflection = new \ReflectionMethod($controller, 'getVariablesHtml');
-        $reflection->setAccessible(true);
-
-        $result = $reflection->invoke($controller);
+        $result = $controller->exposeVariablesHtml();
 
         $this->assertIsString($result);
         $this->assertStringContainsString('<table', $result);
@@ -88,12 +85,15 @@ class DataRuleControllerTest extends TestCase
 
     public function test_get_variables_html_contains_code_tags(): void
     {
-        $controller = new DataRuleController;
+        $controller = new class extends DataRuleController
+        {
+            public function exposeVariablesHtml(): string
+            {
+                return $this->getVariablesHtml();
+            }
+        };
 
-        $reflection = new \ReflectionMethod($controller, 'getVariablesHtml');
-        $reflection->setAccessible(true);
-
-        $result = $reflection->invoke($controller);
+        $result = $controller->exposeVariablesHtml();
 
         $this->assertStringContainsString('<code>', $result);
         $this->assertStringContainsString('</code>', $result);

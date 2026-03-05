@@ -5,95 +5,70 @@ namespace Dcat\Admin\Tests\Unit\Http\Actions\Menu;
 use Dcat\Admin\Http\Actions\Menu\Show;
 use Dcat\Admin\Tests\TestCase;
 use Dcat\Admin\Tree\RowAction;
-use Mockery;
+use Illuminate\Support\Fluent;
 
 class ShowTest extends TestCase
 {
-    protected function tearDown(): void
+    protected function setUp(): void
     {
-        Mockery::close();
-        parent::tearDown();
+        parent::setUp();
+
+        ShowMenuFakeModel::reset();
+        $this->app['config']->set('admin.database.menu_model', ShowMenuFakeModel::class);
     }
 
-    // -------------------------------------------------------
-    // Class existence and inheritance
-    // -------------------------------------------------------
-
-    public function test_class_exists(): void
+    public function test_title_switches_icon_based_on_row_show_flag(): void
     {
-        $this->assertTrue(class_exists(Show::class));
+        $action = new Show;
+        $action->setRow(new Fluent(['show' => 1]));
+
+        $this->assertInstanceOf(RowAction::class, $action);
+        $this->assertStringContainsString('icon-eye-off', $action->title());
+
+        $action->setRow(new Fluent(['show' => 0]));
+        $this->assertStringContainsString('icon-eye', $action->title());
     }
 
-    public function test_extends_row_action(): void
+    public function test_handle_toggles_menu_show_status_and_returns_location_response(): void
     {
-        $this->assertTrue(is_subclass_of(Show::class, RowAction::class));
+        $action = new Show;
+        $action->setKey(9);
+
+        $response = $action->handle()->toArray();
+
+        $this->assertSame(9, ShowMenuFakeModel::$lastFindId);
+        $this->assertSame(['show' => 0], ShowMenuFakeModel::$lastUpdateData);
+        $this->assertTrue($response['status']);
+        $this->assertSame('location', $response['data']['then']['action']);
+        $this->assertStringContainsString('auth/menu', $response['data']['then']['value']);
+    }
+}
+
+class ShowMenuFakeModel
+{
+    public static ?int $lastFindId = null;
+
+    public static ?array $lastUpdateData = null;
+
+    public int $show = 1;
+
+    public static function reset(): void
+    {
+        static::$lastFindId = null;
+        static::$lastUpdateData = null;
     }
 
-    // -------------------------------------------------------
-    // Method existence
-    // -------------------------------------------------------
-
-    public function test_handle_method_exists(): void
+    public static function find($id): self
     {
-        $this->assertTrue(method_exists(Show::class, 'handle'));
+        static::$lastFindId = (int) $id;
+
+        return new self;
     }
 
-    public function test_title_method_exists(): void
+    public function update(array $data): bool
     {
-        $this->assertTrue(method_exists(Show::class, 'title'));
-    }
+        static::$lastUpdateData = $data;
 
-    // -------------------------------------------------------
-    // Method visibility
-    // -------------------------------------------------------
-
-    public function test_handle_is_public(): void
-    {
-        $method = new \ReflectionMethod(Show::class, 'handle');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_title_is_public(): void
-    {
-        $method = new \ReflectionMethod(Show::class, 'title');
-        $this->assertTrue($method->isPublic());
-    }
-
-    // -------------------------------------------------------
-    // Method parameters
-    // -------------------------------------------------------
-
-    public function test_handle_has_no_parameters(): void
-    {
-        $method = new \ReflectionMethod(Show::class, 'handle');
-        $this->assertCount(0, $method->getParameters());
-    }
-
-    public function test_title_has_no_parameters(): void
-    {
-        $method = new \ReflectionMethod(Show::class, 'title');
-        $this->assertCount(0, $method->getParameters());
-    }
-
-    // -------------------------------------------------------
-    // Class reflection
-    // -------------------------------------------------------
-
-    public function test_class_is_not_abstract(): void
-    {
-        $reflection = new \ReflectionClass(Show::class);
-        $this->assertFalse($reflection->isAbstract());
-    }
-
-    public function test_class_declares_handle_method(): void
-    {
-        $method = new \ReflectionMethod(Show::class, 'handle');
-        $this->assertSame(Show::class, $method->getDeclaringClass()->getName());
-    }
-
-    public function test_class_declares_title_method(): void
-    {
-        $method = new \ReflectionMethod(Show::class, 'title');
-        $this->assertSame(Show::class, $method->getDeclaringClass()->getName());
+        return true;
     }
 }

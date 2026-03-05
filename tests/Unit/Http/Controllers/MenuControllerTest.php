@@ -41,11 +41,15 @@ class MenuControllerTest extends TestCase
 
     public function test_icon_help_returns_fontawesome_link(): void
     {
-        $controller = new MenuController;
-        $reflection = new \ReflectionMethod($controller, 'iconHelp');
-        $reflection->setAccessible(true);
+        $controller = new class extends MenuController
+        {
+            public function exposeIconHelp(): string
+            {
+                return $this->iconHelp();
+            }
+        };
 
-        $result = $reflection->invoke($controller);
+        $result = $controller->exposeIconHelp();
 
         $this->assertIsString($result);
         $this->assertStringContainsString('http://fontawesome.io/icons/', $result);
@@ -53,40 +57,36 @@ class MenuControllerTest extends TestCase
         $this->assertStringContainsString('target="_blank"', $result);
     }
 
-    public function test_form_method_exists(): void
+    public function test_form_returns_form_instance(): void
     {
-        $this->assertTrue(method_exists(MenuController::class, 'form'));
+        $controller = new MenuController;
 
-        $reflection = new \ReflectionMethod(MenuController::class, 'form');
-        $this->assertTrue($reflection->isPublic());
+        $this->assertInstanceOf(\Dcat\Admin\Form::class, $controller->form());
     }
 
-    public function test_index_method_exists(): void
+    public function test_index_builds_content_with_row_callback_body(): void
     {
-        $this->assertTrue(method_exists(MenuController::class, 'index'));
+        $content = Mockery::mock(\Dcat\Admin\Layout\Content::class);
+        $content->shouldReceive('title')->once()->andReturnSelf();
+        $content->shouldReceive('description')->once()->andReturnSelf();
+        $content->shouldReceive('body')->once()->with(Mockery::type(\Closure::class))->andReturnSelf();
 
-        $reflection = new \ReflectionMethod(MenuController::class, 'index');
-        $this->assertTrue($reflection->isPublic());
+        $controller = new MenuController;
+        $result = $controller->index($content);
+
+        $this->assertSame($content, $result);
     }
 
-    public function test_tree_view_method_exists_and_is_protected(): void
+    public function test_tree_view_returns_tree_instance(): void
     {
-        $this->assertTrue(method_exists(MenuController::class, 'treeView'));
+        $controller = new class extends MenuController
+        {
+            public function exposeTreeView(): \Dcat\Admin\Tree
+            {
+                return $this->treeView();
+            }
+        };
 
-        $reflection = new \ReflectionMethod(MenuController::class, 'treeView');
-        $this->assertTrue($reflection->isProtected());
-    }
-
-    public function test_index_method_accepts_content_parameter(): void
-    {
-        $reflection = new \ReflectionMethod(MenuController::class, 'index');
-        $parameters = $reflection->getParameters();
-
-        $this->assertCount(1, $parameters);
-        $this->assertEquals('content', $parameters[0]->getName());
-
-        $type = $parameters[0]->getType();
-        $this->assertNotNull($type);
-        $this->assertEquals(\Dcat\Admin\Layout\Content::class, $type->getName());
+        $this->assertInstanceOf(\Dcat\Admin\Tree::class, $controller->exposeTreeView());
     }
 }

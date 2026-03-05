@@ -48,9 +48,13 @@ class ScaffoldControllerTest extends TestCase
             'prefix' => 'pre_',
         ]);
 
-        $controller = new ScaffoldController;
-        $reflection = new \ReflectionMethod($controller, 'getDatabaseColumns');
-        $reflection->setAccessible(true);
+        $controller = new class extends ScaffoldController
+        {
+            public function exposeGetDatabaseColumns($db = null, $tb = null)
+            {
+                return $this->getDatabaseColumns($db, $tb);
+            }
+        };
 
         // Mock DB connection 来捕获 SQL 和绑定参数
         $capturedSql = null;
@@ -71,7 +75,7 @@ class ScaffoldControllerTest extends TestCase
             ->with('scaffold_test')
             ->andReturn($connection);
 
-        $result = $reflection->invoke($controller, 'test_db', 'users');
+        $result = $controller->exposeGetDatabaseColumns('test_db', 'users');
 
         // 验证使用了参数化查询
         $this->assertStringContainsString('table_schema = ?', $capturedSql);
@@ -96,9 +100,13 @@ class ScaffoldControllerTest extends TestCase
             'password' => '',
         ]);
 
-        $controller = new ScaffoldController;
-        $reflection = new \ReflectionMethod($controller, 'getDatabaseColumns');
-        $reflection->setAccessible(true);
+        $controller = new class extends ScaffoldController
+        {
+            public function exposeGetDatabaseColumns($db = null, $tb = null)
+            {
+                return $this->getDatabaseColumns($db, $tb);
+            }
+        };
 
         $capturedSql = null;
         $capturedBindings = null;
@@ -119,7 +127,7 @@ class ScaffoldControllerTest extends TestCase
             ->andReturn($connection);
 
         // 不传表名时，绑定只有数据库名
-        $result = $reflection->invoke($controller, 'test_db2', null);
+        $result = $controller->exposeGetDatabaseColumns('test_db2', null);
 
         $this->assertStringContainsString('table_schema = ?', $capturedSql);
         $this->assertStringNotContainsString('TABLE_NAME = ?', $capturedSql);
