@@ -114,6 +114,10 @@ class Translator
 
     protected function hasKey(string $key): bool
     {
-        return (bool) call_user_func([$this->translator, 'has'], $key);
+        if (method_exists($this->translator, 'has')) {
+            return (bool) $this->translator->has($key);
+        }
+
+        return false;
     }
 }

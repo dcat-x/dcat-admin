@@ -4,6 +4,7 @@ namespace Dcat\Admin\Grid\Displayers;
 
 use Dcat\Admin\Support\Helper;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Storage;
 
 class Image extends AbstractDisplayer
@@ -29,8 +30,8 @@ class Image extends AbstractDisplayer
         })->implode('&nbsp;');
     }
 
-    protected function resolveStorageUrl($storage, string $path): string
+    protected function resolveStorageUrl(FilesystemAdapter $storage, string $path): string
     {
-        return (string) call_user_func([$storage, 'url'], $path);
+        return (string) $storage->url($path);
     }
 }

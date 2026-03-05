@@ -231,11 +231,21 @@ trait HasFiles
 
     protected function getUploadFieldColumn(UploadFieldInterface $field): string
     {
-        return (string) call_user_func([$field, 'column']);
+        if (method_exists($field, 'column')) {
+            return (string) $field->column();
+        }
+
+        throw new \BadMethodCallException('Upload field must implement column() method.');
     }
 
     protected function setUploadFieldOriginal(UploadFieldInterface $field, array $input): void
     {
-        call_user_func([$field, 'setOriginal'], $input);
+        if (method_exists($field, 'setOriginal')) {
+            $field->setOriginal($input);
+
+            return;
+        }
+
+        throw new \BadMethodCallException('Upload field must implement setOriginal() method.');
     }
 }

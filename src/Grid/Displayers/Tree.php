@@ -79,13 +79,17 @@ EOT;
 
     protected function resolveRepositoryModel($repository)
     {
-        return call_user_func([$repository, 'model']);
+        if (is_object($repository) && method_exists($repository, 'model')) {
+            return $repository->model();
+        }
+
+        throw new \RuntimeException('Repository must implement model() method.');
     }
 
     protected function resolvePaginatorLastPage($paginator): int
     {
-        if (method_exists($paginator, 'lastPage')) {
-            return (int) call_user_func([$paginator, 'lastPage']);
+        if (is_object($paginator) && method_exists($paginator, 'lastPage')) {
+            return (int) $paginator->lastPage();
         }
 
         return 1;

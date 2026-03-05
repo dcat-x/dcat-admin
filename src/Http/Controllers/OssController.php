@@ -185,6 +185,10 @@ class OssController extends AdminController
 
     protected function temporaryUrl($disk, string $path, int $expireMinutes): string
     {
-        return (string) call_user_func([$disk, 'temporaryUrl'], $path, now()->addMinutes($expireMinutes));
+        if (is_object($disk) && method_exists($disk, 'temporaryUrl')) {
+            return (string) $disk->temporaryUrl($path, now()->addMinutes($expireMinutes));
+        }
+
+        throw new \RuntimeException('Configured storage driver does not support temporary URLs.');
     }
 }

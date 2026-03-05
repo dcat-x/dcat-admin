@@ -207,7 +207,7 @@ trait WebUploader
         $key = null;
 
         if ($this->form && method_exists($this->form, 'getKey')) {
-            $key = call_user_func([$this->form, 'getKey']);
+            $key = $this->form->getKey();
         }
 
         $defaultOptions = [

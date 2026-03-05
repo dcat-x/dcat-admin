@@ -9,6 +9,7 @@ use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
@@ -81,7 +82,12 @@ class Administrator extends Model implements AuthenticatableContract, Authorizab
     {
         $storage = Storage::disk($disk);
 
-        return (string) call_user_func([$storage, 'url'], $path);
+        return $this->storageUrl($storage, $path);
+    }
+
+    protected function storageUrl(FilesystemAdapter $storage, string $path): string
+    {
+        return (string) $storage->url($path);
     }
 
     /**

@@ -609,7 +609,11 @@ if (! function_exists('rate_formatter')) {
 if (! function_exists('ali_sign_url')) {
     function admin_storage_temporary_url($storage, string $path, int $expireMinutes): string
     {
-        return (string) call_user_func([$storage, 'temporaryUrl'], $path, now()->addMinutes($expireMinutes));
+        if (is_object($storage) && method_exists($storage, 'temporaryUrl')) {
+            return (string) $storage->temporaryUrl($path, now()->addMinutes($expireMinutes));
+        }
+
+        throw new \RuntimeException('Configured storage driver does not support temporary URLs.');
     }
 
     /**

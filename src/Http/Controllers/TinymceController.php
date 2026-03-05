@@ -27,23 +27,20 @@ class TinymceController
         return uniqid(md5($file->getClientOriginalName())).'.'.$file->getClientOriginalExtension();
     }
 
-    /**
-     * @return \Illuminate\Contracts\Filesystem\Filesystem|FilesystemAdapter
-     */
-    protected function disk()
+    protected function disk(): FilesystemAdapter
     {
         $disk = request()->get('disk') ?: config('admin.upload.disk');
 
         return Storage::disk($disk);
     }
 
-    protected function putFileAs($disk, string $dir, UploadedFile $file, string $name): void
+    protected function putFileAs(FilesystemAdapter $disk, string $dir, UploadedFile $file, string $name): void
     {
-        call_user_func([$disk, 'putFileAs'], $dir, $file, $name);
+        $disk->putFileAs($dir, $file, $name);
     }
 
-    protected function diskUrl($disk, string $path): string
+    protected function diskUrl(FilesystemAdapter $disk, string $path): string
     {
-        return (string) call_user_func([$disk, 'url'], $path);
+        return (string) $disk->url($path);
     }
 }

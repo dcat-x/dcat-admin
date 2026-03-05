@@ -313,18 +313,24 @@ HTML
             return null;
         }
 
-        return (string) call_user_func([$this->repository, 'getParentColumn']);
+        return (string) $this->repository->getParentColumn();
     }
 
     protected function resolveRepositoryDefaultParentId(EloquentRepository $repository)
     {
-        return call_user_func([$repository->model(), 'getDefaultParentId']);
+        $model = $repository->model();
+
+        if (method_exists($model, 'getDefaultParentId')) {
+            return $model->getDefaultParentId();
+        }
+
+        return 0;
     }
 
     protected function resolvePaginatorLastPage($paginator): int
     {
-        if (method_exists($paginator, 'lastPage')) {
-            return (int) call_user_func([$paginator, 'lastPage']);
+        if (is_object($paginator) && method_exists($paginator, 'lastPage')) {
+            return (int) $paginator->lastPage();
         }
 
         return 1;

@@ -3,6 +3,7 @@
 namespace Dcat\Admin\Grid\Displayers;
 
 use Dcat\Admin\Support\Helper;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Storage;
 
 class Downloadable extends AbstractDisplayer
@@ -34,8 +35,8 @@ HTML;
         })->implode('<br>');
     }
 
-    protected function resolveStorageUrl($storage, string $path): string
+    protected function resolveStorageUrl(FilesystemAdapter $storage, string $path): string
     {
-        return (string) call_user_func([$storage, 'url'], $path);
+        return (string) $storage->url($path);
     }
 }

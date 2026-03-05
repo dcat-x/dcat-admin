@@ -10,6 +10,7 @@ use Dcat\Admin\Traits\HasVariables;
 use Dcat\Admin\Widgets\Dump;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
@@ -305,9 +306,9 @@ HTML;
         });
     }
 
-    protected function resolveStorageUrl($storage, string $path): string
+    protected function resolveStorageUrl(FilesystemAdapter $storage, string $path): string
     {
-        return (string) call_user_func([$storage, 'url'], $path);
+        return (string) $storage->url($path);
     }
 
     /**

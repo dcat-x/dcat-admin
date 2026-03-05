@@ -486,17 +486,25 @@ trait UploadField
     {
         $storage = $this->getStorage();
 
-        if ($permission !== null) {
-            return call_user_func([$storage, 'putFileAs'], $directory, $file, $name, $permission);
+        if (! method_exists($storage, 'putFileAs')) {
+            throw new \RuntimeException('Configured storage driver does not support putFileAs().');
         }
 
-        return call_user_func([$storage, 'putFileAs'], $directory, $file, $name);
+        if ($permission !== null) {
+            return $storage->putFileAs($directory, $file, $name, $permission);
+        }
+
+        return $storage->putFileAs($directory, $file, $name);
     }
 
     protected function storageUrl(string $path, $storage = null): string
     {
         $storage = $storage ?: $this->getStorage();
 
-        return call_user_func([$storage, 'url'], $path);
+        if (! method_exists($storage, 'url')) {
+            throw new \RuntimeException('Configured storage driver does not support url().');
+        }
+
+        return $storage->url($path);
     }
 }

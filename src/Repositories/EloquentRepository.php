@@ -689,7 +689,9 @@ class EloquentRepository extends Repository implements TreeRepository
 
     protected function applyWithTrashed($query): void
     {
-        call_user_func([$query, 'withTrashed']);
+        if (is_object($query) && method_exists($query, 'withTrashed')) {
+            $query->withTrashed();
+        }
     }
 
     protected function callSortable(string $method): bool
@@ -699,12 +701,16 @@ class EloquentRepository extends Repository implements TreeRepository
 
     protected function isTrashed($model): bool
     {
-        return (bool) call_user_func([$model, 'trashed']);
+        if (! is_object($model) || ! method_exists($model, 'trashed')) {
+            return false;
+        }
+
+        return (bool) $model->trashed();
     }
 
     protected function callModelMethod(string $method, array $arguments = [])
     {
-        return call_user_func([$this->model(), $method], ...$arguments);
+        return $this->model()->{$method}(...$arguments);
     }
 
     /**
@@ -775,7 +781,7 @@ class EloquentRepository extends Repository implements TreeRepository
                 continue;
             }
 
-            $relation = call_user_func([$model, $relationColumn]);
+            $relation = $model->{$relationColumn}();
 
             if ($relation instanceof Relations\Relation) {
                 $relations[$column] = $value;

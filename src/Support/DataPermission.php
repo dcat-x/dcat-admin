@@ -282,7 +282,7 @@ class DataPermission
             return $this->departmentIdsCache;
         }
 
-        $departments = call_user_func([$this->user, 'departments'])->get();
+        $departments = $this->user->departments()->get();
 
         return $this->departmentIdsCache = $departments->pluck('id')->toArray();
     }
