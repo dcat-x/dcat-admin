@@ -30,7 +30,6 @@
 | condition | varchar | 条件：=/!=/>/<等 |
 | value | text | 条件值 |
 | value_type | varchar | 值类型：fixed/variable |
-| action | varchar | 表单操作：hide/disable/readonly |
 | status | tinyint | 状态：1启用，0禁用 |
 
 ### 规则作用域
@@ -54,8 +53,6 @@
 | `in` | 在列表中 |
 | `not_in` | 不在列表中 |
 | `like` | 模糊匹配 |
-| `is_null` | 为空 |
-| `is_not_null` | 不为空 |
 
 ### 值类型
 
@@ -126,11 +123,10 @@ DataRule::create([
 
 // 创建表单规则：禁止编辑状态字段
 DataRule::create([
-    'name' => '禁止编辑状态',
+    'name' => '隐藏状态字段',
     'menu_id' => 5,
     'scope' => DataRule::SCOPE_FORM,
     'field' => 'status',
-    'action' => 'disable',
     'status' => 1,
 ]);
 ```

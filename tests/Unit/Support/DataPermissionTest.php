@@ -8,6 +8,34 @@ use Dcat\Admin\Tests\TestCase;
 use Illuminate\Database\Eloquent\Builder;
 use Mockery;
 
+class FakeDepartmentRelationForDataPermissionTest
+{
+    public int $calls = 0;
+
+    public function __construct(private $department) {}
+
+    public function first()
+    {
+        $this->calls++;
+
+        return $this->department;
+    }
+}
+
+class FakeUserForDataPermissionTest
+{
+    public int $id = 1;
+
+    public string $username = 'tester';
+
+    public function __construct(private FakeDepartmentRelationForDataPermissionTest $relation) {}
+
+    public function primaryDepartment(): FakeDepartmentRelationForDataPermissionTest
+    {
+        return $this->relation;
+    }
+}
+
 class DataPermissionTest extends TestCase
 {
     protected function setUp(): void
@@ -186,5 +214,26 @@ class DataPermissionTest extends TestCase
         $this->assertTrue(method_exists(DataPermission::class, 'getHiddenFormFields'));
         $this->assertTrue(method_exists(DataPermission::class, 'canAccessColumn'));
         $this->assertTrue(method_exists(DataPermission::class, 'canAccessFormField'));
+    }
+
+    public function test_primary_department_query_is_cached_in_single_resolve_cycle(): void
+    {
+        $this->app['config']->set('admin.department.enable', true);
+
+        $relation = new FakeDepartmentRelationForDataPermissionTest((object) [
+            'id' => 9,
+            'path' => '1/9',
+        ]);
+        $user = new FakeUserForDataPermissionTest($relation);
+        $rule = new DataRule([
+            'value' => '{department_id}-{department_path}',
+            'value_type' => DataRule::VALUE_TYPE_VARIABLE,
+        ]);
+
+        $dataPermission = new DataPermission($user);
+        $resolved = $dataPermission->resolveValue($rule);
+
+        $this->assertSame('9-1/9', $resolved);
+        $this->assertSame(1, $relation->calls);
     }
 }

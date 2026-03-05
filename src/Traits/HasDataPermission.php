@@ -5,6 +5,7 @@ namespace Dcat\Admin\Traits;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Support\DataPermission;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\App;
 
 trait HasDataPermission
 {
@@ -17,6 +18,11 @@ trait HasDataPermission
      * 当前菜单ID（用于数据权限）
      */
     protected static $currentMenuId;
+
+    /**
+     * 当前菜单ID缓存所属请求哈希
+     */
+    protected static $menuIdRequestHash;
 
     /**
      * 是否启用数据权限
@@ -62,6 +68,8 @@ trait HasDataPermission
      */
     public static function setCurrentMenuId(?int $menuId): void
     {
+        static::resetMenuIdCacheIfNewRequest();
+
         static::$currentMenuId = $menuId;
     }
 
@@ -70,12 +78,14 @@ trait HasDataPermission
      */
     public static function getCurrentMenuId(): ?int
     {
+        static::resetMenuIdCacheIfNewRequest();
+
         if (static::$currentMenuId !== null) {
             return static::$currentMenuId;
         }
 
         // 尝试从请求中获取当前菜单
-        return static::detectMenuIdFromRequest();
+        return static::$currentMenuId = static::detectMenuIdFromRequest();
     }
 
     /**
@@ -207,5 +217,20 @@ trait HasDataPermission
         }
 
         return DataPermission::make()->canAccessFormField($menuId, $field);
+    }
+
+    /**
+     * 新请求时重置菜单ID缓存，避免长驻进程污染
+     */
+    protected static function resetMenuIdCacheIfNewRequest(): void
+    {
+        $requestHash = spl_object_id(App::make('request'));
+
+        if (static::$menuIdRequestHash === $requestHash) {
+            return;
+        }
+
+        static::$menuIdRequestHash = $requestHash;
+        static::$currentMenuId = null;
     }
 }

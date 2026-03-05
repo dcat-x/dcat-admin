@@ -5,6 +5,32 @@ namespace Dcat\Admin\Tests\Unit\Traits;
 use Dcat\Admin\Tests\TestCase;
 use Dcat\Admin\Traits\HasDataPermission;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+
+class FakeMenuQueryForHasDataPermissionTest
+{
+    public static int $firstCalls = 0;
+
+    public function orWhere($column, $value): self
+    {
+        return $this;
+    }
+
+    public function first()
+    {
+        static::$firstCalls++;
+
+        return (object) ['id' => 123];
+    }
+}
+
+class FakeMenuModelForHasDataPermissionTest
+{
+    public static function where($column, $value): FakeMenuQueryForHasDataPermissionTest
+    {
+        return new FakeMenuQueryForHasDataPermissionTest;
+    }
+}
 
 class DataPermissionTestModel extends Model
 {
@@ -36,6 +62,8 @@ class HasDataPermissionTest extends TestCase
         // 恢复默认状态
         DataPermissionTestModel::enableDataPermission();
         DataPermissionTestModel::setCurrentMenuId(null);
+        $this->app['config']->set('admin.database.menu_model', \Dcat\Admin\Models\Menu::class);
+        FakeMenuQueryForHasDataPermissionTest::$firstCalls = 0;
 
         parent::tearDown();
     }
@@ -186,5 +214,20 @@ class HasDataPermissionTest extends TestCase
         $scopes = $model->getGlobalScopes();
 
         $this->assertArrayHasKey('data_permission', $scopes);
+    }
+
+    public function test_get_current_menu_id_is_cached_in_same_request(): void
+    {
+        $this->app->instance('request', Request::create('/admin/orders', 'GET'));
+        $this->app['config']->set('admin.database.menu_model', FakeMenuModelForHasDataPermissionTest::class);
+
+        DataPermissionTestModel::setCurrentMenuId(null);
+
+        $first = DataPermissionTestModel::getCurrentMenuId();
+        $second = DataPermissionTestModel::getCurrentMenuId();
+
+        $this->assertSame(123, $first);
+        $this->assertSame(123, $second);
+        $this->assertSame(1, FakeMenuQueryForHasDataPermissionTest::$firstCalls);
     }
 }

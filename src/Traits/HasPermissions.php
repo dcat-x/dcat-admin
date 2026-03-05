@@ -11,6 +11,16 @@ trait HasPermissions
     protected $allPermissions;
 
     /**
+     * 权限标识缓存
+     */
+    protected ?array $permissionSlugs = null;
+
+    /**
+     * 权限ID缓存
+     */
+    protected ?array $permissionIds = null;
+
+    /**
      * Get all permissions of user.
      *
      * @return mixed
@@ -46,12 +56,8 @@ trait HasPermissions
             return true;
         }
 
-        $permissions = $this->allPermissions();
-
-        return $permissions->pluck('slug')->contains($ability) ?:
-            $permissions
-                ->pluck('id')
-                ->contains($ability);
+        return in_array($ability, $this->getPermissionSlugs(), true)
+            || in_array($ability, $this->getPermissionIds(), true);
     }
 
     /**
@@ -176,5 +182,23 @@ trait HasPermissions
         static::deleting(function ($model) {
             $model->roles()->detach();
         });
+    }
+
+    protected function getPermissionSlugs(): array
+    {
+        if ($this->permissionSlugs !== null) {
+            return $this->permissionSlugs;
+        }
+
+        return $this->permissionSlugs = $this->allPermissions()->pluck('slug')->all();
+    }
+
+    protected function getPermissionIds(): array
+    {
+        if ($this->permissionIds !== null) {
+            return $this->permissionIds;
+        }
+
+        return $this->permissionIds = $this->allPermissions()->pluck('id')->all();
     }
 }

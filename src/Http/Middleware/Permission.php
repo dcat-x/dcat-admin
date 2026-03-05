@@ -7,6 +7,7 @@ use Dcat\Admin\Exception\RuntimeException;
 use Dcat\Admin\Http\Auth\Permission as Checker;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 
 class Permission
@@ -15,6 +16,18 @@ class Permission
      * @var string
      */
     protected $middlewarePrefix = 'admin.permission:';
+
+    /**
+     * 菜单匹配缓存（请求级）
+     *
+     * @var array<string, mixed>
+     */
+    protected static $menuPermissionCache = [];
+
+    /**
+     * 缓存所属的请求哈希，用于检测跨请求
+     */
+    protected static $cacheRequestHash;
 
     /**
      * Handle an incoming request.
@@ -57,6 +70,33 @@ class Permission
      */
     protected function checkMenuPermission(Request $request, $user): bool
     {
+        [$path, $pathPattern] = $this->normalizeMenuPath($request);
+
+        $menu = $this->findMatchedMenu($path, $pathPattern);
+
+        // 如果没有对应的菜单，允许访问（可能是 API 接口或异步请求）
+        if (! $menu) {
+            return true;
+        }
+
+        $menuRoles = $menu->roles->pluck('slug')->toArray();
+
+        // 如果菜单没有绑定角色，普通用户不允许访问
+        if (empty($menuRoles)) {
+            return false;
+        }
+
+        // 检查用户角色是否在菜单绑定的角色中
+        return $user->inRoles($menuRoles);
+    }
+
+    /**
+     * 规范化菜单匹配路径
+     *
+     * @return array{0: string, 1: string}
+     */
+    protected function normalizeMenuPath(Request $request): array
+    {
         $path = '/'.trim($request->path(), '/');
         $prefix = config('admin.route.prefix', 'admin');
 
@@ -69,6 +109,22 @@ class Permission
 
         // 移除路径中的 ID 部分 (如 users/1/edit -> users/*/edit)
         $pathPattern = preg_replace('/\/\d+/', '/*', $path);
+
+        return [$path, $pathPattern];
+    }
+
+    /**
+     * 查找匹配菜单（请求级缓存）
+     */
+    protected function findMatchedMenu(string $path, string $pathPattern)
+    {
+        $this->refreshRequestCacheIfNeeded();
+
+        $cacheKey = $path.'|'.$pathPattern;
+
+        if (array_key_exists($cacheKey, static::$menuPermissionCache)) {
+            return static::$menuPermissionCache[$cacheKey];
+        }
 
         $menuModel = config('admin.database.menu_model');
 
@@ -87,20 +143,19 @@ class Permission
                 ->first();
         }
 
-        // 如果没有对应的菜单，允许访问（可能是 API 接口或异步请求）
-        if (! $menu) {
-            return true;
+        return static::$menuPermissionCache[$cacheKey] = $menu;
+    }
+
+    protected function refreshRequestCacheIfNeeded(): void
+    {
+        $requestHash = spl_object_id(App::make('request'));
+
+        if (static::$cacheRequestHash === $requestHash) {
+            return;
         }
 
-        $menuRoles = $menu->roles->pluck('slug')->toArray();
-
-        // 如果菜单没有绑定角色，普通用户不允许访问
-        if (empty($menuRoles)) {
-            return false;
-        }
-
-        // 检查用户角色是否在菜单绑定的角色中
-        return $user->inRoles($menuRoles);
+        static::$cacheRequestHash = $requestHash;
+        static::$menuPermissionCache = [];
     }
 
     /**

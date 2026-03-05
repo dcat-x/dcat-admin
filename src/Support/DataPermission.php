@@ -16,6 +16,21 @@ class DataPermission
     protected $user;
 
     /**
+     * 用户所有部门ID缓存（实例级）
+     */
+    protected ?array $departmentIdsCache = null;
+
+    /**
+     * 主部门缓存（实例级）
+     */
+    protected $primaryDepartmentCache;
+
+    /**
+     * 主部门是否已解析
+     */
+    protected bool $primaryDepartmentResolved = false;
+
+    /**
      * 数据规则缓存（请求级别）
      */
     protected static $rulesCache = [];
@@ -258,7 +273,7 @@ class DataPermission
             return null;
         }
 
-        $department = $this->user->primaryDepartment()->first();
+        $department = $this->getPrimaryDepartment();
 
         return $department ? $department->id : null;
     }
@@ -276,7 +291,11 @@ class DataPermission
             return [];
         }
 
-        return $this->user->departments->pluck('id')->toArray();
+        if ($this->departmentIdsCache !== null) {
+            return $this->departmentIdsCache;
+        }
+
+        return $this->departmentIdsCache = $this->user->departments->pluck('id')->toArray();
     }
 
     /**
@@ -292,7 +311,7 @@ class DataPermission
             return null;
         }
 
-        $department = $this->user->primaryDepartment()->first();
+        $department = $this->getPrimaryDepartment();
 
         return $department ? $department->path : null;
     }
@@ -322,7 +341,7 @@ class DataPermission
      */
     public function canAccessColumn(int $menuId, string $field): bool
     {
-        return ! in_array($field, $this->getHiddenColumns($menuId));
+        return ! in_array($field, $this->getHiddenColumns($menuId), true);
     }
 
     /**
@@ -330,7 +349,7 @@ class DataPermission
      */
     public function canAccessFormField(int $menuId, string $field): bool
     {
-        return ! in_array($field, $this->getHiddenFormFields($menuId));
+        return ! in_array($field, $this->getHiddenFormFields($menuId), true);
     }
 
     /**
@@ -347,5 +366,20 @@ class DataPermission
     public static function make($user = null): self
     {
         return new static($user);
+    }
+
+    /**
+     * 获取主部门（带实例级缓存）
+     */
+    protected function getPrimaryDepartment()
+    {
+        if ($this->primaryDepartmentResolved) {
+            return $this->primaryDepartmentCache;
+        }
+
+        $this->primaryDepartmentResolved = true;
+        $this->primaryDepartmentCache = $this->user->primaryDepartment()->first();
+
+        return $this->primaryDepartmentCache;
     }
 }

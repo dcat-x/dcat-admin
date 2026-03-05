@@ -5,6 +5,29 @@ namespace Dcat\Admin\Tests\Unit\Traits;
 use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Models\Permission;
 use Dcat\Admin\Tests\TestCase;
+use Dcat\Admin\Traits\HasPermissions;
+
+class FakePermissionUserForHasPermissionsTest
+{
+    use HasPermissions;
+
+    public function __construct(private array $permissionItems = []) {}
+
+    public function getKeyName(): string
+    {
+        return 'id';
+    }
+
+    public function isAdministrator(): bool
+    {
+        return false;
+    }
+
+    public function allPermissions(): \Illuminate\Support\Collection
+    {
+        return collect($this->permissionItems)->keyBy('id');
+    }
+}
 
 class HasPermissionsTest extends TestCase
 {
@@ -132,5 +155,18 @@ class HasPermissionsTest extends TestCase
 
         // 验证 allPermissions 方法存在
         $this->assertTrue(method_exists($admin, 'allPermissions'));
+    }
+
+    public function test_can_matches_permission_slug_and_id(): void
+    {
+        $user = new FakePermissionUserForHasPermissionsTest([
+            (object) ['id' => 1, 'slug' => 'post.create'],
+            (object) ['id' => 2, 'slug' => 'post.delete'],
+        ]);
+
+        $this->assertTrue($user->can('post.create'));
+        $this->assertTrue($user->can(2));
+        $this->assertFalse($user->can('not-exists'));
+        $this->assertFalse($user->can(999));
     }
 }
