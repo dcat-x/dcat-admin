@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- 优化权限与数据权限查询性能，新增菜单 URI 与数据规则相关复合索引迁移
+
 ## [1.1.21] - 2026-03-02
 
 ### Fixed

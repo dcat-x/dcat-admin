@@ -21,7 +21,36 @@
 ```
 
 ### 菜单缓存
-通过`admin.menu.cache.enable`配置参数可以开启或关闭菜单缓存，建议开启。
+通过`admin.menu.cache.enable`配置参数可以开启或关闭菜单缓存。
+
+推荐做法：
+
+- 本地开发环境：关闭缓存，方便调试菜单变更。
+- 生产环境：开启缓存，减少菜单构建和关联查询开销。
+
+配置示例（`config/admin.php`）：
+
+```php
+'menu' => [
+    'cache' => [
+        'enable' => true,
+        'store' => 'file', // 也可使用 redis 等缓存驱动
+    ],
+],
+```
+
+刷新策略：
+
+- 通过后台菜单管理页面保存/删除菜单时，系统会自动清理缓存并重建。
+- 如果你是通过 SQL 或脚本直接修改菜单相关表（`admin_menu`、`admin_role_menu`、`admin_permission_menu`），请手动执行缓存刷新命令：
+
+```bash
+php artisan admin:menu-cache
+```
+
+多应用场景建议：
+
+- 使用多后台（`multi_app`）时，建议在部署后统一执行一次 `admin:menu-cache`，确保各应用菜单缓存一致。
 
 ### 通过Menu::add接口动态添加菜单
 `Dcat Admin`还提供了通过数组的方式在代码中即时添加菜单。

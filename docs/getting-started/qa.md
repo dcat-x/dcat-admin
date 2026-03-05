@@ -190,3 +190,17 @@ class User extend Model
 ```
  "disable_no_referrer_meta" => true
 ```
+
+### 16.菜单修改后不生效（左侧菜单未更新）
+
+通常是菜单缓存导致的。请按以下步骤排查：
+
+1. 确认 `config/admin.php` 中 `admin.menu.cache.enable` 配置是否开启。
+2. 如果你是通过后台菜单管理页面修改菜单，系统会自动刷新缓存；请先尝试刷新浏览器页面。
+3. 如果你是通过 SQL 或脚本直接修改了 `admin_menu`、`admin_role_menu`、`admin_permission_menu`，需要手动刷新菜单缓存：
+
+```bash
+php artisan admin:menu-cache
+```
+
+多应用（`multi_app`）场景下，建议部署完成后统一执行一次上述命令，确保各应用菜单缓存一致。

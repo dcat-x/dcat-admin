@@ -88,7 +88,7 @@ trait HasPermissions
     public function isRole(string $role): bool
     {
         /* @var Collection $roles */
-        $roles = $this->roles;
+        $roles = $this->getUserRoles();
 
         return $roles->pluck('slug')->contains($role) ?:
             $roles->pluck('id')->contains($role);
@@ -103,7 +103,7 @@ trait HasPermissions
     public function inRoles($roles = []): bool
     {
         /* @var Collection $all */
-        $all = $this->roles;
+        $all = $this->getUserRoles();
 
         $roles = Helper::array($roles);
 
@@ -200,5 +200,14 @@ trait HasPermissions
         }
 
         return $this->permissionIds = $this->allPermissions()->pluck('id')->all();
+    }
+
+    protected function getUserRoles(): Collection
+    {
+        if (method_exists($this, 'allRoles')) {
+            return $this->allRoles();
+        }
+
+        return $this->roles;
     }
 }

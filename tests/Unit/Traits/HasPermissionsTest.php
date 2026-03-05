@@ -29,6 +29,26 @@ class FakePermissionUserForHasPermissionsTest
     }
 }
 
+class FakeInheritedRoleUserForHasPermissionsTest
+{
+    use HasPermissions;
+
+    public $roles;
+
+    public function __construct()
+    {
+        $this->roles = collect();
+    }
+
+    public function allRoles(): \Illuminate\Support\Collection
+    {
+        return collect([
+            (object) ['id' => 8, 'slug' => 'editor'],
+            (object) ['id' => 9, 'slug' => 'auditor'],
+        ]);
+    }
+}
+
 class HasPermissionsTest extends TestCase
 {
     protected function setUp(): void
@@ -168,5 +188,24 @@ class HasPermissionsTest extends TestCase
         $this->assertTrue($user->can(2));
         $this->assertFalse($user->can('not-exists'));
         $this->assertFalse($user->can(999));
+    }
+
+    public function test_is_role_uses_all_roles_when_available(): void
+    {
+        $user = new FakeInheritedRoleUserForHasPermissionsTest;
+
+        $this->assertTrue($user->isRole('editor'));
+        $this->assertTrue($user->isRole('9'));
+        $this->assertFalse($user->isRole('manager'));
+    }
+
+    public function test_in_roles_uses_all_roles_when_available(): void
+    {
+        $user = new FakeInheritedRoleUserForHasPermissionsTest;
+
+        $this->assertTrue($user->inRoles(['editor']));
+        $this->assertTrue($user->inRoles(['8']));
+        $this->assertTrue($user->inRoles(['auditor', 'manager']));
+        $this->assertFalse($user->inRoles(['manager']));
     }
 }

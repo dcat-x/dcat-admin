@@ -12,13 +12,11 @@ class FakeMenuPermissionQueryForMiddlewareTest
 {
     public static int $exactFirstCalls = 0;
 
-    public static int $fallbackFirstCalls = 0;
+    public static int $fallbackGetCalls = 0;
 
     public static $exactResult;
 
     public static $fallbackResult;
-
-    protected string $mode = 'exact';
 
     public function where($column, $operator = null, $value = null): self
     {
@@ -34,35 +32,28 @@ class FakeMenuPermissionQueryForMiddlewareTest
         return $this;
     }
 
-    public function whereRaw($sql, $bindings = []): self
-    {
-        $this->mode = 'fallback';
-
-        return $this;
-    }
-
-    public function orderByRaw($sql): self
-    {
-        return $this;
-    }
-
     public function first()
     {
-        if ($this->mode === 'fallback') {
-            static::$fallbackFirstCalls++;
-
-            return static::$fallbackResult;
-        }
-
         static::$exactFirstCalls++;
 
         return static::$exactResult;
     }
 
+    public function get()
+    {
+        static::$fallbackGetCalls++;
+
+        if (static::$fallbackResult === null) {
+            return collect();
+        }
+
+        return collect(static::$fallbackResult);
+    }
+
     public static function reset(): void
     {
         static::$exactFirstCalls = 0;
-        static::$fallbackFirstCalls = 0;
+        static::$fallbackGetCalls = 0;
         static::$exactResult = null;
         static::$fallbackResult = null;
     }
@@ -272,6 +263,24 @@ class PermissionTest extends TestCase
         $this->assertSame(66, $first->id);
         $this->assertSame(66, $second->id);
         $this->assertSame(1, FakeMenuPermissionQueryForMiddlewareTest::$exactFirstCalls);
+    }
+
+    public function test_find_matched_menu_fallback_uses_longest_prefix(): void
+    {
+        FakeMenuPermissionQueryForMiddlewareTest::$exactResult = null;
+        FakeMenuPermissionQueryForMiddlewareTest::$fallbackResult = [
+            (object) ['id' => 1, 'uri' => 'orders', 'roles' => collect()],
+            (object) ['id' => 2, 'uri' => 'orders/history', 'roles' => collect()],
+            (object) ['id' => 3, 'uri' => 'users', 'roles' => collect()],
+        ];
+        $this->app->instance('request', Request::create('/admin/orders/history/export', 'GET'));
+
+        $middleware = new TestablePermissionMiddleware;
+        $matched = $middleware->callFindMatchedMenu('orders/history/export', 'orders/history/export');
+
+        $this->assertNotNull($matched);
+        $this->assertSame(2, $matched->id);
+        $this->assertSame(1, FakeMenuPermissionQueryForMiddlewareTest::$fallbackGetCalls);
     }
 
     public function test_handle_allows_when_no_menu_matched(): void

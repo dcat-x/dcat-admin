@@ -25,6 +25,13 @@ class Permission
     protected static $menuPermissionCache = [];
 
     /**
+     * 菜单前缀匹配候选缓存（请求级）
+     *
+     * @var array<int, mixed>|null
+     */
+    protected static $menuPrefixCandidates;
+
+    /**
      * 缓存所属的请求哈希，用于检测跨请求
      */
     protected static $cacheRequestHash;
@@ -136,14 +143,48 @@ class Permission
 
         // 如果没有精确匹配，尝试前缀匹配（子路径）
         if (! $menu) {
-            $menu = $menuModel::with('roles')
-                ->whereRaw("? LIKE CONCAT(uri, '%')", [$path])
-                ->where('uri', '!=', '')
-                ->orderByRaw('LENGTH(uri) DESC')
-                ->first();
+            $menu = $this->findPrefixMatchedMenu($path);
         }
 
         return static::$menuPermissionCache[$cacheKey] = $menu;
+    }
+
+    protected function findPrefixMatchedMenu(string $path)
+    {
+        $matched = null;
+        $matchedUriLength = -1;
+
+        foreach ($this->getPrefixCandidates() as $candidate) {
+            $uri = trim((string) ($candidate->uri ?? ''), '/');
+
+            if ($uri === '' || ! str_starts_with($path, $uri)) {
+                continue;
+            }
+
+            $uriLength = strlen($uri);
+            if ($uriLength > $matchedUriLength) {
+                $matched = $candidate;
+                $matchedUriLength = $uriLength;
+            }
+        }
+
+        return $matched;
+    }
+
+    /**
+     * @return iterable<mixed>
+     */
+    protected function getPrefixCandidates(): iterable
+    {
+        if (static::$menuPrefixCandidates !== null) {
+            return static::$menuPrefixCandidates;
+        }
+
+        $menuModel = config('admin.database.menu_model');
+
+        return static::$menuPrefixCandidates = $menuModel::with('roles')
+            ->where('uri', '!=', '')
+            ->get();
     }
 
     protected function refreshRequestCacheIfNeeded(): void
@@ -156,6 +197,7 @@ class Permission
 
         static::$cacheRequestHash = $requestHash;
         static::$menuPermissionCache = [];
+        static::$menuPrefixCandidates = null;
     }
 
     /**
