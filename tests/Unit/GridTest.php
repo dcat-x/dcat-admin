@@ -16,11 +16,6 @@ class GridTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
-    {
-        $this->assertTrue(class_exists(Grid::class));
-    }
-
     public function test_uses_macroable_trait(): void
     {
         $ref = new ReflectionClass(Grid::class);
@@ -155,109 +150,88 @@ class GridTest extends TestCase
         $this->assertSame('_async_', Grid::ASYNC_NAME);
     }
 
-    public function test_method_exists_columns(): void
+    public function test_column_and_columns_append_to_grid_collection(): void
     {
-        $this->assertTrue(method_exists(Grid::class, 'columns'));
+        $grid = new Grid;
+
+        $grid->column('name', 'Name');
+        $grid->columns(['email' => 'Email']);
+        $grid->columns('age');
+
+        $this->assertCount(3, $grid->columns());
+        $this->assertTrue($grid->columns()->has('name'));
+        $this->assertTrue($grid->columns()->has('email'));
+        $this->assertTrue($grid->columns()->has('age'));
     }
 
-    public function test_method_exists_rows(): void
+    public function test_option_and_toggle_methods_update_grid_state(): void
     {
-        $this->assertTrue(method_exists(Grid::class, 'rows'));
+        $grid = new Grid;
+
+        $grid->disableRowSelector();
+        $grid->disableCreateButton();
+        $grid->disableActions();
+        $grid->disableFilter();
+
+        $this->assertFalse($grid->option('row_selector'));
+        $this->assertFalse($grid->allowCreateButton());
+        $this->assertFalse($grid->option('actions'));
+        $this->assertFalse($grid->option('filter'));
+
+        $grid->showRowSelector();
+        $grid->showCreateButton();
+        $grid->showActions();
+        $grid->showFilter();
+
+        $this->assertTrue($grid->option('row_selector'));
+        $this->assertTrue($grid->allowCreateButton());
+        $this->assertTrue($grid->option('actions'));
+        $this->assertTrue($grid->option('filter'));
     }
 
-    public function test_method_exists_column(): void
+    public function test_paginate_and_key_name_setters_apply_values(): void
     {
-        $this->assertTrue(method_exists(Grid::class, 'column'));
+        $grid = new Grid;
+
+        $grid->setKeyName('uuid');
+        $grid->paginate(50);
+
+        $this->assertSame('uuid', $grid->getKeyName());
+        $this->assertSame(50, $grid->getPerPage());
     }
 
-    public function test_method_exists_option(): void
+    public function test_rows_callback_runs_when_rows_are_built(): void
     {
-        $this->assertTrue(method_exists(Grid::class, 'option'));
+        $grid = new class extends Grid
+        {
+            public function buildRowsForTest(array $rows): void
+            {
+                $this->buildRows(collect($rows));
+            }
+        };
+
+        $called = false;
+        $grid->rows(function ($rows) use (&$called) {
+            $called = true;
+        });
+
+        $grid->buildRowsForTest([['id' => 1], ['id' => 2]]);
+
+        $this->assertTrue($called);
+        $this->assertCount(2, $grid->rows());
     }
 
-    public function test_method_exists_disable_row_selector(): void
+    public function test_wrap_marks_grid_as_having_wrapper(): void
     {
-        $this->assertTrue(method_exists(Grid::class, 'disableRowSelector'));
-    }
+        $grid = new Grid;
 
-    public function test_method_exists_show_row_selector(): void
-    {
-        $this->assertTrue(method_exists(Grid::class, 'showRowSelector'));
-    }
+        $this->assertFalse($grid->hasWrapper());
 
-    public function test_method_exists_disable_create_button(): void
-    {
-        $this->assertTrue(method_exists(Grid::class, 'disableCreateButton'));
-    }
+        $grid->wrap(fn () => 'wrapped');
 
-    public function test_method_exists_show_create_button(): void
-    {
-        $this->assertTrue(method_exists(Grid::class, 'showCreateButton'));
-    }
-
-    public function test_method_exists_disable_pagination(): void
-    {
-        $this->assertTrue(method_exists(Grid::class, 'disablePagination'));
-    }
-
-    public function test_method_exists_show_pagination(): void
-    {
-        $this->assertTrue(method_exists(Grid::class, 'showPagination'));
-    }
-
-    public function test_method_exists_disable_actions(): void
-    {
-        $this->assertTrue(method_exists(Grid::class, 'disableActions'));
-    }
-
-    public function test_method_exists_show_actions(): void
-    {
-        $this->assertTrue(method_exists(Grid::class, 'showActions'));
-    }
-
-    public function test_method_exists_disable_filter(): void
-    {
-        $this->assertTrue(method_exists(Grid::class, 'disableFilter'));
-    }
-
-    public function test_method_exists_show_filter(): void
-    {
-        $this->assertTrue(method_exists(Grid::class, 'showFilter'));
-    }
-
-    public function test_method_exists_resource(): void
-    {
-        $this->assertTrue(method_exists(Grid::class, 'resource'));
-    }
-
-    public function test_method_exists_model(): void
-    {
-        $this->assertTrue(method_exists(Grid::class, 'model'));
-    }
-
-    public function test_method_exists_get_key_name(): void
-    {
-        $this->assertTrue(method_exists(Grid::class, 'getKeyName'));
-    }
-
-    public function test_method_exists_set_key_name(): void
-    {
-        $this->assertTrue(method_exists(Grid::class, 'setKeyName'));
-    }
-
-    public function test_method_exists_paginate(): void
-    {
-        $this->assertTrue(method_exists(Grid::class, 'paginate'));
-    }
-
-    public function test_method_exists_wrap(): void
-    {
-        $this->assertTrue(method_exists(Grid::class, 'wrap'));
-    }
-
-    public function test_method_exists_render(): void
-    {
-        $this->assertTrue(method_exists(Grid::class, 'render'));
+        $this->assertTrue($grid->hasWrapper());
+        $this->assertIsString($grid->resource());
+        $this->assertNotNull($grid->model());
     }
 
     public function test_rows_callbacks_default_empty_array(): void

@@ -2,6 +2,8 @@
 
 namespace Dcat\Admin\Tests\Unit\Grid\Displayers;
 
+use Dcat\Admin\Grid;
+use Dcat\Admin\Grid\Column;
 use Dcat\Admin\Grid\Displayers\ContextMenuActions;
 use Dcat\Admin\Grid\Displayers\DropdownActions;
 use Dcat\Admin\Tests\TestCase;
@@ -15,14 +17,22 @@ class ContextMenuActionsTest extends TestCase
         Mockery::close();
     }
 
-    public function test_class_exists(): void
+    protected function makeDisplayer(): ContextMenuActions
     {
-        $this->assertTrue(class_exists(ContextMenuActions::class));
+        $grid = Mockery::mock(Grid::class);
+        $grid->shouldReceive('getTableId')->andReturn('grid-1');
+        $grid->shouldReceive('getRowName')->andReturn('grid-row');
+
+        $column = Mockery::mock(Column::class);
+
+        return new ContextMenuActions([], $grid, $column, ['id' => 1]);
     }
 
-    public function test_extends_dropdown_actions(): void
+    public function test_is_instance_of_dropdown_actions(): void
     {
-        $this->assertTrue(is_subclass_of(ContextMenuActions::class, DropdownActions::class));
+        $displayer = $this->makeDisplayer();
+
+        $this->assertInstanceOf(DropdownActions::class, $displayer);
     }
 
     public function test_element_id_default_value(): void
@@ -33,27 +43,30 @@ class ContextMenuActionsTest extends TestCase
         $this->assertSame('grid-context-menu', $ref->getDefaultValue());
     }
 
-    public function test_has_method_add_script(): void
-    {
-        $this->assertTrue(method_exists(ContextMenuActions::class, 'addScript'));
-    }
-
-    public function test_has_method_display(): void
-    {
-        $this->assertTrue(method_exists(ContextMenuActions::class, 'display'));
-    }
-
-    public function test_add_script_is_protected(): void
+    public function test_add_script_is_protected_and_parameterless(): void
     {
         $method = new \ReflectionMethod(ContextMenuActions::class, 'addScript');
 
         $this->assertTrue($method->isProtected());
+        $this->assertCount(0, $method->getParameters());
     }
 
-    public function test_display_is_public(): void
+    public function test_display_is_public_and_accepts_optional_callback_parameter(): void
+    {
+        $method = new \ReflectionMethod(ContextMenuActions::class, 'display');
+        $params = $method->getParameters();
+
+        $this->assertTrue($method->isPublic());
+        $this->assertCount(1, $params);
+        $this->assertSame('callback', $params[0]->getName());
+        $this->assertTrue($params[0]->isDefaultValueAvailable());
+        $this->assertNull($params[0]->getDefaultValue());
+    }
+
+    public function test_display_method_is_declared_on_context_menu_actions(): void
     {
         $method = new \ReflectionMethod(ContextMenuActions::class, 'display');
 
-        $this->assertTrue($method->isPublic());
+        $this->assertSame(ContextMenuActions::class, $method->getDeclaringClass()->getName());
     }
 }

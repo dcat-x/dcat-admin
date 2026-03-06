@@ -26,6 +26,16 @@ class CheckboxTraitFilter extends Filter
     {
         return $this->renderCheckbox();
     }
+
+    public function formAction()
+    {
+        return '/admin/filter';
+    }
+
+    public function getQueryName()
+    {
+        return 'filter_test_checkbox';
+    }
 }
 
 class CheckboxTraitTest extends TestCase
@@ -44,32 +54,45 @@ class CheckboxTraitTest extends TestCase
         $this->assertNull($filter->render());
     }
 
-    public function test_trait_has_render_checkbox_method(): void
+    public function test_render_checkbox_contains_expected_markup_when_visible(): void
     {
-        $this->assertTrue(method_exists(CheckboxTraitFilter::class, 'renderCheckbox'));
+        $filter = new CheckboxTraitFilter(['a' => 'A', 'b' => 'B']);
+        request()->merge(['filter_test_checkbox' => ['a']]);
+
+        $html = $filter->render();
+
+        $this->assertStringContainsString('test-all-class', $html);
+        $this->assertStringContainsString('test-item-class', $html);
+        $this->assertStringContainsString('name="filter_test_checkbox[]"', $html);
+        $this->assertStringContainsString('>A<', $html);
+        $this->assertStringContainsString('>B<', $html);
     }
 
-    public function test_trait_has_add_script_method(): void
+    public function test_render_options_marks_selected_option_as_checked(): void
     {
-        $this->assertTrue(method_exists(CheckboxTraitFilter::class, 'addScript'));
+        $filter = new CheckboxTraitFilter(['a' => 'A', 'b' => 'B']);
+
+        $ref = new \ReflectionMethod(CheckboxTraitFilter::class, 'renderOptions');
+        $ref->setAccessible(true);
+        $html = $ref->invoke($filter, ['b']);
+
+        $this->assertStringContainsString('value="b"', $html);
+        $this->assertStringContainsString('checked', $html);
     }
 
-    public function test_trait_has_render_options_method(): void
+    public function test_protected_method_signatures_are_expected(): void
     {
-        $this->assertTrue(method_exists(CheckboxTraitFilter::class, 'renderOptions'));
-    }
+        $renderCheckbox = new \ReflectionMethod(CheckboxTraitFilter::class, 'renderCheckbox');
+        $addScript = new \ReflectionMethod(CheckboxTraitFilter::class, 'addScript');
+        $renderOptions = new \ReflectionMethod(CheckboxTraitFilter::class, 'renderOptions');
 
-    public function test_render_checkbox_method_exists(): void
-    {
-        $ref = new \ReflectionMethod(CheckboxTraitFilter::class, 'renderCheckbox');
-        $this->assertFalse($ref->isPublic());
-        $this->assertFalse($ref->isStatic());
-    }
+        $this->assertTrue($renderCheckbox->isProtected());
+        $this->assertCount(0, $renderCheckbox->getParameters());
 
-    public function test_add_script_method_exists(): void
-    {
-        $ref = new \ReflectionMethod(CheckboxTraitFilter::class, 'addScript');
-        $this->assertFalse($ref->isPublic());
-        $this->assertFalse($ref->isStatic());
+        $this->assertTrue($addScript->isProtected());
+        $this->assertCount(0, $addScript->getParameters());
+
+        $this->assertTrue($renderOptions->isProtected());
+        $this->assertCount(1, $renderOptions->getParameters());
     }
 }

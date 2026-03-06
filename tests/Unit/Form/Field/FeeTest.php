@@ -2,7 +2,6 @@
 
 namespace Dcat\Admin\Tests\Unit\Form\Field;
 
-use Dcat\Admin\Form\Field\Currency;
 use Dcat\Admin\Form\Field\Fee;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
@@ -15,92 +14,87 @@ class FeeTest extends TestCase
         parent::tearDown();
     }
 
-    // -------------------------------------------------------
-    // Class existence and inheritance
-    // -------------------------------------------------------
-
-    public function test_class_exists(): void
+    protected function getProtectedProperty(object $object, string $property)
     {
-        $this->assertTrue(class_exists(Fee::class));
+        $reflection = new \ReflectionProperty($object, $property);
+        $reflection->setAccessible(true);
+
+        return $reflection->getValue($object);
     }
 
-    public function test_extends_currency(): void
+    protected function invokeProtectedMethod(object $object, string $method, array $arguments = [])
     {
-        $this->assertTrue(is_subclass_of(Fee::class, Currency::class));
+        $reflection = new \ReflectionMethod($object, $method);
+        $reflection->setAccessible(true);
+
+        return $reflection->invokeArgs($object, $arguments);
     }
 
-    // -------------------------------------------------------
-    // Method existence
-    // -------------------------------------------------------
-
-    public function test_inputmask_method_exists(): void
+    public function test_inputmask_updates_script_and_returns_self(): void
     {
-        $this->assertTrue(method_exists(Fee::class, 'inputmask'));
+        $field = new Fee('amount', ['Amount']);
+
+        $result = $field->inputmask(['alias' => 'currency']);
+
+        $this->assertSame($field, $result);
+
+        $script = $this->getProtectedProperty($field, 'script');
+        $this->assertStringContainsString('inputmask', $script);
+        $this->assertStringContainsString('onBeforeMask', $script);
+        $this->assertStringContainsString('onUnMask', $script);
+        $this->assertStringContainsString('groupSeparator', $script);
     }
 
-    public function test_render_method_exists(): void
-    {
-        $this->assertTrue(method_exists(Fee::class, 'render'));
-    }
-
-    // -------------------------------------------------------
-    // Method visibility and return type
-    // -------------------------------------------------------
-
-    public function test_inputmask_is_public(): void
-    {
-        $method = new \ReflectionMethod(Fee::class, 'inputmask');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_render_is_public(): void
-    {
-        $method = new \ReflectionMethod(Fee::class, 'render');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_inputmask_has_options_parameter(): void
+    public function test_inputmask_has_options_parameter_and_static_return_type(): void
     {
         $method = new \ReflectionMethod(Fee::class, 'inputmask');
         $params = $method->getParameters();
 
         $this->assertCount(1, $params);
         $this->assertSame('options', $params[0]->getName());
-    }
 
-    public function test_inputmask_return_type_is_static(): void
-    {
-        $method = new \ReflectionMethod(Fee::class, 'inputmask');
         $returnType = $method->getReturnType();
-
         $this->assertNotNull($returnType);
         $this->assertSame('static', $returnType->getName());
     }
 
-    public function test_render_return_type_is_mixed(): void
+    public function test_symbol_sets_currency_prefix_and_returns_self(): void
     {
-        $method = new \ReflectionMethod(Fee::class, 'render');
-        $returnType = $method->getReturnType();
+        $field = new Fee('amount', ['Amount']);
 
-        $this->assertNotNull($returnType);
+        $result = $field->symbol('¥');
+
+        $this->assertSame($field, $result);
+        $this->assertSame('¥', $this->getProtectedProperty($field, 'symbol'));
     }
 
-    // -------------------------------------------------------
-    // Inheritance chain
-    // -------------------------------------------------------
-
-    public function test_inherits_symbol_method_from_currency(): void
+    public function test_digits_merges_options_and_returns_self(): void
     {
-        $this->assertTrue(method_exists(Fee::class, 'symbol'));
+        $field = new Fee('amount', ['Amount']);
+
+        $result = $field->digits(4);
+
+        $this->assertSame($field, $result);
+
+        $options = $this->getProtectedProperty($field, 'options');
+        $this->assertSame(4, $options['digits']);
     }
 
-    public function test_inherits_digits_method_from_currency(): void
+    public function test_prepare_input_value_removes_commas_in_string_values(): void
     {
-        $this->assertTrue(method_exists(Fee::class, 'digits'));
+        $field = new Fee('amount', ['Amount']);
+
+        $prepared = $this->invokeProtectedMethod($field, 'prepareInputValue', ['1,234,567.89']);
+
+        $this->assertSame('1234567.89', $prepared);
     }
 
-    public function test_inherits_prepare_input_value_from_currency(): void
+    public function test_prepare_input_value_keeps_non_string_values_unchanged(): void
     {
-        $this->assertTrue(method_exists(Fee::class, 'prepareInputValue'));
+        $field = new Fee('amount', ['Amount']);
+
+        $prepared = $this->invokeProtectedMethod($field, 'prepareInputValue', [12345]);
+
+        $this->assertSame(12345, $prepared);
     }
 }

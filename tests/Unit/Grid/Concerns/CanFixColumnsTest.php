@@ -111,9 +111,11 @@ class CanFixColumnsTest extends TestCase
         $this->assertTrue($property->isProtected());
     }
 
-    public function test_apply_fix_columns_method_exists(): void
+    public function test_apply_fix_columns_method_signature(): void
     {
-        $this->assertTrue(method_exists(CanFixColumnsTestHelper::class, 'applyFixColumns'));
+        $method = new \ReflectionMethod(CanFixColumnsTestHelper::class, 'applyFixColumns');
+
+        $this->assertSame(0, $method->getNumberOfParameters());
     }
 }
 

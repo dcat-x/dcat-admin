@@ -14,63 +14,20 @@ class ImageFieldTest extends TestCase
         parent::tearDown();
     }
 
-    // -------------------------------------------------------
-    // Trait existence
-    // -------------------------------------------------------
-
-    public function test_trait_exists(): void
+    protected function getProtectedProperty(object $object, string $property)
     {
-        $this->assertTrue(trait_exists(ImageField::class));
+        $reflection = new \ReflectionProperty($object, $property);
+        $reflection->setAccessible(true);
+
+        return $reflection->getValue($object);
     }
 
-    // -------------------------------------------------------
-    // Method existence
-    // -------------------------------------------------------
-
-    public function test_default_directory_method_exists(): void
-    {
-        $this->assertTrue(method_exists(ImageField::class, 'defaultDirectory'));
-    }
-
-    public function test_call_intervention_methods_method_exists(): void
-    {
-        $this->assertTrue(method_exists(ImageField::class, 'callInterventionMethods'));
-    }
-
-    public function test_thumbnail_method_exists(): void
-    {
-        $this->assertTrue(method_exists(ImageField::class, 'thumbnail'));
-    }
-
-    public function test_destroy_thumbnail_method_exists(): void
-    {
-        $this->assertTrue(method_exists(ImageField::class, 'destroyThumbnail'));
-    }
-
-    public function test_upload_and_delete_original_thumbnail_method_exists(): void
-    {
-        $this->assertTrue(method_exists(ImageField::class, 'uploadAndDeleteOriginalThumbnail'));
-    }
-
-    // -------------------------------------------------------
-    // Default property values via reflection
-    // -------------------------------------------------------
-
-    public function test_intervention_calls_default_is_empty_array(): void
+    public function test_intervention_calls_and_thumbnails_default_empty(): void
     {
         $reflection = new \ReflectionClass(ImageField::class);
         $properties = $reflection->getDefaultProperties();
 
-        $this->assertArrayHasKey('interventionCalls', $properties);
         $this->assertSame([], $properties['interventionCalls']);
-    }
-
-    public function test_thumbnails_default_is_empty_array(): void
-    {
-        $reflection = new \ReflectionClass(ImageField::class);
-        $properties = $reflection->getDefaultProperties();
-
-        $this->assertArrayHasKey('thumbnails', $properties);
         $this->assertSame([], $properties['thumbnails']);
     }
 
@@ -82,77 +39,157 @@ class ImageFieldTest extends TestCase
 
         $value = $property->getValue();
 
-        $this->assertIsArray($value);
         $this->assertArrayHasKey('filling', $value);
         $this->assertSame('fill', $value['filling']);
     }
 
-    // -------------------------------------------------------
-    // Method visibility checks
-    // -------------------------------------------------------
-
-    public function test_default_directory_is_public(): void
+    public function test_default_directory_reads_admin_upload_image_directory_config(): void
     {
-        $method = new \ReflectionMethod(ImageField::class, 'defaultDirectory');
-        $this->assertTrue($method->isPublic());
+        config()->set('admin.upload.directory.image', 'images/custom');
+
+        $field = new ImageFieldTestDouble;
+
+        $this->assertSame('images/custom', $field->defaultDirectory());
     }
 
-    public function test_call_intervention_methods_is_public(): void
+    public function test_thumbnail_accepts_single_definition(): void
     {
-        $method = new \ReflectionMethod(ImageField::class, 'callInterventionMethods');
-        $this->assertTrue($method->isPublic());
+        $field = new ImageFieldTestDouble;
+
+        $result = $field->thumbnail('small', 100, 80);
+
+        $this->assertSame($field, $result);
+
+        $thumbnails = $this->getProtectedProperty($field, 'thumbnails');
+        $this->assertSame([100, 80], $thumbnails['small']);
     }
 
-    public function test_thumbnail_is_public(): void
+    public function test_thumbnail_accepts_batch_definitions_and_ignores_invalid_items(): void
     {
-        $method = new \ReflectionMethod(ImageField::class, 'thumbnail');
-        $this->assertTrue($method->isPublic());
+        $field = new ImageFieldTestDouble;
+
+        $result = $field->thumbnail([
+            'small' => [100, 80],
+            'large' => [400, 300, 'resize'],
+            'invalid' => [100],
+        ]);
+
+        $this->assertSame($field, $result);
+
+        $thumbnails = $this->getProtectedProperty($field, 'thumbnails');
+        $this->assertArrayHasKey('small', $thumbnails);
+        $this->assertArrayHasKey('large', $thumbnails);
+        $this->assertArrayNotHasKey('invalid', $thumbnails);
     }
 
-    public function test_destroy_thumbnail_is_public(): void
+    public function test_call_intervention_methods_returns_target_when_no_calls_defined(): void
     {
-        $method = new \ReflectionMethod(ImageField::class, 'destroyThumbnail');
-        $this->assertTrue($method->isPublic());
+        $field = new ImageFieldTestDouble;
+
+        $target = '/tmp/demo.jpg';
+
+        $this->assertSame($target, $field->callInterventionMethods($target, 'image/jpeg'));
     }
 
-    public function test_upload_and_delete_original_thumbnail_is_protected(): void
+    public function test_destroy_thumbnail_returns_early_when_retainable_and_not_forced(): void
     {
-        $method = new \ReflectionMethod(ImageField::class, 'uploadAndDeleteOriginalThumbnail');
-        $this->assertTrue($method->isProtected());
+        $field = new ImageFieldTestDouble;
+        $field->retainable = true;
+        $field->thumbnail('small', 100, 80);
+
+        $field->destroyThumbnail('avatar.jpg');
+
+        $this->assertSame([], $field->storage->deleted);
     }
 
-    // -------------------------------------------------------
-    // Parameter checks
-    // -------------------------------------------------------
-
-    public function test_thumbnail_has_three_parameters(): void
+    public function test_destroy_thumbnail_deletes_existing_thumbnail_files(): void
     {
-        $method = new \ReflectionMethod(ImageField::class, 'thumbnail');
-        $params = $method->getParameters();
+        $field = new ImageFieldTestDouble;
+        $field->thumbnail('small', 100, 80)
+            ->thumbnail('large', 400, 300);
 
-        $this->assertCount(3, $params);
-        $this->assertSame('name', $params[0]->getName());
-        $this->assertSame('width', $params[1]->getName());
-        $this->assertSame('height', $params[2]->getName());
+        $field->storage->existing = [
+            'avatar-small.jpg',
+            'avatar-large.jpg',
+        ];
+
+        $field->destroyThumbnail('avatar.jpg', true);
+
+        $this->assertSame(['avatar-small.jpg', 'avatar-large.jpg'], $field->storage->deleted);
     }
 
-    public function test_call_intervention_methods_has_two_parameters(): void
+    public function test_destroy_thumbnail_accepts_array_input(): void
     {
-        $method = new \ReflectionMethod(ImageField::class, 'callInterventionMethods');
-        $params = $method->getParameters();
+        $field = new ImageFieldTestDouble;
+        $field->thumbnail('small', 100, 80);
+        $field->storage->existing = ['a-small.jpg', 'b-small.jpg'];
 
-        $this->assertCount(2, $params);
-        $this->assertSame('target', $params[0]->getName());
-        $this->assertSame('mime', $params[1]->getName());
+        $field->destroyThumbnail(['a.jpg', 'b.jpg'], true);
+
+        $this->assertSame(['a-small.jpg', 'b-small.jpg'], $field->storage->deleted);
     }
 
-    public function test_destroy_thumbnail_has_two_parameters(): void
+    public function test_method_signatures_are_expected(): void
     {
-        $method = new \ReflectionMethod(ImageField::class, 'destroyThumbnail');
-        $params = $method->getParameters();
+        $thumbnail = new \ReflectionMethod(ImageField::class, 'thumbnail');
+        $callIntervention = new \ReflectionMethod(ImageField::class, 'callInterventionMethods');
+        $destroyThumbnail = new \ReflectionMethod(ImageField::class, 'destroyThumbnail');
 
-        $this->assertCount(2, $params);
-        $this->assertSame('file', $params[0]->getName());
-        $this->assertSame('force', $params[1]->getName());
+        $this->assertCount(3, $thumbnail->getParameters());
+        $this->assertCount(2, $callIntervention->getParameters());
+        $this->assertCount(2, $destroyThumbnail->getParameters());
+        $this->assertTrue((new \ReflectionMethod(ImageField::class, 'uploadAndDeleteOriginalThumbnail'))->isProtected());
+    }
+}
+
+class ImageFieldTestDouble
+{
+    use ImageField;
+
+    public array $original = [];
+
+    public bool $retainable = false;
+
+    public string $name = 'avatar.jpg';
+
+    public ?string $storagePermission = null;
+
+    public FakeImageFieldStorage $storage;
+
+    public function __construct()
+    {
+        $this->storage = new FakeImageFieldStorage;
+    }
+
+    public function getStorage(): FakeImageFieldStorage
+    {
+        return $this->storage;
+    }
+
+    public function getDirectory(): string
+    {
+        return 'uploads';
+    }
+
+    public static function hasMacro($method): bool
+    {
+        return false;
+    }
+}
+
+class FakeImageFieldStorage
+{
+    public array $existing = [];
+
+    public array $deleted = [];
+
+    public function exists(string $path): bool
+    {
+        return in_array($path, $this->existing, true);
+    }
+
+    public function delete(string $path): void
+    {
+        $this->deleted[] = $path;
     }
 }

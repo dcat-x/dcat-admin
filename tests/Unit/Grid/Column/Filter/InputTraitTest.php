@@ -20,6 +20,16 @@ class InputTraitFilter extends Filter
     {
         return $this->renderInput();
     }
+
+    public function formAction()
+    {
+        return '/admin/filter';
+    }
+
+    public function getQueryName()
+    {
+        return 'filter_test_input';
+    }
 }
 
 class InputTraitTest extends TestCase
@@ -30,41 +40,27 @@ class InputTraitTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_placeholder_sets_value(): void
+    public function test_placeholder_sets_value_and_returns_self(): void
     {
         $filter = new InputTraitFilter;
-        $filter->placeholder('Enter value...');
+        $result = $filter->placeholder('Enter value...');
 
         $ref = new \ReflectionProperty(InputTraitFilter::class, 'placeholder');
         $ref->setAccessible(true);
+
+        $this->assertSame($filter, $result);
         $this->assertEquals('Enter value...', $ref->getValue($filter));
     }
 
-    public function test_placeholder_returns_self(): void
-    {
-        $filter = new InputTraitFilter;
-        $result = $filter->placeholder('test');
-
-        $this->assertSame($filter, $result);
-    }
-
-    public function test_placeholder_default_null(): void
+    public function test_placeholder_default_null_and_accepts_null(): void
     {
         $filter = new InputTraitFilter;
 
         $ref = new \ReflectionProperty(InputTraitFilter::class, 'placeholder');
         $ref->setAccessible(true);
         $this->assertNull($ref->getValue($filter));
-    }
 
-    public function test_placeholder_accepts_null(): void
-    {
-        $filter = new InputTraitFilter;
-        $filter->placeholder('something');
-        $filter->placeholder(null);
-
-        $ref = new \ReflectionProperty(InputTraitFilter::class, 'placeholder');
-        $ref->setAccessible(true);
+        $filter->placeholder('something')->placeholder(null);
         $this->assertNull($ref->getValue($filter));
     }
 
@@ -76,18 +72,49 @@ class InputTraitTest extends TestCase
         $this->assertNull($filter->render());
     }
 
-    public function test_trait_has_render_input_method(): void
+    public function test_render_input_contains_placeholder_and_input_css_class_when_visible(): void
     {
-        $this->assertTrue(method_exists(InputTraitFilter::class, 'renderInput'));
+        $filter = new InputTraitFilter;
+        $filter->placeholder('Search keyword');
+
+        $html = $filter->render();
+
+        $this->assertStringContainsString('Search keyword', $html);
+        $this->assertStringContainsString('test-input-class', $html);
+        $this->assertStringContainsString('icon-filter', $html);
     }
 
-    public function test_trait_has_add_script_method(): void
+    public function test_value_filter_registers_resolving_callback_and_returns_self(): void
     {
-        $this->assertTrue(method_exists(InputTraitFilter::class, 'addScript'));
+        $filter = new InputTraitFilter;
+
+        $result = $filter->valueFilter('name');
+
+        $this->assertSame($filter, $result);
+
+        $ref = new \ReflectionProperty(Filter::class, 'resolvings');
+        $ref->setAccessible(true);
+        $resolvings = $ref->getValue($filter);
+
+        $this->assertIsArray($resolvings);
+        $this->assertCount(1, $resolvings);
+        $this->assertInstanceOf(\Closure::class, $resolvings[0]);
     }
 
-    public function test_trait_has_value_filter_method(): void
+    public function test_trait_method_signatures_are_expected(): void
     {
-        $this->assertTrue(method_exists(InputTraitFilter::class, 'valueFilter'));
+        $renderInput = new \ReflectionMethod(InputTraitFilter::class, 'renderInput');
+        $addScript = new \ReflectionMethod(InputTraitFilter::class, 'addScript');
+        $valueFilter = new \ReflectionMethod(InputTraitFilter::class, 'valueFilter');
+
+        $this->assertTrue($renderInput->isProtected());
+        $this->assertCount(0, $renderInput->getParameters());
+
+        $this->assertTrue($addScript->isProtected());
+        $this->assertCount(0, $addScript->getParameters());
+
+        $this->assertTrue($valueFilter->isPublic());
+        $this->assertCount(1, $valueFilter->getParameters());
+        $this->assertSame('valueKey', $valueFilter->getParameters()[0]->getName());
     }
 }

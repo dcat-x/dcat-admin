@@ -16,14 +16,18 @@ class ActionCommandTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
+    public function test_reflection_can_load_class_metadata(): void
     {
-        $this->assertTrue(class_exists(ActionCommand::class));
+        $ref = new \ReflectionClass(ActionCommand::class);
+
+        $this->assertSame(ActionCommand::class, $ref->getName());
     }
 
     public function test_extends_generator_command(): void
     {
-        $this->assertTrue(is_subclass_of(ActionCommand::class, GeneratorCommand::class));
+        $parents = class_parents(ActionCommand::class);
+
+        $this->assertContains(GeneratorCommand::class, $parents);
     }
 
     public function test_signature_default_value(): void

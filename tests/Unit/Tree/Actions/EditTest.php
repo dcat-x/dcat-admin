@@ -15,11 +15,6 @@ class EditTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
-    {
-        $this->assertTrue(class_exists(Edit::class));
-    }
-
     public function test_extends_row_action(): void
     {
         $action = Mockery::mock(Edit::class)->makePartial();
@@ -27,9 +22,11 @@ class EditTest extends TestCase
         $this->assertInstanceOf(RowAction::class, $action);
     }
 
-    public function test_has_html_method(): void
+    public function test_html_signature_has_no_parameters(): void
     {
-        $this->assertTrue(method_exists(Edit::class, 'html'));
+        $method = new \ReflectionMethod(Edit::class, 'html');
+
+        $this->assertSame(0, $method->getNumberOfParameters());
     }
 
     public function test_html_contains_edit_url(): void

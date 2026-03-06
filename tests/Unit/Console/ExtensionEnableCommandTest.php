@@ -16,14 +16,11 @@ class ExtensionEnableCommandTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
+    public function test_command_is_instance_of_illuminate_command(): void
     {
-        $this->assertTrue(class_exists(ExtensionEnableCommand::class));
-    }
+        $command = new ExtensionEnableCommand;
 
-    public function test_extends_command(): void
-    {
-        $this->assertTrue(is_subclass_of(ExtensionEnableCommand::class, Command::class));
+        $this->assertInstanceOf(Command::class, $command);
     }
 
     public function test_signature_contains_admin_ext_enable(): void
@@ -50,15 +47,18 @@ class ExtensionEnableCommandTest extends TestCase
         $this->assertEquals('Enable an existing extension', $defaultValue);
     }
 
-    public function test_handle_method_exists(): void
-    {
-        $this->assertTrue(method_exists(ExtensionEnableCommand::class, 'handle'));
-    }
-
-    public function test_handle_is_public(): void
+    public function test_handle_signature_is_public_and_parameterless(): void
     {
         $ref = new \ReflectionMethod(ExtensionEnableCommand::class, 'handle');
 
         $this->assertTrue($ref->isPublic());
+        $this->assertCount(0, $ref->getParameters());
+    }
+
+    public function test_signature_property_is_protected(): void
+    {
+        $ref = new \ReflectionProperty(ExtensionEnableCommand::class, 'signature');
+
+        $this->assertTrue($ref->isProtected());
     }
 }

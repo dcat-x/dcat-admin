@@ -26,7 +26,9 @@ class BatchInputTest extends TestCase
 
     public function test_extends_presenter(): void
     {
-        $this->assertTrue(is_subclass_of(BatchInput::class, Presenter::class));
+        $parents = class_parents(BatchInput::class);
+
+        $this->assertContains(Presenter::class, $parents);
     }
 
     public function test_has_css_property_with_select2(): void

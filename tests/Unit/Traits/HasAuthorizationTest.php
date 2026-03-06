@@ -82,15 +82,19 @@ class HasAuthorizationTest extends TestCase
         }
     }
 
-    public function test_trait_methods_exist(): void
+    public function test_method_signatures_are_expected(): void
     {
-        $obj = new class
-        {
-            use HasAuthorization;
-        };
+        $passesAuthorization = new \ReflectionMethod(HasAuthorization::class, 'passesAuthorization');
+        $authorize = new \ReflectionMethod(HasAuthorization::class, 'authorize');
+        $failedAuthorization = new \ReflectionMethod(HasAuthorization::class, 'failedAuthorization');
 
-        $this->assertTrue(method_exists($obj, 'passesAuthorization'));
-        $this->assertTrue(method_exists($obj, 'authorize'));
-        $this->assertTrue(method_exists($obj, 'failedAuthorization'));
+        $this->assertTrue($passesAuthorization->isPublic());
+        $this->assertCount(0, $passesAuthorization->getParameters());
+
+        $this->assertTrue($authorize->isProtected());
+        $this->assertCount(1, $authorize->getParameters());
+
+        $this->assertTrue($failedAuthorization->isPublic());
+        $this->assertCount(0, $failedAuthorization->getParameters());
     }
 }

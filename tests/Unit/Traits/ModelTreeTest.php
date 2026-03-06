@@ -6,6 +6,44 @@ use Dcat\Admin\Tests\TestCase;
 use Dcat\Admin\Traits\ModelTree;
 use Mockery;
 
+class FakeModelTreeNode
+{
+    use ModelTree;
+
+    public function getKeyName()
+    {
+        return 'id';
+    }
+
+    public function allNodes()
+    {
+        return collect();
+    }
+
+    public function exposeBuildSelectOptions(array $nodes, int $parentId = 0): array
+    {
+        return $this->buildSelectOptions($nodes, $parentId);
+    }
+
+    public function exposeCallQueryCallbacks($model)
+    {
+        return $this->callQueryCallbacks($model);
+    }
+}
+
+class CustomizedModelTreeNode extends FakeModelTreeNode
+{
+    protected string $parentColumn = 'pid';
+
+    protected string $titleColumn = 'name';
+
+    protected string $orderColumn = 'sort';
+
+    protected string $depthColumn = 'depth';
+
+    protected string $defaultParentId = 'root';
+}
+
 class ModelTreeTest extends TestCase
 {
     protected function tearDown(): void
@@ -14,126 +52,90 @@ class ModelTreeTest extends TestCase
         Mockery::close();
     }
 
-    public function test_trait_exists(): void
+    public function test_default_column_names_are_returned_when_properties_not_defined(): void
     {
-        $this->assertTrue(trait_exists(ModelTree::class));
+        $node = new FakeModelTreeNode;
+
+        $this->assertSame('parent_id', $node->getParentColumn());
+        $this->assertSame('title', $node->getTitleColumn());
+        $this->assertSame('order', $node->getOrderColumn());
+        $this->assertSame('', $node->getDepthColumn());
+        $this->assertSame('0', $node->getDefaultParentId());
     }
 
-    public function test_has_get_parent_column_method(): void
+    public function test_custom_column_names_are_respected(): void
     {
-        $this->assertTrue(method_exists(ModelTree::class, 'getParentColumn'));
+        $node = new CustomizedModelTreeNode;
+
+        $this->assertSame('pid', $node->getParentColumn());
+        $this->assertSame('name', $node->getTitleColumn());
+        $this->assertSame('sort', $node->getOrderColumn());
+        $this->assertSame('depth', $node->getDepthColumn());
+        $this->assertSame('root', $node->getDefaultParentId());
     }
 
-    public function test_has_get_title_column_method(): void
+    public function test_with_query_registers_and_executes_callbacks_in_order(): void
     {
-        $this->assertTrue(method_exists(ModelTree::class, 'getTitleColumn'));
+        $node = new FakeModelTreeNode;
+        $trace = [];
+
+        $model = new class($trace)
+        {
+            public array $trace;
+
+            public function __construct(array &$trace)
+            {
+                $this->trace = &$trace;
+            }
+        };
+
+        $node
+            ->withQuery(function ($m) {
+                $m->trace[] = 'first';
+
+                return $m;
+            })
+            ->withQuery(function ($m) {
+                $m->trace[] = 'second';
+
+                return $m;
+            });
+
+        $result = $node->exposeCallQueryCallbacks($model);
+
+        $this->assertSame($model, $result);
+        $this->assertSame(['first', 'second'], $model->trace);
     }
 
-    public function test_has_get_order_column_method(): void
+    public function test_to_tree_builds_nested_structure_from_flat_nodes(): void
     {
-        $this->assertTrue(method_exists(ModelTree::class, 'getOrderColumn'));
+        $node = new FakeModelTreeNode;
+        $nodes = [
+            ['id' => 1, 'parent_id' => 0, 'title' => 'Root'],
+            ['id' => 2, 'parent_id' => 1, 'title' => 'Child A'],
+            ['id' => 3, 'parent_id' => 1, 'title' => 'Child B'],
+        ];
+
+        $tree = $node->toTree($nodes);
+
+        $this->assertCount(1, $tree);
+        $this->assertSame(1, $tree[0]['id']);
+        $this->assertCount(2, $tree[0]['children']);
     }
 
-    public function test_has_get_depth_column_method(): void
+    public function test_build_select_options_generates_hierarchical_labels(): void
     {
-        $this->assertTrue(method_exists(ModelTree::class, 'getDepthColumn'));
-    }
+        $node = new FakeModelTreeNode;
+        $nodes = [
+            ['id' => 1, 'parent_id' => 0, 'title' => 'Root'],
+            ['id' => 2, 'parent_id' => 1, 'title' => 'Child'],
+        ];
 
-    public function test_has_get_default_parent_id_method(): void
-    {
-        $this->assertTrue(method_exists(ModelTree::class, 'getDefaultParentId'));
-    }
+        $options = $node->exposeBuildSelectOptions($nodes);
 
-    public function test_has_with_query_method(): void
-    {
-        $this->assertTrue(method_exists(ModelTree::class, 'withQuery'));
-    }
-
-    public function test_has_to_tree_method(): void
-    {
-        $this->assertTrue(method_exists(ModelTree::class, 'toTree'));
-    }
-
-    public function test_has_all_nodes_method(): void
-    {
-        $this->assertTrue(method_exists(ModelTree::class, 'allNodes'));
-    }
-
-    public function test_has_save_order_method(): void
-    {
-        $this->assertTrue(method_exists(ModelTree::class, 'saveOrder'));
-    }
-
-    public function test_has_select_options_method(): void
-    {
-        $this->assertTrue(method_exists(ModelTree::class, 'selectOptions'));
-    }
-
-    public function test_has_move_order_down_method(): void
-    {
-        $this->assertTrue(method_exists(ModelTree::class, 'moveOrderDown'));
-    }
-
-    public function test_has_move_order_up_method(): void
-    {
-        $this->assertTrue(method_exists(ModelTree::class, 'moveOrderUp'));
-    }
-
-    public function test_has_move_to_start_method(): void
-    {
-        $this->assertTrue(method_exists(ModelTree::class, 'moveToStart'));
-    }
-
-    public function test_branch_order_is_static(): void
-    {
-        $ref = new \ReflectionProperty(ModelTree::class, 'branchOrder');
-        $ref->setAccessible(true);
-        $this->assertTrue($ref->isStatic());
-    }
-
-    public function test_branch_order_default_empty_array(): void
-    {
-        $ref = new \ReflectionProperty(ModelTree::class, 'branchOrder');
-        $ref->setAccessible(true);
-        $this->assertSame([], $ref->getDefaultValue());
-    }
-
-    public function test_query_callbacks_is_protected(): void
-    {
-        $ref = new \ReflectionProperty(ModelTree::class, 'queryCallbacks');
-        $ref->setAccessible(true);
-        $this->assertTrue($ref->isProtected());
-    }
-
-    public function test_query_callbacks_default_empty_array(): void
-    {
-        $ref = new \ReflectionProperty(ModelTree::class, 'queryCallbacks');
-        $ref->setAccessible(true);
-        $this->assertSame([], $ref->getDefaultValue());
-    }
-
-    public function test_set_branch_order_is_protected_static(): void
-    {
-        $ref = new \ReflectionMethod(ModelTree::class, 'setBranchOrder');
-        $this->assertTrue($ref->isProtected());
-        $this->assertTrue($ref->isStatic());
-    }
-
-    public function test_build_select_options_is_protected(): void
-    {
-        $ref = new \ReflectionMethod(ModelTree::class, 'buildSelectOptions');
-        $this->assertTrue($ref->isProtected());
-    }
-
-    public function test_call_query_callbacks_is_protected(): void
-    {
-        $ref = new \ReflectionMethod(ModelTree::class, 'callQueryCallbacks');
-        $this->assertTrue($ref->isProtected());
-    }
-
-    public function test_determine_order_column_name_is_protected(): void
-    {
-        $ref = new \ReflectionMethod(ModelTree::class, 'determineOrderColumnName');
-        $this->assertTrue($ref->isProtected());
+        $this->assertArrayHasKey(1, $options);
+        $this->assertArrayHasKey(2, $options);
+        $this->assertStringContainsString('Root', $options[1]);
+        $this->assertStringContainsString('Child', $options[2]);
     }
 }

@@ -16,9 +16,11 @@ class GeneratorCommandTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
+    public function test_reflection_can_load_class_metadata(): void
     {
-        $this->assertTrue(class_exists(GeneratorCommand::class));
+        $ref = new \ReflectionClass(GeneratorCommand::class);
+
+        $this->assertSame(GeneratorCommand::class, $ref->getName());
     }
 
     public function test_is_abstract_class(): void
@@ -30,7 +32,9 @@ class GeneratorCommandTest extends TestCase
 
     public function test_extends_illuminate_console_command(): void
     {
-        $this->assertTrue(is_subclass_of(GeneratorCommand::class, Command::class));
+        $parents = class_parents(GeneratorCommand::class);
+
+        $this->assertContains(Command::class, $parents);
     }
 
     public function test_has_files_property(): void

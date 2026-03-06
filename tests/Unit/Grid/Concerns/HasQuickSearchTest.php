@@ -49,14 +49,18 @@ class HasQuickSearchTest extends TestCase
         $this->assertNull($ref->getValue($helper));
     }
 
-    public function test_quick_search_method_exists(): void
+    public function test_quick_search_method_signature(): void
     {
-        $this->assertTrue(method_exists(HasQuickSearchTestHelper::class, 'quickSearch'));
+        $method = new \ReflectionMethod(HasQuickSearchTestHelper::class, 'quickSearch');
+
+        $this->assertSame(1, $method->getNumberOfParameters());
     }
 
-    public function test_apply_quick_search_method_exists(): void
+    public function test_apply_quick_search_method_signature(): void
     {
-        $this->assertTrue(method_exists(HasQuickSearchTestHelper::class, 'applyQuickSearch'));
+        $method = new \ReflectionMethod(HasQuickSearchTestHelper::class, 'applyQuickSearch');
+
+        $this->assertSame(0, $method->getNumberOfParameters());
     }
 
     public function test_add_where_bindings_is_protected(): void

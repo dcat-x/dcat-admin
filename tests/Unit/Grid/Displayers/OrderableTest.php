@@ -20,7 +20,9 @@ class OrderableTest extends TestCase
 
     public function test_orderable_extends_abstract_displayer(): void
     {
-        $this->assertTrue(is_subclass_of(Orderable::class, AbstractDisplayer::class));
+        $parents = class_parents(Orderable::class);
+
+        $this->assertContains(AbstractDisplayer::class, $parents);
     }
 
     public function test_display_returns_html_with_arrows(): void

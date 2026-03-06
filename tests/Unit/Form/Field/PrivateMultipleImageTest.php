@@ -2,7 +2,6 @@
 
 namespace Dcat\Admin\Tests\Unit\Form\Field;
 
-use Dcat\Admin\Form\Field\MultipleImage;
 use Dcat\Admin\Form\Field\PrivateMultipleImage;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
@@ -15,109 +14,99 @@ class PrivateMultipleImageTest extends TestCase
         parent::tearDown();
     }
 
-    // -------------------------------------------------------
-    // Class existence and inheritance
-    // -------------------------------------------------------
-
-    public function test_class_exists(): void
+    protected function getProtectedProperty(object $object, string $property)
     {
-        $this->assertTrue(class_exists(PrivateMultipleImage::class));
-    }
+        $reflection = new \ReflectionProperty($object, $property);
+        $reflection->setAccessible(true);
 
-    public function test_extends_multiple_image(): void
-    {
-        $this->assertTrue(is_subclass_of(PrivateMultipleImage::class, MultipleImage::class));
+        return $reflection->getValue($object);
     }
-
-    // -------------------------------------------------------
-    // Default property values via reflection
-    // -------------------------------------------------------
 
     public function test_disk_name_default_is_empty_string(): void
     {
         $reflection = new \ReflectionClass(PrivateMultipleImage::class);
-        $property = $reflection->getProperty('diskName');
-        $property->setAccessible(true);
-
-        // diskName has a typed default of '' on the class definition
         $defaults = $reflection->getDefaultProperties();
+
         $this->assertArrayHasKey('diskName', $defaults);
         $this->assertSame('', $defaults['diskName']);
     }
 
-    // -------------------------------------------------------
-    // Method existence
-    // -------------------------------------------------------
-
-    public function test_disk_method_exists(): void
+    public function test_disk_sets_disk_name_and_returns_self(): void
     {
-        $this->assertTrue(method_exists(PrivateMultipleImage::class, 'disk'));
+        $field = new PrivateMultipleImage('images', ['Images']);
+
+        $result = $field->disk('oss-private');
+
+        $this->assertSame($field, $result);
+        $this->assertSame('oss-private', $this->getProtectedProperty($field, 'diskName'));
     }
 
-    public function test_object_url_method_exists(): void
+    public function test_object_url_returns_original_path_for_valid_url(): void
     {
-        $this->assertTrue(method_exists(PrivateMultipleImage::class, 'objectUrl'));
+        $field = new PrivateMultipleImage('images', ['Images']);
+
+        $url = 'https://cdn.example.com/path/image.jpg';
+
+        $this->assertSame($url, $field->objectUrl($url));
     }
 
-    // -------------------------------------------------------
-    // Method visibility and signature
-    // -------------------------------------------------------
-
-    public function test_disk_is_public(): void
+    public function test_object_url_uses_proxy_for_private_disk(): void
     {
-        $method = new \ReflectionMethod(PrivateMultipleImage::class, 'disk');
-        $this->assertTrue($method->isPublic());
+        $field = new PrivateMultipleImage('images', ['Images']);
+        config()->set('admin.upload.oss.private_disk', 'oss-private');
+
+        $field->disk('oss-private');
+
+        $result = $field->objectUrl('/foo/bar.jpg');
+
+        $this->assertStringContainsString('dcat-api/oss/proxy/foo/bar.jpg', $result);
     }
 
-    public function test_object_url_is_public(): void
-    {
-        $method = new \ReflectionMethod(PrivateMultipleImage::class, 'objectUrl');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_object_url_has_path_parameter(): void
+    public function test_object_url_signature_is_expected(): void
     {
         $method = new \ReflectionMethod(PrivateMultipleImage::class, 'objectUrl');
         $params = $method->getParameters();
 
         $this->assertCount(1, $params);
         $this->assertSame('path', $params[0]->getName());
-    }
 
-    public function test_object_url_return_type_is_string(): void
-    {
-        $method = new \ReflectionMethod(PrivateMultipleImage::class, 'objectUrl');
         $returnType = $method->getReturnType();
-
         $this->assertNotNull($returnType);
         $this->assertSame('string', $returnType->getName());
     }
 
-    public function test_disk_has_disk_parameter(): void
+    public function test_sortable_updates_option_flag(): void
     {
-        $method = new \ReflectionMethod(PrivateMultipleImage::class, 'disk');
-        $params = $method->getParameters();
+        $field = new PrivateMultipleImage('images', ['Images']);
 
-        $this->assertCount(1, $params);
-        $this->assertSame('disk', $params[0]->getName());
+        $result = $field->sortable(false);
+
+        $this->assertSame($field, $result);
+
+        $options = $this->getProtectedProperty($field, 'options');
+        $this->assertFalse($options['sortable']);
     }
 
-    // -------------------------------------------------------
-    // Inheritance chain
-    // -------------------------------------------------------
-
-    public function test_inherits_sortable_from_multiple_image(): void
+    public function test_limit_only_applies_when_at_least_two(): void
     {
-        $this->assertTrue(method_exists(PrivateMultipleImage::class, 'sortable'));
+        $field = new PrivateMultipleImage('images', ['Images']);
+        $initialOptions = $this->getProtectedProperty($field, 'options');
+
+        $field->limit(1);
+        $optionsAfterOne = $this->getProtectedProperty($field, 'options');
+        $this->assertSame($initialOptions, $optionsAfterOne);
+
+        $field->limit(5);
+        $optionsAfterFive = $this->getProtectedProperty($field, 'options');
+        $this->assertSame(5, $optionsAfterFive['fileNumLimit']);
     }
 
-    public function test_inherits_limit_from_multiple_image(): void
+    public function test_thumbnail_is_chainable(): void
     {
-        $this->assertTrue(method_exists(PrivateMultipleImage::class, 'limit'));
-    }
+        $field = new PrivateMultipleImage('images', ['Images']);
 
-    public function test_inherits_thumbnail_from_image(): void
-    {
-        $this->assertTrue(method_exists(PrivateMultipleImage::class, 'thumbnail'));
+        $result = $field->thumbnail('100', '120');
+
+        $this->assertSame($field, $result);
     }
 }

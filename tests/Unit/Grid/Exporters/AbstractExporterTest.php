@@ -23,11 +23,6 @@ class AbstractExporterTest extends TestCase
         };
     }
 
-    public function test_class_exists(): void
-    {
-        $this->assertTrue(class_exists(AbstractExporter::class));
-    }
-
     public function test_is_abstract(): void
     {
         $ref = new \ReflectionClass(AbstractExporter::class);
@@ -56,66 +51,6 @@ class AbstractExporterTest extends TestCase
         $ref->setAccessible(true);
 
         $this->assertSame('xlsx', $ref->getDefaultValue());
-    }
-
-    public function test_method_titles_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractExporter::class, 'titles'));
-    }
-
-    public function test_method_filename_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractExporter::class, 'filename'));
-    }
-
-    public function test_method_rows_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractExporter::class, 'rows'));
-    }
-
-    public function test_method_xlsx_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractExporter::class, 'xlsx'));
-    }
-
-    public function test_method_csv_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractExporter::class, 'csv'));
-    }
-
-    public function test_method_ods_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractExporter::class, 'ods'));
-    }
-
-    public function test_method_extension_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractExporter::class, 'extension'));
-    }
-
-    public function test_method_set_grid_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractExporter::class, 'setGrid'));
-    }
-
-    public function test_method_get_filename_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractExporter::class, 'getFilename'));
-    }
-
-    public function test_method_build_data_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractExporter::class, 'buildData'));
-    }
-
-    public function test_method_with_scope_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractExporter::class, 'withScope'));
-    }
-
-    public function test_method_make_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractExporter::class, 'make'));
     }
 
     public function test_constructor_with_titles_sets_titles(): void

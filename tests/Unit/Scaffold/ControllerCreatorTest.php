@@ -118,12 +118,31 @@ class ControllerCreatorTest extends TestCase
         $this->assertInstanceOf(Filesystem::class, $ref->getValue($creator));
     }
 
-    public function test_generate_grid_method_exists(): void
+    public function test_create_replaces_scaffold_placeholders_from_generator_methods(): void
     {
-        $creator = new ControllerCreator('App\\Admin\\Controllers\\UserController', Mockery::mock(Filesystem::class));
+        $stubContent = 'DummyNamespace DummyClass DummyModelNamespace DummyModel DummyTitle {controller} {grid} {form} {show}';
 
-        $this->assertTrue(method_exists($creator, 'generateGrid'));
-        $this->assertTrue(method_exists($creator, 'generateForm'));
-        $this->assertTrue(method_exists($creator, 'generateShow'));
+        $writtenContent = null;
+        $files = Mockery::mock(Filesystem::class);
+        $files->shouldReceive('exists')->andReturn(false);
+        $files->shouldReceive('get')->andReturn($stubContent);
+        $files->shouldReceive('makeDirectory')->andReturn(true);
+        $files->shouldReceive('put')->once()->andReturnUsing(function ($path, $content) use (&$writtenContent) {
+            $writtenContent = $content;
+
+            return true;
+        });
+        $files->shouldReceive('chmod')->andReturn(true);
+
+        $creator = new ControllerCreator('App\\Admin\\Controllers\\UserController', $files);
+        $creator->create('App\\Models\\User');
+
+        $this->assertNotNull($writtenContent);
+        $this->assertStringNotContainsString('{grid}', $writtenContent);
+        $this->assertStringNotContainsString('{form}', $writtenContent);
+        $this->assertStringNotContainsString('{show}', $writtenContent);
+        $this->assertStringContainsString("\$grid->column('id')->sortable();", $writtenContent);
+        $this->assertStringContainsString("\$form->display('id');", $writtenContent);
+        $this->assertStringContainsString("\$show->field('id');", $writtenContent);
     }
 }

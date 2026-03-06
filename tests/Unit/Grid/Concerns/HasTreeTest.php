@@ -93,9 +93,11 @@ class HasTreeTest extends TestCase
         $this->assertNull($ref->getValue($helper));
     }
 
-    public function test_enable_tree_method_exists(): void
+    public function test_enable_tree_method_signature(): void
     {
-        $this->assertTrue(method_exists(HasTreeTestHelper::class, 'enableTree'));
+        $method = new \ReflectionMethod(HasTreeTestHelper::class, 'enableTree');
+
+        $this->assertSame(3, $method->getNumberOfParameters());
     }
 
     public function test_get_children_page_name(): void

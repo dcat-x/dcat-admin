@@ -18,7 +18,9 @@ class BatchActionsTest extends TestCase
 
     public function test_extends_abstract_tool(): void
     {
-        $this->assertTrue(is_subclass_of(BatchActions::class, AbstractTool::class));
+        $parents = class_parents(BatchActions::class);
+
+        $this->assertContains(AbstractTool::class, $parents);
     }
 
     public function test_constructor_creates_actions_collection(): void

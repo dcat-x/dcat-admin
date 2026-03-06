@@ -16,14 +16,16 @@ class MenuCacheCommandTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
+    public function test_can_be_instantiated(): void
     {
-        $this->assertTrue(class_exists(MenuCacheCommand::class));
+        $this->assertInstanceOf(MenuCacheCommand::class, new MenuCacheCommand);
     }
 
     public function test_extends_illuminate_console_command(): void
     {
-        $this->assertTrue(is_subclass_of(MenuCacheCommand::class, Command::class));
+        $parents = class_parents(MenuCacheCommand::class);
+
+        $this->assertContains(Command::class, $parents);
     }
 
     public function test_signature_default_value(): void

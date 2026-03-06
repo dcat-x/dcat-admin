@@ -20,9 +20,14 @@ class PaginatorTest extends TestCase
     // Class structure
     // -------------------------------------------------------------------------
 
-    public function test_class_exists(): void
+    public function test_constructor_accepts_grid_parameter(): void
     {
-        $this->assertTrue(class_exists(Paginator::class));
+        $method = new \ReflectionMethod(Paginator::class, '__construct');
+        $params = $method->getParameters();
+
+        $this->assertCount(1, $params);
+        $this->assertSame('grid', $params[0]->getName());
+        $this->assertSame('Dcat\Admin\Grid', $params[0]->getType()?->getName());
     }
 
     public function test_implements_renderable(): void
@@ -32,9 +37,12 @@ class PaginatorTest extends TestCase
         $this->assertArrayHasKey(Renderable::class, $interfaces);
     }
 
-    public function test_render_method_exists(): void
+    public function test_render_method_signature(): void
     {
-        $this->assertTrue(method_exists(Paginator::class, 'render'));
+        $method = new \ReflectionMethod(Paginator::class, 'render');
+
+        $this->assertTrue($method->isPublic());
+        $this->assertSame(0, $method->getNumberOfParameters());
     }
 
     public function test_init_paginator_method_exists(): void

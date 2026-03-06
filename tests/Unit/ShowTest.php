@@ -16,11 +16,6 @@ class ShowTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
-    {
-        $this->assertTrue(class_exists(Show::class));
-    }
-
     public function test_implements_renderable(): void
     {
         $ref = new ReflectionClass(Show::class);
@@ -53,59 +48,50 @@ class ShowTest extends TestCase
         $this->assertSame('id', $prop->getDefaultValue());
     }
 
-    public function test_method_exists_resource(): void
+    public function test_resource_and_set_resource_work_as_expected(): void
     {
-        $this->assertTrue(method_exists(Show::class, 'resource'));
+        $show = new Show;
+
+        $show->setResource('users');
+
+        $this->assertStringContainsString('/users', $show->resource());
     }
 
-    public function test_method_exists_field(): void
+    public function test_field_relation_and_content_methods_add_items(): void
     {
-        $this->assertTrue(method_exists(Show::class, 'field'));
+        $show = new Show(['id' => 1, 'name' => 'Taylor']);
+
+        $show->field('name', 'Name');
+        $show->relation('roles', 'Roles', function () {});
+        $show->html('<div>hello</div>');
+        $show->divider();
+        $show->newline();
+
+        $this->assertCount(4, $show->fields());
+        $this->assertCount(1, $show->relations());
+        $this->assertNotNull($show->panel());
     }
 
-    public function test_method_exists_relation(): void
+    public function test_row_and_rows_collection_work(): void
     {
-        $this->assertTrue(method_exists(Show::class, 'relation'));
+        $show = new Show(['id' => 1, 'name' => 'Taylor']);
+
+        $show->row(function () {
+            return 'row';
+        });
+
+        $this->assertCount(1, $show->rows());
     }
 
-    public function test_method_exists_html(): void
+    public function test_render_outputs_show_container_markup(): void
     {
-        $this->assertTrue(method_exists(Show::class, 'html'));
-    }
+        $show = new Show(['id' => 1, 'name' => 'Taylor']);
+        $show->field('name', 'Name');
 
-    public function test_method_exists_divider(): void
-    {
-        $this->assertTrue(method_exists(Show::class, 'divider'));
-    }
+        $html = $show->render();
 
-    public function test_method_exists_newline(): void
-    {
-        $this->assertTrue(method_exists(Show::class, 'newline'));
-    }
-
-    public function test_method_exists_panel(): void
-    {
-        $this->assertTrue(method_exists(Show::class, 'panel'));
-    }
-
-    public function test_method_exists_set_resource(): void
-    {
-        $this->assertTrue(method_exists(Show::class, 'setResource'));
-    }
-
-    public function test_method_exists_render(): void
-    {
-        $this->assertTrue(method_exists(Show::class, 'render'));
-    }
-
-    public function test_method_exists_row(): void
-    {
-        $this->assertTrue(method_exists(Show::class, 'row'));
-    }
-
-    public function test_method_exists_rows(): void
-    {
-        $this->assertTrue(method_exists(Show::class, 'rows'));
+        $this->assertIsString($html);
+        $this->assertStringContainsString('box-body', $html);
     }
 
     public function test_builder_property_default_null(): void
@@ -124,24 +110,6 @@ class ShowTest extends TestCase
     {
         $prop = new ReflectionProperty(Show::class, 'model');
         $this->assertNull($prop->getDefaultValue());
-    }
-
-    public function test_fields_property_exists(): void
-    {
-        $ref = new ReflectionClass(Show::class);
-        $this->assertTrue($ref->hasProperty('fields'));
-    }
-
-    public function test_relations_property_exists(): void
-    {
-        $ref = new ReflectionClass(Show::class);
-        $this->assertTrue($ref->hasProperty('relations'));
-    }
-
-    public function test_panel_property_exists(): void
-    {
-        $ref = new ReflectionClass(Show::class);
-        $this->assertTrue($ref->hasProperty('panel'));
     }
 
     public function test_is_not_abstract(): void

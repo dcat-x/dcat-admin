@@ -6,7 +6,6 @@ use Dcat\Admin\Grid\ColumnSelector\CacheStore;
 use Dcat\Admin\Grid\ColumnSelector\SessionStore;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
-use ReflectionProperty;
 
 class CacheStoreTest extends TestCase
 {
@@ -16,11 +15,6 @@ class CacheStoreTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
-    {
-        $this->assertTrue(class_exists(CacheStore::class));
-    }
-
     public function test_extends_session_store(): void
     {
         $store = new CacheStore;
@@ -28,26 +22,11 @@ class CacheStoreTest extends TestCase
         $this->assertInstanceOf(SessionStore::class, $store);
     }
 
-    public function test_has_store_method(): void
-    {
-        $this->assertTrue(method_exists(CacheStore::class, 'store'));
-    }
-
-    public function test_has_get_method(): void
-    {
-        $this->assertTrue(method_exists(CacheStore::class, 'get'));
-    }
-
-    public function test_has_forget_method(): void
-    {
-        $this->assertTrue(method_exists(CacheStore::class, 'forget'));
-    }
-
     public function test_constructor_accepts_driver_and_ttl(): void
     {
         $store = new CacheStore('array', 3600);
 
-        $ref = new ReflectionProperty($store, 'ttl');
+        $ref = new \ReflectionProperty($store, 'ttl');
         $ref->setAccessible(true);
 
         $this->assertEquals(3600, $ref->getValue($store));
@@ -57,9 +36,47 @@ class CacheStoreTest extends TestCase
     {
         $store = new CacheStore;
 
-        $ref = new ReflectionProperty($store, 'ttl');
+        $ref = new \ReflectionProperty($store, 'ttl');
         $ref->setAccessible(true);
 
         $this->assertEquals(25920000, $ref->getValue($store));
+    }
+
+    public function test_store_get_and_forget_use_cache_driver(): void
+    {
+        $store = new TestableCacheStore('array', 300);
+
+        $payload = ['visible' => ['name', 'created_at']];
+        $store->store($payload);
+
+        $this->assertSame($payload, $store->get());
+
+        $store->forget();
+
+        $this->assertNull($store->get());
+    }
+
+    public function test_store_get_forget_signatures_are_public_and_parameter_counts_match(): void
+    {
+        $storeMethod = new \ReflectionMethod(CacheStore::class, 'store');
+        $getMethod = new \ReflectionMethod(CacheStore::class, 'get');
+        $forgetMethod = new \ReflectionMethod(CacheStore::class, 'forget');
+
+        $this->assertTrue($storeMethod->isPublic());
+        $this->assertCount(1, $storeMethod->getParameters());
+
+        $this->assertTrue($getMethod->isPublic());
+        $this->assertCount(0, $getMethod->getParameters());
+
+        $this->assertTrue($forgetMethod->isPublic());
+        $this->assertCount(0, $forgetMethod->getParameters());
+    }
+}
+
+class TestableCacheStore extends CacheStore
+{
+    protected function getKey()
+    {
+        return 'test-grid-column-selector-cache';
     }
 }

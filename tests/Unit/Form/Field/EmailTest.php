@@ -62,10 +62,10 @@ class EmailTest extends TestCase
         $this->assertSame('user_email', $field->column());
     }
 
-    public function test_render_method_exists(): void
+    public function test_render_method_signature(): void
     {
-        $field = $this->createField();
+        $method = new \ReflectionMethod(Email::class, 'render');
 
-        $this->assertTrue(method_exists($field, 'render'));
+        $this->assertSame(0, $method->getNumberOfParameters());
     }
 }

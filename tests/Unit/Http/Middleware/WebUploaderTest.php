@@ -14,14 +14,29 @@ class WebUploaderTest extends TestCase
         Mockery::close();
     }
 
-    public function test_class_exists(): void
+    public function test_can_be_instantiated(): void
     {
-        $this->assertTrue(class_exists(WebUploader::class));
+        $this->assertInstanceOf(WebUploader::class, new WebUploader);
     }
 
-    public function test_method_handle_exists(): void
+    public function test_handle_passes_through_when_not_uploading(): void
     {
-        $this->assertTrue(method_exists(WebUploader::class, 'handle'));
+        $middleware = new WebUploader;
+        $request = \Illuminate\Http\Request::create('/admin/upload');
+        $uploader = Mockery::mock(\Dcat\Admin\Support\WebUploader::class);
+        $uploader->shouldReceive('isUploading')->once()->andReturn(false);
+
+        app()->instance('admin.web-uploader', $uploader);
+
+        $called = false;
+        $response = $middleware->handle($request, function ($req) use (&$called) {
+            $called = true;
+
+            return 'next';
+        });
+
+        $this->assertTrue($called);
+        $this->assertSame('next', $response);
     }
 
     public function test_handle_is_public(): void

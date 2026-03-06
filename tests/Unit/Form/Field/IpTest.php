@@ -63,10 +63,10 @@ class IpTest extends TestCase
         $this->assertSame('server_ip', $field->column());
     }
 
-    public function test_render_method_exists(): void
+    public function test_render_method_signature(): void
     {
-        $field = $this->createField();
+        $method = new \ReflectionMethod(Ip::class, 'render');
 
-        $this->assertTrue(method_exists($field, 'render'));
+        $this->assertSame(0, $method->getNumberOfParameters());
     }
 }

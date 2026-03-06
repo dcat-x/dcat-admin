@@ -15,20 +15,6 @@ class SelectTableTest extends TestCase
         parent::tearDown();
     }
 
-    // -------------------------------------------------------
-    // Class structure
-    // -------------------------------------------------------
-
-    public function test_class_exists(): void
-    {
-        $this->assertTrue(class_exists(SelectTable::class));
-    }
-
-    public function test_is_subclass_of_field(): void
-    {
-        $this->assertTrue(is_subclass_of(SelectTable::class, Field::class));
-    }
-
     public function test_uses_can_load_fields_trait(): void
     {
         $traits = class_uses(SelectTable::class);
@@ -55,52 +41,40 @@ class SelectTableTest extends TestCase
         $this->assertSame('primary', $ref->getDefaultValue());
     }
 
-    // -------------------------------------------------------
-    // Method existence
-    // -------------------------------------------------------
-
-    public function test_method_title_exists(): void
+    public function test_chainable_configuration_methods_return_self(): void
     {
-        $this->assertTrue(method_exists(SelectTable::class, 'title'));
+        $field = new SelectTable('user_id', 'User');
+
+        $result = $field
+            ->title('Select User')
+            ->dialogWidth('70%')
+            ->dialogMaxMin(true)
+            ->dialogResize(true)
+            ->pluck('name', 'id')
+            ->options([1 => 'Tom']);
+
+        $this->assertInstanceOf(Field::class, $field);
+        $this->assertSame($field, $result);
     }
 
-    public function test_method_dialog_width_exists(): void
+    public function test_model_sets_pluck_columns_and_options_callback(): void
     {
-        $this->assertTrue(method_exists(SelectTable::class, 'dialogWidth'));
-    }
+        $field = new SelectTable('user_id', 'User');
+        $result = $field->model(\Dcat\Admin\Models\Administrator::class, 'id', 'name');
 
-    public function test_method_dialog_max_min_exists(): void
-    {
-        $this->assertTrue(method_exists(SelectTable::class, 'dialogMaxMin'));
-    }
+        $this->assertSame($field, $result);
 
-    public function test_method_dialog_resize_exists(): void
-    {
-        $this->assertTrue(method_exists(SelectTable::class, 'dialogResize'));
-    }
+        $visibleColumn = new \ReflectionProperty(SelectTable::class, 'visibleColumn');
+        $visibleColumn->setAccessible(true);
 
-    public function test_method_from_exists(): void
-    {
-        $this->assertTrue(method_exists(SelectTable::class, 'from'));
-    }
+        $key = new \ReflectionProperty(SelectTable::class, 'key');
+        $key->setAccessible(true);
 
-    public function test_method_pluck_exists(): void
-    {
-        $this->assertTrue(method_exists(SelectTable::class, 'pluck'));
-    }
+        $options = new \ReflectionProperty(Field::class, 'options');
+        $options->setAccessible(true);
 
-    public function test_method_options_exists(): void
-    {
-        $this->assertTrue(method_exists(SelectTable::class, 'options'));
-    }
-
-    public function test_method_model_exists(): void
-    {
-        $this->assertTrue(method_exists(SelectTable::class, 'model'));
-    }
-
-    public function test_method_render_exists(): void
-    {
-        $this->assertTrue(method_exists(SelectTable::class, 'render'));
+        $this->assertSame('name', $visibleColumn->getValue($field));
+        $this->assertSame('id', $key->getValue($field));
+        $this->assertInstanceOf(\Closure::class, $options->getValue($field));
     }
 }

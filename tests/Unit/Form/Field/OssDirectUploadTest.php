@@ -2,7 +2,6 @@
 
 namespace Dcat\Admin\Tests\Unit\Form\Field;
 
-use Dcat\Admin\Form\Field\File;
 use Dcat\Admin\Form\Field\OssDirectUpload;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
@@ -15,228 +14,108 @@ class OssDirectUploadTest extends TestCase
         parent::tearDown();
     }
 
-    // -------------------------------------------------------
-    // Class existence and inheritance
-    // -------------------------------------------------------
-
-    public function test_class_exists(): void
+    protected function createField(string $column = 'attachment'): OssDirectUpload
     {
-        $this->assertTrue(class_exists(OssDirectUpload::class));
+        return new OssDirectUpload($column, ['Attachment']);
     }
 
-    public function test_extends_file(): void
+    protected function getProtectedProperty(object $object, string $property)
     {
-        $this->assertTrue(is_subclass_of(OssDirectUpload::class, File::class));
-    }
+        $reflection = new \ReflectionProperty($object, $property);
+        $reflection->setAccessible(true);
 
-    // -------------------------------------------------------
-    // Default property values via reflection
-    // -------------------------------------------------------
+        return $reflection->getValue($object);
+    }
 
     public function test_view_is_admin_form_oss_direct_upload(): void
     {
-        $reflection = new \ReflectionClass(OssDirectUpload::class);
-        $property = $reflection->getProperty('view');
-        $property->setAccessible(true);
+        $field = $this->createField();
 
-        $defaults = $reflection->getDefaultProperties();
-        $this->assertSame('admin::form.oss-direct-upload', $defaults['view']);
+        $this->assertSame('admin::form.oss-direct-upload', $this->getProtectedProperty($field, 'view'));
     }
 
-    public function test_max_size_mb_default_is_500(): void
+    public function test_defaults_are_expected(): void
     {
-        $reflection = new \ReflectionClass(OssDirectUpload::class);
-        $defaults = $reflection->getDefaultProperties();
+        $field = $this->createField();
 
-        $this->assertArrayHasKey('maxSizeMb', $defaults);
-        $this->assertSame(500, $defaults['maxSizeMb']);
+        $this->assertSame(500, $this->getProtectedProperty($field, 'maxSizeMb'));
+        $this->assertSame(10, $this->getProtectedProperty($field, 'chunkSizeMb'));
+        $this->assertSame('file', $this->getProtectedProperty($field, 'uploadType'));
+        $this->assertSame('*', $this->getProtectedProperty($field, 'acceptExtensions'));
+        $this->assertNull($this->getProtectedProperty($field, 'uploadDirectory'));
+        $this->assertNull($this->getProtectedProperty($field, 'acceptMimeTypes'));
+        $this->assertNull($this->getProtectedProperty($field, 'stsTokenUrl'));
     }
 
-    public function test_chunk_size_mb_default_is_10(): void
+    public function test_max_size_updates_internal_state_and_returns_self(): void
     {
-        $reflection = new \ReflectionClass(OssDirectUpload::class);
-        $defaults = $reflection->getDefaultProperties();
+        $field = $this->createField();
 
-        $this->assertArrayHasKey('chunkSizeMb', $defaults);
-        $this->assertSame(10, $defaults['chunkSizeMb']);
+        $result = $field->maxSize(1024);
+
+        $this->assertSame($field, $result);
+        $this->assertSame(1024, $this->getProtectedProperty($field, 'maxSizeMb'));
     }
 
-    public function test_upload_type_default_is_file(): void
+    public function test_chunk_size_updates_internal_state_and_returns_self(): void
     {
-        $reflection = new \ReflectionClass(OssDirectUpload::class);
-        $defaults = $reflection->getDefaultProperties();
+        $field = $this->createField();
 
-        $this->assertArrayHasKey('uploadType', $defaults);
-        $this->assertSame('file', $defaults['uploadType']);
+        $result = $field->chunkSize(25);
+
+        $this->assertSame($field, $result);
+        $this->assertSame(25, $this->getProtectedProperty($field, 'chunkSizeMb'));
     }
 
-    public function test_accept_extensions_default_is_wildcard(): void
+    public function test_accept_updates_extensions_and_mime_types(): void
     {
-        $reflection = new \ReflectionClass(OssDirectUpload::class);
-        $defaults = $reflection->getDefaultProperties();
+        $field = $this->createField();
 
-        $this->assertArrayHasKey('acceptExtensions', $defaults);
-        $this->assertSame('*', $defaults['acceptExtensions']);
+        $result = $field->accept('jpg,png', 'image/jpeg,image/png');
+
+        $this->assertSame($field, $result);
+        $this->assertSame('jpg,png', $this->getProtectedProperty($field, 'acceptExtensions'));
+        $this->assertSame('image/jpeg,image/png', $this->getProtectedProperty($field, 'acceptMimeTypes'));
     }
 
-    public function test_upload_directory_default_is_null(): void
+    public function test_upload_type_updates_internal_state_and_returns_self(): void
     {
-        $reflection = new \ReflectionClass(OssDirectUpload::class);
-        $defaults = $reflection->getDefaultProperties();
+        $field = $this->createField();
 
-        $this->assertArrayHasKey('uploadDirectory', $defaults);
-        $this->assertNull($defaults['uploadDirectory']);
+        $result = $field->uploadType('image');
+
+        $this->assertSame($field, $result);
+        $this->assertSame('image', $this->getProtectedProperty($field, 'uploadType'));
     }
 
-    public function test_accept_mime_types_default_is_null(): void
+    public function test_directory_updates_internal_state_and_returns_self(): void
     {
-        $reflection = new \ReflectionClass(OssDirectUpload::class);
-        $defaults = $reflection->getDefaultProperties();
+        $field = $this->createField();
 
-        $this->assertArrayHasKey('acceptMimeTypes', $defaults);
-        $this->assertNull($defaults['acceptMimeTypes']);
+        $result = $field->directory('uploads/manual');
+
+        $this->assertSame($field, $result);
+        $this->assertSame('uploads/manual', $this->getProtectedProperty($field, 'uploadDirectory'));
     }
 
-    public function test_sts_token_url_default_is_null(): void
+    public function test_sts_token_url_updates_internal_state_and_returns_self(): void
     {
-        $reflection = new \ReflectionClass(OssDirectUpload::class);
-        $defaults = $reflection->getDefaultProperties();
+        $field = $this->createField();
 
-        $this->assertArrayHasKey('stsTokenUrl', $defaults);
-        $this->assertNull($defaults['stsTokenUrl']);
+        $result = $field->stsTokenUrl('/custom/sts-token');
+
+        $this->assertSame($field, $result);
+        $this->assertSame('/custom/sts-token', $this->getProtectedProperty($field, 'stsTokenUrl'));
     }
 
-    // -------------------------------------------------------
-    // Method existence
-    // -------------------------------------------------------
-
-    public function test_max_size_method_exists(): void
+    public function test_accept_keeps_mime_types_null_when_not_provided(): void
     {
-        $this->assertTrue(method_exists(OssDirectUpload::class, 'maxSize'));
-    }
+        $field = $this->createField();
 
-    public function test_chunk_size_method_exists(): void
-    {
-        $this->assertTrue(method_exists(OssDirectUpload::class, 'chunkSize'));
-    }
+        $result = $field->accept('pdf,doc');
 
-    public function test_upload_type_method_exists(): void
-    {
-        $this->assertTrue(method_exists(OssDirectUpload::class, 'uploadType'));
-    }
-
-    public function test_directory_method_exists(): void
-    {
-        $this->assertTrue(method_exists(OssDirectUpload::class, 'directory'));
-    }
-
-    public function test_accept_method_exists(): void
-    {
-        $this->assertTrue(method_exists(OssDirectUpload::class, 'accept'));
-    }
-
-    public function test_sts_token_url_method_exists(): void
-    {
-        $this->assertTrue(method_exists(OssDirectUpload::class, 'stsTokenUrl'));
-    }
-
-    public function test_render_method_exists(): void
-    {
-        $this->assertTrue(method_exists(OssDirectUpload::class, 'render'));
-    }
-
-    // -------------------------------------------------------
-    // Method visibility
-    // -------------------------------------------------------
-
-    public function test_max_size_is_public(): void
-    {
-        $method = new \ReflectionMethod(OssDirectUpload::class, 'maxSize');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_chunk_size_is_public(): void
-    {
-        $method = new \ReflectionMethod(OssDirectUpload::class, 'chunkSize');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_upload_type_is_public(): void
-    {
-        $method = new \ReflectionMethod(OssDirectUpload::class, 'uploadType');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_directory_is_public(): void
-    {
-        $method = new \ReflectionMethod(OssDirectUpload::class, 'directory');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_accept_is_public(): void
-    {
-        $method = new \ReflectionMethod(OssDirectUpload::class, 'accept');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_sts_token_url_is_public(): void
-    {
-        $method = new \ReflectionMethod(OssDirectUpload::class, 'stsTokenUrl');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_render_is_public(): void
-    {
-        $method = new \ReflectionMethod(OssDirectUpload::class, 'render');
-        $this->assertTrue($method->isPublic());
-    }
-
-    // -------------------------------------------------------
-    // Return type checks
-    // -------------------------------------------------------
-
-    public function test_max_size_return_type_is_static(): void
-    {
-        $method = new \ReflectionMethod(OssDirectUpload::class, 'maxSize');
-        $returnType = $method->getReturnType();
-
-        $this->assertNotNull($returnType);
-        $this->assertSame('static', $returnType->getName());
-    }
-
-    public function test_chunk_size_return_type_is_static(): void
-    {
-        $method = new \ReflectionMethod(OssDirectUpload::class, 'chunkSize');
-        $returnType = $method->getReturnType();
-
-        $this->assertNotNull($returnType);
-        $this->assertSame('static', $returnType->getName());
-    }
-
-    public function test_upload_type_return_type_is_static(): void
-    {
-        $method = new \ReflectionMethod(OssDirectUpload::class, 'uploadType');
-        $returnType = $method->getReturnType();
-
-        $this->assertNotNull($returnType);
-        $this->assertSame('static', $returnType->getName());
-    }
-
-    public function test_directory_return_type_is_static(): void
-    {
-        $method = new \ReflectionMethod(OssDirectUpload::class, 'directory');
-        $returnType = $method->getReturnType();
-
-        $this->assertNotNull($returnType);
-        $this->assertSame('static', $returnType->getName());
-    }
-
-    public function test_sts_token_url_return_type_is_static(): void
-    {
-        $method = new \ReflectionMethod(OssDirectUpload::class, 'stsTokenUrl');
-        $returnType = $method->getReturnType();
-
-        $this->assertNotNull($returnType);
-        $this->assertSame('static', $returnType->getName());
+        $this->assertSame($field, $result);
+        $this->assertSame('pdf,doc', $this->getProtectedProperty($field, 'acceptExtensions'));
+        $this->assertNull($this->getProtectedProperty($field, 'acceptMimeTypes'));
     }
 }

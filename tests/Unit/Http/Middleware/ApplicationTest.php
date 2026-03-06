@@ -14,14 +14,9 @@ class ApplicationTest extends TestCase
         Mockery::close();
     }
 
-    public function test_class_exists(): void
+    public function test_can_be_instantiated(): void
     {
-        $this->assertTrue(class_exists(Application::class));
-    }
-
-    public function test_method_handle_exists(): void
-    {
-        $this->assertTrue(method_exists(Application::class, 'handle'));
+        $this->assertInstanceOf(Application::class, new Application);
     }
 
     public function test_handle_is_public(): void

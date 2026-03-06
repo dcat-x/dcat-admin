@@ -17,7 +17,9 @@ class DateRangeQuickTest extends TestCase
 
     public function test_extends_presenter(): void
     {
-        $this->assertTrue(is_subclass_of(DateRangeQuick::class, Presenter::class));
+        $parents = class_parents(DateRangeQuick::class);
+
+        $this->assertContains(Presenter::class, $parents);
     }
 
     public function test_constructor_with_empty_ranges_uses_defaults(): void

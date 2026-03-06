@@ -16,14 +16,21 @@ class PublishCommandTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
+    public function test_constructor_accepts_filesystem_parameter(): void
     {
-        $this->assertTrue(class_exists(PublishCommand::class));
+        $method = new \ReflectionMethod(PublishCommand::class, '__construct');
+        $params = $method->getParameters();
+
+        $this->assertCount(1, $params);
+        $this->assertSame('files', $params[0]->getName());
+        $this->assertSame('Illuminate\Filesystem\Filesystem', $params[0]->getType()?->getName());
     }
 
     public function test_extends_illuminate_console_command(): void
     {
-        $this->assertTrue(is_subclass_of(PublishCommand::class, Command::class));
+        $parents = class_parents(PublishCommand::class);
+
+        $this->assertContains(Command::class, $parents);
     }
 
     public function test_signature_contains_admin_publish(): void

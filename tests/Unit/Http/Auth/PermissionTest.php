@@ -10,13 +10,12 @@ class PermissionTest extends TestCase
 {
     protected function tearDown(): void
     {
+        $ref = new \ReflectionProperty(Permission::class, 'errorHandler');
+        $ref->setAccessible(true);
+        $ref->setValue(null, null);
+
         parent::tearDown();
         Mockery::close();
-    }
-
-    public function test_class_exists(): void
-    {
-        $this->assertTrue(class_exists(Permission::class));
     }
 
     public function test_error_handler_static_property_exists(): void
@@ -40,39 +39,50 @@ class PermissionTest extends TestCase
         $this->assertTrue($ref->isProtected());
     }
 
-    public function test_method_check_exists(): void
+    public function test_register_error_handler_updates_static_property(): void
     {
-        $this->assertTrue(method_exists(Permission::class, 'check'));
+        $callback = static fn () => 'handled';
+
+        Permission::registerErrorHandler($callback);
+
+        $ref = new \ReflectionProperty(Permission::class, 'errorHandler');
+        $ref->setAccessible(true);
+
+        $this->assertSame($callback, $ref->getValue());
     }
 
-    public function test_method_allow_exists(): void
+    public function test_check_accepts_permission_parameter(): void
     {
-        $this->assertTrue(method_exists(Permission::class, 'allow'));
+        $method = new \ReflectionMethod(Permission::class, 'check');
+        $parameters = $method->getParameters();
+
+        $this->assertCount(1, $parameters);
+        $this->assertSame('permission', $parameters[0]->getName());
     }
 
-    public function test_method_free_exists(): void
+    public function test_allow_accepts_roles_parameter(): void
     {
-        $this->assertTrue(method_exists(Permission::class, 'free'));
+        $method = new \ReflectionMethod(Permission::class, 'allow');
+        $parameters = $method->getParameters();
+
+        $this->assertCount(1, $parameters);
+        $this->assertSame('roles', $parameters[0]->getName());
     }
 
-    public function test_method_deny_exists(): void
+    public function test_deny_accepts_roles_parameter(): void
     {
-        $this->assertTrue(method_exists(Permission::class, 'deny'));
+        $method = new \ReflectionMethod(Permission::class, 'deny');
+        $parameters = $method->getParameters();
+
+        $this->assertCount(1, $parameters);
+        $this->assertSame('roles', $parameters[0]->getName());
     }
 
-    public function test_method_is_administrator_exists(): void
+    public function test_is_administrator_has_no_parameters(): void
     {
-        $this->assertTrue(method_exists(Permission::class, 'isAdministrator'));
-    }
+        $method = new \ReflectionMethod(Permission::class, 'isAdministrator');
 
-    public function test_method_error_exists(): void
-    {
-        $this->assertTrue(method_exists(Permission::class, 'error'));
-    }
-
-    public function test_method_register_error_handler_exists(): void
-    {
-        $this->assertTrue(method_exists(Permission::class, 'registerErrorHandler'));
+        $this->assertCount(0, $method->getParameters());
     }
 
     public function test_check_is_static(): void

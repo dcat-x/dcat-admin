@@ -7,19 +7,13 @@ use Dcat\Admin\Tests\TestCase;
 
 class LazyRenderableTest extends TestCase
 {
-    public function test_interface_exists(): void
+    public function test_interface_methods_are_declared(): void
     {
-        $this->assertTrue(interface_exists(LazyRenderable::class));
-    }
+        $ref = new \ReflectionClass(LazyRenderable::class);
+        $methods = array_map(fn (\ReflectionMethod $method) => $method->getName(), $ref->getMethods());
 
-    public function test_has_get_url_method(): void
-    {
-        $this->assertTrue(method_exists(LazyRenderable::class, 'getUrl'));
-    }
-
-    public function test_has_render_method(): void
-    {
-        $this->assertTrue(method_exists(LazyRenderable::class, 'render'));
+        $this->assertContains('getUrl', $methods);
+        $this->assertContains('render', $methods);
     }
 
     public function test_anonymous_implementation(): void

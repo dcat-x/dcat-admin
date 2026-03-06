@@ -4,9 +4,16 @@ namespace Dcat\Admin\Tests\Unit\Support;
 
 use Dcat\Admin\Support\DatabaseUpdater;
 use Dcat\Admin\Tests\TestCase;
+use Mockery;
 
 class DatabaseUpdaterTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
+    }
+
     protected function makeUpdater(): DatabaseUpdater
     {
         return new DatabaseUpdater;
@@ -40,12 +47,24 @@ class DatabaseUpdaterTest extends TestCase
         $this->assertSame($expected, $connection);
     }
 
-    public function test_get_class_from_file_returns_false_for_nonexistent_file(): void
+    public function test_get_class_from_file_extracts_namespace_and_class(): void
     {
         $updater = $this->makeUpdater();
-        // getClassFromFile tries fopen which will fail on nonexistent
-        // So we skip this and test that the method exists
-        $this->assertTrue(method_exists($updater, 'getClassFromFile'));
+        $file = tempnam(sys_get_temp_dir(), 'migration_');
+        file_put_contents($file, <<<'PHP'
+<?php
+namespace Tests\Migrations;
+class CreateUsersTable {}
+PHP
+        );
+
+        try {
+            $class = $updater->getClassFromFile($file);
+        } finally {
+            @unlink($file);
+        }
+
+        $this->assertSame('Tests\Migrations\CreateUsersTable', $class);
     }
 
     public function test_set_up_returns_false_for_nonexistent_file(): void
@@ -68,8 +87,21 @@ class DatabaseUpdaterTest extends TestCase
         $this->assertTrue($method->isProtected());
     }
 
-    public function test_transaction_method_exists(): void
+    public function test_transaction_delegates_to_connection_and_returns_callback_value(): void
     {
-        $this->assertTrue(method_exists(DatabaseUpdater::class, 'transaction'));
+        $updater = $this->makeUpdater();
+        $connection = Mockery::mock();
+        $connection->shouldReceive('transaction')
+            ->once()
+            ->andReturnUsing(fn ($callback) => $callback());
+
+        \Illuminate\Support\Facades\DB::shouldReceive('connection')
+            ->once()
+            ->with($updater->connection())
+            ->andReturn($connection);
+
+        $result = $updater->transaction(fn () => 'ok');
+
+        $this->assertSame('ok', $result);
     }
 }

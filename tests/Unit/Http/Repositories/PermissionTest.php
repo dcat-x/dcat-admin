@@ -9,24 +9,48 @@ use Mockery;
 
 class PermissionTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->app['config']->set('admin.database.permissions_model', \Dcat\Admin\Models\Permission::class);
+    }
+
     protected function tearDown(): void
     {
         Mockery::close();
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
+    protected function getProtectedProperty(object $object, string $property)
     {
-        $this->assertTrue(class_exists(Permission::class));
+        $reflection = new \ReflectionProperty($object, $property);
+        $reflection->setAccessible(true);
+
+        return $reflection->getValue($object);
     }
 
-    public function test_is_subclass_of_eloquent_repository(): void
+    public function test_is_instance_of_eloquent_repository(): void
     {
-        $this->assertTrue(is_subclass_of(Permission::class, EloquentRepository::class));
+        $repository = new Permission;
+
+        $this->assertInstanceOf(EloquentRepository::class, $repository);
     }
 
-    public function test_constructor_exists(): void
+    public function test_constructor_sets_eloquent_class_from_config(): void
     {
-        $this->assertTrue(method_exists(Permission::class, '__construct'));
+        $repository = new Permission;
+
+        $this->assertSame(
+            \Dcat\Admin\Models\Permission::class,
+            $this->getProtectedProperty($repository, 'eloquentClass')
+        );
+    }
+
+    public function test_constructor_signature_has_no_parameters(): void
+    {
+        $reflection = new \ReflectionMethod(Permission::class, '__construct');
+
+        $this->assertCount(0, $reflection->getParameters());
     }
 }

@@ -16,31 +16,11 @@ class QuickEditTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
+    public function test_is_instance_of_row_action(): void
     {
-        $this->assertTrue(class_exists(QuickEdit::class));
-    }
-
-    public function test_extends_row_action(): void
-    {
-        $action = Mockery::mock(QuickEdit::class)->makePartial();
+        $action = new QuickEdit;
 
         $this->assertInstanceOf(RowAction::class, $action);
-    }
-
-    public function test_has_html_method(): void
-    {
-        $this->assertTrue(method_exists(QuickEdit::class, 'html'));
-    }
-
-    public function test_has_dialog_form_dimensions(): void
-    {
-        $action = Mockery::mock(QuickEdit::class)->makePartial();
-
-        $ref = new ReflectionProperty(QuickEdit::class, 'dialogFormDimensions');
-        $ref->setAccessible(true);
-
-        $this->assertIsArray($ref->getValue($action));
     }
 
     public function test_dialog_form_dimensions_default_values(): void
@@ -52,6 +32,15 @@ class QuickEditTest extends TestCase
         $dimensions = $ref->getValue($action);
 
         $this->assertEquals(['700px', '670px'], $dimensions);
+    }
+
+    public function test_html_method_signature_is_public_and_parameterless(): void
+    {
+        $method = new \ReflectionMethod(QuickEdit::class, 'html');
+
+        $this->assertTrue($method->isPublic());
+        $this->assertCount(0, $method->getParameters());
+        $this->assertSame(QuickEdit::class, $method->getDeclaringClass()->getName());
     }
 
     public function test_html_contains_quick_edit_class(): void

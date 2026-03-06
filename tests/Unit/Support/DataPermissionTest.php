@@ -130,20 +130,13 @@ class DataPermissionTest extends TestCase
 
     public function test_clear_cache(): void
     {
-        // 验证静态方法存在且可调用
+        $dataPermission = DataPermission::make(null);
+        $this->assertInstanceOf(DataPermission::class, $dataPermission);
+
+        DataPermission::clearCache();
         DataPermission::clearCache();
 
-        // 如果没有异常抛出，测试通过
-        $this->assertTrue(true);
-    }
-
-    public function test_get_rules_for_menu_empty_without_user(): void
-    {
-        $dataPermission = new DataPermission(null);
-
-        $rules = $dataPermission->getRulesForMenu(1);
-
-        $this->assertCount(0, $rules);
+        $this->assertCount(0, $dataPermission->getRulesForMenu(1));
     }
 
     public function test_get_row_rules_empty(): void
@@ -197,23 +190,6 @@ class DataPermissionTest extends TestCase
         $this->assertCount(0, $dataPermission->getRulesForMenu(1));
         $this->assertIsArray($dataPermission->getHiddenColumns(1));
         $this->assertIsArray($dataPermission->getHiddenFormFields(1));
-    }
-
-    public function test_data_permission_methods_exist(): void
-    {
-        // 验证所有公共方法存在
-        $this->assertTrue(method_exists(DataPermission::class, 'make'));
-        $this->assertTrue(method_exists(DataPermission::class, 'clearCache'));
-        $this->assertTrue(method_exists(DataPermission::class, 'getRulesForMenu'));
-        $this->assertTrue(method_exists(DataPermission::class, 'getRowRules'));
-        $this->assertTrue(method_exists(DataPermission::class, 'getColumnRules'));
-        $this->assertTrue(method_exists(DataPermission::class, 'getFormRules'));
-        $this->assertTrue(method_exists(DataPermission::class, 'applyRowRules'));
-        $this->assertTrue(method_exists(DataPermission::class, 'resolveValue'));
-        $this->assertTrue(method_exists(DataPermission::class, 'getHiddenColumns'));
-        $this->assertTrue(method_exists(DataPermission::class, 'getHiddenFormFields'));
-        $this->assertTrue(method_exists(DataPermission::class, 'canAccessColumn'));
-        $this->assertTrue(method_exists(DataPermission::class, 'canAccessFormField'));
     }
 
     public function test_primary_department_query_is_cached_in_single_resolve_cycle(): void

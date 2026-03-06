@@ -4,6 +4,7 @@ namespace Dcat\Admin\Tests\Unit\Models;
 
 use Dcat\Admin\Models\Department;
 use Dcat\Admin\Tests\TestCase;
+use Mockery;
 
 class DepartmentTest extends TestCase
 {
@@ -14,6 +15,12 @@ class DepartmentTest extends TestCase
         // 设置测试配置
         $this->app['config']->set('admin.database.departments_table', 'admin_departments');
         $this->app['config']->set('admin.database.departments_model', Department::class);
+    }
+
+    protected function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
     }
 
     public function test_department_creation(): void
@@ -53,12 +60,11 @@ class DepartmentTest extends TestCase
         $this->assertFalse($disabledDepartment->isEnabled());
     }
 
-    public function test_update_path_method_exists(): void
+    public function test_get_descendant_ids_returns_empty_array_when_path_is_empty(): void
     {
-        $department = new Department;
+        $department = new Department(['path' => null]);
 
-        // 验证 updatePath 方法存在
-        $this->assertTrue(method_exists($department, 'updatePath'));
+        $this->assertSame([], $department->getDescendantIds());
     }
 
     public function test_is_root_department(): void
@@ -71,10 +77,11 @@ class DepartmentTest extends TestCase
         $this->assertNotEquals(0, $childDepartment->parent_id);
     }
 
-    public function test_department_scope_options(): void
+    public function test_select_options_method_available_on_department(): void
     {
-        // 验证 selectOptions 静态方法存在
-        $this->assertTrue(method_exists(Department::class, 'selectOptions'));
+        $reflection = new \ReflectionClass(Department::class);
+
+        $this->assertTrue($reflection->hasMethod('selectOptions'));
     }
 
     public function test_department_tree_columns(): void
@@ -107,45 +114,60 @@ class DepartmentTest extends TestCase
         $this->assertEquals(0, $department->order ?? 0);
     }
 
-    public function test_department_relationships_exist(): void
+    public function test_users_relationship_declares_belongs_to_many_return_type(): void
     {
-        $department = new Department;
+        $method = new \ReflectionMethod(Department::class, 'users');
+        $returnType = $method->getReturnType();
 
-        // 验证关系方法存在
-        $this->assertTrue(method_exists($department, 'users'));
-        $this->assertTrue(method_exists($department, 'roles'));
+        $this->assertNotNull($returnType);
+        $this->assertSame(\Illuminate\Database\Eloquent\Relations\BelongsToMany::class, $returnType->getName());
     }
 
-    public function test_get_descendant_ids_method_exists(): void
+    public function test_roles_relationship_declares_belongs_to_many_return_type(): void
     {
-        $department = new Department;
+        $method = new \ReflectionMethod(Department::class, 'roles');
+        $returnType = $method->getReturnType();
 
-        // 验证方法存在
-        $this->assertTrue(method_exists($department, 'getDescendantIds'));
+        $this->assertNotNull($returnType);
+        $this->assertSame(\Illuminate\Database\Eloquent\Relations\BelongsToMany::class, $returnType->getName());
     }
 
-    public function test_get_descendants_with_self_method_exists(): void
+    public function test_get_descendant_ids_declares_array_return_type(): void
     {
-        $department = new Department;
+        $method = new \ReflectionMethod(Department::class, 'getDescendantIds');
+        $returnType = $method->getReturnType();
 
-        // 验证方法存在
-        $this->assertTrue(method_exists($department, 'getDescendantsWithSelf'));
+        $this->assertNotNull($returnType);
+        $this->assertSame('array', $returnType->getName());
     }
 
-    public function test_update_descendants_path_method_exists(): void
+    public function test_update_descendants_path_declares_void_return_type(): void
     {
-        $department = new Department;
+        $method = new \ReflectionMethod(Department::class, 'updateDescendantsPath');
+        $returnType = $method->getReturnType();
 
-        // 验证方法存在
-        $this->assertTrue(method_exists($department, 'updateDescendantsPath'));
+        $this->assertNotNull($returnType);
+        $this->assertSame('void', $returnType->getName());
     }
 
-    public function test_department_uses_model_tree_trait(): void
+    public function test_department_model_tree_methods_are_available(): void
     {
-        $department = new Department;
+        $reflection = new \ReflectionClass(Department::class);
 
-        // 验证使用了 ModelTree trait（通过检查 allNodes 方法）
-        $this->assertTrue(method_exists($department, 'allNodes'));
+        $this->assertTrue($reflection->hasMethod('allNodes'));
+        $this->assertTrue($reflection->hasMethod('getDescendantsWithSelf'));
+    }
+
+    public function test_update_path_sets_root_path_and_saves_quietly(): void
+    {
+        $department = Mockery::mock(Department::class)->makePartial();
+        $department->id = 12;
+        $department->parent_id = 0;
+        $department->shouldReceive('saveQuietly')->once();
+
+        $department->updatePath();
+
+        $this->assertSame('/12/', $department->path);
     }
 
     public function test_department_is_sortable(): void

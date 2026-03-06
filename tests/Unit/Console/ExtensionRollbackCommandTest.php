@@ -16,14 +16,18 @@ class ExtensionRollbackCommandTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
+    public function test_reflection_can_load_class_metadata(): void
     {
-        $this->assertTrue(class_exists(ExtensionRollbackCommand::class));
+        $ref = new \ReflectionClass(ExtensionRollbackCommand::class);
+
+        $this->assertSame(ExtensionRollbackCommand::class, $ref->getName());
     }
 
     public function test_extends_illuminate_console_command(): void
     {
-        $this->assertTrue(is_subclass_of(ExtensionRollbackCommand::class, Command::class));
+        $parents = class_parents(ExtensionRollbackCommand::class);
+
+        $this->assertContains(Command::class, $parents);
     }
 
     public function test_signature_contains_command_name(): void

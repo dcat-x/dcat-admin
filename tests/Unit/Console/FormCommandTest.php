@@ -16,14 +16,18 @@ class FormCommandTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
+    public function test_reflection_can_load_class_metadata(): void
     {
-        $this->assertTrue(class_exists(FormCommand::class));
+        $ref = new \ReflectionClass(FormCommand::class);
+
+        $this->assertSame(FormCommand::class, $ref->getName());
     }
 
     public function test_extends_generator_command(): void
     {
-        $this->assertTrue(is_subclass_of(FormCommand::class, GeneratorCommand::class));
+        $parents = class_parents(FormCommand::class);
+
+        $this->assertContains(GeneratorCommand::class, $parents);
     }
 
     public function test_signature_contains_admin_form(): void

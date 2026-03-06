@@ -24,11 +24,6 @@ class FormTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
-    {
-        $this->assertTrue(class_exists(Form::class));
-    }
-
     public function test_implements_renderable(): void
     {
         $reflection = new \ReflectionClass(Form::class);
@@ -87,56 +82,6 @@ class FormTest extends TestCase
     {
         $traits = class_uses_recursive(Form::class);
         $this->assertContains(HasHtmlAttributes::class, $traits);
-    }
-
-    public function test_method_method_exists(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'method'));
-    }
-
-    public function test_method_action_exists(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'action'));
-    }
-
-    public function test_method_fill_exists(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'fill'));
-    }
-
-    public function test_method_data_exists(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'data'));
-    }
-
-    public function test_method_confirm_exists(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'confirm'));
-    }
-
-    public function test_method_disable_reset_button_exists(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'disableResetButton'));
-    }
-
-    public function test_method_disable_submit_button_exists(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'disableSubmitButton'));
-    }
-
-    public function test_method_width_exists(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'width'));
-    }
-
-    public function test_method_ajax_exists(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'ajax'));
-    }
-
-    public function test_method_render_exists(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'render'));
     }
 
     public function test_form_creation(): void
@@ -261,5 +206,26 @@ class FormTest extends TestCase
     public function test_form_lazy_payload_name_constant(): void
     {
         $this->assertEquals('_payload_', Form::LAZY_PAYLOAD_NAME);
+    }
+
+    public function test_method_and_action_set_html_attributes(): void
+    {
+        $form = new Form;
+        $form->method('put')->action('users');
+
+        $this->assertSame('PUT', $form->getHtmlAttribute('method'));
+        $this->assertStringContainsString('/users', $form->action());
+    }
+
+    public function test_render_outputs_form_and_footer_markup(): void
+    {
+        $form = new Form(['name' => 'tester']);
+
+        $html = $form->render();
+
+        $this->assertStringContainsString('<form', $html);
+        $this->assertStringContainsString('btn btn-primary', $html);
+        $this->assertStringContainsString('btn btn-white', $html);
+        $this->assertStringContainsString('</form>', $html);
     }
 }

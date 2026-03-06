@@ -16,14 +16,18 @@ class CreateUserCommandTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
+    public function test_reflection_can_load_class_metadata(): void
     {
-        $this->assertTrue(class_exists(CreateUserCommand::class));
+        $ref = new \ReflectionClass(CreateUserCommand::class);
+
+        $this->assertSame(CreateUserCommand::class, $ref->getName());
     }
 
     public function test_extends_illuminate_console_command(): void
     {
-        $this->assertTrue(is_subclass_of(CreateUserCommand::class, Command::class));
+        $parents = class_parents(CreateUserCommand::class);
+
+        $this->assertContains(Command::class, $parents);
     }
 
     public function test_signature_default_value(): void

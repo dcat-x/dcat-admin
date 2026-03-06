@@ -2,6 +2,8 @@
 
 namespace Dcat\Admin\Tests\Unit\Http\Displayers\Extensions;
 
+use Dcat\Admin\Grid;
+use Dcat\Admin\Grid\Column;
 use Dcat\Admin\Grid\Displayers\AbstractDisplayer;
 use Dcat\Admin\Http\Displayers\Extensions\Name;
 use Dcat\Admin\Tests\TestCase;
@@ -15,96 +17,81 @@ class NameTest extends TestCase
         parent::tearDown();
     }
 
-    // -------------------------------------------------------
-    // Class existence and inheritance
-    // -------------------------------------------------------
-
-    public function test_class_exists(): void
+    protected function makeDisplayer(string $value = 'demo'): TestableNameDisplayer
     {
-        $this->assertTrue(class_exists(Name::class));
+        $grid = Mockery::mock(Grid::class);
+        $column = Mockery::mock(Column::class);
+
+        return new TestableNameDisplayer($value, $grid, $column, ['id' => 1]);
     }
 
-    public function test_extends_abstract_displayer(): void
+    public function test_is_instance_of_abstract_displayer(): void
     {
-        $this->assertTrue(is_subclass_of(Name::class, AbstractDisplayer::class));
+        $displayer = $this->makeDisplayer();
+
+        $this->assertInstanceOf(AbstractDisplayer::class, $displayer);
     }
 
-    // -------------------------------------------------------
-    // Method existence
-    // -------------------------------------------------------
-
-    public function test_display_method_exists(): void
-    {
-        $this->assertTrue(method_exists(Name::class, 'display'));
-    }
-
-    public function test_resolve_action_method_exists(): void
-    {
-        $this->assertTrue(method_exists(Name::class, 'resolveAction'));
-    }
-
-    // -------------------------------------------------------
-    // Method visibility
-    // -------------------------------------------------------
-
-    public function test_display_is_public(): void
+    public function test_display_is_public_and_parameterless(): void
     {
         $method = new \ReflectionMethod(Name::class, 'display');
+
         $this->assertTrue($method->isPublic());
-    }
-
-    public function test_resolve_action_is_protected(): void
-    {
-        $method = new \ReflectionMethod(Name::class, 'resolveAction');
-        $this->assertTrue($method->isProtected());
-    }
-
-    // -------------------------------------------------------
-    // Method parameters
-    // -------------------------------------------------------
-
-    public function test_display_has_no_parameters(): void
-    {
-        $method = new \ReflectionMethod(Name::class, 'display');
         $this->assertCount(0, $method->getParameters());
+        $this->assertSame(Name::class, $method->getDeclaringClass()->getName());
     }
 
-    public function test_resolve_action_has_action_parameter(): void
+    public function test_resolve_action_is_protected_and_accepts_action_parameter(): void
     {
         $method = new \ReflectionMethod(Name::class, 'resolveAction');
         $params = $method->getParameters();
 
+        $this->assertTrue($method->isProtected());
         $this->assertCount(1, $params);
         $this->assertSame('action', $params[0]->getName());
+        $this->assertSame(Name::class, $method->getDeclaringClass()->getName());
     }
 
-    // -------------------------------------------------------
-    // Class reflection
-    // -------------------------------------------------------
+    public function test_resolve_action_sets_context_and_returns_action_rendered_content(): void
+    {
+        $displayer = $this->makeDisplayer('pkg');
+
+        $result = $displayer->callResolveAction(FakeExtensionAction::class);
+
+        $this->assertSame('rendered:1', $result);
+    }
 
     public function test_class_is_not_abstract(): void
     {
         $reflection = new \ReflectionClass(Name::class);
+
         $this->assertFalse($reflection->isAbstract());
     }
+}
 
-    public function test_class_declares_display_method(): void
+class TestableNameDisplayer extends Name
+{
+    public function callResolveAction(string $action): string
     {
-        $method = new \ReflectionMethod(Name::class, 'display');
-        $this->assertSame(Name::class, $method->getDeclaringClass()->getName());
+        return $this->resolveAction($action);
+    }
+}
+
+class FakeExtensionAction
+{
+    protected $row;
+
+    public function setGrid($grid): void {}
+
+    public function setColumn($column): void {}
+
+    public function setRow($row): void
+    {
+        $this->row = $row;
     }
 
-    public function test_class_declares_resolve_action_method(): void
+    public function render(): string
     {
-        $method = new \ReflectionMethod(Name::class, 'resolveAction');
-        $this->assertSame(Name::class, $method->getDeclaringClass()->getName());
-    }
-
-    public function test_class_has_expected_methods(): void
-    {
-        $reflection = new \ReflectionClass(Name::class);
-
-        $this->assertTrue($reflection->hasMethod('display'));
-        $this->assertTrue($reflection->hasMethod('resolveAction'));
+        return 'rendered:'.($this->row->id ?? '0');
     }
 }

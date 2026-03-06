@@ -40,11 +40,11 @@ class HandleCascadeFieldsTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_trait_has_cascade_group_method(): void
+    public function test_trait_cascade_group_method_signature(): void
     {
-        $helper = new HandleCascadeFieldsTestHelper;
+        $method = new \ReflectionMethod(HandleCascadeFieldsTestHelper::class, 'cascadeGroup');
 
-        $this->assertTrue(method_exists($helper, 'cascadeGroup'));
+        $this->assertSame(2, $method->getNumberOfParameters());
     }
 
     public function test_cascade_group_method_exists(): void

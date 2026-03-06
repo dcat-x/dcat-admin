@@ -2,8 +2,9 @@
 
 namespace Dcat\Admin\Tests\Unit\Grid\Displayers;
 
+use Dcat\Admin\Grid;
+use Dcat\Admin\Grid\Column;
 use Dcat\Admin\Grid\Displayers\Checkbox;
-use Dcat\Admin\Grid\Displayers\Editable;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
 
@@ -15,70 +16,108 @@ class CheckboxTest extends TestCase
         Mockery::close();
     }
 
-    public function test_class_exists(): void
+    protected function makeDisplayer($value = ['1', '3'], $original = ['1', '3']): TestableCheckboxDisplayer
     {
-        $this->assertTrue(class_exists(Checkbox::class));
+        $grid = Mockery::mock(Grid::class);
+        $grid->shouldReceive('getKeyName')->andReturn('id');
+        $grid->shouldReceive('resource')->andReturn('/admin/users');
+
+        $column = Mockery::mock(Column::class);
+        $column->shouldReceive('getName')->andReturn('status');
+        $column->shouldReceive('getOriginal')->andReturn($original);
+
+        return new TestableCheckboxDisplayer($value, $grid, $column, ['id' => 9]);
     }
 
-    public function test_extends_editable(): void
+    public function test_type_and_view_defaults_are_expected(): void
     {
-        $this->assertTrue(is_subclass_of(Checkbox::class, Editable::class));
+        $type = new \ReflectionProperty(Checkbox::class, 'type');
+        $type->setAccessible(true);
+
+        $view = new \ReflectionProperty(Checkbox::class, 'view');
+        $view->setAccessible(true);
+
+        $this->assertSame('checkbox', $type->getDefaultValue());
+        $this->assertSame('admin::grid.displayer.editinline.checkbox', $view->getDefaultValue());
     }
 
-    public function test_type_is_checkbox(): void
+    public function test_render_checkbox_builds_widget_with_options_and_css_class(): void
     {
-        $ref = new \ReflectionProperty(Checkbox::class, 'type');
-        $ref->setAccessible(true);
+        $displayer = $this->makeDisplayer();
 
-        $this->assertSame('checkbox', $ref->getDefaultValue());
+        $widget = $displayer->exposeRenderCheckbox([
+            '1' => 'One',
+            '2' => 'Two',
+        ]);
+
+        $this->assertSame([
+            '1' => 'One',
+            '2' => 'Two',
+        ], $widget->getOptions());
+        $this->assertSame('status[]', $widget->getHtmlAttribute('name'));
+        $this->assertStringContainsString('ie-input', $widget->getHtmlAttribute('class'));
     }
 
-    public function test_view_is_checkbox_view(): void
+    public function test_get_value_formats_selected_labels(): void
     {
-        $ref = new \ReflectionProperty(Checkbox::class, 'view');
-        $ref->setAccessible(true);
+        $displayer = $this->makeDisplayer(['1', '3']);
+        $displayer->display([
+            '1' => 'One',
+            '2' => 'Two',
+            '3' => 'Three',
+        ]);
 
-        $this->assertSame('admin::grid.displayer.editinline.checkbox', $ref->getDefaultValue());
+        $this->assertSame('One; Three', $displayer->exposeGetValue());
     }
 
-    public function test_has_method_display(): void
+    public function test_get_original_returns_json_encoded_string_array(): void
     {
-        $this->assertTrue(method_exists(Checkbox::class, 'display'));
+        $displayer = $this->makeDisplayer(['1', '3'], [1, 3]);
+
+        $this->assertSame('["1","3"]', $displayer->exposeGetOriginal());
     }
 
-    public function test_has_method_render_checkbox(): void
+    public function test_display_renders_checkbox_template_and_refresh_flag(): void
     {
-        $this->assertTrue(method_exists(Checkbox::class, 'renderCheckbox'));
+        $displayer = $this->makeDisplayer(['1']);
+
+        $html = $displayer->display([
+            '1' => 'One',
+            '2' => 'Two',
+        ], true);
+
+        $this->assertStringContainsString('data-editinline="popover"', $html);
+        $this->assertStringContainsString('data-name="status"', $html);
+        $this->assertStringContainsString('data-refresh="1"', $html);
+        $this->assertStringContainsString('One', $html);
     }
 
-    public function test_has_method_get_value(): void
+    public function test_protected_method_visibilities_are_expected(): void
     {
-        $this->assertTrue(method_exists(Checkbox::class, 'getValue'));
+        $renderCheckbox = new \ReflectionMethod(Checkbox::class, 'renderCheckbox');
+        $getValue = new \ReflectionMethod(Checkbox::class, 'getValue');
+        $getOriginal = new \ReflectionMethod(Checkbox::class, 'getOriginal');
+
+        $this->assertTrue($renderCheckbox->isProtected());
+        $this->assertTrue($getValue->isProtected());
+        $this->assertTrue($getOriginal->isProtected());
+    }
+}
+
+class TestableCheckboxDisplayer extends Checkbox
+{
+    public function exposeRenderCheckbox(array $options)
+    {
+        return $this->renderCheckbox($options);
     }
 
-    public function test_has_method_get_original(): void
+    public function exposeGetValue()
     {
-        $this->assertTrue(method_exists(Checkbox::class, 'getOriginal'));
+        return $this->getValue();
     }
 
-    public function test_render_checkbox_is_protected(): void
+    public function exposeGetOriginal()
     {
-        $method = new \ReflectionMethod(Checkbox::class, 'renderCheckbox');
-
-        $this->assertTrue($method->isProtected());
-    }
-
-    public function test_get_value_is_protected(): void
-    {
-        $method = new \ReflectionMethod(Checkbox::class, 'getValue');
-
-        $this->assertTrue($method->isProtected());
-    }
-
-    public function test_get_original_is_protected(): void
-    {
-        $method = new \ReflectionMethod(Checkbox::class, 'getOriginal');
-
-        $this->assertTrue($method->isProtected());
+        return $this->getOriginal();
     }
 }

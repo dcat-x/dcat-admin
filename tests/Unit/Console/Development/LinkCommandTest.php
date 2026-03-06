@@ -5,6 +5,7 @@ namespace Dcat\Admin\Tests\Unit\Console\Development;
 use Dcat\Admin\Console\Development\LinkCommand;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Console\Command;
+use Illuminate\Filesystem\Filesystem;
 use Mockery;
 
 class LinkCommandTest extends TestCase
@@ -16,14 +17,11 @@ class LinkCommandTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
+    public function test_command_is_instance_of_illuminate_console_command(): void
     {
-        $this->assertTrue(class_exists(LinkCommand::class));
-    }
+        $command = new LinkCommand;
 
-    public function test_extends_illuminate_console_command(): void
-    {
-        $this->assertTrue(is_subclass_of(LinkCommand::class, Command::class));
+        $this->assertInstanceOf(Command::class, $command);
     }
 
     public function test_signature_equals_admin_dev(): void
@@ -49,19 +47,19 @@ class LinkCommandTest extends TestCase
         );
     }
 
-    public function test_has_handle_method(): void
+    public function test_handle_invokes_link_assets_and_link_tests_with_filesystem(): void
     {
-        $this->assertTrue(method_exists(LinkCommand::class, 'handle'));
-    }
+        $this->app->instance('files', new Filesystem);
 
-    public function test_has_link_tests_method(): void
-    {
-        $this->assertTrue(method_exists(LinkCommand::class, 'linkTests'));
-    }
+        $command = new TestableLinkCommand;
+        $command->setLaravel($this->app);
 
-    public function test_has_link_assets_method(): void
-    {
-        $this->assertTrue(method_exists(LinkCommand::class, 'linkAssets'));
+        $command->handle();
+
+        $this->assertTrue($command->linkAssetsCalled);
+        $this->assertTrue($command->linkTestsCalled);
+        $this->assertInstanceOf(Filesystem::class, $command->receivedFilesInAssets);
+        $this->assertInstanceOf(Filesystem::class, $command->receivedFilesInTests);
     }
 
     public function test_handle_is_public(): void
@@ -83,5 +81,28 @@ class LinkCommandTest extends TestCase
         $ref = new \ReflectionMethod(LinkCommand::class, 'linkAssets');
 
         $this->assertTrue($ref->isProtected());
+    }
+}
+
+class TestableLinkCommand extends LinkCommand
+{
+    public bool $linkAssetsCalled = false;
+
+    public bool $linkTestsCalled = false;
+
+    public $receivedFilesInAssets;
+
+    public $receivedFilesInTests;
+
+    protected function linkTests($files)
+    {
+        $this->linkTestsCalled = true;
+        $this->receivedFilesInTests = $files;
+    }
+
+    protected function linkAssets($files)
+    {
+        $this->linkAssetsCalled = true;
+        $this->receivedFilesInAssets = $files;
     }
 }

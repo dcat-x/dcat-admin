@@ -3,7 +3,11 @@
 namespace Dcat\Admin\Tests\Unit\Models;
 
 use Dcat\Admin\Models\DataRule;
+use Dcat\Admin\Models\Menu;
+use Dcat\Admin\Models\Role;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class DataRuleTest extends TestCase
 {
@@ -13,6 +17,8 @@ class DataRuleTest extends TestCase
 
         $this->app['config']->set('admin.database.data_rules_table', 'admin_data_rules');
         $this->app['config']->set('admin.database.data_rules_model', DataRule::class);
+        $this->app['config']->set('admin.database.menu_model', Menu::class);
+        $this->app['config']->set('admin.database.roles_model', Role::class);
     }
 
     public function test_data_rule_creation(): void
@@ -177,12 +183,12 @@ class DataRuleTest extends TestCase
         $this->assertIsInt($rule->order);
     }
 
-    public function test_data_rule_relationships_exist(): void
+    public function test_data_rule_relationships_return_expected_relation_types(): void
     {
         $rule = new DataRule;
 
-        $this->assertTrue(method_exists($rule, 'menu'));
-        $this->assertTrue(method_exists($rule, 'roles'));
+        $this->assertInstanceOf(BelongsTo::class, $rule->menu());
+        $this->assertInstanceOf(BelongsToMany::class, $rule->roles());
     }
 
     public function test_data_rule_defaults(): void

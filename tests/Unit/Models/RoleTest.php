@@ -4,6 +4,7 @@ namespace Dcat\Admin\Tests\Unit\Models;
 
 use Dcat\Admin\Models\Role;
 use Dcat\Admin\Tests\TestCase;
+use Mockery;
 
 class RoleTest extends TestCase
 {
@@ -13,6 +14,12 @@ class RoleTest extends TestCase
 
         $this->app['config']->set('admin.database.roles_model', Role::class);
         $this->app['config']->set('admin.database.roles_table', 'admin_roles');
+    }
+
+    protected function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
     }
 
     public function test_role_creation(): void
@@ -50,60 +57,77 @@ class RoleTest extends TestCase
         $this->assertContains('slug', $fillable);
     }
 
-    public function test_administrators_relationship_exists(): void
+    public function test_administrators_relationship_returns_belongs_to_many(): void
     {
-        $role = new Role;
+        $method = new \ReflectionMethod(Role::class, 'administrators');
+        $returnType = $method->getReturnType();
 
-        $this->assertTrue(method_exists($role, 'administrators'));
+        $this->assertNotNull($returnType);
+        $this->assertSame(\Illuminate\Database\Eloquent\Relations\BelongsToMany::class, $returnType->getName());
     }
 
-    public function test_permissions_relationship_exists(): void
+    public function test_permissions_relationship_returns_belongs_to_many(): void
     {
-        $role = new Role;
+        $method = new \ReflectionMethod(Role::class, 'permissions');
+        $returnType = $method->getReturnType();
 
-        $this->assertTrue(method_exists($role, 'permissions'));
+        $this->assertNotNull($returnType);
+        $this->assertSame(\Illuminate\Database\Eloquent\Relations\BelongsToMany::class, $returnType->getName());
     }
 
-    public function test_menus_relationship_exists(): void
+    public function test_menus_relationship_returns_belongs_to_many(): void
     {
-        $role = new Role;
+        $method = new \ReflectionMethod(Role::class, 'menus');
+        $returnType = $method->getReturnType();
 
-        $this->assertTrue(method_exists($role, 'menus'));
+        $this->assertNotNull($returnType);
+        $this->assertSame(\Illuminate\Database\Eloquent\Relations\BelongsToMany::class, $returnType->getName());
     }
 
-    public function test_departments_relationship_exists(): void
+    public function test_can_returns_true_when_permission_exists(): void
     {
-        $role = new Role;
+        $relation = Mockery::mock(\Illuminate\Database\Eloquent\Relations\BelongsToMany::class);
+        $relation->shouldReceive('where')
+            ->with('slug', 'posts.edit')
+            ->once()
+            ->andReturnSelf();
+        $relation->shouldReceive('exists')
+            ->once()
+            ->andReturnTrue();
 
-        // 验证新增的部门关系存在
-        $this->assertTrue(method_exists($role, 'departments'));
+        $role = Mockery::mock(Role::class)->makePartial();
+        $role->shouldReceive('permissions')
+            ->once()
+            ->andReturn($relation);
+
+        $this->assertTrue($role->can('posts.edit'));
     }
 
-    public function test_data_rules_relationship_exists(): void
+    public function test_cannot_returns_true_when_permission_does_not_exist(): void
     {
-        $role = new Role;
+        $relation = Mockery::mock(\Illuminate\Database\Eloquent\Relations\BelongsToMany::class);
+        $relation->shouldReceive('where')
+            ->with('slug', 'posts.delete')
+            ->once()
+            ->andReturnSelf();
+        $relation->shouldReceive('exists')
+            ->once()
+            ->andReturnFalse();
 
-        // 验证新增的数据规则关系存在
-        $this->assertTrue(method_exists($role, 'dataRules'));
+        $role = Mockery::mock(Role::class)->makePartial();
+        $role->shouldReceive('permissions')
+            ->once()
+            ->andReturn($relation);
+
+        $this->assertTrue($role->cannot('posts.delete'));
     }
 
-    public function test_can_method_exists(): void
+    public function test_get_permission_id_returns_empty_collection_for_empty_input(): void
     {
-        $role = new Role;
+        $result = Role::getPermissionId([]);
 
-        $this->assertTrue(method_exists($role, 'can'));
-    }
-
-    public function test_cannot_method_exists(): void
-    {
-        $role = new Role;
-
-        $this->assertTrue(method_exists($role, 'cannot'));
-    }
-
-    public function test_get_permission_id_method_exists(): void
-    {
-        $this->assertTrue(method_exists(Role::class, 'getPermissionId'));
+        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $result);
+        $this->assertTrue($result->isEmpty());
     }
 
     public function test_administrator_role(): void

@@ -33,7 +33,9 @@ class BadgeTest extends TestCase
 
     public function test_badge_extends_label(): void
     {
-        $this->assertTrue(is_subclass_of(Badge::class, Label::class));
+        $parents = class_parents(Badge::class);
+
+        $this->assertContains(Label::class, $parents);
     }
 
     public function test_display_uses_badge_class(): void

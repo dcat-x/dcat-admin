@@ -16,14 +16,16 @@ class UpdateCommandTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
+    public function test_can_be_instantiated(): void
     {
-        $this->assertTrue(class_exists(UpdateCommand::class));
+        $this->assertInstanceOf(UpdateCommand::class, new UpdateCommand);
     }
 
     public function test_extends_illuminate_console_command(): void
     {
-        $this->assertTrue(is_subclass_of(UpdateCommand::class, Command::class));
+        $parents = class_parents(UpdateCommand::class);
+
+        $this->assertContains(Command::class, $parents);
     }
 
     public function test_signature_default_value(): void
@@ -42,12 +44,11 @@ class UpdateCommandTest extends TestCase
         $this->assertEquals('Update the admin package', $defaultValue);
     }
 
-    public function test_has_handle_method(): void
+    public function test_handle_method_signature(): void
     {
-        $this->assertTrue(
-            method_exists(UpdateCommand::class, 'handle'),
-            'UpdateCommand should have method handle'
-        );
+        $method = new \ReflectionMethod(UpdateCommand::class, 'handle');
+
+        $this->assertSame(0, $method->getNumberOfParameters());
     }
 
     public function test_handle_is_public(): void

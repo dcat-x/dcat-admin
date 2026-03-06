@@ -17,7 +17,9 @@ class ContentTest extends TestCase
 
     public function test_implements_renderable(): void
     {
-        $this->assertTrue(is_subclass_of(Content::class, Renderable::class));
+        $interfaces = class_implements(Content::class);
+
+        $this->assertContains(Renderable::class, $interfaces);
     }
 
     public function test_constructor_with_closure(): void

@@ -2,63 +2,81 @@
 
 namespace Dcat\Admin\Tests\Unit\Grid\Concerns;
 
+use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Concerns\HasEvents;
 use Dcat\Admin\Grid\Events\Fetching;
 use Dcat\Admin\Tests\TestCase;
 
 class HasEventsTest extends TestCase
 {
-    public function test_trait_has_listen_method(): void
+    public function test_dispatched_initially_empty_array(): void
     {
-        $this->assertTrue(method_exists(HasEventsTestHelper::class, 'listen'));
-    }
+        $grid = new HasEventsTestHelper;
 
-    public function test_trait_has_fire_method(): void
-    {
-        $this->assertTrue(method_exists(HasEventsTestHelper::class, 'fire'));
-    }
-
-    public function test_trait_has_fire_once_method(): void
-    {
-        $this->assertTrue(method_exists(HasEventsTestHelper::class, 'fireOnce'));
-    }
-
-    public function test_dispatched_initially_empty(): void
-    {
-        $user = new HasEventsTestHelper;
-
-        $reflection = new \ReflectionProperty($user, 'dispatched');
-        $reflection->setAccessible(true);
-        $this->assertEmpty($reflection->getValue($user));
-    }
-
-    public function test_dispatched_is_array(): void
-    {
-        $user = new HasEventsTestHelper;
-
-        $reflection = new \ReflectionProperty($user, 'dispatched');
-        $reflection->setAccessible(true);
-        $this->assertIsArray($reflection->getValue($user));
-    }
-
-    public function test_fire_once_checks_dispatched_array(): void
-    {
-        $user = new HasEventsTestHelper;
-
-        $reflection = new \ReflectionProperty($user, 'dispatched');
+        $reflection = new \ReflectionProperty($grid, 'dispatched');
         $reflection->setAccessible(true);
 
-        // Simulate that Fetching was already dispatched
-        $reflection->setValue($user, [Fetching::class => new Fetching]);
+        $this->assertIsArray($reflection->getValue($grid));
+        $this->assertEmpty($reflection->getValue($grid));
+    }
 
-        // fireOnce should not call fire again for same type
-        // We verify by checking the dispatched array doesn't change
-        $dispatched = $reflection->getValue($user);
+    public function test_fire_sets_grid_on_event_and_marks_event_as_dispatched(): void
+    {
+        $grid = new HasEventsTestHelper;
+        $event = new Fetching;
+
+        $grid->fire($event);
+
+        $reflection = new \ReflectionProperty($grid, 'dispatched');
+        $reflection->setAccessible(true);
+        $dispatched = $reflection->getValue($grid);
+
+        $this->assertSame($grid, $event->grid);
         $this->assertArrayHasKey(Fetching::class, $dispatched);
+        $this->assertSame($event, $dispatched[Fetching::class]);
+    }
+
+    public function test_fire_once_dispatches_only_once_for_same_event_type(): void
+    {
+        $grid = new HasEventsTestHelper;
+
+        $first = new Fetching(['a']);
+        $second = new Fetching(['b']);
+
+        $grid->fireOnce($first);
+        $grid->fireOnce($second);
+
+        $reflection = new \ReflectionProperty($grid, 'dispatched');
+        $reflection->setAccessible(true);
+        $dispatched = $reflection->getValue($grid);
+
+        $this->assertCount(1, $dispatched);
+        $this->assertSame($first, $dispatched[Fetching::class]);
+    }
+
+    public function test_method_signatures_are_expected(): void
+    {
+        $listen = new \ReflectionMethod(HasEventsTestHelper::class, 'listen');
+        $fire = new \ReflectionMethod(HasEventsTestHelper::class, 'fire');
+        $fireOnce = new \ReflectionMethod(HasEventsTestHelper::class, 'fireOnce');
+
+        $this->assertTrue($listen->isPublic());
+        $this->assertCount(2, $listen->getParameters());
+
+        $this->assertTrue($fire->isPublic());
+        $this->assertCount(1, $fire->getParameters());
+
+        $this->assertTrue($fireOnce->isPublic());
+        $this->assertCount(1, $fireOnce->getParameters());
     }
 }
 
-class HasEventsTestHelper
+class HasEventsTestHelper extends Grid
 {
     use HasEvents;
+
+    public function __construct()
+    {
+        // Skip parent constructor
+    }
 }

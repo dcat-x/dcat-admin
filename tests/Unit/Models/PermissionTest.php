@@ -3,6 +3,7 @@
 namespace Dcat\Admin\Tests\Unit\Models;
 
 use Dcat\Admin\Models\Permission;
+use Dcat\Admin\Models\Role;
 use Dcat\Admin\Tests\TestCase;
 
 class PermissionTest extends TestCase
@@ -13,6 +14,9 @@ class PermissionTest extends TestCase
 
         $this->app['config']->set('admin.database.permissions_model', Permission::class);
         $this->app['config']->set('admin.database.permissions_table', 'admin_permissions');
+        $this->app['config']->set('admin.database.roles_model', Role::class);
+        $this->app['config']->set('admin.database.role_permissions_table', 'admin_role_permissions');
+        $this->app['config']->set('admin.database.menu_model', \Dcat\Admin\Models\Menu::class);
     }
 
     public function test_permission_creation(): void
@@ -98,33 +102,41 @@ class PermissionTest extends TestCase
         $this->assertEquals(Permission::TYPE_MENU, $permission->type ?? Permission::TYPE_MENU);
     }
 
-    public function test_menu_relationship_exists(): void
+    public function test_menu_relationship_returns_belongs_to(): void
     {
         $permission = new Permission;
 
-        // 验证 menu 关系方法存在
-        $this->assertTrue(method_exists($permission, 'menu'));
+        $relation = $permission->menu();
+
+        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class, $relation);
     }
 
-    public function test_find_by_key_method_exists(): void
+    public function test_find_by_key_signature_accepts_string_key(): void
     {
-        // 验证静态方法存在
-        $this->assertTrue(method_exists(Permission::class, 'findByKey'));
+        $method = new \ReflectionMethod(Permission::class, 'findByKey');
+        $params = $method->getParameters();
+
+        $this->assertCount(1, $params);
+        $this->assertSame('key', $params[0]->getName());
+        $this->assertSame('string', $params[0]->getType()->getName());
     }
 
-    public function test_get_button_permissions_method_exists(): void
+    public function test_get_button_permissions_signature_accepts_menu_id(): void
     {
-        // 验证静态方法存在
-        $this->assertTrue(method_exists(Permission::class, 'getButtonPermissions'));
+        $method = new \ReflectionMethod(Permission::class, 'getButtonPermissions');
+        $params = $method->getParameters();
+
+        $this->assertCount(1, $params);
+        $this->assertSame('menuId', $params[0]->getName());
+        $this->assertSame('int', $params[0]->getType()->getName());
     }
 
     public function test_permission_tree_structure(): void
     {
         $permission = new Permission;
 
-        // 验证树结构相关方法
-        $this->assertTrue(method_exists($permission, 'allNodes'));
         $this->assertEquals('parent_id', $permission->getParentColumn());
+        $this->assertTrue((new \ReflectionClass(Permission::class))->hasMethod('allNodes'));
     }
 
     public function test_http_methods_property(): void
@@ -137,12 +149,13 @@ class PermissionTest extends TestCase
         $this->assertContains('DELETE', Permission::$httpMethods);
     }
 
-    public function test_permission_roles_relationship_exists(): void
+    public function test_permission_roles_relationship_returns_belongs_to_many(): void
     {
         $permission = new Permission;
 
-        // 验证角色关系存在
-        $this->assertTrue(method_exists($permission, 'roles'));
+        $relation = $permission->roles();
+
+        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsToMany::class, $relation);
     }
 
     public function test_button_permission_creation(): void

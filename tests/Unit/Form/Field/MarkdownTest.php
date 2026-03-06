@@ -2,7 +2,6 @@
 
 namespace Dcat\Admin\Tests\Unit\Form\Field;
 
-use Dcat\Admin\Form\Field;
 use Dcat\Admin\Form\Field\Markdown;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
@@ -13,20 +12,6 @@ class MarkdownTest extends TestCase
     {
         Mockery::close();
         parent::tearDown();
-    }
-
-    // -------------------------------------------------------
-    // Class existence and inheritance
-    // -------------------------------------------------------
-
-    public function test_class_exists(): void
-    {
-        $this->assertTrue(class_exists(Markdown::class));
-    }
-
-    public function test_extends_field(): void
-    {
-        $this->assertTrue(is_subclass_of(Markdown::class, Field::class));
     }
 
     // -------------------------------------------------------
@@ -158,43 +143,89 @@ class MarkdownTest extends TestCase
         $this->assertNull($defaults['disk']);
     }
 
-    // -------------------------------------------------------
-    // Method existence
-    // -------------------------------------------------------
-
-    public function test_html_decode_method_exists(): void
+    public function test_html_decode_updates_options_and_returns_self(): void
     {
-        $this->assertTrue(method_exists(Markdown::class, 'htmlDecode'));
+        $field = new Markdown('content');
+
+        $result = $field->htmlDecode('style,script,iframe');
+
+        $reflection = new \ReflectionProperty($field, 'options');
+        $reflection->setAccessible(true);
+        $options = $reflection->getValue($field);
+
+        $this->assertSame($field, $result);
+        $this->assertSame('style,script,iframe', $options['htmlDecode']);
     }
 
-    public function test_height_method_exists(): void
+    public function test_height_updates_options_and_returns_self(): void
     {
-        $this->assertTrue(method_exists(Markdown::class, 'height'));
+        $field = new Markdown('content');
+
+        $result = $field->height(680);
+
+        $reflection = new \ReflectionProperty($field, 'options');
+        $reflection->setAccessible(true);
+        $options = $reflection->getValue($field);
+
+        $this->assertSame($field, $result);
+        $this->assertSame(680, $options['height']);
     }
 
-    public function test_disk_method_exists(): void
+    public function test_disk_updates_property_and_returns_self(): void
     {
-        $this->assertTrue(method_exists(Markdown::class, 'disk'));
+        $field = new Markdown('content');
+
+        $result = $field->disk('s3');
+
+        $reflection = new \ReflectionProperty($field, 'disk');
+        $reflection->setAccessible(true);
+
+        $this->assertSame($field, $result);
+        $this->assertSame('s3', $reflection->getValue($field));
     }
 
-    public function test_image_directory_method_exists(): void
+    public function test_image_directory_updates_property_and_returns_self(): void
     {
-        $this->assertTrue(method_exists(Markdown::class, 'imageDirectory'));
+        $field = new Markdown('content');
+
+        $result = $field->imageDirectory('custom/markdown');
+
+        $reflection = new \ReflectionProperty($field, 'imageUploadDirectory');
+        $reflection->setAccessible(true);
+
+        $this->assertSame($field, $result);
+        $this->assertSame('custom/markdown', $reflection->getValue($field));
     }
 
-    public function test_image_url_method_exists(): void
+    public function test_image_url_sets_formatted_upload_url(): void
     {
-        $this->assertTrue(method_exists(Markdown::class, 'imageUrl'));
+        $field = new Markdown('content');
+        $field->disk('public')->imageDirectory('docs/images');
+
+        $result = $field->imageUrl('/custom/upload');
+
+        $reflection = new \ReflectionProperty($field, 'options');
+        $reflection->setAccessible(true);
+        $options = $reflection->getValue($field);
+
+        $this->assertSame($field, $result);
+        $this->assertArrayHasKey('imageUploadURL', $options);
+        $this->assertStringContainsString('/custom/upload', $options['imageUploadURL']);
+        $this->assertStringContainsString('disk=public', $options['imageUploadURL']);
+        $this->assertStringContainsString('dir=docs%2Fimages', $options['imageUploadURL']);
     }
 
-    public function test_language_url_method_exists(): void
+    public function test_language_url_updates_language_property_and_returns_self(): void
     {
-        $this->assertTrue(method_exists(Markdown::class, 'languageUrl'));
-    }
+        $field = new Markdown('content');
 
-    public function test_render_method_exists(): void
-    {
-        $this->assertTrue(method_exists(Markdown::class, 'render'));
+        $result = $field->languageUrl('/lang/editor-md/ja.js');
+
+        $reflection = new \ReflectionProperty($field, 'language');
+        $reflection->setAccessible(true);
+
+        $this->assertSame($field, $result);
+        $this->assertSame('/lang/editor-md/ja.js', $reflection->getValue($field));
     }
 
     // -------------------------------------------------------

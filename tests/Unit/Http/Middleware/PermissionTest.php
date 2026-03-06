@@ -227,16 +227,32 @@ class PermissionTest extends TestCase
         $this->assertEquals('next', $response);
     }
 
-    public function test_should_pass_through_method_exists(): void
+    public function test_should_pass_through_returns_false_for_unmatched_route(): void
     {
         $middleware = new Permission;
-        $this->assertTrue(method_exists($middleware, 'shouldPassThrough'));
+        $this->app['config']->set('admin.permission.except', []);
+        $request = Request::create('/admin/private/path', 'GET');
+        $route = new \Illuminate\Routing\Route('GET', 'admin/private/path', function () {
+            return 'ok';
+        });
+        $route->middleware(['web']);
+        $route->name('admin.private.path');
+        $request->setRouteResolver(fn () => $route);
+
+        $this->assertFalse($middleware->shouldPassThrough($request));
     }
 
-    public function test_check_route_permission_method_exists(): void
+    public function test_check_route_permission_returns_false_without_permission_middleware(): void
     {
         $middleware = new Permission;
-        $this->assertTrue(method_exists($middleware, 'checkRoutePermission'));
+        $request = Request::create('/admin/private/path', 'GET');
+        $route = new \Illuminate\Routing\Route('GET', 'admin/private/path', function () {
+            return 'ok';
+        });
+        $route->middleware(['web']);
+        $request->setRouteResolver(fn () => $route);
+
+        $this->assertFalse($middleware->checkRoutePermission($request));
     }
 
     public function test_normalize_menu_path_removes_prefix_and_generates_pattern(): void

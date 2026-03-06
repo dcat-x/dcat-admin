@@ -54,11 +54,11 @@ class MobileTest extends TestCase
         $this->assertSame('phone', $field->column());
     }
 
-    public function test_render_method_exists(): void
+    public function test_render_method_signature(): void
     {
-        $field = $this->createField();
+        $method = new \ReflectionMethod(Mobile::class, 'render');
 
-        $this->assertTrue(method_exists($field, 'render'));
+        $this->assertSame(0, $method->getNumberOfParameters());
     }
 
     public function test_does_not_have_default_rules(): void

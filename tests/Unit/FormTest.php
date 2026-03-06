@@ -16,11 +16,6 @@ class FormTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
-    {
-        $this->assertTrue(class_exists(Form::class));
-    }
-
     public function test_implements_renderable(): void
     {
         $ref = new ReflectionClass(Form::class);
@@ -107,149 +102,71 @@ class FormTest extends TestCase
         $this->assertSame('_current_', Form::CURRENT_URL_NAME);
     }
 
-    public function test_method_exists_resource(): void
+    public function test_action_title_and_resource_work_as_expected(): void
     {
-        $this->assertTrue(method_exists(Form::class, 'resource'));
+        $form = new Form;
+
+        $this->assertSame($form, $form->action('users'));
+        $this->assertStringContainsString('/users', $form->action());
+
+        $this->assertSame($form, $form->title('Custom title'));
+        $this->assertSame('Custom title', $form->builder()->title());
+
+        $this->assertSame($form, $form->setResource('users'));
+        $this->assertStringContainsString('/users', $form->resource(0));
     }
 
-    public function test_method_exists_title(): void
+    public function test_builder_and_model_accessors_return_instances(): void
     {
-        $this->assertTrue(method_exists(Form::class, 'title'));
+        $form = new Form;
+
+        $this->assertInstanceOf(\Dcat\Admin\Form\Builder::class, $form->builder());
+        $this->assertInstanceOf(\Illuminate\Support\Fluent::class, $form->model());
     }
 
-    public function test_method_exists_builder(): void
+    public function test_disable_methods_are_chainable_and_affect_footer_rendering(): void
     {
-        $this->assertTrue(method_exists(Form::class, 'builder'));
+        $form = new Form;
+
+        $result = $form
+            ->disableHeader()
+            ->disableViewCheck()
+            ->disableEditingCheck()
+            ->disableCreatingCheck();
+
+        $this->assertSame($form, $result);
+
+        $footer = $form->builder()->footer()->render();
+        $this->assertStringNotContainsString('after-save', $footer);
     }
 
-    public function test_method_exists_model(): void
+    public function test_form_mode_helpers_reflect_builder_mode(): void
     {
-        $this->assertTrue(method_exists(Form::class, 'model'));
+        $form = new Form;
+
+        $this->assertTrue($form->isCreating());
+        $this->assertFalse($form->isEditing());
+        $this->assertFalse($form->isDeleting());
     }
 
-    public function test_method_exists_action(): void
+    public function test_event_registration_methods_are_chainable(): void
     {
-        $this->assertTrue(method_exists(Form::class, 'action'));
-    }
+        $form = new Form;
 
-    public function test_method_exists_footer(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'footer'));
-    }
+        $result = $form
+            ->creating(fn () => null)
+            ->editing(fn () => null)
+            ->submitted(fn () => null)
+            ->saving(fn () => null)
+            ->saved(fn () => null)
+            ->deleting(fn () => null)
+            ->deleted(fn () => null)
+            ->uploading(fn () => null)
+            ->uploaded(fn () => null)
+            ->fileDeleting(fn () => null)
+            ->fileDeleted(fn () => null);
 
-    public function test_method_exists_disable_header(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'disableHeader'));
-    }
-
-    public function test_method_exists_disable_view_check(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'disableViewCheck'));
-    }
-
-    public function test_method_exists_disable_editing_check(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'disableEditingCheck'));
-    }
-
-    public function test_method_exists_disable_creating_check(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'disableCreatingCheck'));
-    }
-
-    public function test_method_exists_is_creating(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'isCreating'));
-    }
-
-    public function test_method_exists_is_editing(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'isEditing'));
-    }
-
-    public function test_method_exists_is_deleting(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'isDeleting'));
-    }
-
-    public function test_method_exists_store(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'store'));
-    }
-
-    public function test_method_exists_update(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'update'));
-    }
-
-    public function test_method_exists_destroy(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'destroy'));
-    }
-
-    public function test_method_exists_render(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'render'));
-    }
-
-    public function test_method_exists_confirm(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'confirm'));
-    }
-
-    public function test_method_exists_saved(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'saved'));
-    }
-
-    public function test_method_exists_saving(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'saving'));
-    }
-
-    public function test_method_exists_submitted(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'submitted'));
-    }
-
-    public function test_method_exists_deleting(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'deleting'));
-    }
-
-    public function test_method_exists_deleted(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'deleted'));
-    }
-
-    public function test_method_exists_uploaded(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'uploaded'));
-    }
-
-    public function test_method_exists_uploading(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'uploading'));
-    }
-
-    public function test_method_exists_editing(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'editing'));
-    }
-
-    public function test_method_exists_creating(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'creating'));
-    }
-
-    public function test_method_exists_file_deleted(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'fileDeleted'));
-    }
-
-    public function test_method_exists_file_deleting(): void
-    {
-        $this->assertTrue(method_exists(Form::class, 'fileDeleting'));
+        $this->assertSame($form, $result);
     }
 
     public function test_builder_property_default_null(): void

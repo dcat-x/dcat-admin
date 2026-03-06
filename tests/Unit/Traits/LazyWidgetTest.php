@@ -24,9 +24,11 @@ class LazyWidgetTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_trait_exists(): void
+    public function test_helper_uses_lazy_widget_trait(): void
     {
-        $this->assertTrue(trait_exists(LazyWidget::class));
+        $traits = class_uses(LazyWidgetTestHelper::class);
+
+        $this->assertContains(LazyWidget::class, $traits);
     }
 
     public function test_payload_default_empty(): void
@@ -97,13 +99,17 @@ class LazyWidgetTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    public function test_trait_has_translation_method(): void
+    public function test_translation_method_signature(): void
     {
-        $this->assertTrue(method_exists(LazyWidgetTestHelper::class, 'translation'));
+        $method = new \ReflectionMethod(LazyWidgetTestHelper::class, 'translation');
+
+        $this->assertSame(0, $method->getNumberOfParameters());
     }
 
-    public function test_trait_has_get_url_method(): void
+    public function test_get_url_method_signature(): void
     {
-        $this->assertTrue(method_exists(LazyWidgetTestHelper::class, 'getUrl'));
+        $method = new \ReflectionMethod(LazyWidgetTestHelper::class, 'getUrl');
+
+        $this->assertSame(0, $method->getNumberOfParameters());
     }
 }

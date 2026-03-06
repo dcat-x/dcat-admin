@@ -10,7 +10,9 @@ class AbstractToolTest extends TestCase
 {
     public function test_extends_grid_action(): void
     {
-        $this->assertTrue(is_subclass_of(AbstractTool::class, GridAction::class));
+        $parents = class_parents(AbstractTool::class);
+
+        $this->assertContains(GridAction::class, $parents);
     }
 
     public function test_class_is_abstract(): void
@@ -33,9 +35,11 @@ class AbstractToolTest extends TestCase
         $this->assertSame('btn btn-white waves-effect', $ref->getDefaultValue());
     }
 
-    public function test_has_html_method(): void
+    public function test_html_method_signature(): void
     {
-        $this->assertTrue(method_exists(AbstractTool::class, 'html'));
+        $ref = new \ReflectionMethod(AbstractTool::class, 'html');
+
+        $this->assertSame(0, $ref->getNumberOfParameters());
     }
 
     public function test_html_method_is_protected(): void

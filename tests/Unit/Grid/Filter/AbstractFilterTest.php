@@ -2,9 +2,17 @@
 
 namespace Dcat\Admin\Tests\Unit\Grid\Filter;
 
+use Dcat\Admin\Exception\RuntimeException;
+use Dcat\Admin\Grid\Filter;
 use Dcat\Admin\Grid\Filter\AbstractFilter;
+use Dcat\Admin\Grid\Filter\Presenter\BatchInput;
+use Dcat\Admin\Grid\Filter\Presenter\Checkbox;
+use Dcat\Admin\Grid\Filter\Presenter\DateTime;
+use Dcat\Admin\Grid\Filter\Presenter\MultipleSelect;
+use Dcat\Admin\Grid\Filter\Presenter\Radio;
+use Dcat\Admin\Grid\Filter\Presenter\Select;
+use Dcat\Admin\Grid\Filter\Presenter\Text;
 use Dcat\Admin\Tests\TestCase;
-use Dcat\Admin\Traits\HasVariables;
 use Mockery;
 
 class AbstractFilterTest extends TestCase
@@ -15,352 +23,198 @@ class AbstractFilterTest extends TestCase
         Mockery::close();
     }
 
-    protected function makeFilter(string $column = 'test_col', string $label = 'Test Label'): AbstractFilter
+    protected function makeFilter(string $column = 'name', string $label = 'Name'): AbstractFilter
     {
         return new class($column, $label) extends AbstractFilter {};
     }
 
-    public function test_class_exists(): void
+    protected function makeParent(array $filters = [], array $inputs = []): Filter
     {
-        $this->assertTrue(class_exists(AbstractFilter::class));
+        $grid = new class
+        {
+            public function makeName(string $name): string
+            {
+                return 'admin_'.$name;
+            }
+        };
+
+        $parent = Mockery::mock(Filter::class);
+        $parent->shouldReceive('grid')->andReturn($grid);
+        $parent->shouldReceive('filters')->andReturn($filters);
+        $parent->shouldReceive('inputs')->andReturn($inputs);
+
+        return $parent;
     }
 
-    public function test_is_abstract(): void
+    public function test_constructor_sets_column_and_label(): void
     {
-        $ref = new \ReflectionClass(AbstractFilter::class);
+        $filter = $this->makeFilter('user.name', 'User Name');
 
-        $this->assertTrue($ref->isAbstract());
+        $this->assertSame('user.name', $filter->originalColumn());
+        $this->assertSame('User Name', $filter->getLabel());
     }
 
-    public function test_uses_has_variables_trait(): void
+    public function test_set_parent_builds_id_and_parent_accessors(): void
     {
-        $ref = new \ReflectionClass(AbstractFilter::class);
-        $traits = $ref->getTraitNames();
+        $filter = $this->makeFilter('profile.name', 'Profile Name');
+        $parent = $this->makeParent();
 
-        $this->assertContains(HasVariables::class, $traits);
+        $filter->setParent($parent);
+
+        $this->assertSame($parent, $filter->parent());
+        $this->assertSame('admin_filter-column-profile-name', $filter->getId());
     }
 
-    public function test_query_default_is_where(): void
+    public function test_set_id_and_column_use_formatted_grid_name(): void
     {
-        $ref = new \ReflectionProperty(AbstractFilter::class, 'query');
-        $ref->setAccessible(true);
+        $filter = $this->makeFilter('profile.name', 'Profile Name');
+        $filter->setParent($this->makeParent());
+        $filter->setId('custom.id');
 
-        $this->assertSame('where', $ref->getDefaultValue());
+        $this->assertSame('admin_filter-column-custom-id', $filter->getId());
+        $this->assertSame('admin_profile-name', $filter->column());
+        $this->assertSame('admin_profile.name', $filter->getElementName());
     }
 
-    public function test_width_default_is_10(): void
+    public function test_siblings_previous_and_next_follow_parent_filters_order(): void
     {
-        $ref = new \ReflectionProperty(AbstractFilter::class, 'width');
-        $ref->setAccessible(true);
+        $first = $this->makeFilter('first', 'First');
+        $current = $this->makeFilter('current', 'Current');
+        $last = $this->makeFilter('last', 'Last');
 
-        $this->assertSame(10, $ref->getDefaultValue());
+        $filters = [$first, $current, $last];
+        $parent = $this->makeParent($filters);
+
+        $first->setParent($parent);
+        $current->setParent($parent);
+        $last->setParent($parent);
+
+        $this->assertSame($filters, $current->siblings());
+        $this->assertSame($first, $current->previous());
+        $this->assertSame($last, $current->next());
     }
 
-    public function test_view_default_is_admin_filter_where(): void
+    public function test_condition_builds_where_for_single_column(): void
     {
-        $ref = new \ReflectionProperty(AbstractFilter::class, 'view');
-        $ref->setAccessible(true);
+        $filter = $this->makeFilter('name', 'Name');
 
-        $this->assertSame('admin::filter.where', $ref->getDefaultValue());
+        $condition = $filter->condition(['name' => 'Taylor']);
+
+        $this->assertSame('Taylor', $filter->getValue());
+        $this->assertIsArray($condition);
+        $this->assertArrayHasKey('where', $condition);
+        $this->assertSame('name', $condition['where'][0]);
+        $this->assertSame('Taylor', $condition['where'][1]);
     }
 
-    public function test_ignore_default_is_false(): void
+    public function test_ignore_prevents_condition_building(): void
     {
-        $ref = new \ReflectionProperty(AbstractFilter::class, 'ignore');
-        $ref->setAccessible(true);
+        $filter = $this->makeFilter('name', 'Name');
+        $filter->ignore();
 
-        $this->assertFalse($ref->getDefaultValue());
+        $this->assertNull($filter->condition(['name' => 'Taylor']));
     }
 
-    public function test_method_width_exists(): void
+    public function test_condition_builds_relation_query_for_dotted_column(): void
     {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'width'));
+        $filter = $this->makeFilter('profile.name', 'Profile Name');
+
+        $condition = $filter->condition(['profile.name' => 'Taylor']);
+
+        $method = array_key_first($condition);
+
+        $this->assertContains($method, ['whereHas', 'whereHasIn']);
+        $this->assertSame('profile', $condition[$method][0]);
+        $this->assertIsCallable($condition[$method][1]);
+
+        $query = Mockery::mock();
+        $query->shouldReceive('getModel')->andReturn(new class
+        {
+            public function getTable(): string
+            {
+                return 'profiles';
+            }
+        });
+        $query->shouldReceive('where')->once()->with('profiles.name', 'Taylor');
+
+        $condition[$method][1]($query);
     }
 
-    public function test_method_set_parent_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'setParent'));
-    }
-
-    public function test_method_parent_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'parent'));
-    }
-
-    public function test_method_siblings_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'siblings'));
-    }
-
-    public function test_method_previous_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'previous'));
-    }
-
-    public function test_method_next_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'next'));
-    }
-
-    public function test_method_condition_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'condition'));
-    }
-
-    public function test_method_ignore_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'ignore'));
-    }
-
-    public function test_method_select_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'select'));
-    }
-
-    public function test_method_multiple_select_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'multipleSelect'));
-    }
-
-    public function test_method_radio_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'radio'));
-    }
-
-    public function test_method_checkbox_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'checkbox'));
-    }
-
-    public function test_method_datetime_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'datetime'));
-    }
-
-    public function test_method_date_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'date'));
-    }
-
-    public function test_method_time_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'time'));
-    }
-
-    public function test_method_day_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'day'));
-    }
-
-    public function test_method_month_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'month'));
-    }
-
-    public function test_method_year_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'year'));
-    }
-
-    public function test_method_set_presenter_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'setPresenter'));
-    }
-
-    public function test_method_default_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'default'));
-    }
-
-    public function test_method_get_default_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'getDefault'));
-    }
-
-    public function test_method_get_id_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'getId'));
-    }
-
-    public function test_method_set_id_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'setId'));
-    }
-
-    public function test_method_column_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'column'));
-    }
-
-    public function test_method_original_column_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'originalColumn'));
-    }
-
-    public function test_method_get_label_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'getLabel'));
-    }
-
-    public function test_method_get_value_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'getValue'));
-    }
-
-    public function test_method_set_value_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'setValue'));
-    }
-
-    public function test_method_render_exists(): void
-    {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'render'));
-    }
-
-    public function test_constructor_sets_column(): void
-    {
-        $filter = $this->makeFilter('test_col', 'Test Label');
-
-        $this->assertSame('test_col', $filter->originalColumn());
-    }
-
-    public function test_constructor_sets_label(): void
-    {
-        $filter = $this->makeFilter('test_col', 'Test Label');
-
-        $this->assertSame('Test Label', $filter->getLabel());
-    }
-
-    public function test_original_column_returns_test_col(): void
-    {
-        $filter = $this->makeFilter('test_col', 'Test Label');
-
-        $this->assertSame('test_col', $filter->originalColumn());
-    }
-
-    public function test_get_label_returns_test_label(): void
-    {
-        $filter = $this->makeFilter('test_col', 'Test Label');
-
-        $this->assertSame('Test Label', $filter->getLabel());
-    }
-
-    public function test_ignore_sets_ignore_and_returns_this(): void
-    {
-        $filter = $this->makeFilter();
-
-        $result = $filter->ignore();
-
-        $this->assertSame($filter, $result);
-
-        $ref = new \ReflectionProperty($filter, 'ignore');
-        $ref->setAccessible(true);
-
-        $this->assertTrue($ref->getValue($filter));
-    }
-
-    public function test_set_value_then_get_value(): void
-    {
-        $filter = $this->makeFilter();
-
-        $filter->setValue('foo');
-
-        $this->assertSame('foo', $filter->getValue());
-    }
-
-    public function test_default_then_get_default(): void
-    {
-        $filter = $this->makeFilter();
-
-        $filter->default('bar');
-
-        $this->assertSame('bar', $filter->getDefault());
-    }
-
-    public function test_width_with_integer_sets_width(): void
-    {
-        $filter = $this->makeFilter();
-
-        $result = $filter->width(6);
-
-        $this->assertSame($filter, $result);
-
-        $ref = new \ReflectionProperty($filter, 'width');
-        $ref->setAccessible(true);
-
-        $this->assertSame(6, $ref->getValue($filter));
-    }
-
-    public function test_width_with_string_sets_style(): void
-    {
-        $filter = $this->makeFilter();
-
-        $result = $filter->width('200px');
-
-        $this->assertSame($filter, $result);
-
-        $ref = new \ReflectionProperty($filter, 'style');
-        $ref->setAccessible(true);
-
-        $this->assertSame('width:200px;padding-left:10px;padding-right:10px', $ref->getValue($filter));
-    }
-
-    public function test_width_with_string_sets_width_to_space(): void
-    {
-        $filter = $this->makeFilter();
-
-        $filter->width('200px');
-
-        $ref = new \ReflectionProperty($filter, 'width');
-        $ref->setAccessible(true);
-
-        $this->assertSame(' ', $ref->getValue($filter));
-    }
-
-    public function test_set_value_returns_this(): void
-    {
-        $filter = $this->makeFilter();
-
-        $result = $filter->setValue('value');
-
-        $this->assertSame($filter, $result);
-    }
-
-    public function test_default_returns_this(): void
-    {
-        $filter = $this->makeFilter();
-
-        $result = $filter->default('value');
-
-        $this->assertSame($filter, $result);
-    }
-
-    public function test_get_default_returns_null_initially(): void
+    public function test_default_and_value_helpers_work_as_expected(): void
     {
         $filter = $this->makeFilter();
 
         $this->assertNull($filter->getDefault());
+        $this->assertNull($filter->getValue());
+
+        $filter->default('guest')->setValue('admin');
+
+        $this->assertSame('guest', $filter->getDefault());
+        $this->assertSame('admin', $filter->getValue());
     }
 
-    public function test_get_value_returns_null_initially(): void
+    public function test_width_accepts_numeric_and_string_styles(): void
+    {
+        $filter = $this->makeFilter();
+        $filter->setParent($this->makeParent());
+
+        $filter->width(6);
+        $numericHtml = $filter->render();
+        $this->assertStringContainsString('col-sm-6', $numericHtml);
+
+        $filter->width('200px');
+        $styledHtml = $filter->render();
+        $this->assertStringContainsString('col-sm- ', $styledHtml);
+        $this->assertStringContainsString('width:200px', $styledHtml);
+    }
+
+    public function test_presenter_factory_methods_return_expected_presenter_types(): void
     {
         $filter = $this->makeFilter();
 
-        $this->assertNull($filter->getValue());
+        $this->assertInstanceOf(Select::class, $filter->select([]));
+        $this->assertInstanceOf(MultipleSelect::class, $filter->multipleSelect([]));
+        $this->assertInstanceOf(Radio::class, $filter->radio([]));
+        $this->assertInstanceOf(Checkbox::class, $filter->checkbox([]));
+        $this->assertInstanceOf(DateTime::class, $filter->datetime([]));
+        $this->assertInstanceOf(DateTime::class, $filter->date());
+        $this->assertInstanceOf(DateTime::class, $filter->time());
+        $this->assertInstanceOf(DateTime::class, $filter->day());
+        $this->assertInstanceOf(DateTime::class, $filter->month());
+        $this->assertInstanceOf(DateTime::class, $filter->year());
+        $this->assertInstanceOf(BatchInput::class, $filter->batchInput('/lookup'));
     }
 
-    public function test_method_batch_input_exists(): void
+    public function test_render_returns_filter_markup_with_presenter_output(): void
     {
-        $this->assertTrue(method_exists(AbstractFilter::class, 'batchInput'));
+        $filter = $this->makeFilter('name', 'Name');
+        $filter->setParent($this->makeParent([], ['name' => 'Taylor']));
+        $filter->setPresenter(new Text('Name'));
+
+        $html = $filter->render();
+
+        $this->assertStringContainsString('filter-input', $html);
+        $this->assertStringContainsString('input-group', $html);
+        $this->assertStringContainsString('admin_name', $html);
+        $this->assertStringContainsString('Taylor', $html);
     }
 
-    public function test_batch_input_accepts_string_parameter(): void
+    public function test_call_delegates_to_presenter_method(): void
     {
-        $ref = new \ReflectionMethod(AbstractFilter::class, 'batchInput');
-        $params = $ref->getParameters();
+        $filter = $this->makeFilter('name', 'Name');
 
-        $this->assertCount(1, $params);
-        $this->assertEquals('lookupUrl', $params[0]->getName());
-        $this->assertEquals('string', $params[0]->getType()->getName());
+        $presenter = $filter->placeholder('Search...');
+
+        $this->assertInstanceOf(Text::class, $presenter);
+    }
+
+    public function test_call_throws_runtime_exception_for_unknown_method(): void
+    {
+        $filter = $this->makeFilter('name', 'Name');
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Call to undefined method');
+
+        $filter->methodDoesNotExist();
     }
 }

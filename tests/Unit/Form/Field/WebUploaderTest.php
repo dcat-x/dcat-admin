@@ -6,6 +6,60 @@ use Dcat\Admin\Form\Field\WebUploader;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
 
+class FakeWebUploaderField
+{
+    use WebUploader;
+
+    public const FILE_DELETE_FLAG = '_remove_';
+
+    public array $options = [
+    ];
+
+    public array $rulesCalled = [];
+
+    public $form;
+
+    public function rules(string $rule): void
+    {
+        $this->rulesCalled[] = $rule;
+    }
+
+    public function options(array $options): void
+    {
+        $this->options = $options;
+    }
+
+    public function column(): string
+    {
+        return 'avatar';
+    }
+
+    public function getElementName(): string
+    {
+        return 'avatar';
+    }
+
+    protected function initialPreviewConfig(): array
+    {
+        return ['url' => 'preview'];
+    }
+
+    public function exposeSetUpDefaultOptions(): void
+    {
+        $this->setUpDefaultOptions();
+    }
+
+    public function exposeSetDefaultServer(): void
+    {
+        $this->setDefaultServer();
+    }
+
+    public function exposeSetupPreviewOptions(): void
+    {
+        $this->setupPreviewOptions();
+    }
+}
+
 class WebUploaderTest extends TestCase
 {
     protected function tearDown(): void
@@ -14,226 +68,142 @@ class WebUploaderTest extends TestCase
         parent::tearDown();
     }
 
-    // -------------------------------------------------------
-    // Trait existence
-    // -------------------------------------------------------
-
-    public function test_trait_exists(): void
+    protected function makeField(): FakeWebUploaderField
     {
-        $this->assertTrue(trait_exists(WebUploader::class));
+        return new FakeWebUploaderField;
     }
 
-    // -------------------------------------------------------
-    // Method existence
-    // -------------------------------------------------------
-
-    public function test_accept_method_exists(): void
+    public function test_accept_and_mime_types_set_accept_options(): void
     {
-        $this->assertTrue(method_exists(WebUploader::class, 'accept'));
+        $field = $this->makeField();
+
+        $field->accept('jpg,png', 'image/*')->mimeTypes('image/jpeg,image/png');
+
+        $this->assertSame('jpg,png', $field->options['accept']['extensions']);
+        $this->assertSame('image/jpeg,image/png', $field->options['accept']['mimeTypes']);
     }
 
-    public function test_mime_types_method_exists(): void
+    public function test_chunk_size_enables_chunked_and_converts_kb_to_bytes(): void
     {
-        $this->assertTrue(method_exists(WebUploader::class, 'mimeTypes'));
+        $field = $this->makeField();
+        $field->chunkSize(512);
+
+        $this->assertTrue($field->options['chunked']);
+        $this->assertSame(512 * 1024, $field->options['chunkSize']);
     }
 
-    public function test_chunked_method_exists(): void
+    public function test_max_size_sets_rule_and_single_size_limit(): void
     {
-        $this->assertTrue(method_exists(WebUploader::class, 'chunked'));
+        $field = $this->makeField();
+        $field->maxSize(1024);
+
+        $this->assertContains('max:1024', $field->rulesCalled);
+        $this->assertSame(1024 * 1024, $field->options['fileSingleSizeLimit']);
     }
 
-    public function test_chunk_size_method_exists(): void
+    public function test_url_sets_server_and_delete_url(): void
     {
-        $this->assertTrue(method_exists(WebUploader::class, 'chunkSize'));
+        $field = $this->makeField();
+        $field->url('upload/avatar');
+
+        $this->assertStringContainsString('/upload/avatar', $field->options['server']);
+        $this->assertStringContainsString('/upload/avatar', $field->options['deleteUrl']);
     }
 
-    public function test_auto_upload_method_exists(): void
+    public function test_toggle_methods_update_options_flags(): void
     {
-        $this->assertTrue(method_exists(WebUploader::class, 'autoUpload'));
+        $field = $this->makeField();
+        $field->autoUpload(false)->autoSave(false)->removable()->downloadable(false)->compress(['quality' => 80])->threads(3);
+
+        $this->assertFalse($field->options['autoUpload']);
+        $this->assertFalse($field->options['autoUpdateColumn']);
+        $this->assertFalse($field->options['removable']);
+        $this->assertFalse($field->options['downloadable']);
+        $this->assertSame(['quality' => 80], $field->options['compress']);
+        $this->assertSame(3, $field->options['threads']);
     }
 
-    public function test_threads_method_exists(): void
+    public function test_form_and_delete_data_are_merged(): void
     {
-        $this->assertTrue(method_exists(WebUploader::class, 'threads'));
+        $field = $this->makeField();
+        $field->options['formData'] = [];
+        $field->options['deleteData'] = [];
+
+        $field->withFormData(['a' => 1])->withDeleteData(['b' => 2]);
+
+        $this->assertSame(1, $field->options['formData']['a']);
+        $this->assertSame(2, $field->options['deleteData']['b']);
     }
 
-    public function test_max_size_method_exists(): void
+    public function test_setup_default_options_populates_required_keys(): void
     {
-        $this->assertTrue(method_exists(WebUploader::class, 'maxSize'));
+        $field = $this->makeField();
+        $field->form = new class
+        {
+            public function getKey(): int
+            {
+                return 15;
+            }
+        };
+
+        $field->exposeSetUpDefaultOptions();
+
+        $this->assertSame('avatar', $field->options['elementName']);
+        $this->assertSame(15, $field->options['formData']['primary_key']);
+        $this->assertSame(15, $field->options['deleteData']['primary_key']);
+        $this->assertArrayHasKey('lang', $field->options);
     }
 
-    public function test_removable_method_exists(): void
+    public function test_set_default_server_uses_form_action_and_editing_method_put(): void
     {
-        $this->assertTrue(method_exists(WebUploader::class, 'removable'));
+        $field = $this->makeField();
+        $field->options['formData'] = [];
+        $field->options['deleteData'] = [];
+        $field->form = new class
+        {
+            public function action(): string
+            {
+                return 'http://localhost/admin/users/1';
+            }
+
+            public function builder()
+            {
+                return new class
+                {
+                    public function isEditing(): bool
+                    {
+                        return true;
+                    }
+                };
+            }
+        };
+
+        $field->exposeSetDefaultServer();
+
+        $this->assertSame('http://localhost/admin/users/1', $field->options['server']);
+        $this->assertSame('http://localhost/admin/users/1', $field->options['updateServer']);
+        $this->assertSame('http://localhost/admin/users/1', $field->options['deleteUrl']);
+        $this->assertSame('PUT', $field->options['formData']['_method']);
+        $this->assertSame('PUT', $field->options['deleteData']['_method']);
+        $this->assertTrue($field->options['autoUpdateColumn']);
     }
 
-    public function test_downloadable_method_exists(): void
+    public function test_setup_preview_options_uses_initial_preview_config(): void
     {
-        $this->assertTrue(method_exists(WebUploader::class, 'downloadable'));
+        $field = $this->makeField();
+        $field->exposeSetupPreviewOptions();
+
+        $this->assertSame(['url' => 'preview'], $field->options['preview']);
     }
 
-    public function test_compress_method_exists(): void
+    public function test_get_create_url_removes_trailing_create_segment(): void
     {
-        $this->assertTrue(method_exists(WebUploader::class, 'compress'));
-    }
+        $request = \Illuminate\Http\Request::create('/admin/users/create', 'GET');
+        $this->app->instance('request', $request);
 
-    public function test_url_method_exists(): void
-    {
-        $this->assertTrue(method_exists(WebUploader::class, 'url'));
-    }
+        $field = $this->makeField();
+        $url = $field->getCreateUrl();
 
-    public function test_auto_save_method_exists(): void
-    {
-        $this->assertTrue(method_exists(WebUploader::class, 'autoSave'));
-    }
-
-    public function test_delete_url_method_exists(): void
-    {
-        $this->assertTrue(method_exists(WebUploader::class, 'deleteUrl'));
-    }
-
-    public function test_with_form_data_method_exists(): void
-    {
-        $this->assertTrue(method_exists(WebUploader::class, 'withFormData'));
-    }
-
-    public function test_with_delete_data_method_exists(): void
-    {
-        $this->assertTrue(method_exists(WebUploader::class, 'withDeleteData'));
-    }
-
-    public function test_get_create_url_method_exists(): void
-    {
-        $this->assertTrue(method_exists(WebUploader::class, 'getCreateUrl'));
-    }
-
-    // -------------------------------------------------------
-    // Method visibility checks
-    // -------------------------------------------------------
-
-    public function test_accept_is_public(): void
-    {
-        $method = new \ReflectionMethod(WebUploader::class, 'accept');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_mime_types_is_public(): void
-    {
-        $method = new \ReflectionMethod(WebUploader::class, 'mimeTypes');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_chunked_is_public(): void
-    {
-        $method = new \ReflectionMethod(WebUploader::class, 'chunked');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_chunk_size_is_public(): void
-    {
-        $method = new \ReflectionMethod(WebUploader::class, 'chunkSize');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_auto_upload_is_public(): void
-    {
-        $method = new \ReflectionMethod(WebUploader::class, 'autoUpload');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_threads_is_public(): void
-    {
-        $method = new \ReflectionMethod(WebUploader::class, 'threads');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_max_size_is_public(): void
-    {
-        $method = new \ReflectionMethod(WebUploader::class, 'maxSize');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_removable_is_public(): void
-    {
-        $method = new \ReflectionMethod(WebUploader::class, 'removable');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_downloadable_is_public(): void
-    {
-        $method = new \ReflectionMethod(WebUploader::class, 'downloadable');
-        $this->assertTrue($method->isPublic());
-    }
-
-    // -------------------------------------------------------
-    // Protected methods
-    // -------------------------------------------------------
-
-    public function test_set_up_default_options_is_protected(): void
-    {
-        $method = new \ReflectionMethod(WebUploader::class, 'setUpDefaultOptions');
-        $this->assertTrue($method->isProtected());
-    }
-
-    public function test_set_default_server_is_protected(): void
-    {
-        $method = new \ReflectionMethod(WebUploader::class, 'setDefaultServer');
-        $this->assertTrue($method->isProtected());
-    }
-
-    public function test_setup_preview_options_is_protected(): void
-    {
-        $method = new \ReflectionMethod(WebUploader::class, 'setupPreviewOptions');
-        $this->assertTrue($method->isProtected());
-    }
-
-    // -------------------------------------------------------
-    // Parameter checks
-    // -------------------------------------------------------
-
-    public function test_accept_has_two_parameters(): void
-    {
-        $method = new \ReflectionMethod(WebUploader::class, 'accept');
-        $params = $method->getParameters();
-
-        $this->assertCount(2, $params);
-        $this->assertSame('extensions', $params[0]->getName());
-        $this->assertSame('mimeTypes', $params[1]->getName());
-    }
-
-    public function test_accept_mime_types_parameter_is_nullable(): void
-    {
-        $method = new \ReflectionMethod(WebUploader::class, 'accept');
-        $params = $method->getParameters();
-
-        $this->assertTrue($params[1]->allowsNull());
-    }
-
-    public function test_chunked_has_bool_parameter_with_default_true(): void
-    {
-        $method = new \ReflectionMethod(WebUploader::class, 'chunked');
-        $params = $method->getParameters();
-
-        $this->assertCount(1, $params);
-        $this->assertSame('value', $params[0]->getName());
-        $this->assertTrue($params[0]->getDefaultValue());
-    }
-
-    public function test_chunk_size_has_int_parameter(): void
-    {
-        $method = new \ReflectionMethod(WebUploader::class, 'chunkSize');
-        $params = $method->getParameters();
-
-        $this->assertCount(1, $params);
-        $this->assertSame('size', $params[0]->getName());
-    }
-
-    public function test_threads_has_int_parameter(): void
-    {
-        $method = new \ReflectionMethod(WebUploader::class, 'threads');
-        $params = $method->getParameters();
-
-        $this->assertCount(1, $params);
-        $this->assertSame('num', $params[0]->getName());
+        $this->assertStringEndsWith('/admin/users', $url);
     }
 }

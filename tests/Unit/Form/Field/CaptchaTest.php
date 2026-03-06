@@ -19,14 +19,12 @@ class CaptchaTest extends TestCase
     // Class structure
     // -------------------------------------------------------
 
-    public function test_class_exists(): void
+    public function test_captcha_extends_text_field(): void
     {
-        $this->assertTrue(class_exists(Captcha::class));
-    }
+        $reflection = new \ReflectionClass(Captcha::class);
+        $parent = $reflection->getParentClass();
 
-    public function test_is_subclass_of_text(): void
-    {
-        $this->assertTrue(is_subclass_of(Captcha::class, Text::class));
+        $this->assertSame(Text::class, $parent?->getName());
     }
 
     // -------------------------------------------------------
@@ -53,13 +51,36 @@ class CaptchaTest extends TestCase
     // Method existence
     // -------------------------------------------------------
 
-    public function test_method_set_form_exists(): void
+    public function test_set_form_calls_ignore_on_form_when_available(): void
     {
-        $this->assertTrue(method_exists(Captcha::class, 'setForm'));
+        $reflection = new \ReflectionClass(Captcha::class);
+        /** @var Captcha $field */
+        $field = $reflection->newInstanceWithoutConstructor();
+        $column = new \ReflectionProperty($field, 'column');
+        $column->setAccessible(true);
+        $column->setValue($field, '__captcha__');
+
+        $form = new class
+        {
+            public array $ignored = [];
+
+            public function ignore(string $column): void
+            {
+                $this->ignored[] = $column;
+            }
+        };
+
+        $result = $field->setForm($form);
+
+        $this->assertSame($field, $result);
+        $this->assertSame(['__captcha__'], $form->ignored);
     }
 
-    public function test_method_render_exists(): void
+    public function test_render_method_signature_is_public_and_parameterless(): void
     {
-        $this->assertTrue(method_exists(Captcha::class, 'render'));
+        $method = new \ReflectionMethod(Captcha::class, 'render');
+
+        $this->assertTrue($method->isPublic());
+        $this->assertCount(0, $method->getParameters());
     }
 }

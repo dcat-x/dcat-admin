@@ -2,6 +2,7 @@
 
 namespace Dcat\Admin\Tests\Unit\Grid\Column;
 
+use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Column;
 use Dcat\Admin\Grid\Column\HasHeader;
 use Dcat\Admin\Tests\TestCase;
@@ -15,62 +16,120 @@ class HasHeaderTest extends TestCase
         Mockery::close();
     }
 
-    public function test_trait_exists(): void
+    protected function makeColumn(): Column
     {
-        $this->assertTrue(trait_exists(HasHeader::class));
+        $column = new Column('name', 'Name');
+        $column->setGrid(new FakeGridForHeader);
+
+        return $column;
+    }
+
+    protected function getProtectedProperty(object $object, string $property)
+    {
+        $reflection = new \ReflectionProperty($object, $property);
+        $reflection->setAccessible(true);
+
+        return $reflection->getValue($object);
     }
 
     public function test_filter_property_is_public(): void
     {
-        $ref = new \ReflectionProperty(HasHeader::class, 'filter');
-        $this->assertTrue($ref->isPublic());
-    }
+        $reflection = new \ReflectionProperty(HasHeader::class, 'filter');
 
-    public function test_headers_property_is_protected(): void
-    {
-        $ref = new \ReflectionProperty(HasHeader::class, 'headers');
-        $this->assertTrue($ref->isProtected());
+        $this->assertTrue($reflection->isPublic());
     }
 
     public function test_headers_default_empty_array(): void
     {
-        $ref = new \ReflectionProperty(HasHeader::class, 'headers');
-        $ref->setAccessible(true);
-        $this->assertSame([], $ref->getDefaultValue());
+        $reflection = new \ReflectionProperty(HasHeader::class, 'headers');
+        $reflection->setAccessible(true);
+
+        $this->assertSame([], $reflection->getDefaultValue());
     }
 
-    public function test_has_add_header_method(): void
+    public function test_add_header_appends_content_and_returns_self(): void
     {
-        $this->assertTrue(method_exists(Column::class, 'addHeader'));
+        $column = $this->makeColumn();
+
+        $result = $column->addHeader('custom-header');
+
+        $this->assertSame($column, $result);
+
+        $headers = $this->getProtectedProperty($column, 'headers');
+        $this->assertSame('custom-header', $headers[0]);
     }
 
-    public function test_has_sortable_method(): void
+    public function test_sortable_adds_sorter_header(): void
     {
-        $this->assertTrue(method_exists(Column::class, 'sortable'));
+        $column = $this->makeColumn();
+
+        $result = $column->sortable();
+
+        $this->assertSame($column, $result);
+
+        $headers = $this->getProtectedProperty($column, 'headers');
+        $this->assertInstanceOf(\Dcat\Admin\Grid\Column\Sorter::class, $headers[0]);
     }
 
-    public function test_has_filter_method_via_trait(): void
+    public function test_filter_by_value_sets_hidden_filter_and_returns_self(): void
     {
-        $this->assertTrue(method_exists(Column::class, 'filter'));
+        $column = $this->makeColumn();
+
+        $result = $column->filterByValue('profile.name');
+
+        $this->assertSame($column, $result);
+        $this->assertInstanceOf(\Dcat\Admin\Grid\Column\Filter::class, $column->filter);
+        $this->assertFalse($column->filter->shouldDisplay());
     }
 
-    public function test_has_filter_by_value_method(): void
+    public function test_help_adds_help_header(): void
     {
-        $this->assertTrue(method_exists(Column::class, 'filterByValue'));
+        $column = $this->makeColumn();
+
+        $result = $column->help('Help text', 'blue', 'top');
+
+        $this->assertSame($column, $result);
+
+        $headers = $this->getProtectedProperty($column, 'headers');
+        $this->assertInstanceOf(\Dcat\Admin\Grid\Column\Help::class, $headers[0]);
     }
 
-    public function test_has_help_method(): void
+    public function test_bind_filter_query_invokes_filter_binding(): void
     {
-        $this->assertTrue(method_exists(Column::class, 'help'));
+        $column = $this->makeColumn();
+        $column->filterByValue();
+
+        $model = Mockery::mock(\Dcat\Admin\Grid\Model::class);
+
+        $column->bindFilterQuery($model);
+
+        $this->assertInstanceOf(\Dcat\Admin\Grid\Column\Filter::class, $column->filter);
     }
 
-    public function test_has_bind_filter_query_method(): void
+    public function test_render_header_wraps_rendered_headers(): void
     {
-        $this->assertTrue(method_exists(Column::class, 'bindFilterQuery'));
+        $column = $this->makeColumn();
+        $column->addHeader('header-a')->addHeader('header-b');
+
+        $rendered = $column->renderHeader();
+
+        $this->assertStringContainsString('grid-column-header', $rendered);
+        $this->assertStringContainsString('header-a', $rendered);
+        $this->assertStringContainsString('header-b', $rendered);
+    }
+}
+
+class FakeGridForHeader extends Grid
+{
+    public function __construct() {}
+
+    public function listen($event, $callback = null)
+    {
+        return null;
     }
 
-    public function test_has_render_header_method(): void
+    public function makeName($name)
     {
-        $this->assertTrue(method_exists(Column::class, 'renderHeader'));
+        return $name;
     }
 }

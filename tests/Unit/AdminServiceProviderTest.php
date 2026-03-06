@@ -17,9 +17,11 @@ class AdminServiceProviderTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
+    public function test_reflection_can_load_class_metadata(): void
     {
-        $this->assertTrue(class_exists(AdminServiceProvider::class));
+        $ref = new ReflectionClass(AdminServiceProvider::class);
+
+        $this->assertSame(AdminServiceProvider::class, $ref->getName());
     }
 
     public function test_extends_service_provider(): void
@@ -48,16 +50,6 @@ class AdminServiceProviderTest extends TestCase
         $this->assertContains(\Dcat\Admin\Console\CreateUserCommand::class, $commands);
     }
 
-    public function test_method_exists_register(): void
-    {
-        $this->assertTrue(method_exists(AdminServiceProvider::class, 'register'));
-    }
-
-    public function test_method_exists_boot(): void
-    {
-        $this->assertTrue(method_exists(AdminServiceProvider::class, 'boot'));
-    }
-
     public function test_boot_method_is_public(): void
     {
         $method = new ReflectionMethod(AdminServiceProvider::class, 'boot');
@@ -70,21 +62,10 @@ class AdminServiceProviderTest extends TestCase
         $this->assertTrue($method->isPublic());
     }
 
-    public function test_has_register_services_method(): void
-    {
-        $this->assertTrue(method_exists(AdminServiceProvider::class, 'registerServices'));
-    }
-
     public function test_register_services_method_is_public(): void
     {
         $method = new ReflectionMethod(AdminServiceProvider::class, 'registerServices');
         $this->assertTrue($method->isPublic());
-    }
-
-    public function test_has_register_route_middleware_method(): void
-    {
-        $ref = new ReflectionClass(AdminServiceProvider::class);
-        $this->assertTrue($ref->hasMethod('registerRouteMiddleware'));
     }
 
     public function test_register_route_middleware_is_protected(): void
@@ -121,19 +102,60 @@ class AdminServiceProviderTest extends TestCase
         $this->assertIsArray($defaultValue);
     }
 
-    public function test_has_register_extensions_method(): void
+    public function test_register_services_binds_expected_singletons(): void
     {
-        $this->assertTrue(method_exists(AdminServiceProvider::class, 'registerExtensions'));
+        $provider = new AdminServiceProvider($this->app);
+        $provider->registerServices();
+
+        $this->assertTrue($this->app->bound('admin.asset'));
+        $this->assertTrue($this->app->bound('admin.menu'));
+        $this->assertTrue($this->app->bound('admin.navbar'));
+        $this->assertTrue($this->app->bound('admin.setting'));
+        $this->assertTrue($this->app->bound('admin.web-uploader'));
+        $this->assertTrue($this->app->bound('admin.translator'));
     }
 
-    public function test_has_boot_extensions_method(): void
+    public function test_register_route_middleware_adds_aliases_and_group(): void
     {
-        $this->assertTrue(method_exists(AdminServiceProvider::class, 'bootExtensions'));
+        config()->set('admin.permission.enable', true);
+
+        $provider = new TestableAdminServiceProvider($this->app);
+        $provider->exposeRegisterRouteMiddleware();
+
+        $router = $this->app->make('router');
+        $aliases = $router->getMiddleware();
+        $groups = $router->getMiddlewareGroups();
+
+        $this->assertArrayHasKey('admin.auth', $aliases);
+        $this->assertArrayHasKey('admin.permission', $aliases);
+        $this->assertArrayHasKey('admin', $groups);
+        $this->assertContains('admin.permission', $groups['admin']);
+    }
+
+    public function test_register_route_middleware_removes_permission_middleware_when_disabled(): void
+    {
+        config()->set('admin.permission.enable', false);
+
+        $provider = new TestableAdminServiceProvider($this->app);
+        $provider->exposeRegisterRouteMiddleware();
+
+        $groups = $this->app->make('router')->getMiddlewareGroups();
+
+        $this->assertArrayHasKey('admin', $groups);
+        $this->assertNotContains('admin.permission', $groups['admin']);
     }
 
     public function test_is_not_abstract(): void
     {
         $ref = new ReflectionClass(AdminServiceProvider::class);
         $this->assertFalse($ref->isAbstract());
+    }
+}
+
+class TestableAdminServiceProvider extends AdminServiceProvider
+{
+    public function exposeRegisterRouteMiddleware(): void
+    {
+        $this->registerRouteMiddleware();
     }
 }

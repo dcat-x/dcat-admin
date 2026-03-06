@@ -19,14 +19,11 @@ class MultipleSelectTableTest extends TestCase
     // Class structure
     // -------------------------------------------------------
 
-    public function test_class_exists(): void
+    public function test_it_is_instance_of_select_table(): void
     {
-        $this->assertTrue(class_exists(MultipleSelectTable::class));
-    }
+        $field = new MultipleSelectTable('user_ids', ['Users']);
 
-    public function test_is_subclass_of_select_table(): void
-    {
-        $this->assertTrue(is_subclass_of(MultipleSelectTable::class, SelectTable::class));
+        $this->assertInstanceOf(SelectTable::class, $field);
     }
 
     // -------------------------------------------------------
@@ -53,18 +50,37 @@ class MultipleSelectTableTest extends TestCase
     // Method existence
     // -------------------------------------------------------
 
-    public function test_method_max_exists(): void
+    public function test_max_updates_property_and_returns_self(): void
     {
-        $this->assertTrue(method_exists(MultipleSelectTable::class, 'max'));
+        $field = new MultipleSelectTable('user_ids', ['Users']);
+
+        $result = $field->max(10);
+
+        $ref = new \ReflectionProperty(MultipleSelectTable::class, 'max');
+        $ref->setAccessible(true);
+
+        $this->assertSame($field, $result);
+        $this->assertSame(10, $ref->getValue($field));
     }
 
-    public function test_method_prepare_input_value_exists(): void
+    public function test_prepare_input_value_converts_to_array(): void
     {
-        $this->assertTrue(method_exists(MultipleSelectTable::class, 'prepareInputValue'));
+        $field = new MultipleSelectTable('user_ids', ['Users']);
+        $method = new \ReflectionMethod(MultipleSelectTable::class, 'prepareInputValue');
+        $method->setAccessible(true);
+
+        $single = $method->invoke($field, '5');
+        $multiple = $method->invoke($field, ['5', '6']);
+
+        $this->assertSame(['5'], $single);
+        $this->assertSame(['5', '6'], $multiple);
     }
 
-    public function test_method_render_exists(): void
+    public function test_render_method_signature_has_no_parameters(): void
     {
-        $this->assertTrue(method_exists(MultipleSelectTable::class, 'render'));
+        $method = new \ReflectionMethod(MultipleSelectTable::class, 'render');
+
+        $this->assertTrue($method->isPublic());
+        $this->assertCount(0, $method->getParameters());
     }
 }

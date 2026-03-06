@@ -15,19 +15,18 @@ class AdminTablesSeederTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
+    public function test_seeder_is_instance_of_illuminate_database_seeder(): void
     {
-        $this->assertTrue(class_exists(AdminTablesSeeder::class));
+        $seeder = new AdminTablesSeeder;
+
+        $this->assertInstanceOf(Seeder::class, $seeder);
     }
 
-    public function test_is_subclass_of_seeder(): void
+    public function test_run_method_signature_has_no_parameters(): void
     {
-        $this->assertTrue(is_subclass_of(AdminTablesSeeder::class, Seeder::class));
-    }
+        $reflection = new \ReflectionMethod(AdminTablesSeeder::class, 'run');
 
-    public function test_method_run_exists(): void
-    {
-        $this->assertTrue(method_exists(AdminTablesSeeder::class, 'run'));
+        $this->assertCount(0, $reflection->getParameters());
     }
 
     public function test_run_method_is_public(): void

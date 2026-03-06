@@ -2,7 +2,6 @@
 
 namespace Dcat\Admin\Tests\Unit\Grid\Exporters;
 
-use Dcat\Admin\Grid\Exporters\AbstractExporter;
 use Dcat\Admin\Grid\Exporters\ExcelExporter;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
@@ -15,77 +14,82 @@ class ExcelExporterTest extends TestCase
         Mockery::close();
     }
 
-    public function test_class_exists(): void
+    protected function makeExporterWithoutConstructor(): ExcelExporter
     {
-        $this->assertTrue(class_exists(ExcelExporter::class));
+        $reflection = new \ReflectionClass(ExcelExporter::class);
+
+        return $reflection->newInstanceWithoutConstructor();
     }
 
-    public function test_is_subclass_of_abstract_exporter(): void
+    protected function getProtectedProperty(object $object, string $property)
     {
-        $this->assertTrue(is_subclass_of(ExcelExporter::class, AbstractExporter::class));
+        $reflection = new \ReflectionProperty($object, $property);
+        $reflection->setAccessible(true);
+
+        return $reflection->getValue($object);
     }
 
-    public function test_method_export_exists(): void
+    public function test_export_method_is_public_and_declared_in_excel_exporter(): void
     {
-        $this->assertTrue(method_exists(ExcelExporter::class, 'export'));
+        $reflection = new \ReflectionMethod(ExcelExporter::class, 'export');
+
+        $this->assertTrue($reflection->isPublic());
+        $this->assertSame(ExcelExporter::class, $reflection->getDeclaringClass()->getName());
+        $this->assertCount(0, $reflection->getParameters());
     }
 
-    public function test_export_is_public(): void
+    public function test_constructor_accepts_titles_parameter_with_empty_array_default(): void
     {
-        $ref = new \ReflectionMethod(ExcelExporter::class, 'export');
+        $reflection = new \ReflectionMethod(ExcelExporter::class, '__construct');
+        $parameters = $reflection->getParameters();
 
-        $this->assertTrue($ref->isPublic());
+        $this->assertCount(1, $parameters);
+        $this->assertSame('titles', $parameters[0]->getName());
+        $this->assertTrue($parameters[0]->isDefaultValueAvailable());
+        $this->assertSame([], $parameters[0]->getDefaultValue());
     }
 
-    public function test_export_overrides_parent(): void
+    public function test_titles_setter_and_getter_work_on_exporter(): void
     {
-        $ref = new \ReflectionMethod(ExcelExporter::class, 'export');
+        $exporter = $this->makeExporterWithoutConstructor();
 
-        $this->assertEquals(ExcelExporter::class, $ref->getDeclaringClass()->getName());
+        $result = $exporter->titles(['id' => 'ID', 'name' => 'Name']);
+
+        $this->assertSame($exporter, $result);
+        $this->assertSame(['id' => 'ID', 'name' => 'Name'], $exporter->titles());
     }
 
-    public function test_export_has_no_parameters(): void
+    public function test_filename_setter_affects_get_filename(): void
     {
-        $ref = new \ReflectionMethod(ExcelExporter::class, 'export');
+        $exporter = $this->makeExporterWithoutConstructor();
 
-        $this->assertCount(0, $ref->getParameters());
+        $result = $exporter->filename('users-export');
+
+        $this->assertSame($exporter, $result);
+        $this->assertSame('users-export', $exporter->getFilename());
     }
 
-    public function test_constructor_exists(): void
+    public function test_with_scope_sets_scope_property(): void
     {
-        $this->assertTrue(method_exists(ExcelExporter::class, '__construct'));
+        $exporter = $this->makeExporterWithoutConstructor();
+
+        $result = $exporter->withScope('all');
+
+        $this->assertSame($exporter, $result);
+        $this->assertSame('all', $this->getProtectedProperty($exporter, 'scope'));
     }
 
-    public function test_constructor_accepts_titles_parameter(): void
+    public function test_extension_helpers_update_extension_property(): void
     {
-        $ref = new \ReflectionMethod(ExcelExporter::class, '__construct');
-        $params = $ref->getParameters();
+        $exporter = $this->makeExporterWithoutConstructor();
 
-        $this->assertCount(1, $params);
-        $this->assertEquals('titles', $params[0]->getName());
-    }
+        $exporter->csv();
+        $this->assertSame('csv', $this->getProtectedProperty($exporter, 'extension'));
 
-    public function test_constructor_titles_default_is_empty_array(): void
-    {
-        $ref = new \ReflectionMethod(ExcelExporter::class, '__construct');
-        $params = $ref->getParameters();
+        $exporter->ods();
+        $this->assertSame('ods', $this->getProtectedProperty($exporter, 'extension'));
 
-        $this->assertTrue($params[0]->isDefaultValueAvailable());
-        $this->assertSame([], $params[0]->getDefaultValue());
-    }
-
-    public function test_inherits_titles_method(): void
-    {
-        $this->assertTrue(method_exists(ExcelExporter::class, 'titles'));
-    }
-
-    public function test_inherits_filename_method(): void
-    {
-        $this->assertTrue(method_exists(ExcelExporter::class, 'filename'));
-    }
-
-    public function test_inherits_with_scope_method(): void
-    {
-        $this->assertTrue(method_exists(ExcelExporter::class, 'withScope'));
+        $exporter->xlsx();
+        $this->assertSame('xlsx', $this->getProtectedProperty($exporter, 'extension'));
     }
 }

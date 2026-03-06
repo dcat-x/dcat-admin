@@ -17,7 +17,9 @@ class ChartTest extends TestCase
 
     public function test_extends_widget(): void
     {
-        $this->assertTrue(is_subclass_of(Chart::class, Widget::class));
+        $parents = class_parents(Chart::class);
+
+        $this->assertContains(Widget::class, $parents);
     }
 
     public function test_constructor_with_selector(): void

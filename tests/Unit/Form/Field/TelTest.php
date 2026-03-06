@@ -28,13 +28,6 @@ class TelTest extends TestCase
         $this->assertInstanceOf(Text::class, $field);
     }
 
-    public function test_can_be_constructed(): void
-    {
-        $field = $this->createField();
-
-        $this->assertSame('tel', $field->column());
-    }
-
     public function test_can_be_constructed_with_custom_column(): void
     {
         $field = $this->createField('phone_number', 'Phone Number');
@@ -42,21 +35,32 @@ class TelTest extends TestCase
         $this->assertSame('phone_number', $field->column());
     }
 
-    public function test_render_method_exists(): void
+    public function test_render_adds_tel_type_and_phone_icon(): void
     {
         $field = $this->createField();
 
-        $this->assertTrue(method_exists($field, 'render'));
+        $html = $field->render();
+
+        $this->assertStringContainsString('type="tel"', $html);
+        $this->assertStringContainsString('fa-phone', $html);
     }
 
-    public function test_inherits_text_methods(): void
+    public function test_type_inputmask_min_max_length_are_chainable(): void
     {
         $field = $this->createField();
 
-        $this->assertTrue(method_exists($field, 'type'));
-        $this->assertTrue(method_exists($field, 'inputmask'));
-        $this->assertTrue(method_exists($field, 'minLength'));
-        $this->assertTrue(method_exists($field, 'maxLength'));
+        $result = $field
+            ->type('tel')
+            ->inputmask(['mask' => '999-9999'])
+            ->minLength(7)
+            ->maxLength(20);
+
+        $this->assertSame($field, $result);
+
+        $attributes = $this->getProtectedProperty($field, 'attributes');
+        $this->assertSame('tel', $attributes['type']);
+        $this->assertSame(7, $attributes['data-minlength']);
+        $this->assertSame(20, $attributes['data-maxlength']);
     }
 
     public function test_does_not_have_default_rules(): void

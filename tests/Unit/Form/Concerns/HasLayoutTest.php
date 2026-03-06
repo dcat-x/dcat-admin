@@ -58,11 +58,12 @@ class HasLayoutTest extends TestCase
         $this->assertSame($helper, $result);
     }
 
-    public function test_has_layout_method(): void
+    public function test_layout_and_column_method_signatures(): void
     {
-        $helper = new HasLayoutTestHelper;
+        $layoutMethod = new \ReflectionMethod(HasLayoutTestHelper::class, 'layout');
+        $columnMethod = new \ReflectionMethod(HasLayoutTestHelper::class, 'column');
 
-        $this->assertTrue(method_exists($helper, 'layout'));
-        $this->assertTrue(method_exists($helper, 'column'));
+        $this->assertSame(0, $layoutMethod->getNumberOfParameters());
+        $this->assertSame(2, $columnMethod->getNumberOfParameters());
     }
 }

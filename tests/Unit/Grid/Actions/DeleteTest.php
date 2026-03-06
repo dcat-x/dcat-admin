@@ -15,36 +15,19 @@ class DeleteTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
+    public function test_is_instance_of_row_action(): void
     {
-        $this->assertTrue(class_exists(Delete::class));
-    }
-
-    public function test_extends_row_action(): void
-    {
-        $action = Mockery::mock(Delete::class)->makePartial();
+        $action = new Delete;
 
         $this->assertInstanceOf(RowAction::class, $action);
     }
 
-    public function test_has_title_method(): void
-    {
-        $this->assertTrue(method_exists(Delete::class, 'title'));
-    }
-
-    public function test_title_contains_icon_trash(): void
+    public function test_title_contains_icon_and_delete_text_by_default(): void
     {
         $action = new Delete;
         $title = $action->title();
 
         $this->assertStringContainsString('icon-trash', $title);
-    }
-
-    public function test_title_contains_delete_text(): void
-    {
-        $action = new Delete;
-        $title = $action->title();
-
         $this->assertStringContainsString('feather', $title);
     }
 
@@ -59,13 +42,50 @@ class DeleteTest extends TestCase
         $this->assertEquals('Custom Delete', $action->title());
     }
 
-    public function test_has_url_method(): void
+    public function test_url_uses_parent_resource_and_row_key(): void
     {
-        $this->assertTrue(method_exists(Delete::class, 'url'));
+        $action = new Delete;
+
+        $grid = Mockery::mock(\Dcat\Admin\Grid::class);
+        $grid->shouldReceive('resource')->andReturn('/admin/users');
+        $grid->shouldReceive('getKeyName')->andReturn('id');
+
+        $action->setGrid($grid)->setRow((object) ['id' => 99]);
+
+        $this->assertSame('/admin/users/99', $action->url());
     }
 
-    public function test_has_render_method(): void
+    public function test_render_sets_expected_data_attributes(): void
     {
-        $this->assertTrue(method_exists(Delete::class, 'render'));
+        $action = new Delete;
+
+        $grid = Mockery::mock(\Dcat\Admin\Grid::class);
+        $model = Mockery::mock();
+        $model->shouldReceive('withoutTreeQuery')->once()->andReturn('/admin/users?page=1');
+
+        $grid->shouldReceive('resource')->andReturn('/admin/users');
+        $grid->shouldReceive('getKeyName')->andReturn('id');
+        $grid->shouldReceive('model')->andReturn($model);
+
+        $action->setGrid($grid)->setRow((object) ['id' => 10]);
+
+        $html = $action->render();
+
+        $this->assertStringContainsString('data-action="delete"', $html);
+        $this->assertStringContainsString('data-url="/admin/users/10"', $html);
+        $this->assertStringContainsString('data-message="ID - 10"', $html);
+        $this->assertStringContainsString('data-redirect="/admin/users?page=1"', $html);
+    }
+
+    public function test_url_and_render_method_signatures_are_public_and_parameterless(): void
+    {
+        $url = new \ReflectionMethod(Delete::class, 'url');
+        $render = new \ReflectionMethod(Delete::class, 'render');
+
+        $this->assertTrue($url->isPublic());
+        $this->assertCount(0, $url->getParameters());
+
+        $this->assertTrue($render->isPublic());
+        $this->assertCount(0, $render->getParameters());
     }
 }

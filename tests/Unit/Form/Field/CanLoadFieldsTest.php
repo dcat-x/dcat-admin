@@ -27,14 +27,20 @@ class CanLoadFieldsTest extends TestCase
     // Method existence
     // -------------------------------------------------------
 
-    public function test_load_method_exists(): void
+    public function test_load_method_signature(): void
     {
-        $this->assertTrue(method_exists(CanLoadFields::class, 'load'));
+        $method = new \ReflectionMethod(CanLoadFields::class, 'load');
+
+        $this->assertTrue($method->isPublic());
+        $this->assertSame(4, $method->getNumberOfParameters());
     }
 
-    public function test_loads_method_exists(): void
+    public function test_loads_method_signature(): void
     {
-        $this->assertTrue(method_exists(CanLoadFields::class, 'loads'));
+        $method = new \ReflectionMethod(CanLoadFields::class, 'loads');
+
+        $this->assertTrue($method->isPublic());
+        $this->assertSame(4, $method->getNumberOfParameters());
     }
 
     // -------------------------------------------------------

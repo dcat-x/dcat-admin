@@ -43,8 +43,10 @@ class FlushAdminStateTest extends TestCase
         $this->assertContains('admin.menu', $services);
     }
 
-    public function test_handle_method_exists(): void
+    public function test_handle_method_signature(): void
     {
-        $this->assertTrue(method_exists(FlushAdminState::class, 'handle'));
+        $method = new \ReflectionMethod(FlushAdminState::class, 'handle');
+
+        $this->assertSame(1, $method->getNumberOfParameters());
     }
 }

@@ -7,9 +7,11 @@ use Dcat\Admin\Tests\TestCase;
 
 class AdminTest extends TestCase
 {
-    public function test_admin_class_exists(): void
+    public function test_reflection_can_load_admin_class_metadata(): void
     {
-        $this->assertTrue(class_exists(Admin::class));
+        $reflection = new \ReflectionClass(Admin::class);
+
+        $this->assertSame(Admin::class, $reflection->getName());
     }
 
     public function test_admin_version(): void

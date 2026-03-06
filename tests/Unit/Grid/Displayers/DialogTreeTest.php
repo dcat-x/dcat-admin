@@ -2,6 +2,8 @@
 
 namespace Dcat\Admin\Tests\Unit\Grid\Displayers;
 
+use Dcat\Admin\Grid;
+use Dcat\Admin\Grid\Column;
 use Dcat\Admin\Grid\Displayers\AbstractDisplayer;
 use Dcat\Admin\Grid\Displayers\DialogTree;
 use Dcat\Admin\Tests\TestCase;
@@ -15,134 +17,92 @@ class DialogTreeTest extends TestCase
         Mockery::close();
     }
 
-    public function test_class_exists(): void
+    protected function makeDisplayer($value = [1, 2]): DialogTree
     {
-        $this->assertTrue(class_exists(DialogTree::class));
+        $grid = Mockery::mock(Grid::class);
+        $grid->shouldReceive('getKeyName')->andReturn('id');
+        $grid->shouldReceive('resource')->andReturn('/admin/roles');
+
+        $column = Mockery::mock(Column::class);
+        $column->shouldReceive('getName')->andReturn('roles');
+        $column->shouldReceive('getLabel')->andReturn('Roles');
+
+        return new class($value, $grid, $column, ['id' => 1]) extends DialogTree
+        {
+            public function exposeFormat($val): string
+            {
+                return $this->format($val);
+            }
+        };
     }
 
-    public function test_extends_abstract_displayer(): void
+    public function test_dialog_tree_is_displayer(): void
     {
-        $this->assertTrue(is_subclass_of(DialogTree::class, AbstractDisplayer::class));
+        $displayer = $this->makeDisplayer();
+
+        $this->assertInstanceOf(AbstractDisplayer::class, $displayer);
     }
 
-    public function test_area_default_value(): void
+    public function test_nodes_options_and_columns_are_applied_to_display_output(): void
     {
-        $ref = new \ReflectionProperty(DialogTree::class, 'area');
-        $ref->setAccessible(true);
+        $displayer = $this->makeDisplayer([1, 2]);
+        $html = $displayer
+            ->nodes([
+                ['node_id' => 1, 'title' => 'Dashboard', 'pid' => 0],
+                ['node_id' => 2, 'title' => 'Users', 'pid' => 1],
+            ])
+            ->setIdColumn('node_id')
+            ->setTitleColumn('title')
+            ->setParentColumn('pid')
+            ->title('Pick Menus')
+            ->area('500px', '420px')
+            ->rootParentId(0)
+            ->options(['checkbox' => ['tie_selection' => false]])
+            ->url('api/tree')
+            ->checkAll()
+            ->display();
 
-        $this->assertSame(['580px', '600px'], $ref->getDefaultValue());
+        $this->assertStringContainsString('class="grid-dialog-tree"', $html);
+        $this->assertStringContainsString('data-title="Pick Menus"', $html);
+        $this->assertStringContainsString('data-url="', $html);
+        $this->assertStringContainsString('api/tree', $html);
+        $this->assertStringContainsString('data-checked="1"', $html);
+        $this->assertStringContainsString('data-val="1,2"', $html);
     }
 
-    public function test_column_names_default_value(): void
+    public function test_display_uses_column_label_as_default_title(): void
     {
-        $ref = new \ReflectionProperty(DialogTree::class, 'columnNames');
-        $ref->setAccessible(true);
+        $displayer = $this->makeDisplayer([3, 5]);
+        $html = $displayer->display();
 
-        $expected = [
-            'id' => 'id',
-            'text' => 'name',
-            'parent' => 'parent_id',
-        ];
-
-        $this->assertSame($expected, $ref->getDefaultValue());
+        $this->assertStringContainsString('data-title="Roles"', $html);
+        $this->assertStringContainsString('data-val="3,5"', $html);
     }
 
-    public function test_nodes_default_empty_array(): void
+    public function test_display_accepts_closure_to_mutate_state(): void
     {
-        $ref = new \ReflectionProperty(DialogTree::class, 'nodes');
-        $ref->setAccessible(true);
+        $displayer = $this->makeDisplayer([9]);
+        $html = $displayer->display(function (DialogTree $tree) {
+            $tree->title('From closure')->nodes([['id' => 9, 'name' => 'Settings', 'parent_id' => 0]]);
+        });
 
-        $this->assertSame([], $ref->getDefaultValue());
+        $this->assertStringContainsString('data-title="From closure"', $html);
     }
 
-    public function test_root_parent_id_default_value(): void
+    public function test_display_accepts_arrayable_nodes(): void
     {
-        $ref = new \ReflectionProperty(DialogTree::class, 'rootParentId');
-        $ref->setAccessible(true);
+        $displayer = $this->makeDisplayer([7]);
+        $html = $displayer->display(collect([['id' => 7, 'name' => 'Logs', 'parent_id' => 0]]));
 
-        $this->assertSame(0, $ref->getDefaultValue());
+        $this->assertStringContainsString('class="grid-dialog-tree"', $html);
+        $this->assertStringContainsString('data-val="7"', $html);
     }
 
-    public function test_has_method_nodes(): void
+    public function test_format_flattens_value_array_to_csv_string(): void
     {
-        $this->assertTrue(method_exists(DialogTree::class, 'nodes'));
-    }
+        $displayer = $this->makeDisplayer();
 
-    public function test_has_method_root_parent_id(): void
-    {
-        $this->assertTrue(method_exists(DialogTree::class, 'rootParentId'));
-    }
-
-    public function test_has_method_url(): void
-    {
-        $this->assertTrue(method_exists(DialogTree::class, 'url'));
-    }
-
-    public function test_has_method_check_all(): void
-    {
-        $this->assertTrue(method_exists(DialogTree::class, 'checkAll'));
-    }
-
-    public function test_has_method_options(): void
-    {
-        $this->assertTrue(method_exists(DialogTree::class, 'options'));
-    }
-
-    public function test_has_method_title(): void
-    {
-        $this->assertTrue(method_exists(DialogTree::class, 'title'));
-    }
-
-    public function test_has_method_area(): void
-    {
-        $this->assertTrue(method_exists(DialogTree::class, 'area'));
-    }
-
-    public function test_has_method_set_id_column(): void
-    {
-        $this->assertTrue(method_exists(DialogTree::class, 'setIdColumn'));
-    }
-
-    public function test_has_method_set_title_column(): void
-    {
-        $this->assertTrue(method_exists(DialogTree::class, 'setTitleColumn'));
-    }
-
-    public function test_has_method_set_parent_column(): void
-    {
-        $this->assertTrue(method_exists(DialogTree::class, 'setParentColumn'));
-    }
-
-    public function test_has_method_display(): void
-    {
-        $this->assertTrue(method_exists(DialogTree::class, 'display'));
-    }
-
-    public function test_nodes_method_is_public(): void
-    {
-        $method = new \ReflectionMethod(DialogTree::class, 'nodes');
-
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_url_method_is_public(): void
-    {
-        $method = new \ReflectionMethod(DialogTree::class, 'url');
-
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_area_property_is_protected(): void
-    {
-        $ref = new \ReflectionProperty(DialogTree::class, 'area');
-
-        $this->assertTrue($ref->isProtected());
-    }
-
-    public function test_column_names_property_is_protected(): void
-    {
-        $ref = new \ReflectionProperty(DialogTree::class, 'columnNames');
-
-        $this->assertTrue($ref->isProtected());
+        $this->assertSame('4,6', $displayer->exposeFormat([4, 6]));
+        $this->assertSame('', $displayer->exposeFormat([]));
     }
 }

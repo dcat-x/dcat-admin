@@ -42,20 +42,29 @@ class PasswordTest extends TestCase
         $this->assertSame('user_password', $field->column());
     }
 
-    public function test_render_method_exists(): void
+    public function test_render_adds_password_type_and_eye_icon(): void
     {
         $field = $this->createField();
 
-        $this->assertTrue(method_exists($field, 'render'));
+        $html = $field->render();
+
+        $this->assertStringContainsString('type="password"', $html);
+        $this->assertStringContainsString('icon-eye', $html);
     }
 
-    public function test_inherits_text_methods(): void
+    public function test_type_inputmask_and_datalist_are_chainable(): void
     {
         $field = $this->createField();
 
-        $this->assertTrue(method_exists($field, 'type'));
-        $this->assertTrue(method_exists($field, 'inputmask'));
-        $this->assertTrue(method_exists($field, 'datalist'));
+        $result = $field
+            ->type('password')
+            ->inputmask(['mask' => '******'])
+            ->datalist(['secret', 'strong-password']);
+
+        $this->assertSame($field, $result);
+
+        $attributes = $this->getProtectedProperty($field, 'attributes');
+        $this->assertSame('password', $attributes['type']);
     }
 
     public function test_does_not_have_default_rules(): void

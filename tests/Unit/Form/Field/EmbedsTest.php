@@ -3,7 +3,6 @@
 namespace Dcat\Admin\Tests\Unit\Form\Field;
 
 use Dcat\Admin\Contracts\FieldsCollection;
-use Dcat\Admin\Form\Field;
 use Dcat\Admin\Form\Field\Embeds;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
@@ -16,65 +15,98 @@ class EmbedsTest extends TestCase
         parent::tearDown();
     }
 
-    // -------------------------------------------------------
-    // Class structure
-    // -------------------------------------------------------
-
-    public function test_class_exists(): void
+    protected function getProtectedProperty(object $object, string $property)
     {
-        $this->assertTrue(class_exists(Embeds::class));
+        $reflection = new \ReflectionProperty($object, $property);
+        $reflection->setAccessible(true);
+
+        return $reflection->getValue($object);
     }
 
-    public function test_is_subclass_of_field(): void
+    protected function invokeProtectedMethod(object $object, string $method, array $arguments = [])
     {
-        $this->assertTrue(is_subclass_of(Embeds::class, Field::class));
+        $reflection = new \ReflectionMethod($object, $method);
+        $reflection->setAccessible(true);
+
+        return $reflection->invokeArgs($object, $arguments);
     }
 
     public function test_implements_fields_collection(): void
     {
-        $ref = new \ReflectionClass(Embeds::class);
+        $reflection = new \ReflectionClass(Embeds::class);
 
-        $this->assertTrue($ref->implementsInterface(FieldsCollection::class));
+        $this->assertTrue($reflection->implementsInterface(FieldsCollection::class));
     }
 
-    // -------------------------------------------------------
-    // Default property values via reflection
-    // -------------------------------------------------------
-
-    public function test_builder_default_null(): void
+    public function test_builder_default_is_null(): void
     {
-        $ref = new \ReflectionProperty(Embeds::class, 'builder');
-        $ref->setAccessible(true);
+        $reflection = new \ReflectionProperty(Embeds::class, 'builder');
+        $reflection->setAccessible(true);
 
-        $this->assertNull($ref->getDefaultValue());
+        $this->assertNull($reflection->getDefaultValue());
     }
 
-    // -------------------------------------------------------
-    // Method existence
-    // -------------------------------------------------------
-
-    public function test_method_get_validator_exists(): void
+    public function test_constructor_with_single_argument_sets_builder(): void
     {
-        $this->assertTrue(method_exists(Embeds::class, 'getValidator'));
+        $builder = static function (): void {};
+
+        $field = new Embeds('extra', [$builder]);
+
+        $this->assertSame($builder, $this->getProtectedProperty($field, 'builder'));
     }
 
-    public function test_method_reset_input_key_exists(): void
+    public function test_reset_input_key_renames_fields_for_array_columns(): void
     {
-        $this->assertTrue(method_exists(Embeds::class, 'resetInputKey'));
+        $field = new Embeds('extra', [static function (): void {}]);
+
+        $input = [
+            'extra' => [
+                'start_at' => '2026-01-01',
+                'end_at' => '2026-01-31',
+                'note' => 'keep',
+            ],
+        ];
+
+        $field->resetInputKey($input, ['start' => 'start_at', 'end' => 'end_at']);
+
+        $this->assertArrayHasKey('start_atstart', $input['extra']);
+        $this->assertArrayHasKey('end_atend', $input['extra']);
+        $this->assertArrayNotHasKey('start_at', $input['extra']);
+        $this->assertArrayNotHasKey('end_at', $input['extra']);
+        $this->assertSame('keep', $input['extra']['note']);
     }
 
-    public function test_method_field_exists(): void
+    public function test_get_validator_returns_false_when_input_missing_column(): void
     {
-        $this->assertTrue(method_exists(Embeds::class, 'field'));
+        $field = new Embeds('extra', [static function (): void {}]);
+
+        $validator = $field->getValidator(['other' => ['k' => 'v']]);
+
+        $this->assertFalse($validator);
     }
 
-    public function test_method_fields_exists(): void
+    public function test_format_validation_messages_prefixes_column_name(): void
     {
-        $this->assertTrue(method_exists(Embeds::class, 'fields'));
+        $field = new Embeds('extra', [static function (): void {}]);
+
+        $messages = $this->invokeProtectedMethod($field, 'formatValidationMessages', [
+            [],
+            ['name.required' => 'Name is required'],
+        ]);
+
+        $this->assertSame(['extra.name.required' => 'Name is required'], $messages);
     }
 
-    public function test_method_render_exists(): void
+    public function test_format_validation_attribute_for_string_column(): void
     {
-        $this->assertTrue(method_exists(Embeds::class, 'render'));
+        $field = new Embeds('extra', [static function (): void {}]);
+
+        $attributes = $this->invokeProtectedMethod($field, 'formatValidationAttribute', [
+            ['extra' => ['name' => 'cooper']],
+            'Name',
+            'name',
+        ]);
+
+        $this->assertSame(['extra.name' => 'Name'], $attributes);
     }
 }

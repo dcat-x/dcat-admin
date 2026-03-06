@@ -63,8 +63,10 @@ class ShowAbstractToolTest extends TestCase
         $this->assertNull($reflection->getValue($tool));
     }
 
-    public function test_set_parent_method_exists(): void
+    public function test_set_parent_method_signature(): void
     {
-        $this->assertTrue(method_exists(AbstractTool::class, 'setParent'));
+        $method = new \ReflectionMethod(AbstractTool::class, 'setParent');
+
+        $this->assertSame(1, $method->getNumberOfParameters());
     }
 }

@@ -15,11 +15,6 @@ class SessionStoreTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
-    {
-        $this->assertTrue(class_exists(SessionStore::class));
-    }
-
     public function test_implements_column_selector_store(): void
     {
         $store = new SessionStore;
@@ -40,18 +35,41 @@ class SessionStoreTest extends TestCase
         $this->assertSame($grid, $ref->getValue($store));
     }
 
-    public function test_has_store_method(): void
+    public function test_store_get_and_forget_use_session_storage(): void
     {
-        $this->assertTrue(method_exists(SessionStore::class, 'store'));
+        $store = new TestableSessionStore;
+
+        $payload = ['visible' => ['name', 'email']];
+        $store->store($payload);
+
+        $this->assertSame($payload, $store->get());
+
+        $store->forget();
+
+        $this->assertNull($store->get());
     }
 
-    public function test_has_get_method(): void
+    public function test_store_get_forget_signatures_are_public_and_parameter_counts_match(): void
     {
-        $this->assertTrue(method_exists(SessionStore::class, 'get'));
-    }
+        $storeMethod = new \ReflectionMethod(SessionStore::class, 'store');
+        $getMethod = new \ReflectionMethod(SessionStore::class, 'get');
+        $forgetMethod = new \ReflectionMethod(SessionStore::class, 'forget');
 
-    public function test_has_forget_method(): void
+        $this->assertTrue($storeMethod->isPublic());
+        $this->assertCount(1, $storeMethod->getParameters());
+
+        $this->assertTrue($getMethod->isPublic());
+        $this->assertCount(0, $getMethod->getParameters());
+
+        $this->assertTrue($forgetMethod->isPublic());
+        $this->assertCount(0, $forgetMethod->getParameters());
+    }
+}
+
+class TestableSessionStore extends SessionStore
+{
+    protected function getKey()
     {
-        $this->assertTrue(method_exists(SessionStore::class, 'forget'));
+        return 'test-grid-column-selector-session';
     }
 }

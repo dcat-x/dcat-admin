@@ -16,14 +16,16 @@ class InstallCommandTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
+    public function test_can_be_instantiated(): void
     {
-        $this->assertTrue(class_exists(InstallCommand::class));
+        $this->assertInstanceOf(InstallCommand::class, new InstallCommand);
     }
 
     public function test_extends_illuminate_console_command(): void
     {
-        $this->assertTrue(is_subclass_of(InstallCommand::class, Command::class));
+        $parents = class_parents(InstallCommand::class);
+
+        $this->assertContains(Command::class, $parents);
     }
 
     public function test_signature_default_value(): void

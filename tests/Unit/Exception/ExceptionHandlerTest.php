@@ -17,19 +17,20 @@ class ExceptionHandlerTest extends TestCase
         $this->assertInstanceOf(ExceptionHandler::class, $handler);
     }
 
-    public function test_handler_has_handle_method(): void
+    public function test_handle_render_report_method_signatures_are_expected(): void
     {
-        $this->assertTrue(method_exists(Handler::class, 'handle'));
-    }
+        $handle = new \ReflectionMethod(Handler::class, 'handle');
+        $render = new \ReflectionMethod(Handler::class, 'render');
+        $report = new \ReflectionMethod(Handler::class, 'report');
 
-    public function test_handler_has_render_method(): void
-    {
-        $this->assertTrue(method_exists(Handler::class, 'render'));
-    }
+        $this->assertTrue($handle->isPublic());
+        $this->assertCount(1, $handle->getParameters());
 
-    public function test_handler_has_report_method(): void
-    {
-        $this->assertTrue(method_exists(Handler::class, 'report'));
+        $this->assertTrue($render->isPublic());
+        $this->assertCount(1, $render->getParameters());
+
+        $this->assertTrue($report->isPublic());
+        $this->assertCount(1, $report->getParameters());
     }
 
     public function test_handle_rethrows_http_response_exception(): void

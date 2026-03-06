@@ -27,9 +27,11 @@ class HasDependsTest extends TestCase
     // Method existence
     // -------------------------------------------------------
 
-    public function test_depends_method_exists(): void
+    public function test_depends_method_signature(): void
     {
-        $this->assertTrue(method_exists(HasDepends::class, 'depends'));
+        $method = new \ReflectionMethod(HasDepends::class, 'depends');
+
+        $this->assertSame(2, $method->getNumberOfParameters());
     }
 
     // -------------------------------------------------------

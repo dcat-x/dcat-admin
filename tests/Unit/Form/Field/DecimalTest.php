@@ -64,10 +64,10 @@ class DecimalTest extends TestCase
         $this->assertSame('amount', $field->column());
     }
 
-    public function test_render_method_exists(): void
+    public function test_render_method_signature(): void
     {
-        $field = $this->createField();
+        $method = new \ReflectionMethod(Decimal::class, 'render');
 
-        $this->assertTrue(method_exists($field, 'render'));
+        $this->assertSame(0, $method->getNumberOfParameters());
     }
 }

@@ -24,11 +24,6 @@ class DeleteTest extends TestCase
         return $action;
     }
 
-    public function test_class_exists(): void
-    {
-        $this->assertTrue(class_exists(Delete::class));
-    }
-
     public function test_extends_row_action(): void
     {
         $action = Mockery::mock(Delete::class)->makePartial();
@@ -36,9 +31,11 @@ class DeleteTest extends TestCase
         $this->assertInstanceOf(RowAction::class, $action);
     }
 
-    public function test_has_html_method(): void
+    public function test_html_signature_has_no_parameters(): void
     {
-        $this->assertTrue(method_exists(Delete::class, 'html'));
+        $method = new \ReflectionMethod(Delete::class, 'html');
+
+        $this->assertSame(0, $method->getNumberOfParameters());
     }
 
     public function test_html_method_returns_string(): void

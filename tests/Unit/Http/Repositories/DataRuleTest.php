@@ -9,24 +9,52 @@ use Mockery;
 
 class DataRuleTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->app['config']->set('admin.database.data_rules_model', \Dcat\Admin\Models\DataRule::class);
+    }
+
     protected function tearDown(): void
     {
         Mockery::close();
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
+    protected function getProtectedProperty(object $object, string $property)
     {
-        $this->assertTrue(class_exists(DataRule::class));
+        $reflection = new \ReflectionProperty($object, $property);
+        $reflection->setAccessible(true);
+
+        return $reflection->getValue($object);
     }
 
-    public function test_is_subclass_of_eloquent_repository(): void
+    public function test_is_instance_of_eloquent_repository(): void
     {
-        $this->assertTrue(is_subclass_of(DataRule::class, EloquentRepository::class));
+        $repository = new DataRule;
+
+        $this->assertInstanceOf(EloquentRepository::class, $repository);
     }
 
-    public function test_constructor_exists(): void
+    public function test_constructor_sets_eloquent_class_from_config(): void
     {
-        $this->assertTrue(method_exists(DataRule::class, '__construct'));
+        $repository = new DataRule;
+
+        $this->assertSame(
+            \Dcat\Admin\Models\DataRule::class,
+            $this->getProtectedProperty($repository, 'eloquentClass')
+        );
+    }
+
+    public function test_constructor_signature_accepts_optional_relations_array(): void
+    {
+        $reflection = new \ReflectionMethod(DataRule::class, '__construct');
+        $params = $reflection->getParameters();
+
+        $this->assertCount(1, $params);
+        $this->assertSame('relations', $params[0]->getName());
+        $this->assertTrue($params[0]->isDefaultValueAvailable());
+        $this->assertSame([], $params[0]->getDefaultValue());
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Dcat\Admin\Tests\Unit\Form\Field;
 
-use Dcat\Admin\Form\Field;
 use Dcat\Admin\Form\Field\Map;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
@@ -13,64 +12,6 @@ class MapTest extends TestCase
     {
         Mockery::close();
         parent::tearDown();
-    }
-
-    // -------------------------------------------------------
-    // Class existence and inheritance
-    // -------------------------------------------------------
-
-    public function test_class_exists(): void
-    {
-        $this->assertTrue(class_exists(Map::class));
-    }
-
-    public function test_extends_field(): void
-    {
-        $this->assertTrue(is_subclass_of(Map::class, Field::class));
-    }
-
-    // -------------------------------------------------------
-    // Method existence
-    // -------------------------------------------------------
-
-    public function test_height_method_exists(): void
-    {
-        $this->assertTrue(method_exists(Map::class, 'height'));
-    }
-
-    public function test_google_method_exists(): void
-    {
-        $this->assertTrue(method_exists(Map::class, 'google'));
-    }
-
-    public function test_tencent_method_exists(): void
-    {
-        $this->assertTrue(method_exists(Map::class, 'tencent'));
-    }
-
-    public function test_yandex_method_exists(): void
-    {
-        $this->assertTrue(method_exists(Map::class, 'yandex'));
-    }
-
-    public function test_baidu_method_exists(): void
-    {
-        $this->assertTrue(method_exists(Map::class, 'baidu'));
-    }
-
-    public function test_amap_method_exists(): void
-    {
-        $this->assertTrue(method_exists(Map::class, 'amap'));
-    }
-
-    public function test_require_assets_method_exists(): void
-    {
-        $this->assertTrue(method_exists(Map::class, 'requireAssets'));
-    }
-
-    public function test_get_using_map_method_exists(): void
-    {
-        $this->assertTrue(method_exists(Map::class, 'getUsingMap'));
     }
 
     // -------------------------------------------------------
@@ -164,15 +105,6 @@ class MapTest extends TestCase
         $type = $params[0]->getType();
         $this->assertNotNull($type);
         $this->assertSame('string', $type->getName());
-    }
-
-    // -------------------------------------------------------
-    // Render method
-    // -------------------------------------------------------
-
-    public function test_render_method_exists(): void
-    {
-        $this->assertTrue(method_exists(Map::class, 'render'));
     }
 
     public function test_render_is_public(): void

@@ -16,14 +16,18 @@ class ExtensionMakeCommandTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
+    public function test_reflection_can_load_class_metadata(): void
     {
-        $this->assertTrue(class_exists(ExtensionMakeCommand::class));
+        $ref = new \ReflectionClass(ExtensionMakeCommand::class);
+
+        $this->assertSame(ExtensionMakeCommand::class, $ref->getName());
     }
 
     public function test_extends_command(): void
     {
-        $this->assertTrue(is_subclass_of(ExtensionMakeCommand::class, Command::class));
+        $parents = class_parents(ExtensionMakeCommand::class);
+
+        $this->assertContains(Command::class, $parents);
     }
 
     public function test_signature_contains_admin_ext_make(): void

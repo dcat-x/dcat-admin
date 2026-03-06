@@ -16,7 +16,9 @@ class LazyRenderableTest extends TestCase
 
     public function test_implements_lazy_renderable_contract(): void
     {
-        $this->assertTrue(is_subclass_of(LazyRenderable::class, LazyRenderableContract::class));
+        $implements = class_implements(LazyRenderable::class);
+
+        $this->assertContains(LazyRenderableContract::class, $implements);
     }
 
     public function test_constructor_accepts_payload(): void
@@ -64,9 +66,11 @@ class LazyRenderableTest extends TestCase
         $this->assertIsArray($ref->getDefaultValue());
     }
 
-    public function test_require_assets_method_exists(): void
+    public function test_require_assets_method_signature(): void
     {
-        $this->assertTrue(method_exists(LazyRenderable::class, 'requireAssets'));
+        $method = new \ReflectionMethod(LazyRenderable::class, 'requireAssets');
+
+        $this->assertSame(0, $method->getNumberOfParameters());
     }
 }
 

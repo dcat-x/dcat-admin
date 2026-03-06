@@ -2,7 +2,10 @@
 
 namespace Dcat\Admin\Tests\Unit\Form\Field;
 
+use Dcat\Admin\Exception\RuntimeException;
 use Dcat\Admin\Form\Field\CanCascadeFields;
+use Dcat\Admin\Form\Field\Checkbox;
+use Dcat\Admin\Form\Field\Select;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
 
@@ -14,119 +17,161 @@ class CanCascadeFieldsTest extends TestCase
         parent::tearDown();
     }
 
-    // -------------------------------------------------------
-    // Trait existence
-    // -------------------------------------------------------
-
-    public function test_trait_exists(): void
+    protected function getProtectedProperty(object $object, string $property)
     {
-        $this->assertTrue(trait_exists(CanCascadeFields::class));
+        $reflection = new \ReflectionProperty($object, $property);
+        $reflection->setAccessible(true);
+
+        return $reflection->getValue($object);
     }
 
-    // -------------------------------------------------------
-    // Method existence
-    // -------------------------------------------------------
-
-    public function test_when_method_exists(): void
+    protected function invokeProtectedMethod(object $object, string $method, array $arguments = [])
     {
-        $this->assertTrue(method_exists(CanCascadeFields::class, 'when'));
+        $reflection = new \ReflectionMethod($object, $method);
+        $reflection->setAccessible(true);
+
+        return $reflection->invokeArgs($object, $arguments);
     }
 
-    public function test_get_default_operator_method_exists(): void
+    protected function setProtectedProperty(object $object, string $property, mixed $value): void
     {
-        $this->assertTrue(method_exists(CanCascadeFields::class, 'getDefaultOperator'));
+        $reflection = new \ReflectionProperty($object, $property);
+        $reflection->setAccessible(true);
+        $reflection->setValue($object, $value);
     }
 
-    public function test_format_values_method_exists(): void
+    public function test_conditions_and_cascade_groups_default_to_empty_arrays(): void
     {
-        $this->assertTrue(method_exists(CanCascadeFields::class, 'formatValues'));
+        $field = new FakeCascadeField;
+
+        $this->assertSame([], $this->getProtectedProperty($field, 'conditions'));
+        $this->assertSame([], $this->getProtectedProperty($field, 'cascadeGroups'));
     }
 
-    public function test_get_cascade_class_method_exists(): void
+    public function test_when_with_two_arguments_uses_default_operator_and_registers_group(): void
     {
-        $this->assertTrue(method_exists(CanCascadeFields::class, 'getCascadeClass'));
+        $field = new FakeCascadeField;
+
+        $result = $field->when('active', static function (): void {});
+
+        $this->assertSame($field, $result);
+
+        $conditions = $this->getProtectedProperty($field, 'conditions');
+        $this->assertSame('=', $conditions[0]['operator']);
+        $this->assertSame('active', $conditions[0]['value']);
+
+        $this->assertSame('status', $field->form->groups[0]['column']);
+        $this->assertSame(0, $field->form->groups[0]['index']);
+        $this->assertStringContainsString('cascade-status-field-active-0', $field->form->groups[0]['class']);
     }
 
-    public function test_add_cascade_script_method_exists(): void
+    public function test_get_default_operator_returns_in_for_checkbox_field(): void
     {
-        $this->assertTrue(method_exists(CanCascadeFields::class, 'addCascadeScript'));
+        $checkbox = new Checkbox('roles', ['Roles']);
+
+        $operator = $this->invokeProtectedMethod($checkbox, 'getDefaultOperator');
+
+        $this->assertSame('in', $operator);
     }
 
-    public function test_get_cascade_script_method_exists(): void
+    public function test_format_values_wraps_in_operator_and_stringifies_values(): void
     {
-        $this->assertTrue(method_exists(CanCascadeFields::class, 'getCascadeScript'));
+        $field = new FakeCascadeField;
+
+        $value = 100;
+        $this->invokeProtectedMethod($field, 'formatValues', ['in', &$value]);
+
+        $this->assertSame(['100'], $value);
+
+        $value = 200;
+        $this->invokeProtectedMethod($field, 'formatValues', ['=', &$value]);
+
+        $this->assertSame('200', $value);
     }
 
-    public function test_get_form_front_value_method_exists(): void
+    public function test_get_cascade_script_returns_null_when_no_conditions(): void
     {
-        $this->assertTrue(method_exists(CanCascadeFields::class, 'getFormFrontValue'));
+        $field = new FakeCascadeField;
+
+        $script = $this->invokeProtectedMethod($field, 'getCascadeScript');
+
+        $this->assertNull($script);
     }
 
-    // -------------------------------------------------------
-    // Default property values via reflection on the trait
-    // -------------------------------------------------------
-
-    public function test_conditions_default_is_empty_array(): void
+    public function test_get_cascade_script_contains_runtime_sections_after_when_called(): void
     {
-        $reflection = new \ReflectionClass(CanCascadeFields::class);
-        $properties = $reflection->getDefaultProperties();
+        $field = new Select('status', ['Status']);
+        $form = new FakeCascadeForm;
+        $this->setProtectedProperty($field, 'form', $form);
+        $this->setProtectedProperty($field, 'parent', null);
 
-        $this->assertArrayHasKey('conditions', $properties);
-        $this->assertSame([], $properties['conditions']);
+        $field->when('=', 1, static function (): void {});
+
+        $script = $this->invokeProtectedMethod($field, 'getCascadeScript');
+
+        $this->assertIsString($script);
+        $this->assertStringContainsString('operator_table', $script);
+        $this->assertStringContainsString('cascade_groups', $script);
+        $this->assertStringContainsString("event = 'change'", $script);
     }
 
-    public function test_cascade_groups_default_is_empty_array(): void
+    public function test_get_form_front_value_for_select_contains_value_reader(): void
     {
-        $reflection = new \ReflectionClass(CanCascadeFields::class);
-        $properties = $reflection->getDefaultProperties();
+        $select = new Select('status', ['Status']);
 
-        $this->assertArrayHasKey('cascadeGroups', $properties);
-        $this->assertSame([], $properties['cascadeGroups']);
+        $code = $this->invokeProtectedMethod($select, 'getFormFrontValue');
+
+        $this->assertStringContainsString('$(this).val()', $code);
     }
 
-    // -------------------------------------------------------
-    // Method visibility checks
-    // -------------------------------------------------------
-
-    public function test_when_is_public(): void
+    public function test_get_form_front_value_throws_for_invalid_field_type(): void
     {
-        $method = new \ReflectionMethod(CanCascadeFields::class, 'when');
-        $this->assertTrue($method->isPublic());
+        $field = new FakeCascadeField;
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Invalid form field type');
+
+        $this->invokeProtectedMethod($field, 'getFormFrontValue');
+    }
+}
+
+class FakeCascadeField
+{
+    use CanCascadeFields;
+
+    public string $cascadeEvent = 'change';
+
+    public FakeCascadeForm $form;
+
+    public $parent = null;
+
+    public function __construct()
+    {
+        $this->form = new FakeCascadeForm;
     }
 
-    public function test_get_default_operator_is_protected(): void
+    public function column(): string
     {
-        $method = new \ReflectionMethod(CanCascadeFields::class, 'getDefaultOperator');
-        $this->assertTrue($method->isProtected());
+        return 'status';
     }
 
-    public function test_format_values_is_protected(): void
+    protected function getElementClassString(): string
     {
-        $method = new \ReflectionMethod(CanCascadeFields::class, 'formatValues');
-        $this->assertTrue($method->isProtected());
+        return 'status field';
     }
 
-    public function test_get_cascade_class_is_protected(): void
+    protected function getElementClassSelector(): string
     {
-        $method = new \ReflectionMethod(CanCascadeFields::class, 'getCascadeClass');
-        $this->assertTrue($method->isProtected());
+        return '.status-field';
     }
+}
 
-    public function test_add_cascade_script_is_protected(): void
-    {
-        $method = new \ReflectionMethod(CanCascadeFields::class, 'addCascadeScript');
-        $this->assertTrue($method->isProtected());
-    }
+class FakeCascadeForm
+{
+    public array $groups = [];
 
-    public function test_get_cascade_script_is_protected(): void
+    public function cascadeGroup(\Closure $closure, array $group): void
     {
-        $method = new \ReflectionMethod(CanCascadeFields::class, 'getCascadeScript');
-        $this->assertTrue($method->isProtected());
-    }
-
-    public function test_get_form_front_value_is_protected(): void
-    {
-        $method = new \ReflectionMethod(CanCascadeFields::class, 'getFormFrontValue');
-        $this->assertTrue($method->isProtected());
+        $this->groups[] = $group;
     }
 }

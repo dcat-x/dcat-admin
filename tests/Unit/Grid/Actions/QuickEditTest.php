@@ -15,24 +15,14 @@ class QuickEditTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_class_exists(): void
+    public function test_is_instance_of_row_action(): void
     {
-        $this->assertTrue(class_exists(QuickEdit::class));
-    }
-
-    public function test_extends_row_action(): void
-    {
-        $action = Mockery::mock(QuickEdit::class)->makePartial();
+        $action = new QuickEdit;
 
         $this->assertInstanceOf(RowAction::class, $action);
     }
 
-    public function test_has_title_method(): void
-    {
-        $this->assertTrue(method_exists(QuickEdit::class, 'title'));
-    }
-
-    public function test_title_contains_edit_icon(): void
+    public function test_title_contains_edit_icon_by_default(): void
     {
         $action = new QuickEdit;
         $title = $action->title();
@@ -40,15 +30,53 @@ class QuickEditTest extends TestCase
         $this->assertStringContainsString('icon-edit', $title);
     }
 
-    public function test_has_make_selector_method(): void
+    public function test_title_returns_custom_when_set(): void
     {
-        $this->assertTrue(method_exists(QuickEdit::class, 'makeSelector'));
+        $action = new QuickEdit;
+
+        $ref = new \ReflectionProperty($action, 'title');
+        $ref->setAccessible(true);
+        $ref->setValue($action, 'Custom Quick Edit');
+
+        $this->assertSame('Custom Quick Edit', $action->title());
     }
 
     public function test_make_selector_returns_quick_edit(): void
     {
         $action = new QuickEdit;
 
-        $this->assertEquals('quick-edit', $action->makeSelector());
+        $this->assertSame('quick-edit', $action->makeSelector());
+    }
+
+    public function test_render_sets_data_url_attribute(): void
+    {
+        $action = new QuickEdit;
+
+        $grid = Mockery::mock(\Dcat\Admin\Grid::class);
+        $grid->shouldReceive('option')->with('dialog_form_area')->andReturn([900, 600]);
+        $grid->shouldReceive('getEditUrl')->with(8)->andReturn('/admin/users/8/edit');
+        $grid->shouldReceive('getKeyName')->andReturn('id');
+
+        $action->setGrid($grid)->setRow((object) ['id' => 8]);
+
+        $html = $action->render();
+
+        $this->assertStringContainsString('data-url="/admin/users/8/edit"', $html);
+    }
+
+    public function test_public_method_signatures_are_expected(): void
+    {
+        $title = new \ReflectionMethod(QuickEdit::class, 'title');
+        $makeSelector = new \ReflectionMethod(QuickEdit::class, 'makeSelector');
+        $render = new \ReflectionMethod(QuickEdit::class, 'render');
+
+        $this->assertTrue($title->isPublic());
+        $this->assertCount(0, $title->getParameters());
+
+        $this->assertTrue($makeSelector->isPublic());
+        $this->assertCount(0, $makeSelector->getParameters());
+
+        $this->assertTrue($render->isPublic());
+        $this->assertCount(0, $render->getParameters());
     }
 }
