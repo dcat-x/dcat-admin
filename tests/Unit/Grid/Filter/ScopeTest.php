@@ -44,7 +44,7 @@ class ScopeTest extends TestCase
 
         $conditions = $scope->condition();
         $this->assertCount(1, $conditions);
-        $this->assertArrayHasKey('where', $conditions[0]);
+        $this->assertConditionEntryHasKey($conditions, 0, 'where');
         $this->assertEquals(['status', 'active'], $conditions[0]['where']);
     }
 
@@ -66,7 +66,7 @@ class ScopeTest extends TestCase
 
         $conditions = $scope->condition();
         $this->assertCount(1, $conditions);
-        $this->assertArrayHasKey('whereBetween', $conditions[0]);
+        $this->assertConditionEntryHasKey($conditions, 0, 'whereBetween');
     }
 
     public function test_order_by_query(): void
@@ -76,7 +76,7 @@ class ScopeTest extends TestCase
 
         $conditions = $scope->condition();
         $this->assertCount(1, $conditions);
-        $this->assertArrayHasKey('orderBy', $conditions[0]);
+        $this->assertConditionEntryHasKey($conditions, 0, 'orderBy');
         $this->assertEquals(['created_at', 'desc'], $conditions[0]['orderBy']);
     }
 
@@ -89,14 +89,20 @@ class ScopeTest extends TestCase
 
         $conditions = $scope->condition();
         $this->assertCount(3, $conditions);
-        $this->assertArrayHasKey('where', $conditions[0]);
-        $this->assertArrayHasKey('whereNotNull', $conditions[1]);
-        $this->assertArrayHasKey('orderBy', $conditions[2]);
+        $this->assertConditionEntryHasKey($conditions, 0, 'where');
+        $this->assertConditionEntryHasKey($conditions, 1, 'whereNotNull');
+        $this->assertConditionEntryHasKey($conditions, 2, 'orderBy');
     }
 
     public function test_get_label(): void
     {
         $scope = $this->makeScope('trashed', 'Trashed Items');
         $this->assertEquals('Trashed Items', $scope->getLabel());
+    }
+
+    private function assertConditionEntryHasKey(array $conditions, int $index, string $key): void
+    {
+        $this->assertIsArray($conditions[$index] ?? null);
+        $this->assertContains($key, array_keys($conditions[$index]));
     }
 }

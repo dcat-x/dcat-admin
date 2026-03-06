@@ -36,8 +36,7 @@ class NotInTest extends TestCase
 
         $condition = $filter->condition(['status' => ['deleted', 'banned']]);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('whereNotIn', $condition);
+        $this->assertConditionHasWhereNotIn($condition);
         $this->assertEquals(['status', ['deleted', 'banned']], $condition['whereNotIn']);
     }
 
@@ -47,8 +46,7 @@ class NotInTest extends TestCase
 
         $condition = $filter->condition(['status' => 'deleted,banned']);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('whereNotIn', $condition);
+        $this->assertConditionHasWhereNotIn($condition);
         $this->assertEquals(['status', ['deleted', 'banned']], $condition['whereNotIn']);
     }
 
@@ -67,8 +65,7 @@ class NotInTest extends TestCase
 
         $condition = $filter->condition(['role' => 'admin']);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('whereNotIn', $condition);
+        $this->assertConditionHasWhereNotIn($condition);
         $this->assertEquals(['role', ['admin']], $condition['whereNotIn']);
     }
 
@@ -89,5 +86,11 @@ class NotInTest extends TestCase
         $condition = $filter->condition(['status' => ['deleted']]);
 
         $this->assertNull($condition);
+    }
+
+    private function assertConditionHasWhereNotIn(mixed $condition): void
+    {
+        $this->assertIsArray($condition);
+        $this->assertContains('whereNotIn', array_keys($condition));
     }
 }

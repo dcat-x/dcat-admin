@@ -36,8 +36,7 @@ class BetweenTest extends TestCase
 
         $condition = $filter->condition(['price' => ['start' => '100', 'end' => '500']]);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('whereBetween', $condition);
+        $this->assertConditionHasKey($condition, 'whereBetween');
         $this->assertEquals(['price', ['100', '500']], $condition['whereBetween']);
     }
 
@@ -47,8 +46,7 @@ class BetweenTest extends TestCase
 
         $condition = $filter->condition(['price' => ['start' => '100', 'end' => '']]);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasKey($condition, 'where');
         $this->assertEquals(['price', '>=', '100'], $condition['where']);
     }
 
@@ -58,8 +56,7 @@ class BetweenTest extends TestCase
 
         $condition = $filter->condition(['price' => ['start' => '', 'end' => '500']]);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasKey($condition, 'where');
         $this->assertEquals(['price', '<=', '500'], $condition['where']);
     }
 
@@ -88,8 +85,7 @@ class BetweenTest extends TestCase
 
         $condition = $filter->condition(['created_at' => ['start' => '2024-01-01', 'end' => '2024-12-31']]);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('whereBetween', $condition);
+        $this->assertConditionHasKey($condition, 'whereBetween');
 
         $values = $condition['whereBetween'][1];
         $this->assertEquals(strtotime('2024-01-01'), $values[0]);
@@ -103,8 +99,7 @@ class BetweenTest extends TestCase
 
         $condition = $filter->condition(['created_at' => ['start' => '2024-06-15', 'end' => '']]);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasKey($condition, 'where');
         $this->assertEquals(strtotime('2024-06-15'), $condition['where'][2]);
     }
 
@@ -124,8 +119,7 @@ class BetweenTest extends TestCase
         $id = $filter->formatId('price');
 
         $this->assertIsArray($id);
-        $this->assertArrayHasKey('start', $id);
-        $this->assertArrayHasKey('end', $id);
+        $this->assertArrayContainsKeys(['start', 'end'], $id);
         $this->assertEquals('filter-column-price-start', $id['start']);
         $this->assertEquals('filter-column-price-end', $id['end']);
     }
@@ -147,5 +141,18 @@ class BetweenTest extends TestCase
         $filter->condition(['price' => ['start' => '10', 'end' => '20']]);
 
         $this->assertEquals(['start' => '10', 'end' => '20'], $filter->getValue());
+    }
+
+    private function assertConditionHasKey(mixed $condition, string $key): void
+    {
+        $this->assertIsArray($condition);
+        $this->assertContains($key, array_keys($condition));
+    }
+
+    private function assertArrayContainsKeys(array $expectedKeys, array $actual): void
+    {
+        foreach ($expectedKeys as $key) {
+            $this->assertContains($key, array_keys($actual));
+        }
     }
 }

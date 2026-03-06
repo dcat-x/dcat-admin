@@ -153,8 +153,8 @@ class NestedFormTest extends TestCase
         $ref->setAccessible(true);
         $original = $ref->getValue($nestedForm);
 
-        $this->assertArrayHasKey(10, $original);
-        $this->assertArrayHasKey(20, $original);
+        $this->assertContains(10, array_keys($original));
+        $this->assertContains(20, array_keys($original));
         $this->assertSame(['id' => 10, 'name' => 'Item A'], $original[10]);
         $this->assertSame(['id' => 20, 'name' => 'Item B'], $original[20]);
     }

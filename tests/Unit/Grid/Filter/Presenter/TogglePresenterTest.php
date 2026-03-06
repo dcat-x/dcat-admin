@@ -4,6 +4,7 @@ namespace Dcat\Admin\Tests\Unit\Grid\Filter\Presenter;
 
 use Dcat\Admin\Grid\Filter\Presenter\Toggle;
 use Dcat\Admin\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionProperty;
 
 class TogglePresenterTest extends TestCase
@@ -98,17 +99,14 @@ class TogglePresenterTest extends TestCase
         $this->assertEquals('large', $this->getProtectedProperty($toggle, 'size'));
     }
 
-    public function test_default_variables_returns_correct_keys(): void
+    #[DataProvider('defaultVariablesKeyProvider')]
+    public function test_default_variables_returns_correct_keys(string $key): void
     {
         $toggle = $this->makeToggle();
 
         $vars = $toggle->defaultVariables();
 
-        $this->assertArrayHasKey('onText', $vars);
-        $this->assertArrayHasKey('offText', $vars);
-        $this->assertArrayHasKey('onValue', $vars);
-        $this->assertArrayHasKey('offValue', $vars);
-        $this->assertArrayHasKey('size', $vars);
+        $this->assertContains($key, array_keys($vars));
     }
 
     public function test_default_variables_returns_correct_values(): void
@@ -134,5 +132,16 @@ class TogglePresenterTest extends TestCase
 
         $this->assertEquals('On', $vars['onText']);
         $this->assertEquals('Off', $vars['offText']);
+    }
+
+    public static function defaultVariablesKeyProvider(): array
+    {
+        return [
+            ['onText'],
+            ['offText'],
+            ['onValue'],
+            ['offValue'],
+            ['size'],
+        ];
     }
 }

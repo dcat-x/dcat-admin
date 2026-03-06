@@ -8,11 +8,16 @@ use Dcat\Admin\Tests\TestCase;
 
 class RowTest extends TestCase
 {
+    protected function getProperty(Row $row, string $property): mixed
+    {
+        return (new \ReflectionProperty(Row::class, $property))->getValue($row);
+    }
+
     public function test_constructor_with_no_content_creates_empty_row(): void
     {
         $row = new Row;
 
-        $columns = (new \ReflectionProperty(Row::class, 'columns'))->getValue($row);
+        $columns = $this->getProperty($row, 'columns');
 
         $this->assertCount(0, $columns);
     }
@@ -21,7 +26,7 @@ class RowTest extends TestCase
     {
         $row = new Row('hello');
 
-        $columns = (new \ReflectionProperty(Row::class, 'columns'))->getValue($row);
+        $columns = $this->getProperty($row, 'columns');
 
         $this->assertCount(1, $columns);
         $this->assertInstanceOf(Column::class, $columns[0]);
@@ -33,7 +38,7 @@ class RowTest extends TestCase
 
         $row = new Row($column);
 
-        $columns = (new \ReflectionProperty(Row::class, 'columns'))->getValue($row);
+        $columns = $this->getProperty($row, 'columns');
 
         $this->assertCount(1, $columns);
         $this->assertSame($column, $columns[0]);
@@ -46,7 +51,7 @@ class RowTest extends TestCase
         $row->column(6, 'left side');
         $row->column(6, 'right side');
 
-        $columns = (new \ReflectionProperty(Row::class, 'columns'))->getValue($row);
+        $columns = $this->getProperty($row, 'columns');
 
         $this->assertCount(2, $columns);
         $this->assertInstanceOf(Column::class, $columns[0]);
@@ -57,7 +62,7 @@ class RowTest extends TestCase
     {
         $row = new Row;
 
-        $noGutters = (new \ReflectionProperty(Row::class, 'noGutters'))->getValue($row);
+        $noGutters = $this->getProperty($row, 'noGutters');
 
         $this->assertFalse($noGutters);
     }
@@ -68,7 +73,7 @@ class RowTest extends TestCase
 
         $result = $row->noGutters();
 
-        $noGutters = (new \ReflectionProperty(Row::class, 'noGutters'))->getValue($row);
+        $noGutters = $this->getProperty($row, 'noGutters');
 
         $this->assertTrue($noGutters);
         $this->assertSame($row, $result);
@@ -81,7 +86,7 @@ class RowTest extends TestCase
         $row->noGutters(true);
         $row->noGutters(false);
 
-        $noGutters = (new \ReflectionProperty(Row::class, 'noGutters'))->getValue($row);
+        $noGutters = $this->getProperty($row, 'noGutters');
 
         $this->assertFalse($noGutters);
     }
@@ -137,7 +142,7 @@ class RowTest extends TestCase
     {
         $row = new Row('');
 
-        $columns = (new \ReflectionProperty(Row::class, 'columns'))->getValue($row);
+        $columns = $this->getProperty($row, 'columns');
 
         $this->assertCount(0, $columns);
     }

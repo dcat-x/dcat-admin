@@ -174,12 +174,9 @@ class ActionsTest extends TestCase
         $actions = new Actions;
         $defaultActions = $this->getProtectedProperty($actions, 'defaultActions');
 
-        $this->assertArrayHasKey('edit', $defaultActions);
-        $this->assertArrayHasKey('quickEdit', $defaultActions);
-        $this->assertArrayHasKey('delete', $defaultActions);
-        $this->assertEquals(\Dcat\Admin\Tree\Actions\Edit::class, $defaultActions['edit']);
-        $this->assertEquals(\Dcat\Admin\Tree\Actions\QuickEdit::class, $defaultActions['quickEdit']);
-        $this->assertEquals(\Dcat\Admin\Tree\Actions\Delete::class, $defaultActions['delete']);
+        $this->assertSame(\Dcat\Admin\Tree\Actions\Edit::class, $defaultActions['edit'] ?? null);
+        $this->assertSame(\Dcat\Admin\Tree\Actions\QuickEdit::class, $defaultActions['quickEdit'] ?? null);
+        $this->assertSame(\Dcat\Admin\Tree\Actions\Delete::class, $defaultActions['delete'] ?? null);
     }
 
     protected function tearDown(): void

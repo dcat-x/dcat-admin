@@ -29,8 +29,7 @@ class LazyRenderableTest extends TestCase
         $ref->setAccessible(true);
         $payload = $ref->getValue($instance);
 
-        $this->assertArrayHasKey('key', $payload);
-        $this->assertSame('value', $payload['key']);
+        $this->assertSame('value', $payload['key'] ?? null);
     }
 
     public function test_magic_get_returns_payload_value(): void

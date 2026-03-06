@@ -5,6 +5,7 @@ namespace Dcat\Admin\Tests\Unit\Form\Field;
 use Dcat\Admin\Form\Field\Text;
 use Dcat\Admin\Form\Field\Url;
 use Dcat\Admin\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class UrlTest extends TestCase
 {
@@ -28,22 +29,14 @@ class UrlTest extends TestCase
         $this->assertInstanceOf(Text::class, $field);
     }
 
-    public function test_rules_contain_url(): void
+    #[DataProvider('ruleProvider')]
+    public function test_rules_contain_expected_values(string $rule): void
     {
         $field = $this->createField();
 
         $rules = $this->getProtectedProperty($field, 'rules');
 
-        $this->assertContains('url', $rules);
-    }
-
-    public function test_rules_contain_nullable(): void
-    {
-        $field = $this->createField();
-
-        $rules = $this->getProtectedProperty($field, 'rules');
-
-        $this->assertContains('nullable', $rules);
+        $this->assertContains($rule, $rules);
     }
 
     public function test_rules_has_exactly_two_entries(): void
@@ -67,5 +60,13 @@ class UrlTest extends TestCase
         $method = new \ReflectionMethod(Url::class, 'render');
 
         $this->assertSame(0, $method->getNumberOfParameters());
+    }
+
+    public static function ruleProvider(): array
+    {
+        return [
+            'url' => ['url'],
+            'nullable' => ['nullable'],
+        ];
     }
 }

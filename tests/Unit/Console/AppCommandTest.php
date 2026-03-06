@@ -6,6 +6,7 @@ use Dcat\Admin\Console\AppCommand;
 use Dcat\Admin\Console\InstallCommand;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class AppCommandTest extends TestCase
 {
@@ -46,20 +47,12 @@ class AppCommandTest extends TestCase
         $this->assertEquals('Create new application', $defaultValue);
     }
 
-    public function test_has_required_methods(): void
+    #[DataProvider('requiredMethodProvider')]
+    public function test_has_required_methods(string $method): void
     {
-        $methods = [
-            'handle',
-            'addConfig',
-            'setDirectory',
-        ];
+        $reflection = new \ReflectionMethod(AppCommand::class, $method);
 
-        foreach ($methods as $method) {
-            $this->assertTrue(
-                method_exists(AppCommand::class, $method),
-                "AppCommand should have method '{$method}'"
-            );
-        }
+        $this->assertSame($method, $reflection->getName());
     }
 
     public function test_add_config_is_protected(): void
@@ -81,5 +74,14 @@ class AppCommandTest extends TestCase
         $ref = new \ReflectionMethod(AppCommand::class, 'handle');
 
         $this->assertTrue($ref->isPublic());
+    }
+
+    public static function requiredMethodProvider(): array
+    {
+        return [
+            ['handle'],
+            ['addConfig'],
+            ['setDirectory'],
+        ];
     }
 }

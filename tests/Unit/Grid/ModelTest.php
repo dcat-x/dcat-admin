@@ -75,7 +75,7 @@ class ModelTest extends TestCase
 
         $queries = $model->getQueries();
         $this->assertCount(1, $queries);
-        $this->assertEquals('orderBy', $queries->first()['method']);
+        $this->assertSame('orderBy', $queries->first()['method']);
     }
 
     // 4. simple() sets simple pagination mode
@@ -86,7 +86,7 @@ class ModelTest extends TestCase
         $result = $model->simple();
 
         $this->assertSame($model, $result);
-        $this->assertEquals('simplePaginate', $model->getPaginateMethod());
+        $this->assertSame('simplePaginate', $model->getPaginateMethod());
     }
 
     // 5. getPaginateMethod() returns 'paginate' or 'simplePaginate'
@@ -94,7 +94,7 @@ class ModelTest extends TestCase
     {
         $model = $this->createModel();
 
-        $this->assertEquals('paginate', $model->getPaginateMethod());
+        $this->assertSame('paginate', $model->getPaginateMethod());
     }
 
     public function test_get_paginate_method_returns_simple_paginate_when_simple(): void
@@ -102,7 +102,7 @@ class ModelTest extends TestCase
         $model = $this->createModel();
         $model->simple(true);
 
-        $this->assertEquals('simplePaginate', $model->getPaginateMethod());
+        $this->assertSame('simplePaginate', $model->getPaginateMethod());
     }
 
     // 6. usePaginate() enables/disables pagination
@@ -139,7 +139,7 @@ class ModelTest extends TestCase
 
         $result = $model->setPerPage(50);
         $this->assertSame($model, $result);
-        $this->assertEquals(50, $model->getPerPage());
+        $this->assertSame(50, $model->getPerPage());
     }
 
     public function test_get_per_page_returns_null_when_pagination_disabled(): void
@@ -158,7 +158,7 @@ class ModelTest extends TestCase
 
         $result = $model->setPageName('p');
         $this->assertSame($model, $result);
-        $this->assertEquals('p', $model->getPageName());
+        $this->assertSame('p', $model->getPageName());
     }
 
     // 10. setSortName() and getSortName()
@@ -169,7 +169,7 @@ class ModelTest extends TestCase
 
         $result = $model->setSortName('sort');
         $this->assertSame($model, $result);
-        $this->assertEquals('sort', $model->getSortName());
+        $this->assertSame('sort', $model->getSortName());
     }
 
     // 11. addQuery() pushes to queries collection
@@ -182,8 +182,8 @@ class ModelTest extends TestCase
 
         $queries = $model->getQueries();
         $this->assertCount(1, $queries);
-        $this->assertEquals('where', $queries->first()['method']);
-        $this->assertEquals(['status', 'active'], $queries->first()['arguments']);
+        $this->assertSame('where', $queries->first()['method']);
+        $this->assertSame(['status', 'active'], $queries->first()['arguments']);
     }
 
     // 12. findQueryByMethod() filters queries
@@ -219,7 +219,7 @@ class ModelTest extends TestCase
 
         $queries = $model->getQueries();
         $this->assertCount(1, $queries);
-        $this->assertEquals('orderBy', $queries->first()['method']);
+        $this->assertSame('orderBy', $queries->first()['method']);
     }
 
     // 14. rejectQuery() removes matching queries
@@ -235,7 +235,7 @@ class ModelTest extends TestCase
 
         $queries = $model->getQueries();
         $this->assertCount(1, $queries);
-        $this->assertEquals('orderBy', $queries->first()['method']);
+        $this->assertSame('orderBy', $queries->first()['method']);
     }
 
     public function test_reject_query_with_array_of_methods(): void
@@ -250,7 +250,7 @@ class ModelTest extends TestCase
 
         $queries = $model->getQueries();
         $this->assertCount(1, $queries);
-        $this->assertEquals('where', $queries->first()['method']);
+        $this->assertSame('where', $queries->first()['method']);
     }
 
     // 15. resetOrderBy() rejects orderBy/orderByDesc
@@ -266,7 +266,7 @@ class ModelTest extends TestCase
 
         $queries = $model->getQueries();
         $this->assertCount(1, $queries);
-        $this->assertEquals('where', $queries->first()['method']);
+        $this->assertSame('where', $queries->first()['method']);
     }
 
     // 16. getSort() returns [null,null,null] when no sort
@@ -277,7 +277,7 @@ class ModelTest extends TestCase
 
         $sort = $model->getSort();
 
-        $this->assertEquals([null, null, null], $sort);
+        $this->assertSame([null, null, null], $sort);
     }
 
     // 17. setData() with Collection
@@ -352,13 +352,13 @@ class ModelTest extends TestCase
     {
         $model = $this->createModel();
 
-        $this->assertEquals([], $model->getConstraints());
+        $this->assertSame([], $model->getConstraints());
 
         $constraints = ['user_id' => 1, 'type' => 'admin'];
         $result = $model->setConstraints($constraints);
 
         $this->assertSame($model, $result);
-        $this->assertEquals($constraints, $model->getConstraints());
+        $this->assertSame($constraints, $model->getConstraints());
     }
 
     // 22. getSortQueries() finds all sort-related queries
@@ -391,7 +391,7 @@ class ModelTest extends TestCase
 
         $methods = $model->getSortDescMethods();
 
-        $this->assertEquals(['orderByDesc', 'latest'], $methods);
+        $this->assertSame(['orderByDesc', 'latest'], $methods);
     }
 
     // 24. with() handles string relations
@@ -476,8 +476,8 @@ class ModelTest extends TestCase
 
         $queries = $model->getQueries();
         $this->assertCount(1, $queries);
-        $this->assertEquals('where', $queries->first()['method']);
-        $this->assertEquals(['id', 1], $queries->first()['arguments']);
+        $this->assertSame('where', $queries->first()['method']);
+        $this->assertSame(['id', 1], $queries->first()['arguments']);
     }
 
     // Additional: filterQueryBy with array of method names
@@ -506,10 +506,10 @@ class ModelTest extends TestCase
         $model = $this->createModel();
 
         $model->simple(true);
-        $this->assertEquals('simplePaginate', $model->getPaginateMethod());
+        $this->assertSame('simplePaginate', $model->getPaginateMethod());
 
         $model->simple(false);
-        $this->assertEquals('paginate', $model->getPaginateMethod());
+        $this->assertSame('paginate', $model->getPaginateMethod());
     }
 
     // Additional: getSort with sort data in request
@@ -524,7 +524,7 @@ class ModelTest extends TestCase
 
         $sort = $model->getSort();
 
-        $this->assertEquals(['name', 'desc', null], $sort);
+        $this->assertSame(['name', 'desc', null], $sort);
     }
 
     public function test_get_sort_returns_cast_when_present(): void
@@ -538,7 +538,7 @@ class ModelTest extends TestCase
 
         $sort = $model->getSort();
 
-        $this->assertEquals(['price', 'asc', 'int'], $sort);
+        $this->assertSame(['price', 'asc', 'int'], $sort);
     }
 
     // Additional: getPerPage reads from request
@@ -549,7 +549,7 @@ class ModelTest extends TestCase
         $model = new Model($request);
         $model->setGrid($grid);
 
-        $this->assertEquals(50, $model->getPerPage());
+        $this->assertSame(50, $model->getPerPage());
     }
 
     // Additional: default per page is 20
@@ -558,7 +558,7 @@ class ModelTest extends TestCase
         $grid = $this->createMockGrid();
         $model = $this->createModel($grid);
 
-        $this->assertEquals(20, $model->getPerPage());
+        $this->assertSame(20, $model->getPerPage());
     }
 
     // Additional: rejectQuery with callable

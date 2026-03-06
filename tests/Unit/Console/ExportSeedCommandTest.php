@@ -6,6 +6,7 @@ use Dcat\Admin\Console\ExportSeedCommand;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Console\Command;
 use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ExportSeedCommandTest extends TestCase
 {
@@ -62,64 +63,39 @@ class ExportSeedCommandTest extends TestCase
         $this->assertStringContainsString('Export seed', $defaultValue);
     }
 
-    public function test_has_handle_method(): void
+    #[DataProvider('requiredMethodProvider')]
+    public function test_has_required_methods(string $method): void
     {
-        $this->assertTrue(
-            method_exists(ExportSeedCommand::class, 'handle'),
-            'ExportSeedCommand should have method "handle"'
-        );
+        $reflection = new \ReflectionMethod(ExportSeedCommand::class, $method);
+
+        $this->assertSame($method, $reflection->getName());
     }
 
-    public function test_has_get_table_name_method(): void
+    #[DataProvider('protectedMethodProvider')]
+    public function test_protected_methods(string $method): void
     {
-        $this->assertTrue(
-            method_exists(ExportSeedCommand::class, 'getTableName'),
-            'ExportSeedCommand should have method "getTableName"'
-        );
-    }
-
-    public function test_has_get_table_data_array_as_string_method(): void
-    {
-        $this->assertTrue(
-            method_exists(ExportSeedCommand::class, 'getTableDataArrayAsString'),
-            'ExportSeedCommand should have method "getTableDataArrayAsString"'
-        );
-    }
-
-    public function test_has_get_stub_method(): void
-    {
-        $this->assertTrue(
-            method_exists(ExportSeedCommand::class, 'getStub'),
-            'ExportSeedCommand should have method "getStub"'
-        );
-    }
-
-    public function test_has_var_export_method(): void
-    {
-        $this->assertTrue(
-            method_exists(ExportSeedCommand::class, 'varExport'),
-            'ExportSeedCommand should have method "varExport"'
-        );
-    }
-
-    public function test_get_table_name_is_protected(): void
-    {
-        $ref = new \ReflectionMethod(ExportSeedCommand::class, 'getTableName');
+        $ref = new \ReflectionMethod(ExportSeedCommand::class, $method);
 
         $this->assertTrue($ref->isProtected());
     }
 
-    public function test_get_table_data_array_as_string_is_protected(): void
+    public static function requiredMethodProvider(): array
     {
-        $ref = new \ReflectionMethod(ExportSeedCommand::class, 'getTableDataArrayAsString');
-
-        $this->assertTrue($ref->isProtected());
+        return [
+            ['handle'],
+            ['getTableName'],
+            ['getTableDataArrayAsString'],
+            ['getStub'],
+            ['varExport'],
+        ];
     }
 
-    public function test_var_export_is_protected(): void
+    public static function protectedMethodProvider(): array
     {
-        $ref = new \ReflectionMethod(ExportSeedCommand::class, 'varExport');
-
-        $this->assertTrue($ref->isProtected());
+        return [
+            ['getTableName'],
+            ['getTableDataArrayAsString'],
+            ['varExport'],
+        ];
     }
 }

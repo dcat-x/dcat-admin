@@ -180,8 +180,7 @@ class VersionManagerTest extends TestCase
         $result = $vm->getNewFileVersions('test.extension', null);
 
         $this->assertCount(3, $result);
-        $this->assertArrayHasKey('1.0.0', $result);
-        $this->assertArrayHasKey('2.0.0', $result);
+        $this->assertArrayContainsKeys(['1.0.0', '2.0.0'], $result);
     }
 
     public function test_get_new_file_versions_from_specific_version(): void
@@ -204,8 +203,7 @@ class VersionManagerTest extends TestCase
         $result = $vm->getNewFileVersions('test.extension', '1.0.0');
 
         $this->assertCount(2, $result);
-        $this->assertArrayHasKey('1.1.0', $result);
-        $this->assertArrayHasKey('2.0.0', $result);
+        $this->assertArrayContainsKeys(['1.1.0', '2.0.0'], $result);
         $this->assertArrayNotHasKey('1.0.0', $result);
     }
 
@@ -274,5 +272,13 @@ class VersionManagerTest extends TestCase
 
         $this->assertSame($result1, $result2);
         $this->assertIsArray($result1);
+    }
+
+    private function assertArrayContainsKeys(array $expectedKeys, array $actual): void
+    {
+        $actualKeys = array_keys($actual);
+        foreach ($expectedKeys as $key) {
+            $this->assertContains($key, $actualKeys);
+        }
     }
 }

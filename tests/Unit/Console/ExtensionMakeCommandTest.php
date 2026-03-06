@@ -6,6 +6,7 @@ use Dcat\Admin\Console\ExtensionMakeCommand;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Console\Command;
 use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ExtensionMakeCommandTest extends TestCase
 {
@@ -64,46 +65,24 @@ class ExtensionMakeCommandTest extends TestCase
         $this->assertEquals('', $ref->getDefaultValue());
     }
 
-    public function test_dirs_is_array_with_expected_entries(): void
+    #[DataProvider('dirsProvider')]
+    public function test_dirs_is_array_with_expected_entries(string $dir): void
     {
         $ref = new \ReflectionProperty(ExtensionMakeCommand::class, 'dirs');
         $defaultValue = $ref->getDefaultValue();
 
         $this->assertIsArray($defaultValue);
-
-        $expectedDirs = [
-            'updates',
-            'resources/assets/css',
-            'resources/assets/js',
-            'resources/views',
-            'resources/lang',
-            'src/Models',
-            'src/Http/Controllers',
-            'src/Http/Middleware',
-        ];
-
-        foreach ($expectedDirs as $dir) {
-            $this->assertContains($dir, $defaultValue, "dirs should contain '{$dir}'");
-        }
+        $this->assertContains($dir, $defaultValue, "dirs should contain '{$dir}'");
     }
 
-    public function test_theme_dirs_is_array_with_expected_entries(): void
+    #[DataProvider('themeDirsProvider')]
+    public function test_theme_dirs_is_array_with_expected_entries(string $dir): void
     {
         $ref = new \ReflectionProperty(ExtensionMakeCommand::class, 'themeDirs');
         $defaultValue = $ref->getDefaultValue();
 
         $this->assertIsArray($defaultValue);
-
-        $expectedDirs = [
-            'updates',
-            'resources/assets/css',
-            'resources/views',
-            'src',
-        ];
-
-        foreach ($expectedDirs as $dir) {
-            $this->assertContains($dir, $defaultValue, "themeDirs should contain '{$dir}'");
-        }
+        $this->assertContains($dir, $defaultValue, "themeDirs should contain '{$dir}'");
     }
 
     public function test_dirs_count_is_eight(): void
@@ -122,30 +101,12 @@ class ExtensionMakeCommandTest extends TestCase
         $this->assertCount(4, $defaultValue);
     }
 
-    public function test_has_all_required_methods(): void
+    #[DataProvider('requiredMethodProvider')]
+    public function test_has_all_required_methods(string $method): void
     {
-        $methods = [
-            'handle',
-            'showTree',
-            'makeFiles',
-            'makeProviderContent',
-            'makeRegisterThemeContent',
-            'copyFiles',
-            'getRootNameSpace',
-            'getClassName',
-            'makeDirs',
-            'extensionPath',
-            'putFile',
-            'copy',
-            'makeDir',
-        ];
+        $reflection = new \ReflectionMethod(ExtensionMakeCommand::class, $method);
 
-        foreach ($methods as $method) {
-            $this->assertTrue(
-                method_exists(ExtensionMakeCommand::class, $method),
-                "ExtensionMakeCommand should have method '{$method}'"
-            );
-        }
+        $this->assertSame($method, $reflection->getName());
     }
 
     public function test_handle_is_public(): void
@@ -155,52 +116,87 @@ class ExtensionMakeCommandTest extends TestCase
         $this->assertTrue($ref->isPublic());
     }
 
-    public function test_get_root_namespace_is_protected(): void
+    #[DataProvider('protectedMethodProvider')]
+    public function test_protected_methods(string $method): void
     {
-        $ref = new \ReflectionMethod(ExtensionMakeCommand::class, 'getRootNameSpace');
+        $ref = new \ReflectionMethod(ExtensionMakeCommand::class, $method);
 
         $this->assertTrue($ref->isProtected());
     }
 
-    public function test_get_class_name_is_protected(): void
+    #[DataProvider('protectedPropertyProvider')]
+    public function test_has_protected_properties(string $property): void
     {
-        $ref = new \ReflectionMethod(ExtensionMakeCommand::class, 'getClassName');
+        $this->assertTrue(property_exists(ExtensionMakeCommand::class, $property), "ExtensionMakeCommand should have property '{$property}'");
 
-        $this->assertTrue($ref->isProtected());
+        $ref = new \ReflectionProperty(ExtensionMakeCommand::class, $property);
+        $this->assertTrue($ref->isProtected(), "Property '{$property}' should be protected");
     }
 
-    public function test_extension_path_is_protected(): void
+    public static function dirsProvider(): array
     {
-        $ref = new \ReflectionMethod(ExtensionMakeCommand::class, 'extensionPath');
-
-        $this->assertTrue($ref->isProtected());
-    }
-
-    public function test_has_protected_properties(): void
-    {
-        $protectedProperties = [
-            'basePath',
-            'filesystem',
-            'namespace',
-            'className',
-            'extensionName',
-            'package',
-            'extensionDir',
-            'dirs',
-            'themeDirs',
+        return [
+            ['updates'],
+            ['resources/assets/css'],
+            ['resources/assets/js'],
+            ['resources/views'],
+            ['resources/lang'],
+            ['src/Models'],
+            ['src/Http/Controllers'],
+            ['src/Http/Middleware'],
         ];
+    }
 
-        foreach ($protectedProperties as $property) {
-            $this->assertTrue(
-                property_exists(ExtensionMakeCommand::class, $property),
-                "ExtensionMakeCommand should have property '{$property}'"
-            );
+    public static function themeDirsProvider(): array
+    {
+        return [
+            ['updates'],
+            ['resources/assets/css'],
+            ['resources/views'],
+            ['src'],
+        ];
+    }
 
-            $ref = new \ReflectionProperty(ExtensionMakeCommand::class, $property);
-            $this->assertTrue(
-                $ref->isProtected(),
-                "Property '{$property}' should be protected"
-            );
-        }
+    public static function requiredMethodProvider(): array
+    {
+        return [
+            ['handle'],
+            ['showTree'],
+            ['makeFiles'],
+            ['makeProviderContent'],
+            ['makeRegisterThemeContent'],
+            ['copyFiles'],
+            ['getRootNameSpace'],
+            ['getClassName'],
+            ['makeDirs'],
+            ['extensionPath'],
+            ['putFile'],
+            ['copy'],
+            ['makeDir'],
+        ];
+    }
+
+    public static function protectedMethodProvider(): array
+    {
+        return [
+            ['getRootNameSpace'],
+            ['getClassName'],
+            ['extensionPath'],
+        ];
+    }
+
+    public static function protectedPropertyProvider(): array
+    {
+        return [
+            ['basePath'],
+            ['filesystem'],
+            ['namespace'],
+            ['className'],
+            ['extensionName'],
+            ['package'],
+            ['extensionDir'],
+            ['dirs'],
+            ['themeDirs'],
+        ];
     }
 }

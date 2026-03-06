@@ -151,7 +151,7 @@ class WebUploaderTest extends TestCase
         $this->assertSame('avatar', $field->options['elementName']);
         $this->assertSame(15, $field->options['formData']['primary_key']);
         $this->assertSame(15, $field->options['deleteData']['primary_key']);
-        $this->assertArrayHasKey('lang', $field->options);
+        $this->assertContains('lang', array_keys($field->options));
     }
 
     public function test_set_default_server_uses_form_action_and_editing_method_put(): void

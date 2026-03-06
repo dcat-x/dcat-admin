@@ -34,8 +34,7 @@ class EndWithTest extends TestCase
         $filter = $this->makeFilter('email');
         $condition = $filter->condition(['email' => '.com']);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasWhere($condition);
         $this->assertEquals('email', $condition['where'][0]);
         $this->assertEquals('like', $condition['where'][1]);
         $this->assertEquals('%.com', $condition['where'][2]);
@@ -75,7 +74,13 @@ class EndWithTest extends TestCase
         $filter = $this->makeFilter('email');
         $condition = $filter->condition(['email' => '']);
 
-        $this->assertIsArray($condition);
+        $this->assertConditionHasWhere($condition);
         $this->assertEquals('%', $condition['where'][2]);
+    }
+
+    private function assertConditionHasWhere(mixed $condition): void
+    {
+        $this->assertIsArray($condition);
+        $this->assertContains('where', array_keys($condition));
     }
 }

@@ -4,9 +4,18 @@ namespace Dcat\Admin\Tests\Unit;
 
 use Dcat\Admin\Color;
 use Dcat\Admin\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ColorTest extends TestCase
 {
+    protected function getStaticProperty(string $property): mixed
+    {
+        $ref = new \ReflectionProperty(Color::class, $property);
+        $ref->setAccessible(true);
+
+        return $ref->getValue();
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -172,8 +181,7 @@ class ColorTest extends TestCase
         $ref->setAccessible(true);
         $extensions = $ref->getValue();
 
-        $this->assertArrayHasKey('custom-test-theme', $extensions);
-        $this->assertEquals('#ff0000', $extensions['custom-test-theme']['colors']['primary']);
+        $this->assertEquals('#ff0000', $extensions['custom-test-theme']['colors']['primary'] ?? null);
     }
 
     public function test_extend_theme_colors_used_when_selected(): void
@@ -201,43 +209,25 @@ class ColorTest extends TestCase
         $this->assertEquals('#22292f', $dark);
     }
 
+    #[DataProvider('extensionExistsProvider')]
+    public function test_extension_exists(string $name): void
+    {
+        $extensions = $this->getStaticProperty('extensions');
+        $this->assertContains($name, array_keys($extensions));
+    }
+
     public function test_default_extension_has_primary(): void
     {
-        $ref = new \ReflectionProperty(Color::class, 'extensions');
-        $ref->setAccessible(true);
-        $extensions = $ref->getValue();
+        $extensions = $this->getStaticProperty('extensions');
 
-        $this->assertArrayHasKey('primary', $extensions['default']['colors']);
+        $this->assertMatchesRegularExpression('/^#([a-f0-9]{3}|[a-f0-9]{6})$/i', $extensions['default']['colors']['primary'] ?? '');
     }
 
-    public function test_blue_light_extension_exists(): void
+    #[DataProvider('allColorProvider')]
+    public function test_all_colors_has_standard_colors(string $key, string $expected): void
     {
-        $ref = new \ReflectionProperty(Color::class, 'extensions');
-        $ref->setAccessible(true);
-        $extensions = $ref->getValue();
-
-        $this->assertArrayHasKey('blue-light', $extensions);
-    }
-
-    public function test_green_extension_exists(): void
-    {
-        $ref = new \ReflectionProperty(Color::class, 'extensions');
-        $ref->setAccessible(true);
-        $extensions = $ref->getValue();
-
-        $this->assertArrayHasKey('green', $extensions);
-    }
-
-    public function test_all_colors_has_standard_colors(): void
-    {
-        $ref = new \ReflectionProperty(Color::class, 'allColors');
-        $ref->setAccessible(true);
-        $allColors = $ref->getValue();
-
-        $this->assertArrayHasKey('info', $allColors);
-        $this->assertArrayHasKey('success', $allColors);
-        $this->assertArrayHasKey('danger', $allColors);
-        $this->assertArrayHasKey('warning', $allColors);
+        $allColors = $this->getStaticProperty('allColors');
+        $this->assertSame($expected, $allColors[$key] ?? null);
     }
 
     public function test_darken_with_zero_amount(): void
@@ -247,5 +237,23 @@ class ColorTest extends TestCase
 
         // darken with 0 should return the original color
         $this->assertEquals('#586cb1', $result);
+    }
+
+    public static function extensionExistsProvider(): array
+    {
+        return [
+            ['blue-light'],
+            ['green'],
+        ];
+    }
+
+    public static function allColorProvider(): array
+    {
+        return [
+            ['info', 'blue'],
+            ['success', 'green'],
+            ['danger', 'red'],
+            ['warning', 'orange'],
+        ];
     }
 }

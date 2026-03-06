@@ -67,8 +67,7 @@ class WhereBetweenTest extends TestCase
         $filter = $this->makeFilter('price', $query);
         $condition = $filter->condition(['price' => ['start' => '100', 'end' => null]]);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasWhere($condition);
     }
 
     public function test_condition_with_end_value(): void
@@ -80,8 +79,7 @@ class WhereBetweenTest extends TestCase
         $filter = $this->makeFilter('price', $query);
         $condition = $filter->condition(['price' => ['start' => null, 'end' => '500']]);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasWhere($condition);
     }
 
     public function test_condition_with_both_start_and_end(): void
@@ -93,8 +91,7 @@ class WhereBetweenTest extends TestCase
         $filter = $this->makeFilter('price', $query);
         $condition = $filter->condition(['price' => ['start' => '100', 'end' => '500']]);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasWhere($condition);
     }
 
     public function test_condition_sets_value_and_input(): void
@@ -125,5 +122,11 @@ class WhereBetweenTest extends TestCase
         $closure($mockQuery);
 
         $this->assertEquals(['start' => '50', 'end' => '200'], $capturedInput);
+    }
+
+    private function assertConditionHasWhere(mixed $condition): void
+    {
+        $this->assertIsArray($condition);
+        $this->assertContains('where', array_keys($condition));
     }
 }

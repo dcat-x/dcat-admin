@@ -118,8 +118,7 @@ class SelectTest extends TestCase
 
         $this->assertSame($field, $result);
         $config = $this->getProtectedProperty($field, 'config');
-        $this->assertArrayHasKey('allowClear', $config);
-        $this->assertTrue($config['allowClear']);
+        $this->assertTrue($config['allowClear'] ?? false);
     }
 
     public function test_config_sets_multiple_keys(): void
@@ -200,8 +199,7 @@ class SelectTest extends TestCase
 
         $this->assertSame($field, $result);
         $config = $this->getProtectedProperty($field, 'config');
-        $this->assertArrayHasKey('allowClear', $config);
-        $this->assertFalse($config['allowClear']);
+        $this->assertFalse($config['allowClear'] ?? null);
     }
 
     public function test_disable_clear_button_overrides_previous_allow_clear(): void
@@ -228,9 +226,8 @@ class SelectTest extends TestCase
         $this->assertSame($field, $result);
 
         $variables = $this->getProtectedProperty($field, 'variables');
-        $this->assertArrayHasKey('ajax', $variables);
-        $this->assertSame('id', $variables['ajax']['idField']);
-        $this->assertSame('text', $variables['ajax']['textField']);
+        $this->assertSame('id', $variables['ajax']['idField'] ?? null);
+        $this->assertSame('text', $variables['ajax']['textField'] ?? null);
     }
 
     public function test_ajax_sets_custom_id_and_text_fields(): void
@@ -251,8 +248,7 @@ class SelectTest extends TestCase
         $field->ajax('/api/users');
 
         $config = $this->getProtectedProperty($field, 'config');
-        $this->assertArrayHasKey('minimumInputLength', $config);
-        $this->assertSame(1, $config['minimumInputLength']);
+        $this->assertSame(1, $config['minimumInputLength'] ?? null);
     }
 
     public function test_ajax_does_not_overwrite_existing_minimum_input_length(): void

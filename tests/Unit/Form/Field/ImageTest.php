@@ -78,8 +78,7 @@ class ImageTest extends TestCase
 
         $options = $this->getProtectedProperty($field, 'options');
 
-        $this->assertArrayHasKey('accept', $options);
-        $this->assertSame('image/*', $options['accept']['mimeTypes']);
+        $this->assertSame('image/*', $options['accept']['mimeTypes'] ?? null);
         $this->assertTrue($options['isImage']);
     }
 
@@ -91,8 +90,7 @@ class ImageTest extends TestCase
         $options = $this->getProtectedProperty($field, 'options');
 
         $this->assertIsArray($options['accept']);
-        $this->assertArrayHasKey('mimeTypes', $options['accept']);
-        $this->assertSame('image/*', $options['accept']['mimeTypes']);
+        $this->assertSame('image/*', $options['accept']['mimeTypes'] ?? null);
     }
 
     public function test_setup_image_sets_is_image_to_true(): void
@@ -154,9 +152,8 @@ class ImageTest extends TestCase
 
         $options = $this->getProtectedProperty($field, 'options');
 
-        $this->assertArrayHasKey('dimensions', $options);
-        $this->assertSame(50, $options['dimensions']['min_width']);
-        $this->assertSame(300, $options['dimensions']['max_height']);
+        $this->assertSame(50, $options['dimensions']['min_width'] ?? null);
+        $this->assertSame(300, $options['dimensions']['max_height'] ?? null);
     }
 
     public function test_dimensions_with_empty_array_returns_this(): void
@@ -269,8 +266,7 @@ class ImageTest extends TestCase
 
         $thumbnails = $this->getProtectedProperty($field, 'thumbnails');
 
-        $this->assertArrayHasKey('small', $thumbnails);
-        $this->assertSame([100, 100], $thumbnails['small']);
+        $this->assertSame([100, 100], $thumbnails['small'] ?? null);
     }
 
     public function test_thumbnail_with_array_batch(): void
@@ -304,7 +300,7 @@ class ImageTest extends TestCase
 
         $thumbnails = $this->getProtectedProperty($field, 'thumbnails');
 
-        $this->assertArrayHasKey('valid', $thumbnails);
+        $this->assertSame([100, 200], $thumbnails['valid'] ?? null);
         $this->assertArrayNotHasKey('invalid', $thumbnails);
     }
 

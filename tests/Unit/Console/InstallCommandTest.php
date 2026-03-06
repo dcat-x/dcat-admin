@@ -6,6 +6,7 @@ use Dcat\Admin\Console\InstallCommand;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Console\Command;
 use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class InstallCommandTest extends TestCase
 {
@@ -61,141 +62,63 @@ class InstallCommandTest extends TestCase
         $this->assertSame('', $defaultValue);
     }
 
-    public function test_has_handle_method(): void
+    #[DataProvider('requiredMethodProvider')]
+    public function test_has_required_methods(string $method): void
     {
-        $this->assertTrue(
-            method_exists(InstallCommand::class, 'handle'),
-            'InstallCommand should have method "handle"'
-        );
+        $reflection = new \ReflectionMethod(InstallCommand::class, $method);
+
+        $this->assertSame($method, $reflection->getName());
     }
 
-    public function test_has_init_database_method(): void
+    #[DataProvider('publicMethodProvider')]
+    public function test_public_methods_visibility(string $method): void
     {
-        $this->assertTrue(
-            method_exists(InstallCommand::class, 'initDatabase'),
-            'InstallCommand should have method "initDatabase"'
-        );
-    }
-
-    public function test_has_set_directory_method(): void
-    {
-        $this->assertTrue(
-            method_exists(InstallCommand::class, 'setDirectory'),
-            'InstallCommand should have method "setDirectory"'
-        );
-    }
-
-    public function test_has_init_admin_directory_method(): void
-    {
-        $this->assertTrue(
-            method_exists(InstallCommand::class, 'initAdminDirectory'),
-            'InstallCommand should have method "initAdminDirectory"'
-        );
-    }
-
-    public function test_has_create_home_controller_method(): void
-    {
-        $this->assertTrue(
-            method_exists(InstallCommand::class, 'createHomeController'),
-            'InstallCommand should have method "createHomeController"'
-        );
-    }
-
-    public function test_has_create_auth_controller_method(): void
-    {
-        $this->assertTrue(
-            method_exists(InstallCommand::class, 'createAuthController'),
-            'InstallCommand should have method "createAuthController"'
-        );
-    }
-
-    public function test_has_create_metric_cards_method(): void
-    {
-        $this->assertTrue(
-            method_exists(InstallCommand::class, 'createMetricCards'),
-            'InstallCommand should have method "createMetricCards"'
-        );
-    }
-
-    public function test_has_namespace_method(): void
-    {
-        $this->assertTrue(
-            method_exists(InstallCommand::class, 'namespace'),
-            'InstallCommand should have method "namespace"'
-        );
-    }
-
-    public function test_has_create_bootstrap_file_method(): void
-    {
-        $this->assertTrue(
-            method_exists(InstallCommand::class, 'createBootstrapFile'),
-            'InstallCommand should have method "createBootstrapFile"'
-        );
-    }
-
-    public function test_has_create_routes_file_method(): void
-    {
-        $this->assertTrue(
-            method_exists(InstallCommand::class, 'createRoutesFile'),
-            'InstallCommand should have method "createRoutesFile"'
-        );
-    }
-
-    public function test_has_get_stub_method(): void
-    {
-        $this->assertTrue(
-            method_exists(InstallCommand::class, 'getStub'),
-            'InstallCommand should have method "getStub"'
-        );
-    }
-
-    public function test_has_make_dir_method(): void
-    {
-        $this->assertTrue(
-            method_exists(InstallCommand::class, 'makeDir'),
-            'InstallCommand should have method "makeDir"'
-        );
-    }
-
-    public function test_init_database_is_public(): void
-    {
-        $ref = new \ReflectionMethod(InstallCommand::class, 'initDatabase');
+        $ref = new \ReflectionMethod(InstallCommand::class, $method);
 
         $this->assertTrue($ref->isPublic());
     }
 
-    public function test_create_home_controller_is_public(): void
+    #[DataProvider('protectedMethodProvider')]
+    public function test_protected_methods_visibility(string $method): void
     {
-        $ref = new \ReflectionMethod(InstallCommand::class, 'createHomeController');
-
-        $this->assertTrue($ref->isPublic());
-    }
-
-    public function test_create_auth_controller_is_public(): void
-    {
-        $ref = new \ReflectionMethod(InstallCommand::class, 'createAuthController');
-
-        $this->assertTrue($ref->isPublic());
-    }
-
-    public function test_create_metric_cards_is_public(): void
-    {
-        $ref = new \ReflectionMethod(InstallCommand::class, 'createMetricCards');
-
-        $this->assertTrue($ref->isPublic());
-    }
-
-    public function test_set_directory_is_protected(): void
-    {
-        $ref = new \ReflectionMethod(InstallCommand::class, 'setDirectory');
+        $ref = new \ReflectionMethod(InstallCommand::class, $method);
 
         $this->assertTrue($ref->isProtected());
     }
 
-    public function test_get_stub_is_protected(): void
+    public static function requiredMethodProvider(): array
     {
-        $ref = new \ReflectionMethod(InstallCommand::class, 'getStub');
+        return [
+            ['handle'],
+            ['initDatabase'],
+            ['setDirectory'],
+            ['initAdminDirectory'],
+            ['createHomeController'],
+            ['createAuthController'],
+            ['createMetricCards'],
+            ['namespace'],
+            ['createBootstrapFile'],
+            ['createRoutesFile'],
+            ['getStub'],
+            ['makeDir'],
+        ];
+    }
 
-        $this->assertTrue($ref->isProtected());
+    public static function publicMethodProvider(): array
+    {
+        return [
+            ['initDatabase'],
+            ['createHomeController'],
+            ['createAuthController'],
+            ['createMetricCards'],
+        ];
+    }
+
+    public static function protectedMethodProvider(): array
+    {
+        return [
+            ['setDirectory'],
+            ['getStub'],
+        ];
     }
 }

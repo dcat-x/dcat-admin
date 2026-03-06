@@ -33,8 +33,7 @@ class ExtensionTest extends TestCase
 
         $casts = $extension->getCasts();
 
-        $this->assertArrayHasKey('options', $casts);
-        $this->assertEquals('json', $casts['options']);
+        $this->assertEquals('json', $casts['options'] ?? null);
     }
 
     public function test_table_name_from_config(): void

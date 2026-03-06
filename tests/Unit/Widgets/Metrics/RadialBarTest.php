@@ -111,8 +111,8 @@ class RadialBarTest extends TestCase
 
         $options = $this->getProtectedProperty($bar, 'chartOptions');
 
-        $this->assertArrayHasKey('plotOptions', $options);
-        $this->assertArrayHasKey('radialBar', $options['plotOptions']);
+        $this->assertIsArray($options['plotOptions'] ?? null);
+        $this->assertIsArray($options['plotOptions']['radialBar'] ?? null);
         $this->assertEquals(200, $options['plotOptions']['radialBar']['size']);
     }
 
@@ -122,7 +122,7 @@ class RadialBarTest extends TestCase
 
         $options = $this->getProtectedProperty($bar, 'chartOptions');
 
-        $this->assertArrayHasKey('fill', $options);
+        $this->assertIsArray($options['fill'] ?? null);
         $this->assertEquals('gradient', $options['fill']['type']);
         $this->assertEquals('dark', $options['fill']['gradient']['shade']);
         $this->assertEquals('horizontal', $options['fill']['gradient']['type']);

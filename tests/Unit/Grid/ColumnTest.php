@@ -60,18 +60,14 @@ class ColumnTest extends TestCase
     {
         $extensions = Column::extensions();
         $this->assertIsArray($extensions);
-        $this->assertArrayHasKey('switch', $extensions);
-        $this->assertArrayHasKey('image', $extensions);
-        $this->assertArrayHasKey('label', $extensions);
-        $this->assertArrayHasKey('badge', $extensions);
-        $this->assertArrayHasKey('link', $extensions);
+        $this->assertArrayContainsKeys(['switch', 'image', 'label', 'badge', 'link'], $extensions);
     }
 
     public function test_column_extend(): void
     {
         Column::extend('custom_displayer', \stdClass::class);
         $extensions = Column::extensions();
-        $this->assertArrayHasKey('custom_displayer', $extensions);
+        $this->assertSame(\stdClass::class, $extensions['custom_displayer'] ?? null);
     }
 
     public function test_column_set_original(): void
@@ -85,5 +81,13 @@ class ColumnTest extends TestCase
     {
         $this->assertEquals('__row_selector__', Column::SELECT_COLUMN_NAME);
         $this->assertEquals('__actions__', Column::ACTION_COLUMN_NAME);
+    }
+
+    private function assertArrayContainsKeys(array $expectedKeys, array $actual): void
+    {
+        $actualKeys = array_keys($actual);
+        foreach ($expectedKeys as $key) {
+            $this->assertContains($key, $actualKeys);
+        }
     }
 }

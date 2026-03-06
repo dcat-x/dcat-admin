@@ -42,8 +42,7 @@ class FindInSetTest extends TestCase
         $filter = $this->makeFilter('tags');
         $condition = $filter->condition(['tags' => 'php']);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasWhere($condition);
         $this->assertIsCallable($condition['where'][0]);
     }
 
@@ -61,8 +60,7 @@ class FindInSetTest extends TestCase
         $filter = $this->makeFilter('category_ids');
         $condition = $filter->condition(['category_ids' => '5']);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasWhere($condition);
     }
 
     public function test_condition_with_empty_string_returns_where(): void
@@ -71,7 +69,12 @@ class FindInSetTest extends TestCase
         $condition = $filter->condition(['tags' => '']);
 
         // Empty string is not null, condition should still be built
+        $this->assertConditionHasWhere($condition);
+    }
+
+    private function assertConditionHasWhere(mixed $condition): void
+    {
         $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertContains('where', array_keys($condition));
     }
 }

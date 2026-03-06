@@ -32,7 +32,7 @@ class HasEventsTest extends TestCase
         $dispatched = $reflection->getValue($grid);
 
         $this->assertSame($grid, $event->grid);
-        $this->assertArrayHasKey(Fetching::class, $dispatched);
+        $this->assertContains(Fetching::class, array_keys($dispatched));
         $this->assertSame($event, $dispatched[Fetching::class]);
     }
 

@@ -57,8 +57,7 @@ class DateRangeTest extends TestCase
 
         $options = $this->getProtectedProperty($field, 'options');
 
-        $this->assertArrayHasKey('format', $options);
-        $this->assertSame('YYYY-MM-DD', $options['format']);
+        $this->assertSame('YYYY-MM-DD', $options['format'] ?? null);
     }
 
     public function test_prepare_input_value_converts_empty_string_to_null(): void

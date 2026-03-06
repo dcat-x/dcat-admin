@@ -4,6 +4,7 @@ namespace Dcat\Admin\Tests\Unit\Form\Field;
 
 use Dcat\Admin\Form\Field\SwitchField;
 use Dcat\Admin\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SwitchFieldTest extends TestCase
 {
@@ -113,81 +114,29 @@ class SwitchFieldTest extends TestCase
     // color convenience methods
     // -------------------------------------------------------
 
-    public function test_primary_sets_color(): void
+    #[DataProvider('colorMethodProvider')]
+    public function test_color_convenience_methods_set_color(string $method): void
     {
         $field = $this->createSwitch();
 
-        $result = $field->primary();
+        $result = $field->{$method}();
 
         $this->assertSame($field, $result);
         $attributes = $this->getProtectedProperty($field, 'attributes');
-        $this->assertArrayHasKey('data-color', $attributes);
-        $this->assertNotEmpty($attributes['data-color']);
+        $this->assertIsString($attributes['data-color'] ?? null);
+        $this->assertNotSame('', $attributes['data-color']);
     }
 
-    public function test_green_sets_color(): void
+    public static function colorMethodProvider(): array
     {
-        $field = $this->createSwitch();
-
-        $result = $field->green();
-
-        $this->assertSame($field, $result);
-        $attributes = $this->getProtectedProperty($field, 'attributes');
-        $this->assertArrayHasKey('data-color', $attributes);
-    }
-
-    public function test_red_sets_color(): void
-    {
-        $field = $this->createSwitch();
-
-        $result = $field->red();
-
-        $this->assertSame($field, $result);
-        $attributes = $this->getProtectedProperty($field, 'attributes');
-        $this->assertArrayHasKey('data-color', $attributes);
-    }
-
-    public function test_yellow_sets_color(): void
-    {
-        $field = $this->createSwitch();
-
-        $result = $field->yellow();
-
-        $this->assertSame($field, $result);
-        $attributes = $this->getProtectedProperty($field, 'attributes');
-        $this->assertArrayHasKey('data-color', $attributes);
-    }
-
-    public function test_blue_sets_color(): void
-    {
-        $field = $this->createSwitch();
-
-        $result = $field->blue();
-
-        $this->assertSame($field, $result);
-        $attributes = $this->getProtectedProperty($field, 'attributes');
-        $this->assertArrayHasKey('data-color', $attributes);
-    }
-
-    public function test_purple_sets_color(): void
-    {
-        $field = $this->createSwitch();
-
-        $result = $field->purple();
-
-        $this->assertSame($field, $result);
-        $attributes = $this->getProtectedProperty($field, 'attributes');
-        $this->assertArrayHasKey('data-color', $attributes);
-    }
-
-    public function test_custom_sets_color(): void
-    {
-        $field = $this->createSwitch();
-
-        $result = $field->custom();
-
-        $this->assertSame($field, $result);
-        $attributes = $this->getProtectedProperty($field, 'attributes');
-        $this->assertArrayHasKey('data-color', $attributes);
+        return [
+            ['primary'],
+            ['green'],
+            ['red'],
+            ['yellow'],
+            ['blue'],
+            ['purple'],
+            ['custom'],
+        ];
     }
 }

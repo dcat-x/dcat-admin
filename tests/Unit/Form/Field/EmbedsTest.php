@@ -69,8 +69,8 @@ class EmbedsTest extends TestCase
 
         $field->resetInputKey($input, ['start' => 'start_at', 'end' => 'end_at']);
 
-        $this->assertArrayHasKey('start_atstart', $input['extra']);
-        $this->assertArrayHasKey('end_atend', $input['extra']);
+        $this->assertContains('start_atstart', array_keys($input['extra']));
+        $this->assertContains('end_atend', array_keys($input['extra']));
         $this->assertArrayNotHasKey('start_at', $input['extra']);
         $this->assertArrayNotHasKey('end_at', $input['extra']);
         $this->assertSame('keep', $input['extra']['note']);

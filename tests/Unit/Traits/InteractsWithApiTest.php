@@ -130,10 +130,8 @@ class InteractsWithApiTest extends TestCase
         $scripts = $helper->getRequestScripts();
 
         $this->assertIsArray($scripts);
-        $this->assertArrayHasKey('fetching', $scripts);
-        $this->assertArrayHasKey('fetched', $scripts);
-        $this->assertSame([], $scripts['fetching']);
-        $this->assertSame([], $scripts['fetched']);
+        $this->assertSame([], $scripts['fetching'] ?? null);
+        $this->assertSame([], $scripts['fetched'] ?? null);
     }
 
     public function test_merge_copies_selectors_and_scripts(): void

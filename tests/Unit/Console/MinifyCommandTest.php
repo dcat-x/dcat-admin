@@ -6,6 +6,7 @@ use Dcat\Admin\Console\MinifyCommand;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Console\Command;
 use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class MinifyCommandTest extends TestCase
 {
@@ -64,7 +65,7 @@ class MinifyCommandTest extends TestCase
         $ref = new \ReflectionClass(MinifyCommand::class);
         $constants = $ref->getConstants();
 
-        $this->assertArrayHasKey('DEFAULT', $constants);
+        $this->assertContains('DEFAULT', array_keys($constants));
         $this->assertEquals('default', $constants['DEFAULT']);
     }
 
@@ -77,58 +78,22 @@ class MinifyCommandTest extends TestCase
         $this->assertCount(4, $defaultValue);
     }
 
-    public function test_colors_blue_value(): void
+    #[DataProvider('colorProvider')]
+    public function test_colors_value(string $key, string $expected): void
     {
         $ref = new \ReflectionProperty(MinifyCommand::class, 'colors');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertArrayHasKey('blue', $defaultValue);
-        $this->assertEquals('#6d8be6', $defaultValue['blue']);
+        $this->assertContains($key, array_keys($defaultValue));
+        $this->assertEquals($expected, $defaultValue[$key]);
     }
 
-    public function test_colors_green_value(): void
+    #[DataProvider('requiredMethodProvider')]
+    public function test_has_all_required_methods(string $method): void
     {
-        $ref = new \ReflectionProperty(MinifyCommand::class, 'colors');
-        $defaultValue = $ref->getDefaultValue();
+        $reflection = new \ReflectionMethod(MinifyCommand::class, $method);
 
-        $this->assertArrayHasKey('green', $defaultValue);
-        $this->assertEquals('#4e9876', $defaultValue['green']);
-    }
-
-    public function test_colors_blue_light_value(): void
-    {
-        $ref = new \ReflectionProperty(MinifyCommand::class, 'colors');
-        $defaultValue = $ref->getDefaultValue();
-
-        $this->assertArrayHasKey('blue-light', $defaultValue);
-        $this->assertEquals('#62a8ea', $defaultValue['blue-light']);
-    }
-
-    public function test_has_all_required_methods(): void
-    {
-        $methods = [
-            'handle',
-            'compileAllColors',
-            'publishAssets',
-            'replaceFiles',
-            'backupFiles',
-            'resetFiles',
-            'getMixFile',
-            'getMixBakFile',
-            'getColorFile',
-            'getColorBakFile',
-            'npmInstall',
-            'getColor',
-            'formatColor',
-            'runProcess',
-        ];
-
-        foreach ($methods as $method) {
-            $this->assertTrue(
-                method_exists(MinifyCommand::class, $method),
-                "MinifyCommand should have method '{$method}'"
-            );
-        }
+        $this->assertSame($method, $reflection->getName());
     }
 
     public function test_handle_is_public(): void
@@ -138,23 +103,10 @@ class MinifyCommandTest extends TestCase
         $this->assertTrue($ref->isPublic());
     }
 
-    public function test_format_color_is_protected(): void
+    #[DataProvider('protectedMethodProvider')]
+    public function test_protected_methods(string $method): void
     {
-        $ref = new \ReflectionMethod(MinifyCommand::class, 'formatColor');
-
-        $this->assertTrue($ref->isProtected());
-    }
-
-    public function test_compile_all_colors_is_protected(): void
-    {
-        $ref = new \ReflectionMethod(MinifyCommand::class, 'compileAllColors');
-
-        $this->assertTrue($ref->isProtected());
-    }
-
-    public function test_get_mix_file_is_protected(): void
-    {
-        $ref = new \ReflectionMethod(MinifyCommand::class, 'getMixFile');
+        $ref = new \ReflectionMethod(MinifyCommand::class, $method);
 
         $this->assertTrue($ref->isProtected());
     }
@@ -164,5 +116,43 @@ class MinifyCommandTest extends TestCase
         $ref = new \ReflectionProperty(MinifyCommand::class, 'colors');
 
         $this->assertTrue($ref->isProtected());
+    }
+
+    public static function colorProvider(): array
+    {
+        return [
+            ['blue', '#6d8be6'],
+            ['green', '#4e9876'],
+            ['blue-light', '#62a8ea'],
+        ];
+    }
+
+    public static function requiredMethodProvider(): array
+    {
+        return [
+            ['handle'],
+            ['compileAllColors'],
+            ['publishAssets'],
+            ['replaceFiles'],
+            ['backupFiles'],
+            ['resetFiles'],
+            ['getMixFile'],
+            ['getMixBakFile'],
+            ['getColorFile'],
+            ['getColorBakFile'],
+            ['npmInstall'],
+            ['getColor'],
+            ['formatColor'],
+            ['runProcess'],
+        ];
+    }
+
+    public static function protectedMethodProvider(): array
+    {
+        return [
+            ['formatColor'],
+            ['compileAllColors'],
+            ['getMixFile'],
+        ];
     }
 }

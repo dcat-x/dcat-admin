@@ -52,8 +52,7 @@ class ButtonFieldTest extends TestCase
 
         $variables = $this->getProtectedProperty($field, 'variables');
 
-        $this->assertArrayHasKey('buttonClass', $variables);
-        $this->assertSame('btn-primary', $variables['buttonClass']);
+        $this->assertSame('btn-primary', $variables['buttonClass'] ?? null);
     }
 
     // -------------------------------------------------------

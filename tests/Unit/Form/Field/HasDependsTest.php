@@ -5,9 +5,20 @@ namespace Dcat\Admin\Tests\Unit\Form\Field;
 use Dcat\Admin\Form\Field\HasDepends;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class HasDependsTest extends TestCase
 {
+    protected function dependsMethod(): \ReflectionMethod
+    {
+        return new \ReflectionMethod(HasDepends::class, 'depends');
+    }
+
+    protected function dependsParameters(): array
+    {
+        return $this->dependsMethod()->getParameters();
+    }
+
     protected function tearDown(): void
     {
         Mockery::close();
@@ -29,9 +40,7 @@ class HasDependsTest extends TestCase
 
     public function test_depends_method_signature(): void
     {
-        $method = new \ReflectionMethod(HasDepends::class, 'depends');
-
-        $this->assertSame(2, $method->getNumberOfParameters());
+        $this->assertSame(2, $this->dependsMethod()->getNumberOfParameters());
     }
 
     // -------------------------------------------------------
@@ -40,8 +49,7 @@ class HasDependsTest extends TestCase
 
     public function test_depends_is_public(): void
     {
-        $method = new \ReflectionMethod(HasDepends::class, 'depends');
-        $this->assertTrue($method->isPublic());
+        $this->assertTrue($this->dependsMethod()->isPublic());
     }
 
     // -------------------------------------------------------
@@ -50,36 +58,25 @@ class HasDependsTest extends TestCase
 
     public function test_depends_has_expected_parameters(): void
     {
-        $method = new \ReflectionMethod(HasDepends::class, 'depends');
-        $params = $method->getParameters();
+        $params = $this->dependsParameters();
 
         $this->assertCount(2, $params);
         $this->assertSame('fields', $params[0]->getName());
         $this->assertSame('clear', $params[1]->getName());
     }
 
-    public function test_depends_fields_default_is_empty_array(): void
+    #[DataProvider('defaultValueProvider')]
+    public function test_depends_parameter_defaults(int $index, mixed $defaultValue): void
     {
-        $method = new \ReflectionMethod(HasDepends::class, 'depends');
-        $params = $method->getParameters();
+        $params = $this->dependsParameters();
 
-        $this->assertTrue($params[0]->isDefaultValueAvailable());
-        $this->assertSame([], $params[0]->getDefaultValue());
-    }
-
-    public function test_depends_clear_default_is_true(): void
-    {
-        $method = new \ReflectionMethod(HasDepends::class, 'depends');
-        $params = $method->getParameters();
-
-        $this->assertTrue($params[1]->isDefaultValueAvailable());
-        $this->assertTrue($params[1]->getDefaultValue());
+        $this->assertTrue($params[$index]->isDefaultValueAvailable());
+        $this->assertSame($defaultValue, $params[$index]->getDefaultValue());
     }
 
     public function test_depends_clear_has_bool_type(): void
     {
-        $method = new \ReflectionMethod(HasDepends::class, 'depends');
-        $params = $method->getParameters();
+        $params = $this->dependsParameters();
 
         $type = $params[1]->getType();
         $this->assertNotNull($type);
@@ -98,5 +95,13 @@ class HasDependsTest extends TestCase
         $methodNames = array_map(fn ($m) => $m->getName(), $methods);
         $this->assertContains('depends', $methodNames);
         $this->assertCount(1, $methodNames);
+    }
+
+    public static function defaultValueProvider(): array
+    {
+        return [
+            'fields' => [0, []],
+            'clear' => [1, true],
+        ];
     }
 }

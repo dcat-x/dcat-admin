@@ -87,8 +87,7 @@ class ToggleFilterTest extends TestCase
 
         $condition = $filter->condition(['active' => '1']);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasWhere($condition);
         $this->assertEquals(['active', '1'], $condition['where']);
     }
 
@@ -99,5 +98,11 @@ class ToggleFilterTest extends TestCase
         $filter->condition(['active' => '1']);
 
         $this->assertEquals('1', $filter->getValue());
+    }
+
+    private function assertConditionHasWhere(mixed $condition): void
+    {
+        $this->assertIsArray($condition);
+        $this->assertContains('where', array_keys($condition));
     }
 }

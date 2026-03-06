@@ -34,8 +34,7 @@ class StartWithTest extends TestCase
         $filter = $this->makeFilter('name');
         $condition = $filter->condition(['name' => 'foo']);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasWhere($condition);
         $this->assertEquals('name', $condition['where'][0]);
         $this->assertEquals('like', $condition['where'][1]);
         $this->assertEquals('foo%', $condition['where'][2]);
@@ -78,5 +77,11 @@ class StartWithTest extends TestCase
         // Empty string is not null, so condition should be returned
         $this->assertIsArray($condition);
         $this->assertEquals('%', $condition['where'][2]);
+    }
+
+    private function assertConditionHasWhere(mixed $condition): void
+    {
+        $this->assertIsArray($condition);
+        $this->assertContains('where', array_keys($condition));
     }
 }

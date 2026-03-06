@@ -46,12 +46,11 @@ class CreateUserCommandTest extends TestCase
         $this->assertEquals('Create a admin user', $defaultValue);
     }
 
-    public function test_has_handle_method(): void
+    public function test_handle_method_signature(): void
     {
-        $this->assertTrue(
-            method_exists(CreateUserCommand::class, 'handle'),
-            'CreateUserCommand should have method "handle"'
-        );
+        $method = new \ReflectionMethod(CreateUserCommand::class, 'handle');
+
+        $this->assertSame(0, $method->getNumberOfParameters());
     }
 
     public function test_handle_is_public(): void

@@ -83,7 +83,7 @@ class HasComplexHeadersTest extends TestCase
     {
         $grid = $this->createGridMock();
 
-        $this->assertEquals([], $grid->getComplexHeaderNames());
+        $this->assertSame([], $grid->getComplexHeaderNames());
     }
 
     public function test_combine_calls_with_border(): void

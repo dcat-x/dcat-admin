@@ -49,8 +49,7 @@ class WhereTest extends TestCase
         $filter = $this->makeFilter('keyword', $query);
         $condition = $filter->condition(['keyword' => 'test']);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasWhere($condition);
         $this->assertIsCallable($condition['where'][0]);
     }
 
@@ -74,8 +73,7 @@ class WhereTest extends TestCase
         $filter = $this->makeFilter('search', $query);
         $condition = $filter->condition(['search' => 'hello']);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasWhere($condition);
     }
 
     public function test_closure_is_bound_to_filter_instance(): void
@@ -89,12 +87,18 @@ class WhereTest extends TestCase
         $condition = $filter->condition(['keyword' => 'bound_test']);
 
         // Execute the closure to verify binding
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasWhere($condition);
         $closure = $condition['where'][0];
 
         $mockQuery = $this->createMock(\Illuminate\Database\Query\Builder::class);
         $closure($mockQuery);
 
         $this->assertEquals('bound_test', $capturedInput);
+    }
+
+    private function assertConditionHasWhere(mixed $condition): void
+    {
+        $this->assertIsArray($condition);
+        $this->assertContains('where', array_keys($condition));
     }
 }

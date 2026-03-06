@@ -86,8 +86,7 @@ class DateRangeFilterTest extends TestCase
 
         $condition = $filter->condition(['created_at' => ['start' => '2024-01-01', 'end' => '']]);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasKey($condition, 'where');
         $this->assertEquals(['created_at', '>=', '2024-01-01'], $condition['where']);
     }
 
@@ -97,8 +96,7 @@ class DateRangeFilterTest extends TestCase
 
         $condition = $filter->condition(['created_at' => ['start' => '', 'end' => '2024-12-31']]);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasKey($condition, 'where');
         $this->assertEquals(['created_at', '<=', '2024-12-31'], $condition['where']);
     }
 
@@ -108,8 +106,7 @@ class DateRangeFilterTest extends TestCase
 
         $condition = $filter->condition(['created_at' => ['start' => '2024-01-01', 'end' => '2024-12-31']]);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('whereBetween', $condition);
+        $this->assertConditionHasKey($condition, 'whereBetween');
         $this->assertEquals(['created_at', ['2024-01-01', '2024-12-31']], $condition['whereBetween']);
     }
 
@@ -120,8 +117,7 @@ class DateRangeFilterTest extends TestCase
 
         $condition = $filter->condition(['created_at' => ['start' => '2024-01-01', 'end' => '2024-12-31']]);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('whereBetween', $condition);
+        $this->assertConditionHasKey($condition, 'whereBetween');
         $values = $condition['whereBetween'][1];
         $this->assertEquals(strtotime('2024-01-01'), $values[0]);
         $this->assertEquals(strtotime('2024-12-31'), $values[1]);
@@ -134,5 +130,11 @@ class DateRangeFilterTest extends TestCase
         $filter->condition(['created_at' => ['start' => '2024-01-01', 'end' => '2024-12-31']]);
 
         $this->assertEquals(['start' => '2024-01-01', 'end' => '2024-12-31'], $filter->getValue());
+    }
+
+    private function assertConditionHasKey(mixed $condition, string $key): void
+    {
+        $this->assertIsArray($condition);
+        $this->assertContains($key, array_keys($condition));
     }
 }

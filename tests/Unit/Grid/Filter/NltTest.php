@@ -51,8 +51,7 @@ class NltTest extends TestCase
 
         $condition = $filter->condition(['price' => '100']);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasWhere($condition);
         $this->assertEquals(['price', '>=', '100'], $condition['where']);
     }
 
@@ -80,8 +79,7 @@ class NltTest extends TestCase
 
         $condition = $filter->condition(['score' => '0']);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasWhere($condition);
         $this->assertEquals(['score', '>=', '0'], $condition['where']);
     }
 
@@ -93,5 +91,11 @@ class NltTest extends TestCase
         $condition = $filter->condition(['price' => '100']);
 
         $this->assertNull($condition);
+    }
+
+    private function assertConditionHasWhere(mixed $condition): void
+    {
+        $this->assertIsArray($condition);
+        $this->assertContains('where', array_keys($condition));
     }
 }

@@ -48,8 +48,7 @@ class AutocompleteTest extends TestCase
 
         $configs = $this->getProtectedProperty($field, 'configs');
 
-        $this->assertArrayHasKey('autoSelectFirst', $configs);
-        $this->assertTrue($configs['autoSelectFirst']);
+        $this->assertTrue($configs['autoSelectFirst'] ?? false);
     }
 
     public function test_group_by_default_is_group(): void
@@ -142,10 +141,10 @@ class AutocompleteTest extends TestCase
         $this->assertSame($field, $result);
 
         $variables = $this->getProtectedProperty($field, 'variables');
-        $this->assertArrayHasKey('ajax', $variables);
-        $this->assertStringContainsString('/api/autocomplete', $variables['ajax']['url']);
-        $this->assertSame('id', $variables['ajax']['valueField']);
-        $this->assertSame('group', $variables['ajax']['groupField']);
+        $ajax = $variables['ajax'] ?? [];
+        $this->assertStringContainsString('/api/autocomplete', $ajax['url'] ?? '');
+        $this->assertSame('id', $ajax['valueField'] ?? null);
+        $this->assertSame('group', $ajax['groupField'] ?? null);
     }
 
     public function test_format_group_options_adds_group_data_and_clears_groups(): void

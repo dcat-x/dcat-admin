@@ -175,12 +175,7 @@ class RoundTest extends TestCase
         $round = new Round;
         $options = $round->getOptions();
 
-        $this->assertArrayHasKey('icon', $options);
-        $this->assertArrayHasKey('title', $options);
-        $this->assertArrayHasKey('header', $options);
-        $this->assertArrayHasKey('content', $options);
-        $this->assertArrayHasKey('footer', $options);
-        $this->assertArrayHasKey('dropdown', $options);
+        $this->assertArrayContainsKeys(['icon', 'title', 'header', 'content', 'footer', 'dropdown'], $options);
     }
 
     public function test_static_make(): void
@@ -188,5 +183,14 @@ class RoundTest extends TestCase
         $round = Round::make('Stats');
 
         $this->assertInstanceOf(Round::class, $round);
+    }
+
+    private function assertArrayContainsKeys(array $expectedKeys, array $actual): void
+    {
+        $keys = array_keys($actual);
+
+        foreach ($expectedKeys as $key) {
+            $this->assertContains($key, $keys);
+        }
     }
 }

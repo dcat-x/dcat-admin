@@ -44,8 +44,7 @@ class IlikeTest extends TestCase
 
         $condition = $filter->condition(['name' => 'john']);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasWhere($condition);
         $this->assertEquals(['name', 'ilike', '%john%'], $condition['where']);
     }
 
@@ -82,7 +81,13 @@ class IlikeTest extends TestCase
 
         $condition = $filter->condition(['name' => '']);
 
-        $this->assertIsArray($condition);
+        $this->assertConditionHasWhere($condition);
         $this->assertEquals(['name', 'ilike', '%%'], $condition['where']);
+    }
+
+    private function assertConditionHasWhere(mixed $condition): void
+    {
+        $this->assertIsArray($condition);
+        $this->assertContains('where', array_keys($condition));
     }
 }

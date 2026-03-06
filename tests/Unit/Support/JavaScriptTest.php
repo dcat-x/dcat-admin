@@ -81,7 +81,7 @@ class JavaScriptTest extends TestCase
     {
         $js = new JavaScript('to_delete');
         $id = (string) $js;
-        $this->assertArrayHasKey($id, JavaScript::all());
+        $this->assertContains($id, array_keys(JavaScript::all()));
 
         JavaScript::delete($id);
         $this->assertArrayNotHasKey($id, JavaScript::all());

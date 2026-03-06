@@ -5,6 +5,7 @@ namespace Dcat\Admin\Tests\Unit\Grid\Filter\Presenter;
 use Dcat\Admin\Grid\Filter\AbstractFilter;
 use Dcat\Admin\Grid\Filter\Presenter\Text;
 use Dcat\Admin\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionProperty;
 
 class TextTest extends TestCase
@@ -82,17 +83,15 @@ class TextTest extends TestCase
         $this->assertEquals('pencil', $ref->getValue($text));
     }
 
-    public function test_default_variables_returns_expected_keys(): void
+    #[DataProvider('defaultVariableKeyProvider')]
+    public function test_default_variables_returns_expected_keys(string $key): void
     {
         $text = $this->makeText('My placeholder');
         $this->attachFilter($text);
 
         $vars = $text->defaultVariables();
 
-        $this->assertArrayHasKey('placeholder', $vars);
-        $this->assertArrayHasKey('icon', $vars);
-        $this->assertArrayHasKey('type', $vars);
-        $this->assertArrayHasKey('group', $vars);
+        $this->assertContains($key, array_keys($vars));
         $this->assertEquals('My placeholder', $vars['placeholder']);
         $this->assertEquals('pencil', $vars['icon']);
         $this->assertEquals('text', $vars['type']);
@@ -129,5 +128,15 @@ class TextTest extends TestCase
         $ref->setAccessible(true);
 
         $this->assertEquals('envelope', $ref->getValue($text));
+    }
+
+    public static function defaultVariableKeyProvider(): array
+    {
+        return [
+            ['placeholder'],
+            ['icon'],
+            ['type'],
+            ['group'],
+        ];
     }
 }

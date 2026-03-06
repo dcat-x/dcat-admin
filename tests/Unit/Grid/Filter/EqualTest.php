@@ -43,8 +43,7 @@ class EqualTest extends TestCase
 
         $condition = $filter->condition(['status' => 'active']);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasWhere($condition);
         $this->assertEquals(['status', 'active'], $condition['where']);
     }
 
@@ -63,8 +62,7 @@ class EqualTest extends TestCase
 
         $condition = $filter->condition(['type' => '1']);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasWhere($condition);
         $this->assertEquals(['type', '1'], $condition['where']);
     }
 
@@ -74,8 +72,7 @@ class EqualTest extends TestCase
 
         $condition = $filter->condition(['status' => '0']);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasWhere($condition);
         $this->assertEquals(['status', '0'], $condition['where']);
     }
 
@@ -85,8 +82,7 @@ class EqualTest extends TestCase
 
         $condition = $filter->condition(['status' => '']);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasWhere($condition);
         $this->assertEquals(['status', ''], $condition['where']);
     }
 
@@ -107,5 +103,11 @@ class EqualTest extends TestCase
         $condition = $filter->condition(['status' => 'active']);
 
         $this->assertNull($condition);
+    }
+
+    private function assertConditionHasWhere(mixed $condition): void
+    {
+        $this->assertIsArray($condition);
+        $this->assertContains('where', array_keys($condition));
     }
 }

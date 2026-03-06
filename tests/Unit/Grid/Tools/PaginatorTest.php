@@ -34,7 +34,7 @@ class PaginatorTest extends TestCase
     {
         $interfaces = class_implements(Paginator::class);
 
-        $this->assertArrayHasKey(Renderable::class, $interfaces);
+        $this->assertContains(Renderable::class, array_keys($interfaces));
     }
 
     public function test_render_method_signature(): void

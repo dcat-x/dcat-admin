@@ -5,6 +5,7 @@ namespace Dcat\Admin\Tests\Unit\Form\Field;
 use Dcat\Admin\Form\Field\Mobile;
 use Dcat\Admin\Form\Field\Text;
 use Dcat\Admin\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class MobileTest extends TestCase
 {
@@ -28,14 +29,14 @@ class MobileTest extends TestCase
         $this->assertInstanceOf(Text::class, $field);
     }
 
-    public function test_options_has_mask(): void
+    #[DataProvider('optionProvider')]
+    public function test_options_contain_expected_values(string $key, mixed $expected): void
     {
         $field = $this->createField();
 
         $options = $this->getProtectedProperty($field, 'options');
 
-        $this->assertArrayHasKey('mask', $options);
-        $this->assertSame('99999999999', $options['mask']);
+        $this->assertSame($expected, $options[$key] ?? null);
     }
 
     public function test_options_mask_is_eleven_digits(): void
@@ -68,5 +69,12 @@ class MobileTest extends TestCase
         $rules = $this->getProtectedProperty($field, 'rules');
 
         $this->assertEmpty($rules);
+    }
+
+    public static function optionProvider(): array
+    {
+        return [
+            'mask' => ['mask', '99999999999'],
+        ];
     }
 }

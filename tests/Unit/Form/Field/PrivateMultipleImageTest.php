@@ -27,8 +27,7 @@ class PrivateMultipleImageTest extends TestCase
         $reflection = new \ReflectionClass(PrivateMultipleImage::class);
         $defaults = $reflection->getDefaultProperties();
 
-        $this->assertArrayHasKey('diskName', $defaults);
-        $this->assertSame('', $defaults['diskName']);
+        $this->assertSame('', $defaults['diskName'] ?? null);
     }
 
     public function test_disk_sets_disk_name_and_returns_self(): void

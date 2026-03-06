@@ -267,12 +267,9 @@ class FieldTest extends TestCase
         $field->value('Some content');
 
         $variables = $this->getDefaultVariables($field);
+        $expectedKeys = ['content', 'escape', 'label', 'wrapped', 'width'];
 
-        $this->assertArrayHasKey('content', $variables);
-        $this->assertArrayHasKey('escape', $variables);
-        $this->assertArrayHasKey('label', $variables);
-        $this->assertArrayHasKey('wrapped', $variables);
-        $this->assertArrayHasKey('width', $variables);
+        $this->assertArrayContainsKeys($expectedKeys, $variables);
 
         $this->assertSame('Some content', $variables['content']);
         $this->assertSame('Title', $variables['label']);
@@ -363,7 +360,7 @@ class FieldTest extends TestCase
         Field::extend('customField', \Closure::class);
 
         $extensions = Field::extensions();
-        $this->assertArrayHasKey('customField', $extensions);
+        $this->assertSame(\Closure::class, $extensions['customField'] ?? null);
 
         // Clean up static state
         $ref = new \ReflectionProperty(Field::class, 'extendedFields');
@@ -381,8 +378,8 @@ class FieldTest extends TestCase
         Field::extend('fieldB', 'ClassB');
 
         $extensions = Field::extensions();
-        $this->assertArrayHasKey('fieldA', $extensions);
-        $this->assertArrayHasKey('fieldB', $extensions);
+        $this->assertSame('ClassA', $extensions['fieldA'] ?? null);
+        $this->assertSame('ClassB', $extensions['fieldB'] ?? null);
 
         // Restore
         $ref->setValue(null, $original);
@@ -439,5 +436,14 @@ class FieldTest extends TestCase
         [$callable, $params] = $showAs->first();
         $result = $callable->call(new Fluent, 'x|y|z');
         $this->assertSame(['x', 'y', 'z'], $result);
+    }
+
+    private function assertArrayContainsKeys(array $expectedKeys, array $actual): void
+    {
+        $keys = array_keys($actual);
+
+        foreach ($expectedKeys as $key) {
+            $this->assertContains($key, $keys);
+        }
     }
 }

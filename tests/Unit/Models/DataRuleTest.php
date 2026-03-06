@@ -8,6 +8,7 @@ use Dcat\Admin\Models\Role;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DataRuleTest extends TestCase
 {
@@ -111,46 +112,63 @@ class DataRuleTest extends TestCase
         $this->assertFalse($fixedRule->isVariableValue());
     }
 
-    public function test_get_condition_options(): void
+    #[DataProvider('optionMethodProvider')]
+    public function test_option_methods_contain_expected_keys(string $method, array $expectedKeys): void
     {
-        $options = DataRule::getConditionOptions();
+        $options = DataRule::$method();
 
         $this->assertIsArray($options);
-        $this->assertArrayHasKey(DataRule::CONDITION_EQUAL, $options);
-        $this->assertArrayHasKey(DataRule::CONDITION_NOT_EQUAL, $options);
-        $this->assertArrayHasKey(DataRule::CONDITION_LIKE, $options);
-        $this->assertArrayHasKey(DataRule::CONDITION_IN, $options);
+        $this->assertArrayContainsKeys($expectedKeys, $options);
     }
 
-    public function test_get_scope_options(): void
+    public static function optionMethodProvider(): array
     {
-        $options = DataRule::getScopeOptions();
-
-        $this->assertIsArray($options);
-        $this->assertArrayHasKey(DataRule::SCOPE_ROW, $options);
-        $this->assertArrayHasKey(DataRule::SCOPE_COLUMN, $options);
-        $this->assertArrayHasKey(DataRule::SCOPE_FORM, $options);
+        return [
+            [
+                'method' => 'getConditionOptions',
+                'expectedKeys' => [
+                    DataRule::CONDITION_EQUAL,
+                    DataRule::CONDITION_NOT_EQUAL,
+                    DataRule::CONDITION_LIKE,
+                    DataRule::CONDITION_IN,
+                ],
+            ],
+            [
+                'method' => 'getScopeOptions',
+                'expectedKeys' => [
+                    DataRule::SCOPE_ROW,
+                    DataRule::SCOPE_COLUMN,
+                    DataRule::SCOPE_FORM,
+                ],
+            ],
+            [
+                'method' => 'getValueTypeOptions',
+                'expectedKeys' => [
+                    DataRule::VALUE_TYPE_FIXED,
+                    DataRule::VALUE_TYPE_VARIABLE,
+                ],
+            ],
+        ];
     }
 
-    public function test_get_value_type_options(): void
-    {
-        $options = DataRule::getValueTypeOptions();
-
-        $this->assertIsArray($options);
-        $this->assertArrayHasKey(DataRule::VALUE_TYPE_FIXED, $options);
-        $this->assertArrayHasKey(DataRule::VALUE_TYPE_VARIABLE, $options);
-    }
-
-    public function test_get_system_variables(): void
+    #[DataProvider('systemVariableKeyProvider')]
+    public function test_get_system_variables_contains_expected_keys(string $key): void
     {
         $variables = DataRule::getSystemVariables();
 
         $this->assertIsArray($variables);
-        $this->assertArrayHasKey('{user_id}', $variables);
-        $this->assertArrayHasKey('{username}', $variables);
-        $this->assertArrayHasKey('{department_id}', $variables);
-        $this->assertArrayHasKey('{department_ids}', $variables);
-        $this->assertArrayHasKey('{department_path}', $variables);
+        $this->assertContains($key, array_keys($variables));
+    }
+
+    public static function systemVariableKeyProvider(): array
+    {
+        return [
+            ['key' => '{user_id}'],
+            ['key' => '{username}'],
+            ['key' => '{department_id}'],
+            ['key' => '{department_ids}'],
+            ['key' => '{department_path}'],
+        ];
     }
 
     public function test_data_rule_fillable_attributes(): void
@@ -163,10 +181,7 @@ class DataRuleTest extends TestCase
         ];
 
         foreach ($fillable as $attribute) {
-            $this->assertTrue(
-                in_array($attribute, $rule->getFillable()),
-                "Attribute '{$attribute}' should be fillable"
-            );
+            $this->assertContains($attribute, $rule->getFillable(), "Attribute '{$attribute}' should be fillable");
         }
     }
 
@@ -196,9 +211,16 @@ class DataRuleTest extends TestCase
         $rule = new DataRule;
 
         // 检查默认值
-        $this->assertEquals('fixed', $rule->value_type ?? 'fixed');
-        $this->assertEquals('row', $rule->scope ?? 'row');
-        $this->assertEquals(1, $rule->status ?? 1);
-        $this->assertEquals(0, $rule->order ?? 0);
+        $this->assertSame(DataRule::VALUE_TYPE_FIXED, $rule->value_type ?? DataRule::VALUE_TYPE_FIXED);
+        $this->assertSame(DataRule::SCOPE_ROW, $rule->scope ?? DataRule::SCOPE_ROW);
+        $this->assertSame(1, $rule->status ?? 1);
+        $this->assertSame(0, $rule->order ?? 0);
+    }
+
+    private function assertArrayContainsKeys(array $expectedKeys, array $actual): void
+    {
+        foreach ($expectedKeys as $key) {
+            $this->assertContains($key, array_keys($actual));
+        }
     }
 }

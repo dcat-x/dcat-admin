@@ -6,6 +6,7 @@ use Dcat\Admin\Console\GeneratorCommand;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Console\Command;
 use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class GeneratorCommandTest extends TestCase
 {
@@ -37,29 +38,12 @@ class GeneratorCommandTest extends TestCase
         $this->assertContains(Command::class, $parents);
     }
 
-    public function test_has_files_property(): void
+    #[DataProvider('protectedPropertyProvider')]
+    public function test_has_protected_properties(string $property): void
     {
-        $this->assertTrue(property_exists(GeneratorCommand::class, 'files'));
+        $this->assertTrue(property_exists(GeneratorCommand::class, $property));
 
-        $ref = new \ReflectionProperty(GeneratorCommand::class, 'files');
-
-        $this->assertTrue($ref->isProtected());
-    }
-
-    public function test_has_type_property(): void
-    {
-        $this->assertTrue(property_exists(GeneratorCommand::class, 'type'));
-
-        $ref = new \ReflectionProperty(GeneratorCommand::class, 'type');
-
-        $this->assertTrue($ref->isProtected());
-    }
-
-    public function test_has_base_directory_property(): void
-    {
-        $this->assertTrue(property_exists(GeneratorCommand::class, 'baseDirectory'));
-
-        $ref = new \ReflectionProperty(GeneratorCommand::class, 'baseDirectory');
+        $ref = new \ReflectionProperty(GeneratorCommand::class, $property);
 
         $this->assertTrue($ref->isProtected());
     }
@@ -78,73 +62,21 @@ class GeneratorCommandTest extends TestCase
         $this->assertNotEmpty($defaultValue);
     }
 
-    public function test_reserved_names_contains_specific_php_reserved_words(): void
+    #[DataProvider('reservedNameProvider')]
+    public function test_reserved_names_contains_specific_php_reserved_words(string $word): void
     {
         $ref = new \ReflectionProperty(GeneratorCommand::class, 'reservedNames');
         $reservedNames = $ref->getDefaultValue();
 
-        $expectedWords = [
-            'abstract',
-            'class',
-            'function',
-            'return',
-            'yield',
-            'if',
-            'else',
-            'while',
-            'for',
-            'switch',
-            'try',
-            'catch',
-            'finally',
-            'throw',
-            'new',
-            'extends',
-            'implements',
-            'interface',
-            'trait',
-            'public',
-            'protected',
-            'private',
-            'static',
-        ];
-
-        foreach ($expectedWords as $word) {
-            $this->assertContains($word, $reservedNames, "Reserved names should contain '{$word}'");
-        }
+        $this->assertContains($word, $reservedNames, "Reserved names should contain '{$word}'");
     }
 
-    public function test_has_required_methods(): void
+    #[DataProvider('requiredMethodProvider')]
+    public function test_has_required_methods(string $method): void
     {
-        $methods = [
-            'handle',
-            'qualifyClass',
-            'qualifyModel',
-            'getDefaultNamespace',
-            'alreadyExists',
-            'makeDirectory',
-            'buildClass',
-            'replaceNamespace',
-            'getNamespace',
-            'replaceClass',
-            'sortImports',
-            'getNameInput',
-            'isReservedName',
-            'viewPath',
-            'getArguments',
-            'rootNamespace',
-            'getPath',
-            'getBaseDir',
-            'askBaseDirectory',
-            'userProviderModel',
-        ];
+        $reflection = new \ReflectionMethod(GeneratorCommand::class, $method);
 
-        foreach ($methods as $method) {
-            $this->assertTrue(
-                method_exists(GeneratorCommand::class, $method),
-                "GeneratorCommand should have method '{$method}'"
-            );
-        }
+        $this->assertSame($method, $reflection->getName());
     }
 
     public function test_get_stub_is_abstract_method(): void
@@ -187,5 +119,69 @@ class GeneratorCommandTest extends TestCase
         $ref = new \ReflectionMethod(GeneratorCommand::class, 'qualifyClass');
 
         $this->assertTrue($ref->isProtected());
+    }
+
+    public static function protectedPropertyProvider(): array
+    {
+        return [
+            ['files'],
+            ['type'],
+            ['baseDirectory'],
+        ];
+    }
+
+    public static function reservedNameProvider(): array
+    {
+        return [
+            ['abstract'],
+            ['class'],
+            ['function'],
+            ['return'],
+            ['yield'],
+            ['if'],
+            ['else'],
+            ['while'],
+            ['for'],
+            ['switch'],
+            ['try'],
+            ['catch'],
+            ['finally'],
+            ['throw'],
+            ['new'],
+            ['extends'],
+            ['implements'],
+            ['interface'],
+            ['trait'],
+            ['public'],
+            ['protected'],
+            ['private'],
+            ['static'],
+        ];
+    }
+
+    public static function requiredMethodProvider(): array
+    {
+        return [
+            ['handle'],
+            ['qualifyClass'],
+            ['qualifyModel'],
+            ['getDefaultNamespace'],
+            ['alreadyExists'],
+            ['makeDirectory'],
+            ['buildClass'],
+            ['replaceNamespace'],
+            ['getNamespace'],
+            ['replaceClass'],
+            ['sortImports'],
+            ['getNameInput'],
+            ['isReservedName'],
+            ['viewPath'],
+            ['getArguments'],
+            ['rootNamespace'],
+            ['getPath'],
+            ['getBaseDir'],
+            ['askBaseDirectory'],
+            ['userProviderModel'],
+        ];
     }
 }

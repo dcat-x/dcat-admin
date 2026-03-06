@@ -102,7 +102,7 @@ class AbstractFilterTest extends TestCase
 
         $this->assertSame('Taylor', $filter->getValue());
         $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertIsArray($condition['where'] ?? null);
         $this->assertSame('name', $condition['where'][0]);
         $this->assertSame('Taylor', $condition['where'][1]);
     }

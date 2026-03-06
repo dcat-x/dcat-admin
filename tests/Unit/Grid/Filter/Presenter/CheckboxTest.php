@@ -74,11 +74,9 @@ class CheckboxTest extends TestCase
 
         $vars = $checkbox->defaultVariables();
 
-        $this->assertArrayHasKey('options', $vars);
-        $this->assertArrayHasKey('inline', $vars);
-        $this->assertArrayHasKey('showLabel', $vars);
-        $this->assertEquals($options, $vars['options']);
+        $this->assertEquals($options, $vars['options'] ?? null);
         $this->assertTrue($vars['inline']);
+        $this->assertTrue($vars['showLabel']);
     }
 
     public function test_show_label_inherited_from_radio(): void

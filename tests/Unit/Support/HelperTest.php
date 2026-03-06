@@ -186,7 +186,7 @@ class HelperTest extends TestCase
 
         $this->assertCount(1, $result);
         $this->assertEquals('Root', $result[0]['name']);
-        $this->assertArrayHasKey('items', $result[0]);
+        $this->assertIsArray($result[0]['items'] ?? null);
     }
 
     public function test_delete_by_value(): void
@@ -367,8 +367,8 @@ class HelperTest extends TestCase
     {
         $array = ['user_name' => 'John', 'first_name' => 'Jane'];
         Helper::camelArray($array);
-        $this->assertArrayHasKey('userName', $array);
-        $this->assertArrayHasKey('firstName', $array);
+        $this->assertSame('John', $array['userName'] ?? null);
+        $this->assertSame('Jane', $array['firstName'] ?? null);
     }
 
     public function test_export_array(): void

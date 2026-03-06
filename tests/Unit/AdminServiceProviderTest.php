@@ -5,6 +5,7 @@ namespace Dcat\Admin\Tests\Unit;
 use Dcat\Admin\AdminServiceProvider;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionProperty;
@@ -39,50 +40,44 @@ class AdminServiceProviderTest extends TestCase
         $this->assertNotEmpty($defaultValue);
     }
 
-    public function test_commands_property_contains_expected_commands(): void
+    #[DataProvider('expectedCommandProvider')]
+    public function test_commands_property_contains_expected_commands(string $commandClass): void
     {
         $prop = new ReflectionProperty(AdminServiceProvider::class, 'commands');
         $commands = $prop->getDefaultValue();
 
-        $this->assertContains(\Dcat\Admin\Console\AdminCommand::class, $commands);
-        $this->assertContains(\Dcat\Admin\Console\InstallCommand::class, $commands);
-        $this->assertContains(\Dcat\Admin\Console\PublishCommand::class, $commands);
-        $this->assertContains(\Dcat\Admin\Console\CreateUserCommand::class, $commands);
+        $this->assertContains($commandClass, $commands);
     }
 
-    public function test_boot_method_is_public(): void
+    #[DataProvider('publicMethodProvider')]
+    public function test_public_methods(string $methodName): void
     {
-        $method = new ReflectionMethod(AdminServiceProvider::class, 'boot');
+        $method = new ReflectionMethod(AdminServiceProvider::class, $methodName);
         $this->assertTrue($method->isPublic());
     }
 
-    public function test_register_method_is_public(): void
+    #[DataProvider('protectedMethodProvider')]
+    public function test_protected_methods(string $methodName): void
     {
-        $method = new ReflectionMethod(AdminServiceProvider::class, 'register');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_register_services_method_is_public(): void
-    {
-        $method = new ReflectionMethod(AdminServiceProvider::class, 'registerServices');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_register_route_middleware_is_protected(): void
-    {
-        $method = new ReflectionMethod(AdminServiceProvider::class, 'registerRouteMiddleware');
+        $method = new ReflectionMethod(AdminServiceProvider::class, $methodName);
         $this->assertTrue($method->isProtected());
     }
 
-    public function test_route_middleware_property_is_protected_array(): void
+    #[DataProvider('protectedPropertyProvider')]
+    public function test_protected_array_properties(string $propertyName): void
+    {
+        $prop = new ReflectionProperty(AdminServiceProvider::class, $propertyName);
+        $this->assertTrue($prop->isProtected());
+        $this->assertIsArray($prop->getDefaultValue());
+    }
+
+    #[DataProvider('routeMiddlewareKeyProvider')]
+    public function test_route_middleware_property_contains_expected_keys(string $key): void
     {
         $prop = new ReflectionProperty(AdminServiceProvider::class, 'routeMiddleware');
-        $this->assertTrue($prop->isProtected());
         $defaultValue = $prop->getDefaultValue();
-        $this->assertIsArray($defaultValue);
-        $this->assertArrayHasKey('admin.auth', $defaultValue);
-        $this->assertArrayHasKey('admin.pjax', $defaultValue);
-        $this->assertArrayHasKey('admin.permission', $defaultValue);
+
+        $this->assertContains($key, array_keys($defaultValue));
     }
 
     public function test_middleware_groups_property_is_protected_array(): void
@@ -91,7 +86,7 @@ class AdminServiceProviderTest extends TestCase
         $this->assertTrue($prop->isProtected());
         $defaultValue = $prop->getDefaultValue();
         $this->assertIsArray($defaultValue);
-        $this->assertArrayHasKey('admin', $defaultValue);
+        $this->assertIsArray($defaultValue['admin'] ?? null);
     }
 
     public function test_dev_commands_property_is_protected_array(): void
@@ -107,12 +102,9 @@ class AdminServiceProviderTest extends TestCase
         $provider = new AdminServiceProvider($this->app);
         $provider->registerServices();
 
-        $this->assertTrue($this->app->bound('admin.asset'));
-        $this->assertTrue($this->app->bound('admin.menu'));
-        $this->assertTrue($this->app->bound('admin.navbar'));
-        $this->assertTrue($this->app->bound('admin.setting'));
-        $this->assertTrue($this->app->bound('admin.web-uploader'));
-        $this->assertTrue($this->app->bound('admin.translator'));
+        foreach (self::serviceBindingProvider() as [$binding]) {
+            $this->assertTrue($this->app->bound($binding));
+        }
     }
 
     public function test_register_route_middleware_adds_aliases_and_group(): void
@@ -126,9 +118,8 @@ class AdminServiceProviderTest extends TestCase
         $aliases = $router->getMiddleware();
         $groups = $router->getMiddlewareGroups();
 
-        $this->assertArrayHasKey('admin.auth', $aliases);
-        $this->assertArrayHasKey('admin.permission', $aliases);
-        $this->assertArrayHasKey('admin', $groups);
+        $this->assertArrayContainsKeys(['admin.auth', 'admin.permission'], $aliases);
+        $this->assertArrayContainsKeys(['admin'], $groups);
         $this->assertContains('admin.permission', $groups['admin']);
     }
 
@@ -141,7 +132,7 @@ class AdminServiceProviderTest extends TestCase
 
         $groups = $this->app->make('router')->getMiddlewareGroups();
 
-        $this->assertArrayHasKey('admin', $groups);
+        $this->assertArrayContainsKeys(['admin'], $groups);
         $this->assertNotContains('admin.permission', $groups['admin']);
     }
 
@@ -149,6 +140,70 @@ class AdminServiceProviderTest extends TestCase
     {
         $ref = new ReflectionClass(AdminServiceProvider::class);
         $this->assertFalse($ref->isAbstract());
+    }
+
+    public static function publicMethodProvider(): array
+    {
+        return [
+            ['boot'],
+            ['register'],
+            ['registerServices'],
+        ];
+    }
+
+    public static function protectedMethodProvider(): array
+    {
+        return [
+            ['registerRouteMiddleware'],
+        ];
+    }
+
+    public static function protectedPropertyProvider(): array
+    {
+        return [
+            ['routeMiddleware'],
+            ['middlewareGroups'],
+            ['devCommands'],
+        ];
+    }
+
+    public static function routeMiddlewareKeyProvider(): array
+    {
+        return [
+            ['admin.auth'],
+            ['admin.pjax'],
+            ['admin.permission'],
+        ];
+    }
+
+    public static function serviceBindingProvider(): array
+    {
+        return [
+            ['admin.asset'],
+            ['admin.menu'],
+            ['admin.navbar'],
+            ['admin.setting'],
+            ['admin.web-uploader'],
+            ['admin.translator'],
+        ];
+    }
+
+    public static function expectedCommandProvider(): array
+    {
+        return [
+            [\Dcat\Admin\Console\AdminCommand::class],
+            [\Dcat\Admin\Console\InstallCommand::class],
+            [\Dcat\Admin\Console\PublishCommand::class],
+            [\Dcat\Admin\Console\CreateUserCommand::class],
+        ];
+    }
+
+    private function assertArrayContainsKeys(array $expectedKeys, array $actual): void
+    {
+        $actualKeys = array_keys($actual);
+        foreach ($expectedKeys as $key) {
+            $this->assertContains($key, $actualKeys);
+        }
     }
 }
 

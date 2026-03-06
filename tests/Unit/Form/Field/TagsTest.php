@@ -90,8 +90,8 @@ class TagsTest extends TestCase
         $field->options([1 => 'PHP', 2 => 'Laravel']);
 
         $options = $this->getProtectedProperty($field, 'options');
-        $this->assertArrayHasKey(1, $options);
-        $this->assertArrayHasKey(2, $options);
+        $this->assertSame('PHP', $options[1] ?? null);
+        $this->assertSame('Laravel', $options[2] ?? null);
     }
 
     // -------------------------------------------------------

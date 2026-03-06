@@ -5,6 +5,7 @@ namespace Dcat\Admin\Tests\Unit\Form\Field;
 use Dcat\Admin\Form\Field\Ip;
 use Dcat\Admin\Form\Field\Text;
 use Dcat\Admin\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class IpTest extends TestCase
 {
@@ -28,22 +29,14 @@ class IpTest extends TestCase
         $this->assertInstanceOf(Text::class, $field);
     }
 
-    public function test_rules_contain_ip(): void
+    #[DataProvider('ruleProvider')]
+    public function test_rules_contain_expected_values(string $rule): void
     {
         $field = $this->createField();
 
         $rules = $this->getProtectedProperty($field, 'rules');
 
-        $this->assertContains('ip', $rules);
-    }
-
-    public function test_rules_contain_nullable(): void
-    {
-        $field = $this->createField();
-
-        $rules = $this->getProtectedProperty($field, 'rules');
-
-        $this->assertContains('nullable', $rules);
+        $this->assertContains($rule, $rules);
     }
 
     public function test_options_has_ip_alias(): void
@@ -52,8 +45,7 @@ class IpTest extends TestCase
 
         $options = $this->getProtectedProperty($field, 'options');
 
-        $this->assertArrayHasKey('alias', $options);
-        $this->assertSame('ip', $options['alias']);
+        $this->assertSame('ip', $options['alias'] ?? null);
     }
 
     public function test_can_be_constructed_with_custom_column(): void
@@ -68,5 +60,13 @@ class IpTest extends TestCase
         $method = new \ReflectionMethod(Ip::class, 'render');
 
         $this->assertSame(0, $method->getNumberOfParameters());
+    }
+
+    public static function ruleProvider(): array
+    {
+        return [
+            'ip' => ['ip'],
+            'nullable' => ['nullable'],
+        ];
     }
 }

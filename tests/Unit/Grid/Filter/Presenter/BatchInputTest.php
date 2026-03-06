@@ -5,6 +5,7 @@ namespace Dcat\Admin\Tests\Unit\Grid\Filter\Presenter;
 use Dcat\Admin\Grid\Filter\Presenter\BatchInput;
 use Dcat\Admin\Grid\Filter\Presenter\Presenter;
 use Dcat\Admin\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionProperty;
 
 class BatchInputTest extends TestCase
@@ -77,200 +78,60 @@ class BatchInputTest extends TestCase
 
     // ===== Default values =====
 
-    public function test_default_placeholder_is_empty(): void
+    #[DataProvider('defaultPropertyProvider')]
+    public function test_default_property_values(string $property, mixed $expected): void
     {
         $batch = $this->makeBatchInput();
 
-        $this->assertEquals('', $this->getProtectedProperty($batch, 'placeholder'));
+        $this->assertSame($expected, $this->getProtectedProperty($batch, $property));
     }
 
-    public function test_default_batch_title_is_empty(): void
+    public static function defaultPropertyProvider(): array
     {
-        $batch = $this->makeBatchInput();
-
-        $this->assertEquals('', $this->getProtectedProperty($batch, 'batchTitle'));
-    }
-
-    public function test_default_batch_description_is_empty(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $this->assertEquals('', $this->getProtectedProperty($batch, 'batchDescription'));
-    }
-
-    public function test_default_batch_icon(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $this->assertEquals('feather icon-list', $this->getProtectedProperty($batch, 'batchIcon'));
-    }
-
-    public function test_default_batch_button_text_is_empty(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $this->assertEquals('', $this->getProtectedProperty($batch, 'batchButtonText'));
-    }
-
-    public function test_default_batch_max_is_100(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $this->assertEquals(100, $this->getProtectedProperty($batch, 'batchMax'));
-    }
-
-    public function test_default_validation_pattern_is_empty(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $this->assertEquals('', $this->getProtectedProperty($batch, 'validationPattern'));
-    }
-
-    public function test_default_validation_message_is_empty(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $this->assertEquals('', $this->getProtectedProperty($batch, 'validationMessage'));
-    }
-
-    public function test_default_item_label_is_empty(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $this->assertEquals('', $this->getProtectedProperty($batch, 'itemLabel'));
-    }
-
-    public function test_default_batch_placeholder_is_empty(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $this->assertEquals('', $this->getProtectedProperty($batch, 'batchPlaceholder'));
-    }
-
-    public function test_default_query_field_is_keywords(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $this->assertEquals('keywords', $this->getProtectedProperty($batch, 'queryField'));
-    }
-
-    public function test_default_model_is_null(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $this->assertNull($this->getProtectedProperty($batch, 'model'));
-    }
-
-    public function test_default_model_key_is_id(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $this->assertEquals('id', $this->getProtectedProperty($batch, 'modelKey'));
-    }
-
-    public function test_default_model_text_is_name(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $this->assertEquals('name', $this->getProtectedProperty($batch, 'modelText'));
+        return [
+            'placeholder' => ['placeholder', ''],
+            'batchTitle' => ['batchTitle', ''],
+            'batchDescription' => ['batchDescription', ''],
+            'batchIcon' => ['batchIcon', 'feather icon-list'],
+            'batchButtonText' => ['batchButtonText', ''],
+            'batchMax' => ['batchMax', 100],
+            'validationPattern' => ['validationPattern', ''],
+            'validationMessage' => ['validationMessage', ''],
+            'itemLabel' => ['itemLabel', ''],
+            'batchPlaceholder' => ['batchPlaceholder', ''],
+            'queryField' => ['queryField', 'keywords'],
+            'model' => ['model', null],
+            'modelKey' => ['modelKey', 'id'],
+            'modelText' => ['modelText', 'name'],
+        ];
     }
 
     // ===== Setter fluent interface =====
 
-    public function test_placeholder_is_fluent(): void
+    #[DataProvider('fluentSetterProvider')]
+    public function test_fluent_setter_updates_property(string $method, mixed $argument, string $property, mixed $expected): void
     {
         $batch = $this->makeBatchInput();
 
-        $this->assertSame($batch, $batch->placeholder('Search...'));
+        $result = $batch->{$method}($argument);
+
+        $this->assertSame($batch, $result);
+        $this->assertSame($expected, $this->getProtectedProperty($batch, $property));
     }
 
-    public function test_placeholder_sets_value(): void
+    public static function fluentSetterProvider(): array
     {
-        $batch = $this->makeBatchInput();
-
-        $batch->placeholder('Type here...');
-
-        $this->assertEquals('Type here...', $this->getProtectedProperty($batch, 'placeholder'));
-    }
-
-    public function test_batch_title_is_fluent(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $this->assertSame($batch, $batch->batchTitle('Custom Title'));
-    }
-
-    public function test_batch_title_sets_value(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $batch->batchTitle('Custom Title');
-
-        $this->assertEquals('Custom Title', $this->getProtectedProperty($batch, 'batchTitle'));
-    }
-
-    public function test_batch_description_is_fluent(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $this->assertSame($batch, $batch->batchDescription('Custom Desc'));
-    }
-
-    public function test_batch_description_sets_value(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $batch->batchDescription('Custom Description');
-
-        $this->assertEquals('Custom Description', $this->getProtectedProperty($batch, 'batchDescription'));
-    }
-
-    public function test_batch_icon_is_fluent(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $this->assertSame($batch, $batch->batchIcon('fa fa-search'));
-    }
-
-    public function test_batch_icon_sets_value(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $batch->batchIcon('fa fa-search');
-
-        $this->assertEquals('fa fa-search', $this->getProtectedProperty($batch, 'batchIcon'));
-    }
-
-    public function test_batch_button_text_is_fluent(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $this->assertSame($batch, $batch->batchButtonText('Import'));
-    }
-
-    public function test_batch_button_text_sets_value(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $batch->batchButtonText('Import');
-
-        $this->assertEquals('Import', $this->getProtectedProperty($batch, 'batchButtonText'));
-    }
-
-    public function test_batch_max_is_fluent(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $this->assertSame($batch, $batch->batchMax(50));
-    }
-
-    public function test_batch_max_sets_value(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $batch->batchMax(200);
-
-        $this->assertEquals(200, $this->getProtectedProperty($batch, 'batchMax'));
+        return [
+            'placeholder' => ['placeholder', 'Type here...', 'placeholder', 'Type here...'],
+            'batchTitle' => ['batchTitle', 'Custom Title', 'batchTitle', 'Custom Title'],
+            'batchDescription' => ['batchDescription', 'Custom Description', 'batchDescription', 'Custom Description'],
+            'batchIcon' => ['batchIcon', 'fa fa-search', 'batchIcon', 'fa fa-search'],
+            'batchButtonText' => ['batchButtonText', 'Import', 'batchButtonText', 'Import'],
+            'batchMax' => ['batchMax', 200, 'batchMax', 200],
+            'itemLabel' => ['itemLabel', 'phone', 'itemLabel', 'phone'],
+            'batchPlaceholder' => ['batchPlaceholder', 'Enter phone numbers...', 'batchPlaceholder', 'Enter phone numbers...'],
+            'queryField' => ['queryField', 'emails', 'queryField', 'emails'],
+        ];
     }
 
     public function test_validation_pattern_is_fluent(): void
@@ -305,54 +166,6 @@ class BatchInputTest extends TestCase
         $batch->validationPattern('^\d+$');
 
         $this->assertEquals('', $this->getProtectedProperty($batch, 'validationMessage'));
-    }
-
-    public function test_item_label_is_fluent(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $this->assertSame($batch, $batch->itemLabel('email'));
-    }
-
-    public function test_item_label_sets_value(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $batch->itemLabel('phone');
-
-        $this->assertEquals('phone', $this->getProtectedProperty($batch, 'itemLabel'));
-    }
-
-    public function test_batch_placeholder_is_fluent(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $this->assertSame($batch, $batch->batchPlaceholder('Enter emails...'));
-    }
-
-    public function test_batch_placeholder_sets_value(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $batch->batchPlaceholder('Enter phone numbers...');
-
-        $this->assertEquals('Enter phone numbers...', $this->getProtectedProperty($batch, 'batchPlaceholder'));
-    }
-
-    public function test_query_field_is_fluent(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $this->assertSame($batch, $batch->queryField('ids'));
-    }
-
-    public function test_query_field_sets_value(): void
-    {
-        $batch = $this->makeBatchInput();
-
-        $batch->queryField('emails');
-
-        $this->assertEquals('emails', $this->getProtectedProperty($batch, 'queryField'));
     }
 
     public function test_model_is_fluent(): void

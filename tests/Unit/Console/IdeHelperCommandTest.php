@@ -6,6 +6,7 @@ use Dcat\Admin\Console\IdeHelperCommand;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Console\Command;
 use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class IdeHelperCommandTest extends TestCase
 {
@@ -61,16 +62,13 @@ class IdeHelperCommandTest extends TestCase
         $this->assertCount(5, $defaultValue);
     }
 
-    public function test_patterns_has_expected_keys(): void
+    #[DataProvider('patternKeyProvider')]
+    public function test_patterns_has_expected_keys(string $key): void
     {
         $ref = new \ReflectionProperty(IdeHelperCommand::class, 'patterns');
         $defaultValue = $ref->getDefaultValue();
 
-        $expectedKeys = ['grid', 'show', 'grid-column', 'form-field', 'grid-filter'];
-
-        foreach ($expectedKeys as $key) {
-            $this->assertArrayHasKey($key, $defaultValue, "Patterns should have key '{$key}'");
-        }
+        $this->assertContains($key, array_keys($defaultValue), "Patterns should have key '{$key}'");
     }
 
     public function test_templates_is_array_with_six_keys(): void
@@ -82,16 +80,13 @@ class IdeHelperCommandTest extends TestCase
         $this->assertCount(6, $defaultValue);
     }
 
-    public function test_templates_has_expected_keys(): void
+    #[DataProvider('templateKeyProvider')]
+    public function test_templates_has_expected_keys(string $key): void
     {
         $ref = new \ReflectionProperty(IdeHelperCommand::class, 'templates');
         $defaultValue = $ref->getDefaultValue();
 
-        $expectedKeys = ['grid', 'show', 'form', 'grid-column', 'grid-filter', 'show-column'];
-
-        foreach ($expectedKeys as $key) {
-            $this->assertArrayHasKey($key, $defaultValue, "Templates should have key '{$key}'");
-        }
+        $this->assertContains($key, array_keys($defaultValue), "Templates should have key '{$key}'");
     }
 
     public function test_path_default_value(): void
@@ -102,57 +97,18 @@ class IdeHelperCommandTest extends TestCase
         $this->assertEquals('dcat_admin_ide_helper.php', $defaultValue);
     }
 
-    public function test_has_all_required_methods(): void
+    #[DataProvider('requiredMethodProvider')]
+    public function test_has_all_required_methods(string $method): void
     {
-        $methods = [
-            'handle',
-            'getFieldsFromDatabase',
-            'getFieldsFromControllerFiles',
-            'write',
-            'generate',
-            'generateGridFilters',
-            'generateShowFields',
-            'generateFormFields',
-            'generateGridColumns',
-            'getBuilderMethods',
-            'getStub',
-            'getAllControllers',
-            'getClassContent',
-            'getFileNameByClass',
-        ];
+        $reflection = new \ReflectionMethod(IdeHelperCommand::class, $method);
 
-        foreach ($methods as $method) {
-            $this->assertTrue(
-                method_exists(IdeHelperCommand::class, $method),
-                "IdeHelperCommand should have method '{$method}'"
-            );
-        }
+        $this->assertSame($method, $reflection->getName());
     }
 
-    public function test_generate_is_public(): void
+    #[DataProvider('publicMethodProvider')]
+    public function test_public_methods(string $method): void
     {
-        $ref = new \ReflectionMethod(IdeHelperCommand::class, 'generate');
-
-        $this->assertTrue($ref->isPublic());
-    }
-
-    public function test_get_all_controllers_is_public(): void
-    {
-        $ref = new \ReflectionMethod(IdeHelperCommand::class, 'getAllControllers');
-
-        $this->assertTrue($ref->isPublic());
-    }
-
-    public function test_get_class_content_is_public(): void
-    {
-        $ref = new \ReflectionMethod(IdeHelperCommand::class, 'getClassContent');
-
-        $this->assertTrue($ref->isPublic());
-    }
-
-    public function test_get_file_name_by_class_is_public(): void
-    {
-        $ref = new \ReflectionMethod(IdeHelperCommand::class, 'getFileNameByClass');
+        $ref = new \ReflectionMethod(IdeHelperCommand::class, $method);
 
         $this->assertTrue($ref->isPublic());
     }
@@ -173,5 +129,58 @@ class IdeHelperCommandTest extends TestCase
         $ref = new \ReflectionProperty(IdeHelperCommand::class, 'path');
 
         $this->assertTrue($ref->isProtected());
+    }
+
+    public static function patternKeyProvider(): array
+    {
+        return [
+            ['grid'],
+            ['show'],
+            ['grid-column'],
+            ['form-field'],
+            ['grid-filter'],
+        ];
+    }
+
+    public static function templateKeyProvider(): array
+    {
+        return [
+            ['grid'],
+            ['show'],
+            ['form'],
+            ['grid-column'],
+            ['grid-filter'],
+            ['show-column'],
+        ];
+    }
+
+    public static function requiredMethodProvider(): array
+    {
+        return [
+            ['handle'],
+            ['getFieldsFromDatabase'],
+            ['getFieldsFromControllerFiles'],
+            ['write'],
+            ['generate'],
+            ['generateGridFilters'],
+            ['generateShowFields'],
+            ['generateFormFields'],
+            ['generateGridColumns'],
+            ['getBuilderMethods'],
+            ['getStub'],
+            ['getAllControllers'],
+            ['getClassContent'],
+            ['getFileNameByClass'],
+        ];
+    }
+
+    public static function publicMethodProvider(): array
+    {
+        return [
+            ['generate'],
+            ['getAllControllers'],
+            ['getClassContent'],
+            ['getFileNameByClass'],
+        ];
     }
 }

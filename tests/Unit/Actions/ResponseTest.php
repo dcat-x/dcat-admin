@@ -27,7 +27,7 @@ class ResponseTest extends TestCase
         $response = new Response;
         $result = $response->message('Hello');
         $this->assertSame($response, $result);
-        $this->assertEquals('Hello', $response->toArray()['data']['message']);
+        $this->assertSame('Hello', $response->toArray()['data']['message']);
     }
 
     public function test_success_sets_status_and_type(): void
@@ -37,8 +37,8 @@ class ResponseTest extends TestCase
         $this->assertSame($response, $result);
         $array = $response->toArray();
         $this->assertTrue($array['status']);
-        $this->assertEquals('success', $array['data']['type']);
-        $this->assertEquals('Done!', $array['data']['message']);
+        $this->assertSame('success', $array['data']['type']);
+        $this->assertSame('Done!', $array['data']['message']);
     }
 
     public function test_error_sets_status_false_and_type(): void
@@ -47,29 +47,29 @@ class ResponseTest extends TestCase
         $response->error('Failed!');
         $array = $response->toArray();
         $this->assertFalse($array['status']);
-        $this->assertEquals('error', $array['data']['type']);
-        $this->assertEquals('Failed!', $array['data']['message']);
+        $this->assertSame('error', $array['data']['type']);
+        $this->assertSame('Failed!', $array['data']['message']);
     }
 
     public function test_info_sets_type(): void
     {
         $response = new Response;
         $response->info('Note');
-        $this->assertEquals('info', $response->toArray()['data']['type']);
+        $this->assertSame('info', $response->toArray()['data']['type']);
     }
 
     public function test_warning_sets_type(): void
     {
         $response = new Response;
         $response->warning('Careful');
-        $this->assertEquals('warning', $response->toArray()['data']['type']);
+        $this->assertSame('warning', $response->toArray()['data']['type']);
     }
 
     public function test_timeout_sets_data(): void
     {
         $response = new Response;
         $response->timeout(5000);
-        $this->assertEquals(5000, $response->toArray()['data']['timeout']);
+        $this->assertSame(5000, $response->toArray()['data']['timeout']);
     }
 
     public function test_alert_sets_data(): void
@@ -83,7 +83,7 @@ class ResponseTest extends TestCase
     {
         $response = new Response;
         $response->detail('Some detail');
-        $this->assertEquals('Some detail', $response->toArray()['data']['detail']);
+        $this->assertSame('Some detail', $response->toArray()['data']['detail']);
     }
 
     public function test_refresh_sets_then_action(): void
@@ -91,7 +91,7 @@ class ResponseTest extends TestCase
         $response = new Response;
         $response->refresh();
         $then = $response->toArray()['data']['then'];
-        $this->assertEquals('refresh', $then['action']);
+        $this->assertSame('refresh', $then['action']);
         $this->assertTrue($then['value']);
     }
 
@@ -100,8 +100,8 @@ class ResponseTest extends TestCase
         $response = new Response;
         $response->script('alert(1)');
         $then = $response->toArray()['data']['then'];
-        $this->assertEquals('script', $then['action']);
-        $this->assertEquals('alert(1)', $then['value']);
+        $this->assertSame('script', $then['action']);
+        $this->assertSame('alert(1)', $then['value']);
     }
 
     public function test_data_merges_values(): void
@@ -110,8 +110,8 @@ class ResponseTest extends TestCase
         $response->data(['foo' => 'bar']);
         $response->data(['baz' => 'qux']);
         $data = $response->toArray()['data'];
-        $this->assertEquals('bar', $data['foo']);
-        $this->assertEquals('qux', $data['baz']);
+        $this->assertSame('bar', $data['foo']);
+        $this->assertSame('qux', $data['baz']);
     }
 
     public function test_html_sets_value(): void
@@ -119,7 +119,7 @@ class ResponseTest extends TestCase
         $response = new Response;
         $response->html('<div>Test</div>');
         $array = $response->toArray();
-        $this->assertEquals('<div>Test</div>', $array['html']);
+        $this->assertSame('<div>Test</div>', $array['html']);
     }
 
     public function test_options_merges_into_array(): void
@@ -127,22 +127,22 @@ class ResponseTest extends TestCase
         $response = new Response;
         $response->options(['custom_key' => 'value']);
         $array = $response->toArray();
-        $this->assertEquals('value', $array['custom_key']);
+        $this->assertSame('value', $array['custom_key']);
     }
 
     public function test_to_array_structure(): void
     {
         $response = new Response;
         $array = $response->toArray();
-        $this->assertArrayHasKey('status', $array);
-        $this->assertArrayHasKey('data', $array);
+        $this->assertIsBool($array['status'] ?? null);
+        $this->assertIsArray($array['data'] ?? null);
     }
 
     public function test_make_factory_method(): void
     {
         $response = Response::make(['initial' => 'data']);
         $this->assertInstanceOf(Response::class, $response);
-        $this->assertEquals('data', $response->toArray()['data']['initial']);
+        $this->assertSame('data', $response->toArray()['data']['initial']);
     }
 
     public function test_status_code_sets_value(): void
@@ -153,7 +153,7 @@ class ResponseTest extends TestCase
         // statusCode is used in send(), verify via reflection
         $ref = new \ReflectionProperty($response, 'statusCode');
         $ref->setAccessible(true);
-        $this->assertEquals(422, $ref->getValue($response));
+        $this->assertSame(422, $ref->getValue($response));
     }
 
     public function test_chaining_methods(): void
@@ -166,9 +166,9 @@ class ResponseTest extends TestCase
 
         $array = $response->toArray();
         $this->assertTrue($array['status']);
-        $this->assertEquals('success', $array['data']['type']);
-        $this->assertEquals('Item created successfully', $array['data']['detail']);
-        $this->assertEquals(3000, $array['data']['timeout']);
-        $this->assertEquals('refresh', $array['data']['then']['action']);
+        $this->assertSame('success', $array['data']['type']);
+        $this->assertSame('Item created successfully', $array['data']['detail']);
+        $this->assertSame(3000, $array['data']['timeout']);
+        $this->assertSame('refresh', $array['data']['then']['action']);
     }
 }

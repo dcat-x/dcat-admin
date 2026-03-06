@@ -6,6 +6,7 @@ use Dcat\Admin\Console\ActionCommand;
 use Dcat\Admin\Console\GeneratorCommand;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ActionCommandTest extends TestCase
 {
@@ -46,29 +47,12 @@ class ActionCommandTest extends TestCase
         $this->assertEquals('Make a admin action', $defaultValue);
     }
 
-    public function test_has_choice_property(): void
+    #[DataProvider('protectedPropertyProvider')]
+    public function test_has_protected_properties(string $property): void
     {
-        $this->assertTrue(property_exists(ActionCommand::class, 'choice'));
+        $this->assertTrue(property_exists(ActionCommand::class, $property));
 
-        $ref = new \ReflectionProperty(ActionCommand::class, 'choice');
-
-        $this->assertTrue($ref->isProtected());
-    }
-
-    public function test_has_class_name_property(): void
-    {
-        $this->assertTrue(property_exists(ActionCommand::class, 'className'));
-
-        $ref = new \ReflectionProperty(ActionCommand::class, 'className');
-
-        $this->assertTrue($ref->isProtected());
-    }
-
-    public function test_has_namespace_property(): void
-    {
-        $this->assertTrue(property_exists(ActionCommand::class, 'namespace'));
-
-        $ref = new \ReflectionProperty(ActionCommand::class, 'namespace');
+        $ref = new \ReflectionProperty(ActionCommand::class, $property);
 
         $this->assertTrue($ref->isProtected());
     }
@@ -84,11 +68,15 @@ class ActionCommandTest extends TestCase
 
         $defaultValue = $ref->getDefaultValue();
         $this->assertIsArray($defaultValue);
+    }
 
-        $expectedKeys = ['grid-batch', 'grid-row', 'grid-tool', 'form-tool', 'show-tool', 'tree-row', 'tree-tool'];
-        foreach ($expectedKeys as $key) {
-            $this->assertArrayHasKey($key, $defaultValue, "namespaceMap should have key '{$key}'");
-        }
+    #[DataProvider('namespaceMapKeyProvider')]
+    public function test_namespace_map_has_expected_keys(string $key): void
+    {
+        $ref = new \ReflectionProperty(ActionCommand::class, 'namespaceMap');
+        $defaultValue = $ref->getDefaultValue();
+
+        $this->assertContains($key, array_keys($defaultValue), "namespaceMap should have key '{$key}'");
     }
 
     public function test_namespace_map_values(): void
@@ -105,23 +93,12 @@ class ActionCommandTest extends TestCase
         $this->assertEquals('Tree', $map['tree-tool']);
     }
 
-    public function test_has_required_methods(): void
+    #[DataProvider('requiredMethodProvider')]
+    public function test_has_required_methods(string $method): void
     {
-        $methods = [
-            'handle',
-            'actionTyps',
-            'replaceClass',
-            'getStub',
-            'getDefaultNamespace',
-            'getNameInput',
-        ];
+        $reflection = new \ReflectionMethod(ActionCommand::class, $method);
 
-        foreach ($methods as $method) {
-            $this->assertTrue(
-                method_exists(ActionCommand::class, $method),
-                "ActionCommand should have method '{$method}'"
-            );
-        }
+        $this->assertSame($method, $reflection->getName());
     }
 
     public function test_action_typs_is_protected(): void
@@ -136,5 +113,39 @@ class ActionCommandTest extends TestCase
         $ref = new \ReflectionMethod(ActionCommand::class, 'getStub');
 
         $this->assertTrue($ref->isPublic());
+    }
+
+    public static function protectedPropertyProvider(): array
+    {
+        return [
+            ['choice'],
+            ['className'],
+            ['namespace'],
+        ];
+    }
+
+    public static function namespaceMapKeyProvider(): array
+    {
+        return [
+            ['grid-batch'],
+            ['grid-row'],
+            ['grid-tool'],
+            ['form-tool'],
+            ['show-tool'],
+            ['tree-row'],
+            ['tree-tool'],
+        ];
+    }
+
+    public static function requiredMethodProvider(): array
+    {
+        return [
+            ['handle'],
+            ['actionTyps'],
+            ['replaceClass'],
+            ['getStub'],
+            ['getDefaultNamespace'],
+            ['getNameInput'],
+        ];
     }
 }

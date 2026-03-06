@@ -6,6 +6,7 @@ use Dcat\Admin\Console\PublishCommand;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Console\Command;
 use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PublishCommandTest extends TestCase
 {
@@ -70,28 +71,12 @@ class PublishCommandTest extends TestCase
         $this->assertEmpty($defaultValue);
     }
 
-    public function test_has_all_required_methods(): void
+    #[DataProvider('requiredMethodProvider')]
+    public function test_has_all_required_methods(string $method): void
     {
-        $methods = [
-            'handle',
-            'getTags',
-            'publishTag',
-            'pathsToPublish',
-            'publishItem',
-            'publishFile',
-            'publishDirectory',
-            'moveManagedFiles',
-            'isExceptPath',
-            'createParentDirectory',
-            'status',
-        ];
+        $reflection = new \ReflectionMethod(PublishCommand::class, $method);
 
-        foreach ($methods as $method) {
-            $this->assertTrue(
-                method_exists(PublishCommand::class, $method),
-                "PublishCommand should have method '{$method}'"
-            );
-        }
+        $this->assertSame($method, $reflection->getName());
     }
 
     public function test_handle_is_public(): void
@@ -101,23 +86,10 @@ class PublishCommandTest extends TestCase
         $this->assertTrue($ref->isPublic());
     }
 
-    public function test_get_tags_is_protected(): void
+    #[DataProvider('protectedMethodProvider')]
+    public function test_methods_are_protected(string $method): void
     {
-        $ref = new \ReflectionMethod(PublishCommand::class, 'getTags');
-
-        $this->assertTrue($ref->isProtected());
-    }
-
-    public function test_publish_tag_is_protected(): void
-    {
-        $ref = new \ReflectionMethod(PublishCommand::class, 'publishTag');
-
-        $this->assertTrue($ref->isProtected());
-    }
-
-    public function test_is_except_path_is_protected(): void
-    {
-        $ref = new \ReflectionMethod(PublishCommand::class, 'isExceptPath');
+        $ref = new \ReflectionMethod(PublishCommand::class, $method);
 
         $this->assertTrue($ref->isProtected());
     }
@@ -129,5 +101,31 @@ class PublishCommandTest extends TestCase
         $ref = new \ReflectionProperty(PublishCommand::class, 'files');
 
         $this->assertTrue($ref->isProtected());
+    }
+
+    public static function requiredMethodProvider(): array
+    {
+        return [
+            ['handle'],
+            ['getTags'],
+            ['publishTag'],
+            ['pathsToPublish'],
+            ['publishItem'],
+            ['publishFile'],
+            ['publishDirectory'],
+            ['moveManagedFiles'],
+            ['isExceptPath'],
+            ['createParentDirectory'],
+            ['status'],
+        ];
+    }
+
+    public static function protectedMethodProvider(): array
+    {
+        return [
+            ['getTags'],
+            ['publishTag'],
+            ['isExceptPath'],
+        ];
     }
 }

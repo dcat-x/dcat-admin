@@ -92,8 +92,7 @@ class ComplexHeaderTest extends TestCase
 
         $attributes = $header->getHtmlAttributes();
 
-        $this->assertArrayHasKey('rowspan', $attributes);
-        $this->assertEquals(2, $attributes['rowspan']);
+        $this->assertEquals(2, $attributes['rowspan'] ?? null);
         $this->assertArrayNotHasKey('colspan', $attributes);
     }
 
@@ -104,8 +103,7 @@ class ComplexHeaderTest extends TestCase
 
         $attributes = $header->getHtmlAttributes();
 
-        $this->assertArrayHasKey('colspan', $attributes);
-        $this->assertEquals(3, $attributes['colspan']);
+        $this->assertEquals(3, $attributes['colspan'] ?? null);
         $this->assertArrayNotHasKey('rowspan', $attributes);
     }
 

@@ -49,8 +49,15 @@ class RefreshButtonTest extends TestCase
     {
         $button = new RefreshButton;
         $vars = $button->defaultVariables();
-        $this->assertArrayHasKey('attributes', $vars);
-        $this->assertArrayHasKey('icon', $vars);
-        $this->assertArrayHasKey('tooltip', $vars);
+        $this->assertArrayContainsKeys(['attributes', 'icon', 'tooltip'], $vars);
+    }
+
+    private function assertArrayContainsKeys(array $expectedKeys, array $actual): void
+    {
+        $keys = array_keys($actual);
+
+        foreach ($expectedKeys as $key) {
+            $this->assertContains($key, $keys);
+        }
     }
 }

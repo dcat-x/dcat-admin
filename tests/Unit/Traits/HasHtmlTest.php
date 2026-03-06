@@ -22,9 +22,8 @@ class HasHtmlTest extends TestCase
         $result = Admin::resolveHtml($html, ['runScript' => false]);
 
         $this->assertIsArray($result);
-        $this->assertArrayHasKey('html', $result);
-        $this->assertArrayHasKey('script', $result);
-        $this->assertStringContainsString('Hello World', $result['html']);
+        $this->assertIsString($result['script'] ?? null);
+        $this->assertStringContainsString('Hello World', $result['html'] ?? '');
     }
 
     public function test_resolve_html_extracts_scripts(): void

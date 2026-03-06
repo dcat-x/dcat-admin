@@ -109,10 +109,8 @@ class ApplicationTest extends TestCase
         $apps = $app->getApps();
 
         $this->assertIsArray($apps);
-        $this->assertArrayHasKey('api', $apps);
-        $this->assertArrayHasKey('shop', $apps);
-        $this->assertTrue($apps['api']);
-        $this->assertFalse($apps['shop']);
+        $this->assertTrue($apps['api'] ?? false);
+        $this->assertFalse($apps['shop'] ?? true);
     }
 
     public function test_get_enabled_apps_filters_disabled(): void
@@ -122,7 +120,7 @@ class ApplicationTest extends TestCase
         $app = new Application($this->app);
         $enabled = $app->getEnabledApps();
 
-        $this->assertArrayHasKey('api', $enabled);
+        $this->assertTrue($enabled['api'] ?? false);
         $this->assertArrayNotHasKey('shop', $enabled);
     }
 

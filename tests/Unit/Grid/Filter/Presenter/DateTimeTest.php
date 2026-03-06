@@ -53,8 +53,7 @@ class DateTimeTest extends TestCase
         $ref->setAccessible(true);
         $options = $ref->getValue($dt);
 
-        $this->assertArrayHasKey('locale', $options);
-        $this->assertEquals(config('app.locale'), $options['locale']);
+        $this->assertEquals(config('app.locale'), $options['locale'] ?? null);
     }
 
     public function test_constructor_with_custom_locale(): void
@@ -78,7 +77,7 @@ class DateTimeTest extends TestCase
 
         $this->assertEquals('2020-01-01', $options['minDate']);
         $this->assertEquals('2025-12-31', $options['maxDate']);
-        $this->assertArrayHasKey('format', $options);
+        $this->assertIsString($options['format'] ?? null);
     }
 
     public function test_default_variables_contains_options_and_group(): void
@@ -88,9 +87,8 @@ class DateTimeTest extends TestCase
 
         $vars = $dt->defaultVariables();
 
-        $this->assertArrayHasKey('options', $vars);
-        $this->assertArrayHasKey('group', $vars);
-        $this->assertIsArray($vars['options']);
+        $this->assertArrayContainsKeys(['options', 'group'], $vars);
+        $this->assertIsArray($vars['options'] ?? null);
     }
 
     public function test_view_returns_datetime_view(): void
@@ -98,5 +96,14 @@ class DateTimeTest extends TestCase
         $dt = $this->makeDateTime();
 
         $this->assertEquals('admin::filter.datetime', $dt->view());
+    }
+
+    private function assertArrayContainsKeys(array $expectedKeys, array $actual): void
+    {
+        $keys = array_keys($actual);
+
+        foreach ($expectedKeys as $key) {
+            $this->assertContains($key, $keys);
+        }
     }
 }

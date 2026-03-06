@@ -28,7 +28,7 @@ class JsonResponseTest extends TestCase
         $response = JsonResponse::make(['key' => 'value']);
 
         $array = $response->toArray();
-        $this->assertEquals('value', $array['data']['key']);
+        $this->assertSame('value', $array['data']['key']);
     }
 
     public function test_default_status_is_true(): void
@@ -55,7 +55,7 @@ class JsonResponseTest extends TestCase
         $ref = new \ReflectionProperty($response, 'statusCode');
         $ref->setAccessible(true);
 
-        $this->assertEquals(200, $ref->getValue($response));
+        $this->assertSame(200, $ref->getValue($response));
     }
 
     public function test_status_code_can_be_changed(): void
@@ -67,7 +67,7 @@ class JsonResponseTest extends TestCase
 
         $ref = new \ReflectionProperty($response, 'statusCode');
         $ref->setAccessible(true);
-        $this->assertEquals(422, $ref->getValue($response));
+        $this->assertSame(422, $ref->getValue($response));
     }
 
     public function test_message_sets_message_in_data(): void
@@ -76,7 +76,7 @@ class JsonResponseTest extends TestCase
         $result = $response->message('Test message');
 
         $this->assertSame($response, $result);
-        $this->assertEquals('Test message', $response->toArray()['data']['message']);
+        $this->assertSame('Test message', $response->toArray()['data']['message']);
     }
 
     public function test_success_sets_status_true_and_type_success(): void
@@ -88,8 +88,8 @@ class JsonResponseTest extends TestCase
 
         $array = $response->toArray();
         $this->assertTrue($array['status']);
-        $this->assertEquals('success', $array['data']['type']);
-        $this->assertEquals('Operation succeeded', $array['data']['message']);
+        $this->assertSame('success', $array['data']['type']);
+        $this->assertSame('Operation succeeded', $array['data']['message']);
     }
 
     public function test_error_sets_status_false_and_type_error(): void
@@ -101,8 +101,8 @@ class JsonResponseTest extends TestCase
 
         $array = $response->toArray();
         $this->assertFalse($array['status']);
-        $this->assertEquals('error', $array['data']['type']);
-        $this->assertEquals('Something failed', $array['data']['message']);
+        $this->assertSame('error', $array['data']['type']);
+        $this->assertSame('Something failed', $array['data']['message']);
     }
 
     public function test_info_sets_type_info(): void
@@ -111,8 +111,8 @@ class JsonResponseTest extends TestCase
         $response->info('Info message');
 
         $array = $response->toArray();
-        $this->assertEquals('info', $array['data']['type']);
-        $this->assertEquals('Info message', $array['data']['message']);
+        $this->assertSame('info', $array['data']['type']);
+        $this->assertSame('Info message', $array['data']['message']);
     }
 
     public function test_warning_sets_type_warning(): void
@@ -121,8 +121,8 @@ class JsonResponseTest extends TestCase
         $response->warning('Warning message');
 
         $array = $response->toArray();
-        $this->assertEquals('warning', $array['data']['type']);
-        $this->assertEquals('Warning message', $array['data']['message']);
+        $this->assertSame('warning', $array['data']['type']);
+        $this->assertSame('Warning message', $array['data']['message']);
     }
 
     public function test_timeout_sets_timeout_in_data(): void
@@ -131,7 +131,7 @@ class JsonResponseTest extends TestCase
         $result = $response->timeout(5);
 
         $this->assertSame($response, $result);
-        $this->assertEquals(5, $response->toArray()['data']['timeout']);
+        $this->assertSame(5, $response->toArray()['data']['timeout']);
     }
 
     public function test_alert_sets_alert_flag(): void
@@ -157,7 +157,7 @@ class JsonResponseTest extends TestCase
         $result = $response->detail('Some details here');
 
         $this->assertSame($response, $result);
-        $this->assertEquals('Some details here', $response->toArray()['data']['detail']);
+        $this->assertSame('Some details here', $response->toArray()['data']['detail']);
     }
 
     public function test_refresh_sets_then_action_refresh(): void
@@ -168,7 +168,7 @@ class JsonResponseTest extends TestCase
         $this->assertSame($response, $result);
 
         $array = $response->toArray();
-        $this->assertEquals('refresh', $array['data']['then']['action']);
+        $this->assertSame('refresh', $array['data']['then']['action']);
         $this->assertTrue($array['data']['then']['value']);
     }
 
@@ -178,8 +178,8 @@ class JsonResponseTest extends TestCase
         $response->script('alert("hello")');
 
         $array = $response->toArray();
-        $this->assertEquals('script', $array['data']['then']['action']);
-        $this->assertEquals('alert("hello")', $array['data']['then']['value']);
+        $this->assertSame('script', $array['data']['then']['action']);
+        $this->assertSame('alert("hello")', $array['data']['then']['value']);
     }
 
     public function test_data_merges_into_existing_data(): void
@@ -188,8 +188,8 @@ class JsonResponseTest extends TestCase
         $response->data(['key2' => 'val2']);
 
         $array = $response->toArray();
-        $this->assertEquals('val1', $array['data']['key1']);
-        $this->assertEquals('val2', $array['data']['key2']);
+        $this->assertSame('val1', $array['data']['key1']);
+        $this->assertSame('val2', $array['data']['key2']);
     }
 
     public function test_html_sets_html_property(): void
@@ -200,7 +200,7 @@ class JsonResponseTest extends TestCase
         $this->assertSame($response, $result);
 
         $array = $response->toArray();
-        $this->assertArrayHasKey('html', $array);
+        $this->assertSame('<div>Hello</div>', $array['html'] ?? null);
     }
 
     public function test_options_merges_into_options(): void
@@ -209,7 +209,7 @@ class JsonResponseTest extends TestCase
         $response->options(['custom_key' => 'custom_value']);
 
         $array = $response->toArray();
-        $this->assertEquals('custom_value', $array['custom_key']);
+        $this->assertSame('custom_value', $array['custom_key']);
     }
 
     public function test_with_validation_sets_errors_and_status(): void
@@ -223,10 +223,10 @@ class JsonResponseTest extends TestCase
 
         $ref = new \ReflectionProperty($response, 'statusCode');
         $ref->setAccessible(true);
-        $this->assertEquals(422, $ref->getValue($response));
+        $this->assertSame(422, $ref->getValue($response));
 
         $array = $response->toArray();
-        $this->assertEquals($errors, $array['errors']);
+        $this->assertSame($errors, $array['errors']);
     }
 
     public function test_with_validation_accepts_message_bag(): void
@@ -237,8 +237,7 @@ class JsonResponseTest extends TestCase
 
         $array = $response->toArray();
         $this->assertFalse($array['status']);
-        $this->assertArrayHasKey('errors', $array);
-        $this->assertEquals(['Invalid email'], $array['errors']['email']);
+        $this->assertSame(['Invalid email'], $array['errors']['email'] ?? null);
     }
 
     public function test_with_exception_sets_error_status(): void
@@ -251,7 +250,7 @@ class JsonResponseTest extends TestCase
 
         $array = $response->toArray();
         $this->assertFalse($array['status']);
-        $this->assertEquals('error', $array['data']['type']);
+        $this->assertSame('error', $array['data']['type']);
         $this->assertStringContainsString('RuntimeException', $array['data']['message']);
         $this->assertStringContainsString('Something went wrong', $array['data']['message']);
     }
@@ -263,8 +262,7 @@ class JsonResponseTest extends TestCase
 
         $array = $response->toArray();
 
-        $this->assertArrayHasKey('status', $array);
-        $this->assertArrayHasKey('data', $array);
+        $this->assertIsArray($array['data'] ?? null);
         $this->assertTrue($array['status']);
     }
 
@@ -276,7 +274,7 @@ class JsonResponseTest extends TestCase
         $result = $response->send();
 
         $this->assertInstanceOf(\Illuminate\Http\JsonResponse::class, $result);
-        $this->assertEquals(200, $result->getStatusCode());
+        $this->assertSame(200, $result->getStatusCode());
     }
 
     public function test_send_with_custom_status_code(): void
@@ -286,7 +284,7 @@ class JsonResponseTest extends TestCase
 
         $result = $response->send();
 
-        $this->assertEquals(404, $result->getStatusCode());
+        $this->assertSame(404, $result->getStatusCode());
     }
 
     public function test_conditional_if_methods_call_method_when_true(): void
@@ -296,8 +294,8 @@ class JsonResponseTest extends TestCase
 
         $array = $response->toArray();
         $this->assertTrue($array['status']);
-        $this->assertEquals('success', $array['data']['type']);
-        $this->assertEquals('Conditional success', $array['data']['message']);
+        $this->assertSame('success', $array['data']['type']);
+        $this->assertSame('Conditional success', $array['data']['message']);
     }
 
     public function test_conditional_if_methods_skip_when_false(): void
@@ -334,7 +332,7 @@ class JsonResponseTest extends TestCase
         $response->redirect('/dashboard');
 
         $array = $response->toArray();
-        $this->assertEquals('redirect', $array['data']['then']['action']);
+        $this->assertSame('redirect', $array['data']['then']['action']);
         $this->assertNotEmpty($array['data']['then']['value']);
     }
 
@@ -344,7 +342,7 @@ class JsonResponseTest extends TestCase
         $response->location('/users');
 
         $array = $response->toArray();
-        $this->assertEquals('location', $array['data']['then']['action']);
+        $this->assertSame('location', $array['data']['then']['action']);
     }
 
     public function test_location_without_url_sets_null_value(): void
@@ -353,7 +351,7 @@ class JsonResponseTest extends TestCase
         $response->location();
 
         $array = $response->toArray();
-        $this->assertEquals('location', $array['data']['then']['action']);
+        $this->assertSame('location', $array['data']['then']['action']);
         $this->assertNull($array['data']['then']['value']);
     }
 }

@@ -257,8 +257,7 @@ class GridTest extends TestCase
         $prop = new ReflectionProperty(Grid::class, 'options');
         $options = $prop->getDefaultValue();
         $this->assertIsArray($options);
-        $this->assertArrayHasKey('pagination', $options);
-        $this->assertTrue($options['pagination']);
+        $this->assertTrue($options['pagination'] ?? false);
     }
 
     public function test_options_default_has_create_mode(): void

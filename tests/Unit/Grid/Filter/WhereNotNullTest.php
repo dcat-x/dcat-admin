@@ -61,8 +61,7 @@ class WhereNotNullTest extends TestCase
 
         $condition = $filter->condition(['name' => '1']);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('whereNotNull', $condition);
+        $this->assertConditionHasWhereNotNull($condition);
         $this->assertEquals(['name'], $condition['whereNotNull']);
     }
 
@@ -90,5 +89,11 @@ class WhereNotNullTest extends TestCase
 
         $this->assertEquals('name', $filter->originalColumn());
         $this->assertEquals('Has Name', $filter->getLabel());
+    }
+
+    private function assertConditionHasWhereNotNull(mixed $condition): void
+    {
+        $this->assertIsArray($condition);
+        $this->assertContains('whereNotNull', array_keys($condition));
     }
 }

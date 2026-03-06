@@ -8,22 +8,27 @@ use Dcat\Admin\Tests\TestCase;
 
 class ColumnTest extends TestCase
 {
+    protected function getProperty(Column $column, string $property): mixed
+    {
+        return (new \ReflectionProperty(Column::class, $property))->getValue($column);
+    }
+
     public function test_constructor_sets_default_width_to_12(): void
     {
         $column = new Column('content');
 
-        $width = (new \ReflectionProperty(Column::class, 'width'))->getValue($column);
+        $width = $this->getProperty($column, 'width');
 
-        $this->assertEquals(['md' => 12], $width);
+        $this->assertSame(['md' => 12], $width);
     }
 
     public function test_constructor_with_integer_width(): void
     {
         $column = new Column('content', 6);
 
-        $width = (new \ReflectionProperty(Column::class, 'width'))->getValue($column);
+        $width = $this->getProperty($column, 'width');
 
-        $this->assertEquals(['md' => 6], $width);
+        $this->assertSame(['md' => 6], $width);
     }
 
     public function test_constructor_with_fractional_width_converts_to_grid_units(): void
@@ -31,9 +36,9 @@ class ColumnTest extends TestCase
         // 0.5 * 12 = 6
         $column = new Column('content', 0.5);
 
-        $width = (new \ReflectionProperty(Column::class, 'width'))->getValue($column);
+        $width = $this->getProperty($column, 'width');
 
-        $this->assertEquals(['md' => 6], $width);
+        $this->assertSame(['md' => 6], $width);
     }
 
     public function test_constructor_with_one_third_fractional_width(): void
@@ -41,19 +46,19 @@ class ColumnTest extends TestCase
         // 1/3 * 12 = 4
         $column = new Column('content', 1 / 3);
 
-        $width = (new \ReflectionProperty(Column::class, 'width'))->getValue($column);
+        $width = $this->getProperty($column, 'width');
 
-        $this->assertEquals(['md' => 4], $width);
+        $this->assertSame(['md' => 4], $width);
     }
 
     public function test_constructor_with_string_content(): void
     {
         $column = new Column('hello world');
 
-        $contents = (new \ReflectionProperty(Column::class, 'contents'))->getValue($column);
+        $contents = $this->getProperty($column, 'contents');
 
         $this->assertCount(1, $contents);
-        $this->assertEquals('hello world', $contents[0]);
+        $this->assertSame('hello world', $contents[0]);
     }
 
     public function test_constructor_with_closure_calls_closure(): void
@@ -70,9 +75,9 @@ class ColumnTest extends TestCase
         $this->assertTrue($called);
         $this->assertSame($column, $receivedColumn);
 
-        $contents = (new \ReflectionProperty(Column::class, 'contents'))->getValue($column);
+        $contents = $this->getProperty($column, 'contents');
         $this->assertCount(1, $contents);
-        $this->assertEquals('from closure', $contents[0]);
+        $this->assertSame('from closure', $contents[0]);
     }
 
     public function test_append_adds_content(): void
@@ -82,12 +87,12 @@ class ColumnTest extends TestCase
         $column->append('first');
         $column->append('second');
 
-        $contents = (new \ReflectionProperty(Column::class, 'contents'))->getValue($column);
+        $contents = $this->getProperty($column, 'contents');
 
         // '' from constructor + 'first' + 'second'
         $this->assertCount(3, $contents);
-        $this->assertEquals('first', $contents[1]);
-        $this->assertEquals('second', $contents[2]);
+        $this->assertSame('first', $contents[1]);
+        $this->assertSame('second', $contents[2]);
     }
 
     public function test_append_returns_self_for_chaining(): void
@@ -105,7 +110,7 @@ class ColumnTest extends TestCase
 
         $column->row('row content');
 
-        $contents = (new \ReflectionProperty(Column::class, 'contents'))->getValue($column);
+        $contents = $this->getProperty($column, 'contents');
 
         // '' from constructor + Row instance
         $this->assertCount(2, $contents);
@@ -178,6 +183,6 @@ class ColumnTest extends TestCase
         $html = $column->render();
 
         $this->assertStringContainsString('col-md-3', $html);
-        $this->assertEquals('<div class="col-md-3"></div>', $html);
+        $this->assertSame('<div class="col-md-3"></div>', $html);
     }
 }

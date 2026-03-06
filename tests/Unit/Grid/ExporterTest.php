@@ -156,8 +156,7 @@ class ExporterTest extends TestCase
         $property->setAccessible(true);
         $drivers = $property->getValue();
 
-        $this->assertArrayHasKey('csv', $drivers);
-        $this->assertSame('CsvExporterClass', $drivers['csv']);
+        $this->assertSame('CsvExporterClass', $drivers['csv'] ?? null);
 
         // Clean up static state
         $property->setValue(null, []);

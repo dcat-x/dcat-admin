@@ -51,8 +51,7 @@ class NgtFilterTest extends TestCase
 
         $condition = $filter->condition(['price' => '100']);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasWhere($condition);
         $this->assertEquals(['price', '<=', '100'], $condition['where']);
     }
 
@@ -80,8 +79,14 @@ class NgtFilterTest extends TestCase
 
         $condition = $filter->condition(['amount' => '999']);
 
-        $this->assertIsArray($condition);
+        $this->assertConditionHasWhere($condition);
         $this->assertEquals('<=', $condition['where'][1]);
         $this->assertEquals('999', $condition['where'][2]);
+    }
+
+    private function assertConditionHasWhere(mixed $condition): void
+    {
+        $this->assertIsArray($condition);
+        $this->assertContains('where', array_keys($condition));
     }
 }

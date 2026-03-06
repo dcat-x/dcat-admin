@@ -100,10 +100,7 @@ class RadioTest extends TestCase
 
         $vars = $radio->defaultVariables();
 
-        $this->assertArrayHasKey('options', $vars);
-        $this->assertArrayHasKey('inline', $vars);
-        $this->assertArrayHasKey('showLabel', $vars);
-        $this->assertEquals($options, $vars['options']);
+        $this->assertSame($options, $vars['options'] ?? null);
         $this->assertTrue($vars['inline']);
         $this->assertTrue($vars['showLabel']);
     }

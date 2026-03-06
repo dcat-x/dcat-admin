@@ -55,16 +55,14 @@ class InTest extends TestCase
         $class = $ref->getValue($filter);
 
         $this->assertIsArray($class);
-        $this->assertArrayHasKey('all', $class);
-        $this->assertArrayHasKey('item', $class);
-        $this->assertStringStartsWith('column-filter-all-', $class['all']);
-        $this->assertStringStartsWith('column-filter-item-', $class['item']);
+        $this->assertStringStartsWith('column-filter-all-', $class['all'] ?? '');
+        $this->assertStringStartsWith('column-filter-item-', $class['item'] ?? '');
     }
 
     public function test_uses_checkbox_trait(): void
     {
         $traits = class_uses(In::class);
-        $this->assertArrayHasKey(Checkbox::class, $traits);
+        $this->assertContains(Checkbox::class, array_keys($traits));
     }
 
     public function test_add_binding_with_values(): void

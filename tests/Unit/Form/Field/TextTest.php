@@ -77,8 +77,7 @@ class TextTest extends TestCase
         $field->minLength(3);
 
         $attributes = $this->getProtectedProperty($field, 'attributes');
-        $this->assertArrayHasKey('data-minlength-error', $attributes);
-        $this->assertNotEmpty($attributes['data-minlength-error']);
+        $this->assertNotEmpty($attributes['data-minlength-error'] ?? null);
     }
 
     // -------------------------------------------------------
@@ -103,8 +102,7 @@ class TextTest extends TestCase
         $field->maxLength(50);
 
         $attributes = $this->getProtectedProperty($field, 'attributes');
-        $this->assertArrayHasKey('data-maxlength-error', $attributes);
-        $this->assertNotEmpty($attributes['data-maxlength-error']);
+        $this->assertNotEmpty($attributes['data-maxlength-error'] ?? null);
     }
 
     // -------------------------------------------------------
@@ -143,7 +141,6 @@ class TextTest extends TestCase
         $field->datalist(['Option A', 'Option B']);
 
         $attributes = $this->getProtectedProperty($field, 'attributes');
-        $this->assertArrayHasKey('list', $attributes);
-        $this->assertStringStartsWith('list-', $attributes['list']);
+        $this->assertStringStartsWith('list-', $attributes['list'] ?? '');
     }
 }

@@ -49,7 +49,7 @@ class SectionManagerTest extends TestCase
     {
         $result = $this->manager->yieldContent('missing', 'default value');
 
-        $this->assertEquals('default value', $result);
+        $this->assertSame('default value', $result);
     }
 
     public function test_yield_content_returns_injected_content(): void
@@ -58,7 +58,7 @@ class SectionManagerTest extends TestCase
 
         $result = $this->manager->yieldContent('title');
 
-        $this->assertEquals('My Title', $result);
+        $this->assertSame('My Title', $result);
     }
 
     public function test_yield_content_with_appended_items(): void
@@ -80,7 +80,7 @@ class SectionManagerTest extends TestCase
         $result = $this->manager->yieldContent('content');
 
         // When append=false, previous content is cleared
-        $this->assertEquals('replacement', $result);
+        $this->assertSame('replacement', $result);
     }
 
     public function test_flush_sections_clears_all(): void
@@ -113,8 +113,8 @@ class SectionManagerTest extends TestCase
 
         $this->assertCount(2, $sections);
         // Higher priority first (krsort)
-        $this->assertEquals('high priority', $sections[0]['value']);
-        $this->assertEquals('low priority', $sections[1]['value']);
+        $this->assertSame('high priority', $sections[0]['value']);
+        $this->assertSame('low priority', $sections[1]['value']);
     }
 
     public function test_inject_default_stores_default_section(): void
@@ -132,7 +132,7 @@ class SectionManagerTest extends TestCase
 
         $result = $this->manager->yieldContent('banner');
 
-        $this->assertEquals('Custom Banner', $result);
+        $this->assertSame('Custom Banner', $result);
     }
 
     public function test_inject_default_skipped_when_section_already_exists(): void
@@ -142,7 +142,7 @@ class SectionManagerTest extends TestCase
 
         $result = $this->manager->yieldContent('header');
 
-        $this->assertEquals('Existing Header', $result);
+        $this->assertSame('Existing Header', $result);
     }
 
     public function test_yield_content_uses_default_when_no_regular_section(): void
@@ -151,7 +151,7 @@ class SectionManagerTest extends TestCase
 
         $result = $this->manager->yieldContent('notice');
 
-        $this->assertEquals('Default Notice', $result);
+        $this->assertSame('Default Notice', $result);
     }
 
     public function test_has_default_section_returns_false_for_nonexistent(): void
@@ -179,8 +179,8 @@ class SectionManagerTest extends TestCase
         $sections = $this->manager->getSections('ordered');
 
         $this->assertCount(3, $sections);
-        $this->assertEquals('high', $sections[0]['value']);
-        $this->assertEquals('medium', $sections[1]['value']);
-        $this->assertEquals('low', $sections[2]['value']);
+        $this->assertSame('high', $sections[0]['value']);
+        $this->assertSame('medium', $sections[1]['value']);
+        $this->assertSame('low', $sections[2]['value']);
     }
 }

@@ -23,8 +23,7 @@ class MapTest extends TestCase
         $reflection = new \ReflectionClass(Map::class);
         $properties = $reflection->getDefaultProperties();
 
-        $this->assertArrayHasKey('height', $properties);
-        $this->assertSame('300px', $properties['height']);
+        $this->assertSame('300px', $properties['height'] ?? null);
     }
 
     public function test_column_default_is_array(): void
@@ -32,8 +31,7 @@ class MapTest extends TestCase
         $reflection = new \ReflectionClass(Map::class);
         $properties = $reflection->getDefaultProperties();
 
-        $this->assertArrayHasKey('column', $properties);
-        $this->assertIsArray($properties['column']);
+        $this->assertIsArray($properties['column'] ?? null);
     }
 
     // -------------------------------------------------------

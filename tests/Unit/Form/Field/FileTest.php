@@ -55,10 +55,8 @@ class FileTest extends TestCase
 
         $options = $this->getProtectedProperty($field, 'options');
 
-        $this->assertArrayHasKey('isImage', $options);
-        $this->assertFalse($options['isImage']);
-        $this->assertArrayHasKey('chunked', $options);
-        $this->assertFalse($options['chunked']);
+        $this->assertFalse($options['isImage'] ?? null);
+        $this->assertFalse($options['chunked'] ?? null);
     }
 
     public function test_options_has_events_key(): void
@@ -67,8 +65,7 @@ class FileTest extends TestCase
 
         $options = $this->getProtectedProperty($field, 'options');
 
-        $this->assertArrayHasKey('events', $options);
-        $this->assertIsArray($options['events']);
+        $this->assertIsArray($options['events'] ?? null);
     }
 
     public function test_options_has_override_key(): void
@@ -77,8 +74,7 @@ class FileTest extends TestCase
 
         $options = $this->getProtectedProperty($field, 'options');
 
-        $this->assertArrayHasKey('override', $options);
-        $this->assertFalse($options['override']);
+        $this->assertFalse($options['override'] ?? null);
     }
 
     // -------------------------------------------------------

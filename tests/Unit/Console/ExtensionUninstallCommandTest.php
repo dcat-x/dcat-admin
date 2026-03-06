@@ -54,12 +54,11 @@ class ExtensionUninstallCommandTest extends TestCase
         $this->assertEquals('Uninstall an existing extension', $defaultValue);
     }
 
-    public function test_has_handle_method(): void
+    public function test_handle_method_signature(): void
     {
-        $this->assertTrue(
-            method_exists(ExtensionUninstallCommand::class, 'handle'),
-            'ExtensionUninstallCommand should have method handle'
-        );
+        $method = new \ReflectionMethod(ExtensionUninstallCommand::class, 'handle');
+
+        $this->assertSame(0, $method->getNumberOfParameters());
     }
 
     public function test_handle_is_public(): void

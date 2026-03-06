@@ -4,6 +4,7 @@ namespace Dcat\Admin\Tests\Unit;
 
 use Dcat\Admin\Admin;
 use Dcat\Admin\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class AdminTest extends TestCase
 {
@@ -28,24 +29,18 @@ class AdminTest extends TestCase
         $this->assertStringContainsString('Dcat Admin', $longVersion);
     }
 
-    public function test_section_constants(): void
+    #[DataProvider('sectionKeyProvider')]
+    public function test_section_constants(string $key): void
     {
         $this->assertIsArray(Admin::SECTION);
-        $this->assertArrayHasKey('HEAD', Admin::SECTION);
-        $this->assertArrayHasKey('BODY_INNER_BEFORE', Admin::SECTION);
-        $this->assertArrayHasKey('BODY_INNER_AFTER', Admin::SECTION);
-        $this->assertArrayHasKey('APP_INNER_BEFORE', Admin::SECTION);
-        $this->assertArrayHasKey('APP_INNER_AFTER', Admin::SECTION);
-        $this->assertArrayHasKey('NAVBAR_USER_PANEL', Admin::SECTION);
-        $this->assertArrayHasKey('LEFT_SIDEBAR_USER_PANEL', Admin::SECTION);
-        $this->assertArrayHasKey('LEFT_SIDEBAR_MENU', Admin::SECTION);
+        $this->assertContains($key, array_keys(Admin::SECTION));
     }
 
     public function test_pjax_container_id(): void
     {
         // 测试默认状态
         $pjaxId = Admin::getPjaxContainerId();
-        $this->assertEquals('pjax-container', $pjaxId);
+        $this->assertSame('pjax-container', $pjaxId);
 
         // 测试禁用 pjax
         Admin::disablePjax();
@@ -53,27 +48,27 @@ class AdminTest extends TestCase
 
         // 测试启用 pjax
         Admin::pjax(true);
-        $this->assertEquals('pjax-container', Admin::getPjaxContainerId());
+        $this->assertSame('pjax-container', Admin::getPjaxContainerId());
     }
 
     public function test_title(): void
     {
         // 设置 title
         Admin::title('Test Title');
-        $this->assertEquals('Test Title', Admin::title());
+        $this->assertSame('Test Title', Admin::title());
 
         // 设置新 title
         Admin::title('New Title');
-        $this->assertEquals('New Title', Admin::title());
+        $this->assertSame('New Title', Admin::title());
     }
 
     public function test_favicon(): void
     {
         Admin::favicon('/favicon.ico');
-        $this->assertEquals('/favicon.ico', Admin::favicon());
+        $this->assertSame('/favicon.ico', Admin::favicon());
 
         Admin::favicon('/new-favicon.png');
-        $this->assertEquals('/new-favicon.png', Admin::favicon());
+        $this->assertSame('/new-favicon.png', Admin::favicon());
     }
 
     public function test_context(): void
@@ -115,5 +110,19 @@ class AdminTest extends TestCase
     {
         $result = Admin::isDarkMode();
         $this->assertIsBool($result);
+    }
+
+    public static function sectionKeyProvider(): array
+    {
+        return [
+            ['HEAD'],
+            ['BODY_INNER_BEFORE'],
+            ['BODY_INNER_AFTER'],
+            ['APP_INNER_BEFORE'],
+            ['APP_INNER_AFTER'],
+            ['NAVBAR_USER_PANEL'],
+            ['LEFT_SIDEBAR_USER_PANEL'],
+            ['LEFT_SIDEBAR_MENU'],
+        ];
     }
 }

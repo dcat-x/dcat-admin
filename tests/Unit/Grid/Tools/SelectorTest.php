@@ -73,7 +73,7 @@ class SelectorTest extends TestCase
 
         $all = $selector->all();
         $this->assertCount(1, $all);
-        $this->assertArrayHasKey('status', $all->toArray());
+        $this->assertTrue($all->has('status'));
         $this->assertSame('Status', $all['status']['label']);
         $this->assertSame('many', $all['status']['type']);
     }
@@ -104,7 +104,7 @@ class SelectorTest extends TestCase
         $selector->select('status', ['active' => 'Active', 'inactive' => 'Inactive']);
 
         $all = $selector->all();
-        $this->assertArrayHasKey('status', $all->toArray());
+        $this->assertTrue($all->has('status'));
         $this->assertSame(['active' => 'Active', 'inactive' => 'Inactive'], $all['status']['options']);
     }
 
@@ -141,7 +141,7 @@ class SelectorTest extends TestCase
 
         $formatted = $selector->all(true);
 
-        $this->assertArrayHasKey('user_status', $formatted->toArray());
+        $this->assertTrue($formatted->has('user_status'));
         $this->assertArrayNotHasKey('user.status', $formatted->toArray());
     }
 

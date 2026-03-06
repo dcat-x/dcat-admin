@@ -51,10 +51,8 @@ class BetweenTest extends TestCase
         $class = $ref->getValue($filter);
 
         $this->assertIsArray($class);
-        $this->assertArrayHasKey('start', $class);
-        $this->assertArrayHasKey('end', $class);
-        $this->assertStringStartsWith('column-filter-start-', $class['start']);
-        $this->assertStringStartsWith('column-filter-end-', $class['end']);
+        $this->assertStringStartsWith('column-filter-start-', $class['start'] ?? '');
+        $this->assertStringStartsWith('column-filter-end-', $class['end'] ?? '');
     }
 
     public function test_to_timestamp_sets_flag(): void

@@ -39,8 +39,7 @@ class ImageFieldTest extends TestCase
 
         $value = $property->getValue();
 
-        $this->assertArrayHasKey('filling', $value);
-        $this->assertSame('fill', $value['filling']);
+        $this->assertSame('fill', $value['filling'] ?? null);
     }
 
     public function test_default_directory_reads_admin_upload_image_directory_config(): void
@@ -77,8 +76,8 @@ class ImageFieldTest extends TestCase
         $this->assertSame($field, $result);
 
         $thumbnails = $this->getProtectedProperty($field, 'thumbnails');
-        $this->assertArrayHasKey('small', $thumbnails);
-        $this->assertArrayHasKey('large', $thumbnails);
+        $this->assertSame([100, 80], $thumbnails['small'] ?? null);
+        $this->assertSame([400, 300, 'resize'], $thumbnails['large'] ?? null);
         $this->assertArrayNotHasKey('invalid', $thumbnails);
     }
 

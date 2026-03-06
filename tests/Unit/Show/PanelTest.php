@@ -28,12 +28,9 @@ class PanelTest extends TestCase
         $panel = new Panel($show);
 
         $variables = $panel->variables();
+        $expectedKeys = ['fields', 'tools', 'rows', 'style', 'title'];
 
-        $this->assertArrayHasKey('fields', $variables);
-        $this->assertArrayHasKey('tools', $variables);
-        $this->assertArrayHasKey('rows', $variables);
-        $this->assertArrayHasKey('style', $variables);
-        $this->assertArrayHasKey('title', $variables);
+        $this->assertArrayContainsKeys($expectedKeys, $variables);
     }
 
     public function test_fields_initialized_as_collection(): void
@@ -171,8 +168,7 @@ class PanelTest extends TestCase
         $this->assertSame($panel, $result);
 
         $variables = $panel->variables();
-        $this->assertArrayHasKey('custom_key', $variables);
-        $this->assertSame('custom_value', $variables['custom_key']);
+        $this->assertSame('custom_value', $variables['custom_key'] ?? null);
     }
 
     public function test_wrap_sets_wrapper_closure(): void
@@ -207,5 +203,14 @@ class PanelTest extends TestCase
 
         $variables = $panel->variables();
         $this->assertInstanceOf(Collection::class, $variables['rows']);
+    }
+
+    private function assertArrayContainsKeys(array $expectedKeys, array $actual): void
+    {
+        $keys = array_keys($actual);
+
+        foreach ($expectedKeys as $key) {
+            $this->assertContains($key, $keys);
+        }
     }
 }

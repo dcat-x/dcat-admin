@@ -154,8 +154,8 @@ class ColumnSelectorTest extends TestCase
         $result = $method->invoke($selector);
 
         $this->assertInstanceOf(Collection::class, $result);
-        $this->assertArrayHasKey('name', $result->toArray());
-        $this->assertArrayHasKey('email', $result->toArray());
+        $this->assertTrue($result->has('name'));
+        $this->assertTrue($result->has('email'));
         $this->assertArrayNotHasKey(Column::SELECT_COLUMN_NAME, $result->toArray());
         $this->assertArrayNotHasKey(Column::ACTION_COLUMN_NAME, $result->toArray());
     }

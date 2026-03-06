@@ -6,6 +6,7 @@ use Dcat\Admin\Console\FormCommand;
 use Dcat\Admin\Console\GeneratorCommand;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FormCommandTest extends TestCase
 {
@@ -54,21 +55,12 @@ class FormCommandTest extends TestCase
         $this->assertEquals('Make admin form widget', $defaultValue);
     }
 
-    public function test_has_required_methods(): void
+    #[DataProvider('requiredMethodProvider')]
+    public function test_has_required_methods(string $method): void
     {
-        $methods = [
-            'handle',
-            'getStub',
-            'getDefaultNamespace',
-            'getNameInput',
-        ];
+        $reflection = new \ReflectionMethod(FormCommand::class, $method);
 
-        foreach ($methods as $method) {
-            $this->assertTrue(
-                method_exists(FormCommand::class, $method),
-                "FormCommand should have method '{$method}'"
-            );
-        }
+        $this->assertSame($method, $reflection->getName());
     }
 
     public function test_get_stub_is_protected(): void
@@ -83,5 +75,15 @@ class FormCommandTest extends TestCase
         $ref = new \ReflectionMethod(FormCommand::class, 'handle');
 
         $this->assertTrue($ref->isPublic());
+    }
+
+    public static function requiredMethodProvider(): array
+    {
+        return [
+            ['handle'],
+            ['getStub'],
+            ['getDefaultNamespace'],
+            ['getNameInput'],
+        ];
     }
 }

@@ -128,15 +128,21 @@ class WidgetTest extends TestCase
     {
         $w = new ConcreteWidget;
         $vars = $w->defaultVariables();
-        $this->assertArrayHasKey('attributes', $vars);
-        $this->assertArrayHasKey('options', $vars);
-        $this->assertArrayHasKey('class', $vars);
-        $this->assertArrayHasKey('selector', $vars);
+        $this->assertArrayContainsKeys(['attributes', 'options', 'class', 'selector'], $vars);
     }
 
     public function test_make_factory(): void
     {
         $w = ConcreteWidget::make();
         $this->assertInstanceOf(ConcreteWidget::class, $w);
+    }
+
+    private function assertArrayContainsKeys(array $expectedKeys, array $actual): void
+    {
+        $keys = array_keys($actual);
+
+        foreach ($expectedKeys as $key) {
+            $this->assertContains($key, $keys);
+        }
     }
 }

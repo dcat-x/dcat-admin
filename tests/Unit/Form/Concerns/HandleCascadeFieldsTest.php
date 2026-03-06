@@ -49,9 +49,9 @@ class HandleCascadeFieldsTest extends TestCase
 
     public function test_cascade_group_method_exists(): void
     {
-        $ref = new \ReflectionClass(HandleCascadeFieldsTestHelper::class);
+        $method = new \ReflectionMethod(HandleCascadeFieldsTestHelper::class, 'cascadeGroup');
 
-        $this->assertTrue($ref->hasMethod('cascadeGroup'));
+        $this->assertTrue($method->isPublic());
     }
 
     public function test_cascade_group_requires_closure_and_array(): void

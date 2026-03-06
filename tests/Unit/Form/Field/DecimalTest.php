@@ -5,6 +5,7 @@ namespace Dcat\Admin\Tests\Unit\Form\Field;
 use Dcat\Admin\Form\Field\Decimal;
 use Dcat\Admin\Form\Field\Text;
 use Dcat\Admin\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DecimalTest extends TestCase
 {
@@ -28,24 +29,14 @@ class DecimalTest extends TestCase
         $this->assertInstanceOf(Text::class, $field);
     }
 
-    public function test_options_has_decimal_alias(): void
+    #[DataProvider('optionProvider')]
+    public function test_options_contain_expected_values(string $key, mixed $expected): void
     {
         $field = $this->createField();
 
         $options = $this->getProtectedProperty($field, 'options');
 
-        $this->assertArrayHasKey('alias', $options);
-        $this->assertSame('decimal', $options['alias']);
-    }
-
-    public function test_options_has_right_align_false(): void
-    {
-        $field = $this->createField();
-
-        $options = $this->getProtectedProperty($field, 'options');
-
-        $this->assertArrayHasKey('rightAlign', $options);
-        $this->assertFalse($options['rightAlign']);
+        $this->assertSame($expected, $options[$key] ?? null);
     }
 
     public function test_options_has_exactly_two_keys(): void
@@ -69,5 +60,13 @@ class DecimalTest extends TestCase
         $method = new \ReflectionMethod(Decimal::class, 'render');
 
         $this->assertSame(0, $method->getNumberOfParameters());
+    }
+
+    public static function optionProvider(): array
+    {
+        return [
+            'alias' => ['alias', 'decimal'],
+            'rightAlign' => ['rightAlign', false],
+        ];
     }
 }

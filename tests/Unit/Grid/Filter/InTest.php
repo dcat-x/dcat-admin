@@ -36,8 +36,7 @@ class InTest extends TestCase
 
         $condition = $filter->condition(['status' => ['active', 'pending']]);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('whereIn', $condition);
+        $this->assertConditionHasWhereIn($condition);
         $this->assertEquals(['status', ['active', 'pending']], $condition['whereIn']);
     }
 
@@ -47,8 +46,7 @@ class InTest extends TestCase
 
         $condition = $filter->condition(['status' => 'active,pending,closed']);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('whereIn', $condition);
+        $this->assertConditionHasWhereIn($condition);
         $this->assertEquals(['status', ['active', 'pending', 'closed']], $condition['whereIn']);
     }
 
@@ -67,8 +65,7 @@ class InTest extends TestCase
 
         $condition = $filter->condition(['category' => 'news']);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('whereIn', $condition);
+        $this->assertConditionHasWhereIn($condition);
         $this->assertEquals(['category', ['news']], $condition['whereIn']);
     }
 
@@ -98,5 +95,11 @@ class InTest extends TestCase
         $condition = $filter->condition(['status' => ['active']]);
 
         $this->assertNull($condition);
+    }
+
+    private function assertConditionHasWhereIn(mixed $condition): void
+    {
+        $this->assertIsArray($condition);
+        $this->assertContains('whereIn', array_keys($condition));
     }
 }

@@ -61,8 +61,7 @@ class WhereNullTest extends TestCase
 
         $condition = $filter->condition(['deleted_at' => '1']);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('whereNull', $condition);
+        $this->assertConditionHasWhereNull($condition);
         $this->assertEquals(['deleted_at'], $condition['whereNull']);
     }
 
@@ -90,5 +89,11 @@ class WhereNullTest extends TestCase
 
         $this->assertEquals('deleted_at', $filter->originalColumn());
         $this->assertEquals('Is Deleted', $filter->getLabel());
+    }
+
+    private function assertConditionHasWhereNull(mixed $condition): void
+    {
+        $this->assertIsArray($condition);
+        $this->assertContains('whereNull', array_keys($condition));
     }
 }

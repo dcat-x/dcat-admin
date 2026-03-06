@@ -37,14 +37,14 @@ class EditorTest extends TestCase
 
         $options = $this->getProtectedProperty($editor, 'options');
 
-        $this->assertArrayHasKey('plugins', $options);
-        $this->assertIsArray($options['plugins']);
-        $this->assertContains('advlist', $options['plugins']);
-        $this->assertContains('autolink', $options['plugins']);
-        $this->assertContains('link', $options['plugins']);
-        $this->assertContains('image', $options['plugins']);
-        $this->assertContains('table', $options['plugins']);
-        $this->assertContains('code', $options['plugins']);
+        $plugins = $options['plugins'] ?? null;
+        $this->assertIsArray($plugins);
+        $this->assertContains('advlist', $plugins);
+        $this->assertContains('autolink', $plugins);
+        $this->assertContains('link', $plugins);
+        $this->assertContains('image', $plugins);
+        $this->assertContains('table', $plugins);
+        $this->assertContains('code', $plugins);
     }
 
     public function test_default_options_contain_toolbar(): void
@@ -53,9 +53,9 @@ class EditorTest extends TestCase
 
         $options = $this->getProtectedProperty($editor, 'options');
 
-        $this->assertArrayHasKey('toolbar', $options);
-        $this->assertIsArray($options['toolbar']);
-        $this->assertCount(2, $options['toolbar']);
+        $toolbar = $options['toolbar'] ?? null;
+        $this->assertIsArray($toolbar);
+        $this->assertCount(2, $toolbar);
     }
 
     public function test_default_min_height(): void

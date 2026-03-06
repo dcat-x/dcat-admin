@@ -213,7 +213,7 @@ class HasDataPermissionTest extends TestCase
         $model = new DataPermissionTestModel;
         $scopes = $model->getGlobalScopes();
 
-        $this->assertArrayHasKey('data_permission', $scopes);
+        $this->assertInstanceOf(\Closure::class, $scopes['data_permission'] ?? null);
     }
 
     public function test_get_current_menu_id_is_cached_in_same_request(): void

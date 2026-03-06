@@ -8,6 +8,7 @@ use Dcat\Admin\Grid\Displayers\Editable;
 use Dcat\Admin\Grid\Displayers\Textarea;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class TextareaTest extends TestCase
 {
@@ -84,8 +85,7 @@ class TextareaTest extends TestCase
 
         $defaultOptions = $displayer->defaultOptions();
 
-        $this->assertArrayHasKey('rows', $defaultOptions);
-        $this->assertSame(5, $defaultOptions['rows']);
+        $this->assertSame(5, $defaultOptions['rows'] ?? null);
     }
 
     public function test_default_options_returns_array(): void
@@ -102,74 +102,14 @@ class TextareaTest extends TestCase
     // variables()
     // -------------------------------------------------------
 
-    public function test_variables_contain_key(): void
+    #[DataProvider('variablesProvider')]
+    public function test_variables_contain_expected_values($value, $original, string $key, mixed $expected): void
     {
-        $displayer = $this->makeDisplayer('hello');
+        $displayer = $this->makeDisplayer($value, $original);
 
         $vars = $displayer->variables();
 
-        $this->assertArrayHasKey('key', $vars);
-        $this->assertSame(1, $vars['key']);
-    }
-
-    public function test_variables_contain_name(): void
-    {
-        $displayer = $this->makeDisplayer('hello');
-
-        $vars = $displayer->variables();
-
-        $this->assertArrayHasKey('name', $vars);
-        $this->assertSame('description', $vars['name']);
-    }
-
-    public function test_variables_contain_type(): void
-    {
-        $displayer = $this->makeDisplayer('hello');
-
-        $vars = $displayer->variables();
-
-        $this->assertArrayHasKey('type', $vars);
-        $this->assertSame('textarea', $vars['type']);
-    }
-
-    public function test_variables_contain_display_value(): void
-    {
-        $displayer = $this->makeDisplayer('some long text');
-
-        $vars = $displayer->variables();
-
-        $this->assertArrayHasKey('display', $vars);
-        $this->assertSame('some long text', $vars['display']);
-    }
-
-    public function test_variables_contain_original_value(): void
-    {
-        $displayer = $this->makeDisplayer('display_text', 'original_text');
-
-        $vars = $displayer->variables();
-
-        $this->assertArrayHasKey('value', $vars);
-        $this->assertSame('original_text', $vars['value']);
-    }
-
-    public function test_variables_contain_url(): void
-    {
-        $displayer = $this->makeDisplayer('hello');
-
-        $vars = $displayer->variables();
-
-        $this->assertArrayHasKey('url', $vars);
-        $this->assertSame('/admin/posts/1', $vars['url']);
-    }
-
-    public function test_variables_contain_class_selector(): void
-    {
-        $displayer = $this->makeDisplayer('hello');
-
-        $vars = $displayer->variables();
-
-        $this->assertArrayHasKey('class', $vars);
-        $this->assertSame('grid-editable-textarea', $vars['class']);
+        $this->assertSame($expected, $vars[$key] ?? null);
     }
 
     // -------------------------------------------------------
@@ -182,8 +122,7 @@ class TextareaTest extends TestCase
 
         $options = $this->getProtectedProperty($displayer, 'options');
 
-        $this->assertArrayHasKey('refresh', $options);
-        $this->assertFalse($options['refresh']);
+        $this->assertFalse($options['refresh'] ?? null);
     }
 
     // -------------------------------------------------------
@@ -262,5 +201,18 @@ class TextareaTest extends TestCase
         $result = $displayer->display();
 
         $this->assertStringContainsString('icon-edit-2', $result);
+    }
+
+    public static function variablesProvider(): array
+    {
+        return [
+            ['hello', null, 'key', 1],
+            ['hello', null, 'name', 'description'],
+            ['hello', null, 'type', 'textarea'],
+            ['some long text', null, 'display', 'some long text'],
+            ['display_text', 'original_text', 'value', 'original_text'],
+            ['hello', null, 'url', '/admin/posts/1'],
+            ['hello', null, 'class', 'grid-editable-textarea'],
+        ];
     }
 }

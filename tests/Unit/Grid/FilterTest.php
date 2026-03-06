@@ -9,35 +9,37 @@ use Dcat\Admin\Grid\Filter\Toggle;
 use Dcat\Admin\Grid\Filter\WhereNotNull;
 use Dcat\Admin\Grid\Filter\WhereNull;
 use Dcat\Admin\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FilterTest extends TestCase
 {
+    protected function attachParentFilter(object $filter): void
+    {
+        $grid = $this->createMock(\Dcat\Admin\Grid::class);
+        $grid->method('makeName')->willReturnCallback(fn ($name) => $name);
+
+        $parentFilter = $this->createMock(\Dcat\Admin\Grid\Filter::class);
+        $parentFilter->method('grid')->willReturn($grid);
+
+        $filter->setParent($parentFilter);
+    }
+
     public function test_where_null_filter_query(): void
     {
         $filter = new WhereNull('deleted_at', 'Deleted');
-        $this->assertEquals('deleted_at', $filter->originalColumn());
-        $this->assertEquals('Deleted', $filter->getLabel());
+        $this->assertSame('deleted_at', $filter->originalColumn());
+        $this->assertSame('Deleted', $filter->getLabel());
     }
 
     public function test_where_null_condition_with_value(): void
     {
         $filter = new WhereNull('deleted_at', 'Deleted');
 
-        // Mock parent and grid
-        $grid = $this->createMock(\Dcat\Admin\Grid::class);
-        $grid->method('makeName')->willReturnCallback(function ($name) {
-            return $name;
-        });
-
-        $parentFilter = $this->createMock(\Dcat\Admin\Grid\Filter::class);
-        $parentFilter->method('grid')->willReturn($grid);
-
-        $filter->setParent($parentFilter);
+        $this->attachParentFilter($filter);
 
         $condition = $filter->condition(['deleted_at' => '1']);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('whereNull', $condition);
+        $this->assertConditionHasKey($condition, 'whereNull');
     }
 
     public function test_where_null_condition_without_value(): void
@@ -52,45 +54,35 @@ class FilterTest extends TestCase
     public function test_where_not_null_filter_query(): void
     {
         $filter = new WhereNotNull('email', 'Has Email');
-        $this->assertEquals('email', $filter->originalColumn());
-        $this->assertEquals('Has Email', $filter->getLabel());
+        $this->assertSame('email', $filter->originalColumn());
+        $this->assertSame('Has Email', $filter->getLabel());
     }
 
     public function test_where_not_null_condition_with_value(): void
     {
         $filter = new WhereNotNull('email', 'Has Email');
 
-        $grid = $this->createMock(\Dcat\Admin\Grid::class);
-        $grid->method('makeName')->willReturnCallback(function ($name) {
-            return $name;
-        });
-
-        $parentFilter = $this->createMock(\Dcat\Admin\Grid\Filter::class);
-        $parentFilter->method('grid')->willReturn($grid);
-
-        $filter->setParent($parentFilter);
+        $this->attachParentFilter($filter);
 
         $condition = $filter->condition(['email' => '1']);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('whereNotNull', $condition);
+        $this->assertConditionHasKey($condition, 'whereNotNull');
     }
 
     public function test_date_range_filter(): void
     {
         $filter = new DateRange('created_at', 'Created');
-        $this->assertEquals('created_at', $filter->originalColumn());
-        $this->assertEquals('Created', $filter->getLabel());
+        $this->assertSame('created_at', $filter->originalColumn());
+        $this->assertSame('Created', $filter->getLabel());
     }
 
-    public function test_date_range_quick_presenter(): void
+    #[DataProvider('dateRangeQuickVariableKeyProvider')]
+    public function test_date_range_quick_presenter(string $key): void
     {
         $presenter = new DateRangeQuick;
         $variables = $presenter->defaultVariables();
 
-        $this->assertArrayHasKey('ranges', $variables);
-        $this->assertArrayHasKey('dateOptions', $variables);
-        $this->assertArrayHasKey('showDateInputs', $variables);
+        $this->assertContains($key, array_keys($variables));
         $this->assertTrue($variables['showDateInputs']);
     }
 
@@ -102,7 +94,7 @@ class FilterTest extends TestCase
         $presenter = new DateRangeQuick($customRanges);
         $variables = $presenter->defaultVariables();
 
-        $this->assertEquals($customRanges, $variables['ranges']);
+        $this->assertSame($customRanges, $variables['ranges']);
     }
 
     public function test_date_range_quick_hide_inputs(): void
@@ -120,67 +112,40 @@ class FilterTest extends TestCase
         $presenter->format('YYYY-MM-DD HH:mm:ss');
         $variables = $presenter->defaultVariables();
 
-        $this->assertEquals('YYYY-MM-DD HH:mm:ss', $variables['dateOptions']['format']);
+        $this->assertSame('YYYY-MM-DD HH:mm:ss', $variables['dateOptions']['format']);
     }
 
     public function test_date_range_condition_start_only(): void
     {
         $filter = new DateRange('created_at', 'Created');
 
-        $grid = $this->createMock(\Dcat\Admin\Grid::class);
-        $grid->method('makeName')->willReturnCallback(function ($name) {
-            return $name;
-        });
-
-        $parentFilter = $this->createMock(\Dcat\Admin\Grid\Filter::class);
-        $parentFilter->method('grid')->willReturn($grid);
-
-        $filter->setParent($parentFilter);
+        $this->attachParentFilter($filter);
 
         $condition = $filter->condition(['created_at' => ['start' => '2024-01-01', 'end' => '']]);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasKey($condition, 'where');
     }
 
     public function test_date_range_condition_end_only(): void
     {
         $filter = new DateRange('created_at', 'Created');
 
-        $grid = $this->createMock(\Dcat\Admin\Grid::class);
-        $grid->method('makeName')->willReturnCallback(function ($name) {
-            return $name;
-        });
-
-        $parentFilter = $this->createMock(\Dcat\Admin\Grid\Filter::class);
-        $parentFilter->method('grid')->willReturn($grid);
-
-        $filter->setParent($parentFilter);
+        $this->attachParentFilter($filter);
 
         $condition = $filter->condition(['created_at' => ['start' => '', 'end' => '2024-12-31']]);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasKey($condition, 'where');
     }
 
     public function test_date_range_condition_both(): void
     {
         $filter = new DateRange('created_at', 'Created');
 
-        $grid = $this->createMock(\Dcat\Admin\Grid::class);
-        $grid->method('makeName')->willReturnCallback(function ($name) {
-            return $name;
-        });
-
-        $parentFilter = $this->createMock(\Dcat\Admin\Grid\Filter::class);
-        $parentFilter->method('grid')->willReturn($grid);
-
-        $filter->setParent($parentFilter);
+        $this->attachParentFilter($filter);
 
         $condition = $filter->condition(['created_at' => ['start' => '2024-01-01', 'end' => '2024-12-31']]);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('whereBetween', $condition);
+        $this->assertConditionHasKey($condition, 'whereBetween');
     }
 
     public function test_date_range_to_timestamp(): void
@@ -194,8 +159,8 @@ class FilterTest extends TestCase
     public function test_toggle_filter(): void
     {
         $filter = new Toggle('is_active', 'Active');
-        $this->assertEquals('is_active', $filter->originalColumn());
-        $this->assertEquals('Active', $filter->getLabel());
+        $this->assertSame('is_active', $filter->originalColumn());
+        $this->assertSame('Active', $filter->getLabel());
     }
 
     public function test_toggle_values(): void
@@ -211,11 +176,11 @@ class FilterTest extends TestCase
         $presenter = new TogglePresenter('On', 'Off');
         $variables = $presenter->defaultVariables();
 
-        $this->assertEquals('On', $variables['onText']);
-        $this->assertEquals('Off', $variables['offText']);
-        $this->assertEquals(1, $variables['onValue']);
-        $this->assertEquals(0, $variables['offValue']);
-        $this->assertEquals('small', $variables['size']);
+        $this->assertSame('On', $variables['onText']);
+        $this->assertSame('Off', $variables['offText']);
+        $this->assertSame(1, $variables['onValue']);
+        $this->assertSame(0, $variables['offValue']);
+        $this->assertSame('small', $variables['size']);
     }
 
     public function test_toggle_presenter_values(): void
@@ -224,8 +189,8 @@ class FilterTest extends TestCase
         $presenter->values('yes', 'no');
         $variables = $presenter->defaultVariables();
 
-        $this->assertEquals('yes', $variables['onValue']);
-        $this->assertEquals('no', $variables['offValue']);
+        $this->assertSame('yes', $variables['onValue']);
+        $this->assertSame('no', $variables['offValue']);
     }
 
     public function test_toggle_presenter_size(): void
@@ -234,27 +199,18 @@ class FilterTest extends TestCase
         $presenter->size('large');
         $variables = $presenter->defaultVariables();
 
-        $this->assertEquals('large', $variables['size']);
+        $this->assertSame('large', $variables['size']);
     }
 
     public function test_toggle_condition_with_value(): void
     {
         $filter = new Toggle('is_active', 'Active');
 
-        $grid = $this->createMock(\Dcat\Admin\Grid::class);
-        $grid->method('makeName')->willReturnCallback(function ($name) {
-            return $name;
-        });
-
-        $parentFilter = $this->createMock(\Dcat\Admin\Grid\Filter::class);
-        $parentFilter->method('grid')->willReturn($grid);
-
-        $filter->setParent($parentFilter);
+        $this->attachParentFilter($filter);
 
         $condition = $filter->condition(['is_active' => '1']);
 
-        $this->assertIsArray($condition);
-        $this->assertArrayHasKey('where', $condition);
+        $this->assertConditionHasKey($condition, 'where');
     }
 
     public function test_toggle_condition_without_value(): void
@@ -264,5 +220,20 @@ class FilterTest extends TestCase
         $condition = $filter->condition(['is_active' => '']);
 
         $this->assertNull($condition);
+    }
+
+    public static function dateRangeQuickVariableKeyProvider(): array
+    {
+        return [
+            ['ranges'],
+            ['dateOptions'],
+            ['showDateInputs'],
+        ];
+    }
+
+    private function assertConditionHasKey(mixed $condition, string $key): void
+    {
+        $this->assertIsArray($condition);
+        $this->assertContains($key, array_keys($condition));
     }
 }

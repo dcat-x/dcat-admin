@@ -83,9 +83,8 @@ class RowTest extends TestCase
         }, $show);
 
         $fieldEntry = $row->fields()->first();
-        $this->assertArrayHasKey('width', $fieldEntry);
-        $this->assertArrayHasKey('element', $fieldEntry);
-        $this->assertInstanceOf(Field::class, $fieldEntry['element']);
+        $this->assertIsInt($fieldEntry['width'] ?? null);
+        $this->assertInstanceOf(Field::class, $fieldEntry['element'] ?? null);
     }
 
     public function test_default_field_width_is_twelve(): void

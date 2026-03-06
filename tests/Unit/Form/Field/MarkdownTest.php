@@ -5,9 +5,17 @@ namespace Dcat\Admin\Tests\Unit\Form\Field;
 use Dcat\Admin\Form\Field\Markdown;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class MarkdownTest extends TestCase
 {
+    protected function defaultProperties(): array
+    {
+        $reflection = new \ReflectionClass(Markdown::class);
+
+        return $reflection->getDefaultProperties();
+    }
+
     protected function tearDown(): void
     {
         Mockery::close();
@@ -20,127 +28,26 @@ class MarkdownTest extends TestCase
 
     public function test_options_default_has_height_500(): void
     {
-        $reflection = new \ReflectionClass(Markdown::class);
-        $defaults = $reflection->getDefaultProperties();
+        $defaults = $this->defaultProperties();
 
-        $this->assertArrayHasKey('options', $defaults);
-        $this->assertArrayHasKey('height', $defaults['options']);
-        $this->assertSame(500, $defaults['options']['height']);
+        $this->assertIsArray($defaults['options'] ?? null);
+        $this->assertSame(500, $defaults['options']['height'] ?? null);
     }
 
-    public function test_options_default_has_code_fold_true(): void
+    #[DataProvider('optionDefaultProvider')]
+    public function test_options_default_values(string $key, mixed $expected): void
     {
-        $reflection = new \ReflectionClass(Markdown::class);
-        $defaults = $reflection->getDefaultProperties();
+        $defaults = $this->defaultProperties();
 
-        $this->assertTrue($defaults['options']['codeFold']);
+        $this->assertSame($expected, $defaults['options'][$key] ?? null);
     }
 
-    public function test_options_default_has_save_html_to_textarea_true(): void
+    #[DataProvider('defaultPropertyProvider')]
+    public function test_default_properties(string $key, mixed $expected): void
     {
-        $reflection = new \ReflectionClass(Markdown::class);
-        $defaults = $reflection->getDefaultProperties();
+        $defaults = $this->defaultProperties();
 
-        $this->assertTrue($defaults['options']['saveHTMLToTextarea']);
-    }
-
-    public function test_options_default_has_search_replace_true(): void
-    {
-        $reflection = new \ReflectionClass(Markdown::class);
-        $defaults = $reflection->getDefaultProperties();
-
-        $this->assertTrue($defaults['options']['searchReplace']);
-    }
-
-    public function test_options_default_has_emoji_true(): void
-    {
-        $reflection = new \ReflectionClass(Markdown::class);
-        $defaults = $reflection->getDefaultProperties();
-
-        $this->assertTrue($defaults['options']['emoji']);
-    }
-
-    public function test_options_default_has_task_list_true(): void
-    {
-        $reflection = new \ReflectionClass(Markdown::class);
-        $defaults = $reflection->getDefaultProperties();
-
-        $this->assertTrue($defaults['options']['taskList']);
-    }
-
-    public function test_options_default_has_tocm_true(): void
-    {
-        $reflection = new \ReflectionClass(Markdown::class);
-        $defaults = $reflection->getDefaultProperties();
-
-        $this->assertTrue($defaults['options']['tocm']);
-    }
-
-    public function test_options_default_has_tex_true(): void
-    {
-        $reflection = new \ReflectionClass(Markdown::class);
-        $defaults = $reflection->getDefaultProperties();
-
-        $this->assertTrue($defaults['options']['tex']);
-    }
-
-    public function test_options_default_has_flow_chart_false(): void
-    {
-        $reflection = new \ReflectionClass(Markdown::class);
-        $defaults = $reflection->getDefaultProperties();
-
-        $this->assertFalse($defaults['options']['flowChart']);
-    }
-
-    public function test_options_default_has_sequence_diagram_false(): void
-    {
-        $reflection = new \ReflectionClass(Markdown::class);
-        $defaults = $reflection->getDefaultProperties();
-
-        $this->assertFalse($defaults['options']['sequenceDiagram']);
-    }
-
-    public function test_options_default_has_image_upload_true(): void
-    {
-        $reflection = new \ReflectionClass(Markdown::class);
-        $defaults = $reflection->getDefaultProperties();
-
-        $this->assertTrue($defaults['options']['imageUpload']);
-    }
-
-    public function test_options_default_has_auto_focus_true(): void
-    {
-        $reflection = new \ReflectionClass(Markdown::class);
-        $defaults = $reflection->getDefaultProperties();
-
-        $this->assertTrue($defaults['options']['autoFocus']);
-    }
-
-    public function test_image_upload_directory_default_is_markdown_images(): void
-    {
-        $reflection = new \ReflectionClass(Markdown::class);
-        $defaults = $reflection->getDefaultProperties();
-
-        $this->assertArrayHasKey('imageUploadDirectory', $defaults);
-        $this->assertSame('markdown/images', $defaults['imageUploadDirectory']);
-    }
-
-    public function test_language_default_is_null(): void
-    {
-        $reflection = new \ReflectionClass(Markdown::class);
-        $defaults = $reflection->getDefaultProperties();
-
-        $this->assertArrayHasKey('language', $defaults);
-        $this->assertNull($defaults['language']);
-    }
-
-    public function test_disk_default_is_null(): void
-    {
-        $reflection = new \ReflectionClass(Markdown::class);
-        $defaults = $reflection->getDefaultProperties();
-
-        $this->assertArrayHasKey('disk', $defaults);
-        $this->assertNull($defaults['disk']);
+        $this->assertSame($expected, $defaults[$key] ?? null);
     }
 
     public function test_html_decode_updates_options_and_returns_self(): void
@@ -207,12 +114,12 @@ class MarkdownTest extends TestCase
         $reflection = new \ReflectionProperty($field, 'options');
         $reflection->setAccessible(true);
         $options = $reflection->getValue($field);
+        $uploadUrl = $options['imageUploadURL'] ?? '';
 
         $this->assertSame($field, $result);
-        $this->assertArrayHasKey('imageUploadURL', $options);
-        $this->assertStringContainsString('/custom/upload', $options['imageUploadURL']);
-        $this->assertStringContainsString('disk=public', $options['imageUploadURL']);
-        $this->assertStringContainsString('dir=docs%2Fimages', $options['imageUploadURL']);
+        $this->assertStringContainsString('/custom/upload', $uploadUrl);
+        $this->assertStringContainsString('disk=public', $uploadUrl);
+        $this->assertStringContainsString('dir=docs%2Fimages', $uploadUrl);
     }
 
     public function test_language_url_updates_language_property_and_returns_self(): void
@@ -232,45 +139,10 @@ class MarkdownTest extends TestCase
     // Method visibility
     // -------------------------------------------------------
 
-    public function test_html_decode_is_public(): void
+    #[DataProvider('publicMethodProvider')]
+    public function test_methods_are_public(string $methodName): void
     {
-        $method = new \ReflectionMethod(Markdown::class, 'htmlDecode');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_height_is_public(): void
-    {
-        $method = new \ReflectionMethod(Markdown::class, 'height');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_disk_is_public(): void
-    {
-        $method = new \ReflectionMethod(Markdown::class, 'disk');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_image_directory_is_public(): void
-    {
-        $method = new \ReflectionMethod(Markdown::class, 'imageDirectory');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_image_url_is_public(): void
-    {
-        $method = new \ReflectionMethod(Markdown::class, 'imageUrl');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_language_url_is_public(): void
-    {
-        $method = new \ReflectionMethod(Markdown::class, 'languageUrl');
-        $this->assertTrue($method->isPublic());
-    }
-
-    public function test_render_is_public(): void
-    {
-        $method = new \ReflectionMethod(Markdown::class, 'render');
+        $method = new \ReflectionMethod(Markdown::class, $methodName);
         $this->assertTrue($method->isPublic());
     }
 
@@ -278,21 +150,10 @@ class MarkdownTest extends TestCase
     // Protected methods
     // -------------------------------------------------------
 
-    public function test_default_image_upload_url_is_protected(): void
+    #[DataProvider('protectedMethodProvider')]
+    public function test_methods_are_protected(string $methodName): void
     {
-        $method = new \ReflectionMethod(Markdown::class, 'defaultImageUploadUrl');
-        $this->assertTrue($method->isProtected());
-    }
-
-    public function test_format_url_is_protected(): void
-    {
-        $method = new \ReflectionMethod(Markdown::class, 'formatUrl');
-        $this->assertTrue($method->isProtected());
-    }
-
-    public function test_require_lang_is_protected(): void
-    {
-        $method = new \ReflectionMethod(Markdown::class, 'requireLang');
+        $method = new \ReflectionMethod(Markdown::class, $methodName);
         $this->assertTrue($method->isProtected());
     }
 
@@ -336,20 +197,69 @@ class MarkdownTest extends TestCase
         $this->assertSame('dir', $params[0]->getName());
     }
 
-    public function test_default_langs_contains_en(): void
+    #[DataProvider('defaultLangKeyProvider')]
+    public function test_default_langs_contains_expected_keys(string $lang): void
     {
-        $reflection = new \ReflectionClass(Markdown::class);
-        $defaults = $reflection->getDefaultProperties();
+        $defaults = $this->defaultProperties();
 
-        $this->assertArrayHasKey('defaultLangs', $defaults);
-        $this->assertArrayHasKey('en', $defaults['defaultLangs']);
+        $this->assertIsArray($defaults['defaultLangs'] ?? null);
+        $this->assertIsString($defaults['defaultLangs'][$lang] ?? null);
     }
 
-    public function test_default_langs_contains_zh_tw(): void
+    public static function optionDefaultProvider(): array
     {
-        $reflection = new \ReflectionClass(Markdown::class);
-        $defaults = $reflection->getDefaultProperties();
+        return [
+            ['height', 500],
+            ['codeFold', true],
+            ['saveHTMLToTextarea', true],
+            ['searchReplace', true],
+            ['emoji', true],
+            ['taskList', true],
+            ['tocm', true],
+            ['tex', true],
+            ['flowChart', false],
+            ['sequenceDiagram', false],
+            ['imageUpload', true],
+            ['autoFocus', true],
+        ];
+    }
 
-        $this->assertArrayHasKey('zh_TW', $defaults['defaultLangs']);
+    public static function defaultPropertyProvider(): array
+    {
+        return [
+            ['imageUploadDirectory', 'markdown/images'],
+            ['language', null],
+            ['disk', null],
+        ];
+    }
+
+    public static function defaultLangKeyProvider(): array
+    {
+        return [
+            ['en'],
+            ['zh_TW'],
+        ];
+    }
+
+    public static function publicMethodProvider(): array
+    {
+        return [
+            ['htmlDecode'],
+            ['height'],
+            ['disk'],
+            ['imageDirectory'],
+            ['imageUrl'],
+            ['languageUrl'],
+            ['render'],
+        ];
+    }
+
+    public static function protectedMethodProvider(): array
+    {
+        return [
+            ['defaultImageUploadUrl'],
+            ['formatUrl'],
+            ['requireLang'],
+        ];
     }
 }

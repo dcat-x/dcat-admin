@@ -55,12 +55,11 @@ class ExtensionRefreshCommandTest extends TestCase
         $this->assertEquals('Removes and re-adds an existing extension', $defaultValue);
     }
 
-    public function test_has_handle_method(): void
+    public function test_handle_method_signature(): void
     {
-        $this->assertTrue(
-            method_exists(ExtensionRefreshCommand::class, 'handle'),
-            'ExtensionRefreshCommand should have method handle'
-        );
+        $method = new \ReflectionMethod(ExtensionRefreshCommand::class, 'handle');
+
+        $this->assertSame(0, $method->getNumberOfParameters());
     }
 
     public function test_handle_is_public(): void

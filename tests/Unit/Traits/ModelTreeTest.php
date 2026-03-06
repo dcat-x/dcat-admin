@@ -133,9 +133,7 @@ class ModelTreeTest extends TestCase
 
         $options = $node->exposeBuildSelectOptions($nodes);
 
-        $this->assertArrayHasKey(1, $options);
-        $this->assertArrayHasKey(2, $options);
-        $this->assertStringContainsString('Root', $options[1]);
-        $this->assertStringContainsString('Child', $options[2]);
+        $this->assertStringContainsString('Root', $options[1] ?? '');
+        $this->assertStringContainsString('Child', $options[2] ?? '');
     }
 }

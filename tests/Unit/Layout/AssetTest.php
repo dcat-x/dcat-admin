@@ -216,11 +216,7 @@ class AssetTest extends TestCase
 
         $this->asset->baseCss(['extra' => '@extra'], true);
 
-        $this->assertArrayHasKey('extra', $this->asset->baseCss);
-        // Original keys should still be present
-        foreach (array_keys($original) as $key) {
-            $this->assertArrayHasKey($key, $this->asset->baseCss);
-        }
+        $this->assertMergedAssetsContainOriginalKeys($original, $this->asset->baseCss, 'extra');
     }
 
     public function test_base_js_replaces_when_merge_false(): void
@@ -236,10 +232,7 @@ class AssetTest extends TestCase
 
         $this->asset->baseJs(['extra' => '@extra'], true);
 
-        $this->assertArrayHasKey('extra', $this->asset->baseJs);
-        foreach (array_keys($original) as $key) {
-            $this->assertArrayHasKey($key, $this->asset->baseJs);
-        }
+        $this->assertMergedAssetsContainOriginalKeys($original, $this->asset->baseJs, 'extra');
     }
 
     public function test_header_js_merges_by_default(): void
@@ -248,10 +241,7 @@ class AssetTest extends TestCase
 
         $this->asset->headerJs(['extra' => '@extra']);
 
-        $this->assertArrayHasKey('extra', $this->asset->headerJs);
-        foreach (array_keys($original) as $key) {
-            $this->assertArrayHasKey($key, $this->asset->headerJs);
-        }
+        $this->assertMergedAssetsContainOriginalKeys($original, $this->asset->headerJs, 'extra');
     }
 
     public function test_header_js_replaces_when_merge_false(): void
@@ -332,5 +322,15 @@ class AssetTest extends TestCase
         $result = $this->asset->withVersionQuery('http://example.com/app.js?foo=bar');
 
         $this->assertStringContainsString('&v', $result);
+    }
+
+    private function assertMergedAssetsContainOriginalKeys(array $original, array $merged, string $extraKey): void
+    {
+        $mergedKeys = array_keys($merged);
+        $this->assertContains($extraKey, $mergedKeys);
+
+        foreach (array_keys($original) as $key) {
+            $this->assertContains($key, $mergedKeys);
+        }
     }
 }

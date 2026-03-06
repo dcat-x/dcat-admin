@@ -6,6 +6,7 @@ use Dcat\Admin\Console\AdminCommand;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Console\Command;
 use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class AdminCommandTest extends TestCase
 {
@@ -72,21 +73,12 @@ class AdminCommandTest extends TestCase
         $this->assertGreaterThan(3, count($lines));
     }
 
-    public function test_has_required_methods(): void
+    #[DataProvider('requiredMethodProvider')]
+    public function test_has_required_methods(string $method): void
     {
-        $methods = [
-            'handle',
-            'listAdminCommands',
-            'getColumnWidth',
-            'strlen',
-        ];
+        $reflection = new \ReflectionMethod(AdminCommand::class, $method);
 
-        foreach ($methods as $method) {
-            $this->assertTrue(
-                method_exists(AdminCommand::class, $method),
-                "AdminCommand should have method '{$method}'"
-            );
-        }
+        $this->assertSame($method, $reflection->getName());
     }
 
     public function test_strlen_is_public_static(): void
@@ -118,5 +110,15 @@ class AdminCommandTest extends TestCase
         $ref = new \ReflectionMethod(AdminCommand::class, 'handle');
 
         $this->assertTrue($ref->isPublic());
+    }
+
+    public static function requiredMethodProvider(): array
+    {
+        return [
+            ['handle'],
+            ['listAdminCommands'],
+            ['getColumnWidth'],
+            ['strlen'],
+        ];
     }
 }

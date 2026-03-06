@@ -8,6 +8,7 @@ use Dcat\Admin\Grid\Displayers\Editable;
 use Dcat\Admin\Grid\Displayers\Input;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class InputTest extends TestCase
 {
@@ -78,74 +79,14 @@ class InputTest extends TestCase
     // variables()
     // -------------------------------------------------------
 
-    public function test_variables_contain_key(): void
+    #[DataProvider('variablesProvider')]
+    public function test_variables_contain_expected_values($value, $original, string $key, mixed $expected): void
     {
-        $displayer = $this->makeDisplayer('hello');
+        $displayer = $this->makeDisplayer($value, $original);
 
         $vars = $displayer->variables();
 
-        $this->assertArrayHasKey('key', $vars);
-        $this->assertSame(1, $vars['key']);
-    }
-
-    public function test_variables_contain_name(): void
-    {
-        $displayer = $this->makeDisplayer('hello');
-
-        $vars = $displayer->variables();
-
-        $this->assertArrayHasKey('name', $vars);
-        $this->assertSame('title', $vars['name']);
-    }
-
-    public function test_variables_contain_type(): void
-    {
-        $displayer = $this->makeDisplayer('hello');
-
-        $vars = $displayer->variables();
-
-        $this->assertArrayHasKey('type', $vars);
-        $this->assertSame('input', $vars['type']);
-    }
-
-    public function test_variables_contain_display_value(): void
-    {
-        $displayer = $this->makeDisplayer('hello');
-
-        $vars = $displayer->variables();
-
-        $this->assertArrayHasKey('display', $vars);
-        $this->assertSame('hello', $vars['display']);
-    }
-
-    public function test_variables_contain_original_value(): void
-    {
-        $displayer = $this->makeDisplayer('display_val', 'original_val');
-
-        $vars = $displayer->variables();
-
-        $this->assertArrayHasKey('value', $vars);
-        $this->assertSame('original_val', $vars['value']);
-    }
-
-    public function test_variables_contain_url(): void
-    {
-        $displayer = $this->makeDisplayer('hello');
-
-        $vars = $displayer->variables();
-
-        $this->assertArrayHasKey('url', $vars);
-        $this->assertSame('/admin/users/1', $vars['url']);
-    }
-
-    public function test_variables_contain_class_selector(): void
-    {
-        $displayer = $this->makeDisplayer('hello');
-
-        $vars = $displayer->variables();
-
-        $this->assertArrayHasKey('class', $vars);
-        $this->assertSame('grid-editable-input', $vars['class']);
+        $this->assertSame($expected, $vars[$key] ?? null);
     }
 
     // -------------------------------------------------------
@@ -158,8 +99,7 @@ class InputTest extends TestCase
 
         $options = $this->getProtectedProperty($displayer, 'options');
 
-        $this->assertArrayHasKey('refresh', $options);
-        $this->assertFalse($options['refresh']);
+        $this->assertFalse($options['refresh'] ?? null);
     }
 
     // -------------------------------------------------------
@@ -239,5 +179,18 @@ class InputTest extends TestCase
         $result = $displayer->display();
 
         $this->assertStringContainsString('icon-edit-2', $result);
+    }
+
+    public static function variablesProvider(): array
+    {
+        return [
+            ['hello', null, 'key', 1],
+            ['hello', null, 'name', 'title'],
+            ['hello', null, 'type', 'input'],
+            ['hello', null, 'display', 'hello'],
+            ['display_val', 'original_val', 'value', 'original_val'],
+            ['hello', null, 'url', '/admin/users/1'],
+            ['hello', null, 'class', 'grid-editable-input'],
+        ];
     }
 }

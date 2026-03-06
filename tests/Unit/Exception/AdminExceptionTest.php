@@ -19,22 +19,22 @@ class AdminExceptionTest extends TestCase
     {
         $e = new AdminException;
 
-        $this->assertEquals('', $e->getMessage());
-        $this->assertEquals(0, $e->getCode());
+        $this->assertSame('', $e->getMessage());
+        $this->assertSame(0, $e->getCode());
     }
 
     public function test_custom_message(): void
     {
         $e = new AdminException('something went wrong');
 
-        $this->assertEquals('something went wrong', $e->getMessage());
+        $this->assertSame('something went wrong', $e->getMessage());
     }
 
     public function test_custom_code(): void
     {
         $e = new AdminException('error', 500);
 
-        $this->assertEquals(500, $e->getCode());
+        $this->assertSame(500, $e->getCode());
     }
 
     public function test_can_be_thrown_and_caught(): void
@@ -57,6 +57,6 @@ class AdminExceptionTest extends TestCase
         }
 
         $this->assertInstanceOf(AdminException::class, $caught);
-        $this->assertEquals('catch me', $caught->getMessage());
+        $this->assertSame('catch me', $caught->getMessage());
     }
 }

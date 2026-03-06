@@ -62,8 +62,7 @@ class CanImportMenuTest extends TestCase
 
         $rules = $helper->exposeMenuValidationRules();
 
-        $this->assertArrayHasKey('title', $rules);
-        $this->assertEquals('required', $rules['title']);
+        $this->assertEquals('required', $rules['title'] ?? null);
     }
 
     public function test_validate_menu_passes_with_title(): void

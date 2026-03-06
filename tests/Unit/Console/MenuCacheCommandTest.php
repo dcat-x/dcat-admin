@@ -44,12 +44,11 @@ class MenuCacheCommandTest extends TestCase
         $this->assertEquals('Flush the menu cache', $defaultValue);
     }
 
-    public function test_has_handle_method(): void
+    public function test_handle_method_signature(): void
     {
-        $this->assertTrue(
-            method_exists(MenuCacheCommand::class, 'handle'),
-            'MenuCacheCommand should have method "handle"'
-        );
+        $method = new \ReflectionMethod(MenuCacheCommand::class, 'handle');
+
+        $this->assertSame(0, $method->getNumberOfParameters());
     }
 
     public function test_handle_is_public(): void

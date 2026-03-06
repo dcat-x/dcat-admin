@@ -39,7 +39,7 @@ class SettingTest extends TestCase
     {
         $traits = class_uses(Setting::class);
 
-        $this->assertArrayHasKey(LazyWidget::class, $traits);
+        $this->assertContains(LazyWidget::class, array_keys($traits));
     }
 
     public function test_constructor_with_extension_initializes_payload_and_extension(): void
