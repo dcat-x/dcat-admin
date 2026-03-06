@@ -35,7 +35,7 @@ class MenuControllerTest extends TestCase
 
         $result = $controller->title();
 
-        $this->assertEquals(trans('admin.menu'), $result);
+        $this->assertSame(trans('admin.menu'), $result);
         $this->assertIsString($result);
     }
 

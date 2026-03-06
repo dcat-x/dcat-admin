@@ -96,7 +96,7 @@ class BatchActionTest extends TestCase
 
         $batchActions->add($action);
 
-        $this->assertEquals($initialCount + 1, $this->getActionsCount($batchActions));
+        $this->assertSame($initialCount + 1, $this->getActionsCount($batchActions));
     }
 
     public function test_add_sets_selector_prefix(): void
@@ -121,7 +121,7 @@ class BatchActionTest extends TestCase
         $ref->setAccessible(true);
         $actions = $ref->getValue($batchActions);
 
-        $this->assertEquals($initialCount + 1, $actions->count());
+        $this->assertSame($initialCount + 1, $actions->count());
 
         // The divider adds an ActionDivider instance
         $lastItem = $actions->last();

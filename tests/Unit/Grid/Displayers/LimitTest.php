@@ -34,7 +34,7 @@ class LimitTest extends TestCase
         $displayer = $this->makeDisplayer('Hello');
         $result = $displayer->display(100);
 
-        $this->assertEquals('Hello', $result);
+        $this->assertSame('Hello', $result);
     }
 
     public function test_display_string_exceeding_limit(): void
@@ -64,7 +64,7 @@ class LimitTest extends TestCase
         $result = $displayer->display(100);
 
         // Exactly at limit, no truncation
-        $this->assertEquals(htmlentities($exactString), $result);
+        $this->assertSame(htmlentities($exactString), $result);
     }
 
     public function test_display_array_within_limit(): void
@@ -74,7 +74,7 @@ class LimitTest extends TestCase
 
         $this->assertIsArray($result);
         $this->assertCount(3, $result);
-        $this->assertEquals(['a', 'b', 'c'], $result);
+        $this->assertSame(['a', 'b', 'c'], $result);
     }
 
     public function test_display_array_exceeding_limit(): void
@@ -84,7 +84,7 @@ class LimitTest extends TestCase
 
         $this->assertIsArray($result);
         $this->assertCount(4, $result); // 3 items + '...'
-        $this->assertEquals(['a', 'b', 'c', '...'], $result);
+        $this->assertSame(['a', 'b', 'c', '...'], $result);
     }
 
     public function test_display_array_with_custom_end(): void
@@ -94,7 +94,7 @@ class LimitTest extends TestCase
 
         $this->assertIsArray($result);
         $this->assertCount(3, $result);
-        $this->assertEquals('..more', $result[2]);
+        $this->assertSame('..more', $result[2]);
     }
 
     public function test_display_html_entities_encoded(): void

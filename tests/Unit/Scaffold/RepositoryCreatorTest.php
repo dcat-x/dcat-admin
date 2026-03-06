@@ -36,7 +36,7 @@ class RepositoryCreatorTest extends TestCase
 
         $namespace = $ref->invoke($creator, 'App\\Admin\\Repositories\\UserRepository');
 
-        $this->assertEquals('App\\Admin\\Repositories', $namespace);
+        $this->assertSame('App\\Admin\\Repositories', $namespace);
     }
 
     public function test_get_namespace_with_single_segment(): void
@@ -48,7 +48,7 @@ class RepositoryCreatorTest extends TestCase
 
         $namespace = $ref->invoke($creator, 'UserRepository');
 
-        $this->assertEquals('', $namespace);
+        $this->assertSame('', $namespace);
     }
 
     public function test_create_returns_null_when_file_exists(): void

@@ -28,7 +28,7 @@ class SingleRoundTest extends TestCase
     {
         $single = new SingleRound;
 
-        $this->assertEquals(5, $this->getProtectedProperty($single, 'chartMarginBottom'));
+        $this->assertSame(5, $this->getProtectedProperty($single, 'chartMarginBottom'));
     }
 
     public function test_chart_options_type_is_radial_bar(): void
@@ -37,7 +37,7 @@ class SingleRoundTest extends TestCase
 
         $options = $this->getProtectedProperty($single, 'chartOptions');
 
-        $this->assertEquals('radialBar', $options['chart']['type']);
+        $this->assertSame('radialBar', $options['chart']['type']);
     }
 
     public function test_chart_options_sparkline_enabled(): void
@@ -55,7 +55,7 @@ class SingleRoundTest extends TestCase
 
         $options = $this->getProtectedProperty($single, 'chartOptions');
 
-        $this->assertEquals('74%', $options['plotOptions']['radialBar']['hollow']['size']);
+        $this->assertSame('74%', $options['plotOptions']['radialBar']['hollow']['size']);
     }
 
     public function test_chart_options_fill_type_is_gradient(): void
@@ -64,6 +64,6 @@ class SingleRoundTest extends TestCase
 
         $options = $this->getProtectedProperty($single, 'chartOptions');
 
-        $this->assertEquals('gradient', $options['fill']['type']);
+        $this->assertSame('gradient', $options['fill']['type']);
     }
 }

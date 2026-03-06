@@ -26,8 +26,8 @@ class GtTest extends TestCase
     {
         $filter = new Gt('price', 'Min Price');
 
-        $this->assertEquals('price', $filter->originalColumn());
-        $this->assertEquals('Min Price', $filter->getLabel());
+        $this->assertSame('price', $filter->originalColumn());
+        $this->assertSame('Min Price', $filter->getLabel());
     }
 
     public function test_condition_returns_where_with_gt_operator(): void
@@ -37,7 +37,7 @@ class GtTest extends TestCase
         $condition = $filter->condition(['price' => '100']);
 
         $this->assertConditionHasWhere($condition);
-        $this->assertEquals(['price', '>', '100'], $condition['where']);
+        $this->assertSame(['price', '>', '100'], $condition['where']);
     }
 
     public function test_condition_returns_null_when_value_is_null(): void
@@ -56,7 +56,7 @@ class GtTest extends TestCase
         $condition = $filter->condition(['age' => '0']);
 
         $this->assertConditionHasWhere($condition);
-        $this->assertEquals(['age', '>', '0'], $condition['where']);
+        $this->assertSame(['age', '>', '0'], $condition['where']);
     }
 
     public function test_condition_sets_value_on_filter(): void
@@ -65,7 +65,7 @@ class GtTest extends TestCase
 
         $filter->condition(['price' => '50']);
 
-        $this->assertEquals('50', $filter->getValue());
+        $this->assertSame('50', $filter->getValue());
     }
 
     public function test_ignore_returns_null_condition(): void

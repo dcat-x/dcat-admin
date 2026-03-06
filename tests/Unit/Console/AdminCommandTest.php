@@ -36,7 +36,7 @@ class AdminCommandTest extends TestCase
         $ref = new \ReflectionProperty(AdminCommand::class, 'signature');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('admin', $defaultValue);
+        $this->assertSame('admin', $defaultValue);
     }
 
     public function test_description_default_value(): void
@@ -44,7 +44,7 @@ class AdminCommandTest extends TestCase
         $ref = new \ReflectionProperty(AdminCommand::class, 'description');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('List all admin commands', $defaultValue);
+        $this->assertSame('List all admin commands', $defaultValue);
     }
 
     public function test_has_static_logo_property(): void
@@ -94,7 +94,7 @@ class AdminCommandTest extends TestCase
         $result = AdminCommand::strlen('hello');
 
         $this->assertIsInt($result);
-        $this->assertEquals(5, $result);
+        $this->assertSame(5, $result);
     }
 
     public function test_strlen_with_empty_string(): void
@@ -102,7 +102,7 @@ class AdminCommandTest extends TestCase
         $result = AdminCommand::strlen('');
 
         $this->assertIsInt($result);
-        $this->assertEquals(0, $result);
+        $this->assertSame(0, $result);
     }
 
     public function test_handle_is_public(): void

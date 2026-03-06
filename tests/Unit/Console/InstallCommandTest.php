@@ -34,7 +34,7 @@ class InstallCommandTest extends TestCase
         $ref = new \ReflectionProperty(InstallCommand::class, 'signature');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('admin:install', $defaultValue);
+        $this->assertSame('admin:install', $defaultValue);
     }
 
     public function test_description_default_value(): void
@@ -42,7 +42,7 @@ class InstallCommandTest extends TestCase
         $ref = new \ReflectionProperty(InstallCommand::class, 'description');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('Install the admin package', $defaultValue);
+        $this->assertSame('Install the admin package', $defaultValue);
     }
 
     public function test_directory_property_exists_and_is_protected(): void

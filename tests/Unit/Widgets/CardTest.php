@@ -18,8 +18,8 @@ class CardTest extends TestCase
         $card = new Card('Only Content');
 
         $variables = $card->defaultVariables();
-        $this->assertEquals('Only Content', $variables['content']);
-        $this->assertEquals('', $variables['title']);
+        $this->assertSame('Only Content', $variables['content']);
+        $this->assertSame('', $variables['title']);
     }
 
     public function test_card_title_and_content(): void
@@ -27,8 +27,8 @@ class CardTest extends TestCase
         $card = new Card('Title', 'Content');
 
         $variables = $card->defaultVariables();
-        $this->assertEquals('Title', $variables['title']);
-        $this->assertEquals('Content', $variables['content']);
+        $this->assertSame('Title', $variables['title']);
+        $this->assertSame('Content', $variables['content']);
     }
 
     public function test_card_title(): void
@@ -37,7 +37,7 @@ class CardTest extends TestCase
         $card->title('Card Title');
 
         $variables = $card->defaultVariables();
-        $this->assertEquals('Card Title', $variables['title']);
+        $this->assertSame('Card Title', $variables['title']);
     }
 
     public function test_card_content(): void
@@ -46,7 +46,7 @@ class CardTest extends TestCase
         $card->content('Card Content');
 
         $variables = $card->defaultVariables();
-        $this->assertEquals('Card Content', $variables['content']);
+        $this->assertSame('Card Content', $variables['content']);
     }
 
     public function test_card_footer(): void
@@ -55,7 +55,7 @@ class CardTest extends TestCase
         $card->footer('Footer Content');
 
         $variables = $card->defaultVariables();
-        $this->assertEquals('Footer Content', $variables['footer']);
+        $this->assertSame('Footer Content', $variables['footer']);
     }
 
     public function test_card_tool(): void
@@ -76,7 +76,7 @@ class CardTest extends TestCase
         $card->padding('20px');
 
         $variables = $card->defaultVariables();
-        $this->assertEquals('padding:20px', $variables['padding']);
+        $this->assertSame('padding:20px', $variables['padding']);
     }
 
     public function test_card_no_padding(): void
@@ -85,7 +85,7 @@ class CardTest extends TestCase
         $card->noPadding();
 
         $variables = $card->defaultVariables();
-        $this->assertEquals('padding:0', $variables['padding']);
+        $this->assertSame('padding:0', $variables['padding']);
     }
 
     public function test_card_with_header_border(): void
@@ -114,11 +114,11 @@ class CardTest extends TestCase
             ->withHeaderBorder();
 
         $variables = $card->defaultVariables();
-        $this->assertEquals('Chained Title', $variables['title']);
-        $this->assertEquals('Chained Content', $variables['content']);
-        $this->assertEquals('Chained Footer', $variables['footer']);
+        $this->assertSame('Chained Title', $variables['title']);
+        $this->assertSame('Chained Content', $variables['content']);
+        $this->assertSame('Chained Footer', $variables['footer']);
         $this->assertCount(1, $variables['tools']);
-        $this->assertEquals('padding:10px', $variables['padding']);
+        $this->assertSame('padding:10px', $variables['padding']);
         $this->assertTrue($variables['divider']);
     }
 }

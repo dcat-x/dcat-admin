@@ -48,7 +48,7 @@ class HasExtensionTest extends TestCase
         $provider->shouldReceive('getName')->once()->andReturn('test-extension');
 
         $user->setExtension($provider);
-        $this->assertEquals('test-extension', $user->getExtensionName());
+        $this->assertSame('test-extension', $user->getExtensionName());
     }
 
     public function test_extension_initially_null(): void

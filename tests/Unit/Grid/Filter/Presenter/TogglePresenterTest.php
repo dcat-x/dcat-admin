@@ -26,21 +26,21 @@ class TogglePresenterTest extends TestCase
     {
         $toggle = $this->makeToggle();
 
-        $this->assertEquals(1, $this->getProtectedProperty($toggle, 'onValue'));
+        $this->assertSame(1, $this->getProtectedProperty($toggle, 'onValue'));
     }
 
     public function test_default_off_value_is_zero(): void
     {
         $toggle = $this->makeToggle();
 
-        $this->assertEquals(0, $this->getProtectedProperty($toggle, 'offValue'));
+        $this->assertSame(0, $this->getProtectedProperty($toggle, 'offValue'));
     }
 
     public function test_default_size_is_small(): void
     {
         $toggle = $this->makeToggle();
 
-        $this->assertEquals('small', $this->getProtectedProperty($toggle, 'size'));
+        $this->assertSame('small', $this->getProtectedProperty($toggle, 'size'));
     }
 
     public function test_values_setter_is_fluent(): void
@@ -58,8 +58,8 @@ class TogglePresenterTest extends TestCase
 
         $toggle->values('active', 'inactive');
 
-        $this->assertEquals('active', $this->getProtectedProperty($toggle, 'onValue'));
-        $this->assertEquals('inactive', $this->getProtectedProperty($toggle, 'offValue'));
+        $this->assertSame('active', $this->getProtectedProperty($toggle, 'onValue'));
+        $this->assertSame('inactive', $this->getProtectedProperty($toggle, 'offValue'));
     }
 
     public function test_text_setter_is_fluent(): void
@@ -77,8 +77,8 @@ class TogglePresenterTest extends TestCase
 
         $toggle->text('Enabled', 'Disabled');
 
-        $this->assertEquals('Enabled', $this->getProtectedProperty($toggle, 'onText'));
-        $this->assertEquals('Disabled', $this->getProtectedProperty($toggle, 'offText'));
+        $this->assertSame('Enabled', $this->getProtectedProperty($toggle, 'onText'));
+        $this->assertSame('Disabled', $this->getProtectedProperty($toggle, 'offText'));
     }
 
     public function test_size_setter_is_fluent(): void
@@ -96,7 +96,7 @@ class TogglePresenterTest extends TestCase
 
         $toggle->size('large');
 
-        $this->assertEquals('large', $this->getProtectedProperty($toggle, 'size'));
+        $this->assertSame('large', $this->getProtectedProperty($toggle, 'size'));
     }
 
     #[DataProvider('defaultVariablesKeyProvider')]
@@ -117,11 +117,11 @@ class TogglePresenterTest extends TestCase
 
         $vars = $toggle->defaultVariables();
 
-        $this->assertEquals('Yes', $vars['onText']);
-        $this->assertEquals('No', $vars['offText']);
-        $this->assertEquals(1, $vars['onValue']);
-        $this->assertEquals(0, $vars['offValue']);
-        $this->assertEquals('small', $vars['size']);
+        $this->assertSame('Yes', $vars['onText']);
+        $this->assertSame('No', $vars['offText']);
+        $this->assertSame(1, $vars['onValue']);
+        $this->assertSame(0, $vars['offValue']);
+        $this->assertSame('small', $vars['size']);
     }
 
     public function test_custom_text_reflected_in_default_variables(): void
@@ -130,8 +130,8 @@ class TogglePresenterTest extends TestCase
 
         $vars = $toggle->defaultVariables();
 
-        $this->assertEquals('On', $vars['onText']);
-        $this->assertEquals('Off', $vars['offText']);
+        $this->assertSame('On', $vars['onText']);
+        $this->assertSame('Off', $vars['offText']);
     }
 
     public static function defaultVariablesKeyProvider(): array

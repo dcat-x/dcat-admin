@@ -27,8 +27,8 @@ class WhereBetweenTest extends TestCase
         $query = function ($q) {};
         $filter = new WhereBetween('price', $query, 'Price Range');
 
-        $this->assertEquals('price', $filter->originalColumn());
-        $this->assertEquals('Price Range', $filter->getLabel());
+        $this->assertSame('price', $filter->originalColumn());
+        $this->assertSame('Price Range', $filter->getLabel());
     }
 
     public function test_condition_returns_null_when_value_missing(): void
@@ -102,8 +102,8 @@ class WhereBetweenTest extends TestCase
         $input = ['start' => '10', 'end' => '100'];
         $filter->condition(['price' => $input]);
 
-        $this->assertEquals($input, $filter->getValue());
-        $this->assertEquals($input, $filter->input);
+        $this->assertSame($input, $filter->getValue());
+        $this->assertSame($input, $filter->input);
     }
 
     public function test_closure_is_bound_to_filter_instance(): void
@@ -121,7 +121,7 @@ class WhereBetweenTest extends TestCase
         $mockQuery = $this->createMock(\Illuminate\Database\Query\Builder::class);
         $closure($mockQuery);
 
-        $this->assertEquals(['start' => '50', 'end' => '200'], $capturedInput);
+        $this->assertSame(['start' => '50', 'end' => '200'], $capturedInput);
     }
 
     private function assertConditionHasWhere(mixed $condition): void

@@ -18,7 +18,7 @@ class LangCreatorTest extends TestCase
         $ref = new \ReflectionProperty($creator, 'fields');
         $ref->setAccessible(true);
 
-        $this->assertEquals($fields, $ref->getValue($creator));
+        $this->assertSame($fields, $ref->getValue($creator));
     }
 
     public function test_get_lang_path_method_exists(): void
@@ -82,11 +82,11 @@ class LangCreatorTest extends TestCase
         $storedFields = $ref->getValue($creator);
 
         $this->assertCount(3, $storedFields);
-        $this->assertEquals('name', $storedFields[0]['name']);
-        $this->assertEquals('Name', $storedFields[0]['translation']);
-        $this->assertEquals('email', $storedFields[1]['name']);
-        $this->assertEquals('Email', $storedFields[1]['translation']);
-        $this->assertEquals('status', $storedFields[2]['name']);
-        $this->assertEquals('Status', $storedFields[2]['translation']);
+        $this->assertSame('name', $storedFields[0]['name']);
+        $this->assertSame('Name', $storedFields[0]['translation']);
+        $this->assertSame('email', $storedFields[1]['name']);
+        $this->assertSame('Email', $storedFields[1]['translation']);
+        $this->assertSame('status', $storedFields[2]['name']);
+        $this->assertSame('Status', $storedFields[2]['translation']);
     }
 }

@@ -33,7 +33,7 @@ class MenuCacheCommandTest extends TestCase
         $ref = new \ReflectionProperty(MenuCacheCommand::class, 'signature');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('admin:menu-cache', $defaultValue);
+        $this->assertSame('admin:menu-cache', $defaultValue);
     }
 
     public function test_description_default_value(): void
@@ -41,7 +41,7 @@ class MenuCacheCommandTest extends TestCase
         $ref = new \ReflectionProperty(MenuCacheCommand::class, 'description');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('Flush the menu cache', $defaultValue);
+        $this->assertSame('Flush the menu cache', $defaultValue);
     }
 
     public function test_handle_method_signature(): void

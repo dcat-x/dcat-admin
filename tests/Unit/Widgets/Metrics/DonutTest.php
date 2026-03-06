@@ -29,21 +29,21 @@ class DonutTest extends TestCase
     {
         $donut = new Donut;
 
-        $this->assertEquals(100, $this->getProtectedProperty($donut, 'chartHeight'));
+        $this->assertSame(100, $this->getProtectedProperty($donut, 'chartHeight'));
     }
 
     public function test_default_chart_margin_top_is_5(): void
     {
         $donut = new Donut;
 
-        $this->assertEquals(5, $this->getProtectedProperty($donut, 'chartMarginTop'));
+        $this->assertSame(5, $this->getProtectedProperty($donut, 'chartMarginTop'));
     }
 
     public function test_default_content_width_is_6_6(): void
     {
         $donut = new Donut;
 
-        $this->assertEquals([6, 6], $this->getProtectedProperty($donut, 'contentWidth'));
+        $this->assertSame([6, 6], $this->getProtectedProperty($donut, 'contentWidth'));
     }
 
     public function test_content_width_setter_fluent(): void
@@ -52,7 +52,7 @@ class DonutTest extends TestCase
         $result = $donut->contentWidth(4, 8);
 
         $this->assertSame($donut, $result);
-        $this->assertEquals([4, 8], $this->getProtectedProperty($donut, 'contentWidth'));
+        $this->assertSame([4, 8], $this->getProtectedProperty($donut, 'contentWidth'));
     }
 
     public function test_chart_options_type_is_donut(): void
@@ -61,7 +61,7 @@ class DonutTest extends TestCase
 
         $options = $this->getProtectedProperty($donut, 'chartOptions');
 
-        $this->assertEquals('donut', $options['chart']['type']);
+        $this->assertSame('donut', $options['chart']['type']);
     }
 
     public function test_init_creates_chart(): void

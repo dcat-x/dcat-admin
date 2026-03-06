@@ -23,7 +23,7 @@ class DashboardTest extends TestCase
     {
         $result = Dashboard::title();
 
-        $this->assertEquals('admin::dashboard.title', $result->getName());
+        $this->assertSame('admin::dashboard.title', $result->getName());
     }
 
     public function test_title_method_returns_renderable(): void

@@ -19,7 +19,7 @@ class CheckboxTest extends TestCase
         $result = $checkbox->check([1, 3]);
         $this->assertSame($checkbox, $result);
         $vars = $checkbox->defaultVariables();
-        $this->assertEquals([1, 3], $vars['checked']);
+        $this->assertSame([1, 3], $vars['checked']);
     }
 
     public function test_check_with_single_value(): void
@@ -45,7 +45,7 @@ class CheckboxTest extends TestCase
         $checkbox->options([1 => 'A', 2 => 'B', 3 => 'C']);
         $checkbox->checkAll();
         $vars = $checkbox->defaultVariables();
-        $this->assertEquals([1, 2, 3], $vars['checked']);
+        $this->assertSame([1, 2, 3], $vars['checked']);
     }
 
     public function test_check_all_with_excepts(): void
@@ -72,7 +72,7 @@ class CheckboxTest extends TestCase
         $checkbox = new Checkbox;
         $checkbox->options([1 => 'X', 2 => 'Y']);
         $vars = $checkbox->defaultVariables();
-        $this->assertEquals([1 => 'X', 2 => 'Y'], $vars['options']);
+        $this->assertSame([1 => 'X', 2 => 'Y'], $vars['options']);
     }
 
     public function test_make_factory(): void

@@ -131,7 +131,7 @@ class ConditionTest extends TestCase
 
         $condition->process();
         $condition->process();
-        $this->assertEquals(1, $count);
+        $this->assertSame(1, $count);
     }
 
     public function test_now_calls_process(): void

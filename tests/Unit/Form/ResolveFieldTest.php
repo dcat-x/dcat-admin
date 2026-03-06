@@ -72,7 +72,7 @@ class ResolveFieldTest extends TestCase
         $field = Mockery::mock(Field::class);
         $user->testCallResolvingFieldCallbacks($field);
 
-        $this->assertEquals([1, 2], $executed);
+        $this->assertSame([1, 2], $executed);
     }
 
     public function test_call_resolving_stops_on_false(): void
@@ -92,7 +92,7 @@ class ResolveFieldTest extends TestCase
         $field = Mockery::mock(Field::class);
         $user->testCallResolvingFieldCallbacks($field);
 
-        $this->assertEquals([1], $executed);
+        $this->assertSame([1], $executed);
     }
 
     public function test_callback_receives_field_and_self(): void

@@ -66,55 +66,55 @@ class QueryBuilderRepositoryTest extends TestCase
     public function test_get_table_returns_configured_table(): void
     {
         $repo = new TestQueryBuilderRepository;
-        $this->assertEquals('test_qb_table', $repo->getTable());
+        $this->assertSame('test_qb_table', $repo->getTable());
     }
 
     public function test_get_created_at_column_returns_default(): void
     {
         $repo = new TestQueryBuilderRepository;
-        $this->assertEquals('created_at', $repo->getCreatedAtColumn());
+        $this->assertSame('created_at', $repo->getCreatedAtColumn());
     }
 
     public function test_get_updated_at_column_returns_default(): void
     {
         $repo = new TestQueryBuilderRepository;
-        $this->assertEquals('updated_at', $repo->getUpdatedAtColumn());
+        $this->assertSame('updated_at', $repo->getUpdatedAtColumn());
     }
 
     public function test_get_created_at_column_returns_custom(): void
     {
         $repo = new TestQueryBuilderRepositoryCustomTimestamps;
-        $this->assertEquals('date_created', $repo->getCreatedAtColumn());
+        $this->assertSame('date_created', $repo->getCreatedAtColumn());
     }
 
     public function test_get_updated_at_column_returns_custom(): void
     {
         $repo = new TestQueryBuilderRepositoryCustomTimestamps;
-        $this->assertEquals('date_updated', $repo->getUpdatedAtColumn());
+        $this->assertSame('date_updated', $repo->getUpdatedAtColumn());
     }
 
     public function test_get_grid_columns_returns_wildcard(): void
     {
         $repo = new TestQueryBuilderRepository;
-        $this->assertEquals(['*'], $repo->getGridColumns());
+        $this->assertSame(['*'], $repo->getGridColumns());
     }
 
     public function test_get_form_columns_returns_wildcard(): void
     {
         $repo = new TestQueryBuilderRepository;
-        $this->assertEquals(['*'], $repo->getFormColumns());
+        $this->assertSame(['*'], $repo->getFormColumns());
     }
 
     public function test_get_detail_columns_returns_wildcard(): void
     {
         $repo = new TestQueryBuilderRepository;
-        $this->assertEquals(['*'], $repo->getDetailColumns());
+        $this->assertSame(['*'], $repo->getDetailColumns());
     }
 
     public function test_get_key_name_defaults_to_id(): void
     {
         $repo = new TestQueryBuilderRepository;
-        $this->assertEquals('id', $repo->getKeyName());
+        $this->assertSame('id', $repo->getKeyName());
     }
 
     public function test_move_order_up_throws_runtime_exception(): void
@@ -226,8 +226,8 @@ class QueryBuilderRepositoryTest extends TestCase
         $result = $repo->edit($form);
 
         $this->assertIsArray($result);
-        $this->assertEquals('Test', $result['name']);
-        $this->assertEquals('test', $result['slug']);
+        $this->assertSame('Test', $result['name']);
+        $this->assertSame('test', $result['slug']);
     }
 
     public function test_update_modifies_existing_record(): void
@@ -248,11 +248,11 @@ class QueryBuilderRepositoryTest extends TestCase
 
         $result = $repo->update($form);
 
-        $this->assertEquals(1, $result);
+        $this->assertSame(1, $result);
 
         // Verify the update
         $record = $this->app['db']->connection()->table('test_qb_table')->find(1);
-        $this->assertEquals('Updated', $record->name);
+        $this->assertSame('Updated', $record->name);
     }
 
     public function test_deleting_returns_records_for_deletion(): void
@@ -275,8 +275,8 @@ class QueryBuilderRepositoryTest extends TestCase
 
         $this->assertIsArray($result);
         $this->assertCount(2, $result);
-        $this->assertEquals('ToDelete1', $result[0]['name']);
-        $this->assertEquals('ToDelete2', $result[1]['name']);
+        $this->assertSame('ToDelete1', $result[0]['name']);
+        $this->assertSame('ToDelete2', $result[1]['name']);
     }
 
     public function test_delete_removes_records(): void
@@ -331,7 +331,7 @@ class QueryBuilderRepositoryTest extends TestCase
         $result = $repo->detail($show);
 
         $this->assertIsArray($result);
-        $this->assertEquals('DetailTest', $result['name']);
+        $this->assertSame('DetailTest', $result['name']);
     }
 
     public function test_updating_delegates_to_edit(): void
@@ -349,7 +349,7 @@ class QueryBuilderRepositoryTest extends TestCase
         $result = $repo->updating($form);
 
         $this->assertIsArray($result);
-        $this->assertEquals('UpdatingTest', $result['name']);
+        $this->assertSame('UpdatingTest', $result['name']);
     }
 
     public function test_constructor_initializes_query_builder(): void

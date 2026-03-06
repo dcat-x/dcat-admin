@@ -37,7 +37,7 @@ class NewlineTest extends TestCase
 
         $result = $newline->render();
 
-        $this->assertEquals('<div class="col-md-12"></div>', $result);
+        $this->assertSame('<div class="col-md-12"></div>', $result);
     }
 
     public function test_render_returns_string(): void

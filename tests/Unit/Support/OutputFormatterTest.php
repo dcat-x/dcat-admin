@@ -19,7 +19,7 @@ class OutputFormatterTest extends TestCase
     {
         $formatter = new OutputFormatter;
 
-        $this->assertEquals('hello world', $formatter->format('hello world'));
+        $this->assertSame('hello world', $formatter->format('hello world'));
     }
 
     public function test_format_returns_null_when_null_given(): void
@@ -33,7 +33,7 @@ class OutputFormatterTest extends TestCase
     {
         $formatter = new OutputFormatter;
 
-        $this->assertEquals('', $formatter->format(''));
+        $this->assertSame('', $formatter->format(''));
     }
 
     public function test_format_returns_string_with_special_characters(): void
@@ -41,6 +41,6 @@ class OutputFormatterTest extends TestCase
         $formatter = new OutputFormatter;
         $message = '<info>some info</info>';
 
-        $this->assertEquals($message, $formatter->format($message));
+        $this->assertSame($message, $formatter->format($message));
     }
 }

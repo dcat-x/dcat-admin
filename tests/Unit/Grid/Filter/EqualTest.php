@@ -26,15 +26,15 @@ class EqualTest extends TestCase
     {
         $filter = new Equal('status', 'Status');
 
-        $this->assertEquals('status', $filter->originalColumn());
-        $this->assertEquals('Status', $filter->getLabel());
+        $this->assertSame('status', $filter->originalColumn());
+        $this->assertSame('Status', $filter->getLabel());
     }
 
     public function test_constructor_auto_generates_label_from_column(): void
     {
         $filter = new Equal('user_name');
 
-        $this->assertEquals('user_name', $filter->originalColumn());
+        $this->assertSame('user_name', $filter->originalColumn());
     }
 
     public function test_condition_returns_where_with_value(): void
@@ -44,7 +44,7 @@ class EqualTest extends TestCase
         $condition = $filter->condition(['status' => 'active']);
 
         $this->assertConditionHasWhere($condition);
-        $this->assertEquals(['status', 'active'], $condition['where']);
+        $this->assertSame(['status', 'active'], $condition['where']);
     }
 
     public function test_condition_returns_null_when_value_is_null(): void
@@ -63,7 +63,7 @@ class EqualTest extends TestCase
         $condition = $filter->condition(['type' => '1']);
 
         $this->assertConditionHasWhere($condition);
-        $this->assertEquals(['type', '1'], $condition['where']);
+        $this->assertSame(['type', '1'], $condition['where']);
     }
 
     public function test_condition_with_zero_value(): void
@@ -73,7 +73,7 @@ class EqualTest extends TestCase
         $condition = $filter->condition(['status' => '0']);
 
         $this->assertConditionHasWhere($condition);
-        $this->assertEquals(['status', '0'], $condition['where']);
+        $this->assertSame(['status', '0'], $condition['where']);
     }
 
     public function test_condition_with_empty_string_value(): void
@@ -83,7 +83,7 @@ class EqualTest extends TestCase
         $condition = $filter->condition(['status' => '']);
 
         $this->assertConditionHasWhere($condition);
-        $this->assertEquals(['status', ''], $condition['where']);
+        $this->assertSame(['status', ''], $condition['where']);
     }
 
     public function test_condition_sets_value_on_filter(): void
@@ -92,7 +92,7 @@ class EqualTest extends TestCase
 
         $filter->condition(['status' => 'active']);
 
-        $this->assertEquals('active', $filter->getValue());
+        $this->assertSame('active', $filter->getValue());
     }
 
     public function test_ignore_returns_null_condition(): void

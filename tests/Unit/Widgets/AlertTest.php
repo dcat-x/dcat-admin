@@ -19,7 +19,7 @@ class AlertTest extends TestCase
         $alert->content('Alert content here');
 
         $variables = $alert->defaultVariables();
-        $this->assertEquals('Alert content here', $variables['content']);
+        $this->assertSame('Alert content here', $variables['content']);
     }
 
     public function test_alert_title(): void
@@ -28,7 +28,7 @@ class AlertTest extends TestCase
         $alert->title('Alert Title');
 
         $variables = $alert->defaultVariables();
-        $this->assertEquals('Alert Title', $variables['title']);
+        $this->assertSame('Alert Title', $variables['title']);
     }
 
     public function test_alert_style(): void
@@ -46,7 +46,7 @@ class AlertTest extends TestCase
 
         $variables = $alert->defaultVariables();
         $this->assertStringContainsString('alert-info', $variables['attributes']);
-        $this->assertEquals('fa fa-info', $variables['icon']);
+        $this->assertSame('fa fa-info', $variables['icon']);
     }
 
     public function test_alert_success_style(): void
@@ -56,7 +56,7 @@ class AlertTest extends TestCase
 
         $variables = $alert->defaultVariables();
         $this->assertStringContainsString('alert-success', $variables['attributes']);
-        $this->assertEquals('fa fa-check', $variables['icon']);
+        $this->assertSame('fa fa-check', $variables['icon']);
     }
 
     public function test_alert_warning_style(): void
@@ -66,7 +66,7 @@ class AlertTest extends TestCase
 
         $variables = $alert->defaultVariables();
         $this->assertStringContainsString('alert-warning', $variables['attributes']);
-        $this->assertEquals('fa fa-warning', $variables['icon']);
+        $this->assertSame('fa fa-warning', $variables['icon']);
     }
 
     public function test_alert_danger_style(): void
@@ -76,7 +76,7 @@ class AlertTest extends TestCase
 
         $variables = $alert->defaultVariables();
         $this->assertStringContainsString('alert-danger', $variables['attributes']);
-        $this->assertEquals('fa fa-ban', $variables['icon']);
+        $this->assertSame('fa fa-ban', $variables['icon']);
     }
 
     public function test_alert_primary_style(): void
@@ -94,7 +94,7 @@ class AlertTest extends TestCase
         $alert->icon('fa fa-custom');
 
         $variables = $alert->defaultVariables();
-        $this->assertEquals('fa fa-custom', $variables['icon']);
+        $this->assertSame('fa fa-custom', $variables['icon']);
     }
 
     public function test_alert_removable(): void
@@ -131,9 +131,9 @@ class AlertTest extends TestCase
             ->removable();
 
         $variables = $alert->defaultVariables();
-        $this->assertEquals('Chained Title', $variables['title']);
-        $this->assertEquals('Chained Content', $variables['content']);
-        $this->assertEquals('fa fa-custom', $variables['icon']);
+        $this->assertSame('Chained Title', $variables['title']);
+        $this->assertSame('Chained Content', $variables['content']);
+        $this->assertSame('fa fa-custom', $variables['icon']);
         $this->assertTrue($variables['showCloseBtn']);
     }
 }

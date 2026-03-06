@@ -49,7 +49,7 @@ class InputTraitTest extends TestCase
         $ref->setAccessible(true);
 
         $this->assertSame($filter, $result);
-        $this->assertEquals('Enter value...', $ref->getValue($filter));
+        $this->assertSame('Enter value...', $ref->getValue($filter));
     }
 
     public function test_placeholder_default_null_and_accepts_null(): void

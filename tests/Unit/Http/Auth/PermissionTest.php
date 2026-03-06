@@ -155,8 +155,8 @@ class PermissionTest extends TestCase
         $params = $ref->getParameters();
 
         $this->assertCount(1, $params);
-        $this->assertEquals('callback', $params[0]->getName());
+        $this->assertSame('callback', $params[0]->getName());
         $this->assertNotNull($params[0]->getType());
-        $this->assertEquals('Closure', $params[0]->getType()->getName());
+        $this->assertSame('Closure', $params[0]->getType()->getName());
     }
 }

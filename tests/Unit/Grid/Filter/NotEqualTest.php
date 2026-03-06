@@ -26,8 +26,8 @@ class NotEqualTest extends TestCase
     {
         $filter = new NotEqual('status', 'Exclude Status');
 
-        $this->assertEquals('status', $filter->originalColumn());
-        $this->assertEquals('Exclude Status', $filter->getLabel());
+        $this->assertSame('status', $filter->originalColumn());
+        $this->assertSame('Exclude Status', $filter->getLabel());
     }
 
     public function test_condition_returns_where_with_not_equal_operator(): void
@@ -37,7 +37,7 @@ class NotEqualTest extends TestCase
         $condition = $filter->condition(['status' => 'deleted']);
 
         $this->assertConditionHasWhere($condition);
-        $this->assertEquals(['status', '!=', 'deleted'], $condition['where']);
+        $this->assertSame(['status', '!=', 'deleted'], $condition['where']);
     }
 
     public function test_condition_returns_null_when_value_is_null(): void
@@ -56,7 +56,7 @@ class NotEqualTest extends TestCase
         $condition = $filter->condition(['type' => '0']);
 
         $this->assertConditionHasWhere($condition);
-        $this->assertEquals(['type', '!=', '0'], $condition['where']);
+        $this->assertSame(['type', '!=', '0'], $condition['where']);
     }
 
     public function test_condition_sets_value_on_filter(): void
@@ -65,7 +65,7 @@ class NotEqualTest extends TestCase
 
         $filter->condition(['status' => 'banned']);
 
-        $this->assertEquals('banned', $filter->getValue());
+        $this->assertSame('banned', $filter->getValue());
     }
 
     public function test_condition_with_empty_string(): void
@@ -75,7 +75,7 @@ class NotEqualTest extends TestCase
         $condition = $filter->condition(['status' => '']);
 
         $this->assertConditionHasWhere($condition);
-        $this->assertEquals(['status', '!=', ''], $condition['where']);
+        $this->assertSame(['status', '!=', ''], $condition['where']);
     }
 
     public function test_ignore_returns_null_condition(): void

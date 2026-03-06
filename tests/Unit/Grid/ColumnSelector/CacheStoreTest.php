@@ -29,7 +29,7 @@ class CacheStoreTest extends TestCase
         $ref = new \ReflectionProperty($store, 'ttl');
         $ref->setAccessible(true);
 
-        $this->assertEquals(3600, $ref->getValue($store));
+        $this->assertSame(3600, $ref->getValue($store));
     }
 
     public function test_constructor_default_ttl(): void
@@ -39,7 +39,7 @@ class CacheStoreTest extends TestCase
         $ref = new \ReflectionProperty($store, 'ttl');
         $ref->setAccessible(true);
 
-        $this->assertEquals(25920000, $ref->getValue($store));
+        $this->assertSame(25920000, $ref->getValue($store));
     }
 
     public function test_store_get_and_forget_use_cache_driver(): void

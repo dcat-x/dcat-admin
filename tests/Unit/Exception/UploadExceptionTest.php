@@ -27,14 +27,14 @@ class UploadExceptionTest extends TestCase
     {
         $e = new UploadException('upload failed');
 
-        $this->assertEquals('upload failed', $e->getMessage());
+        $this->assertSame('upload failed', $e->getMessage());
     }
 
     public function test_custom_code(): void
     {
         $e = new UploadException('error', 413);
 
-        $this->assertEquals(413, $e->getCode());
+        $this->assertSame(413, $e->getCode());
     }
 
     public function test_can_be_thrown_and_caught(): void
@@ -56,6 +56,6 @@ class UploadExceptionTest extends TestCase
         }
 
         $this->assertInstanceOf(UploadException::class, $caught);
-        $this->assertEquals('upload error', $caught->getMessage());
+        $this->assertSame('upload error', $caught->getMessage());
     }
 }

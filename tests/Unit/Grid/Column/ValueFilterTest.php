@@ -41,7 +41,7 @@ class ValueFilterTest extends TestCase
 
         $ref = new \ReflectionProperty(ValueFilter::class, 'valueKey');
         $ref->setAccessible(true);
-        $this->assertEquals('my_key', $ref->getValue($valueFilter));
+        $this->assertSame('my_key', $ref->getValue($valueFilter));
     }
 
     public function test_constructor_stores_null_value_key(): void
@@ -74,7 +74,7 @@ class ValueFilterTest extends TestCase
 
         $valueFilter = new ValueFilter($filter, 'key');
 
-        $this->assertEquals('filter-column_name', $valueFilter->getQueryName());
+        $this->assertSame('filter-column_name', $valueFilter->getQueryName());
     }
 
     public function test_value_delegates_to_filter(): void
@@ -84,7 +84,7 @@ class ValueFilterTest extends TestCase
 
         $valueFilter = new ValueFilter($filter, 'key');
 
-        $this->assertEquals('some_value', $valueFilter->value());
+        $this->assertSame('some_value', $valueFilter->value());
     }
 
     public function test_value_returns_empty_string_default(): void
@@ -94,7 +94,7 @@ class ValueFilterTest extends TestCase
 
         $valueFilter = new ValueFilter($filter, null);
 
-        $this->assertEquals('', $valueFilter->value());
+        $this->assertSame('', $valueFilter->value());
     }
 
     public function test_get_query_name_returns_string(): void

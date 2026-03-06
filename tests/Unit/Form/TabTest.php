@@ -105,7 +105,7 @@ class TabTest extends TestCase
         $tab->append('Tab 1', function () {}, false, 'custom-tab-id');
 
         $tabs = $tab->getTabs();
-        $this->assertEquals('custom-tab-id', $tabs->first()['id']);
+        $this->assertSame('custom-tab-id', $tabs->first()['id']);
     }
 
     public function test_active_by_title(): void
@@ -146,6 +146,6 @@ class TabTest extends TestCase
         $tab->append('My Tab Title', function () {});
 
         $tabs = $tab->getTabs();
-        $this->assertEquals('My Tab Title', $tabs->first()['title']);
+        $this->assertSame('My Tab Title', $tabs->first()['title']);
     }
 }

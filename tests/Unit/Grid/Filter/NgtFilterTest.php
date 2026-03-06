@@ -42,7 +42,7 @@ class NgtFilterTest extends TestCase
     {
         $filter = $this->makeFilter('price');
 
-        $this->assertEquals('admin::filter.gt', $this->getProtectedProperty($filter, 'view'));
+        $this->assertSame('admin::filter.gt', $this->getProtectedProperty($filter, 'view'));
     }
 
     public function test_condition_returns_less_than_or_equal_where(): void
@@ -52,7 +52,7 @@ class NgtFilterTest extends TestCase
         $condition = $filter->condition(['price' => '100']);
 
         $this->assertConditionHasWhere($condition);
-        $this->assertEquals(['price', '<=', '100'], $condition['where']);
+        $this->assertSame(['price', '<=', '100'], $condition['where']);
     }
 
     public function test_condition_returns_null_when_value_is_null(): void
@@ -70,7 +70,7 @@ class NgtFilterTest extends TestCase
 
         $filter->condition(['price' => '50']);
 
-        $this->assertEquals('50', $filter->getValue());
+        $this->assertSame('50', $filter->getValue());
     }
 
     public function test_condition_with_numeric_value(): void
@@ -80,8 +80,8 @@ class NgtFilterTest extends TestCase
         $condition = $filter->condition(['amount' => '999']);
 
         $this->assertConditionHasWhere($condition);
-        $this->assertEquals('<=', $condition['where'][1]);
-        $this->assertEquals('999', $condition['where'][2]);
+        $this->assertSame('<=', $condition['where'][1]);
+        $this->assertSame('999', $condition['where'][2]);
     }
 
     private function assertConditionHasWhere(mixed $condition): void

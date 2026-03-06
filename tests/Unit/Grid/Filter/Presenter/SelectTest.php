@@ -34,7 +34,7 @@ class SelectTest extends TestCase
         $ref = new ReflectionProperty($select, 'options');
         $ref->setAccessible(true);
 
-        $this->assertEquals($options, $ref->getValue($select));
+        $this->assertSame($options, $ref->getValue($select));
     }
 
     public function test_config_with_key_value(): void
@@ -48,7 +48,7 @@ class SelectTest extends TestCase
         $ref = new ReflectionProperty($select, 'config');
         $ref->setAccessible(true);
 
-        $this->assertEquals(['minimumInputLength' => 3], $ref->getValue($select));
+        $this->assertSame(['minimumInputLength' => 3], $ref->getValue($select));
     }
 
     public function test_config_with_array(): void
@@ -62,7 +62,7 @@ class SelectTest extends TestCase
         $config = $ref->getValue($select);
 
         $this->assertTrue($config['allowClear']);
-        $this->assertEquals(1, $config['minimumInputLength']);
+        $this->assertSame(1, $config['minimumInputLength']);
     }
 
     public function test_config_merges_values(): void
@@ -76,8 +76,8 @@ class SelectTest extends TestCase
         $ref->setAccessible(true);
         $config = $ref->getValue($select);
 
-        $this->assertEquals('val1', $config['key1']);
-        $this->assertEquals('val2', $config['key2']);
+        $this->assertSame('val1', $config['key1']);
+        $this->assertSame('val2', $config['key2']);
     }
 
     public function test_disable_select_all(): void
@@ -115,7 +115,7 @@ class SelectTest extends TestCase
         $ref = new ReflectionProperty($select, 'placeholder');
         $ref->setAccessible(true);
 
-        $this->assertEquals('Pick one...', $ref->getValue($select));
+        $this->assertSame('Pick one...', $ref->getValue($select));
     }
 
     public function test_placeholder_returns_default_when_not_set(): void
@@ -135,7 +135,7 @@ class SelectTest extends TestCase
 
         $class = $select->getElementClass();
 
-        $this->assertEquals('category_id', $class);
+        $this->assertSame('category_id', $class);
     }
 
     public function test_get_element_class_replaces_dots(): void
@@ -150,7 +150,7 @@ class SelectTest extends TestCase
 
         $class = $select->getElementClass();
 
-        $this->assertEquals('user_name', $class);
+        $this->assertSame('user_name', $class);
     }
 
     public function test_get_element_class_selector(): void
@@ -160,7 +160,7 @@ class SelectTest extends TestCase
 
         $selector = $select->getElementClassSelector();
 
-        $this->assertEquals('.category_id', $selector);
+        $this->assertSame('.category_id', $selector);
     }
 
     public function test_add_default_config_does_not_override_existing(): void
@@ -194,6 +194,6 @@ class SelectTest extends TestCase
     {
         $select = $this->makeSelect();
 
-        $this->assertEquals('admin::filter.select', $select->view());
+        $this->assertSame('admin::filter.select', $select->view());
     }
 }

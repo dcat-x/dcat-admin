@@ -42,27 +42,27 @@ class DayTest extends TestCase
     {
         $filter = $this->makeFilter('created_at');
 
-        $this->assertEquals('whereDay', $this->getProtectedProperty($filter, 'query'));
+        $this->assertSame('whereDay', $this->getProtectedProperty($filter, 'query'));
     }
 
     public function test_field_name_property_is_day(): void
     {
         $filter = $this->makeFilter('created_at');
 
-        $this->assertEquals('day', $this->getProtectedProperty($filter, 'fieldName'));
+        $this->assertSame('day', $this->getProtectedProperty($filter, 'fieldName'));
     }
 
     public function test_constructor_sets_column(): void
     {
         $filter = $this->makeFilter('birthday', 'Birthday');
 
-        $this->assertEquals('birthday', $filter->originalColumn());
+        $this->assertSame('birthday', $filter->originalColumn());
     }
 
     public function test_constructor_sets_label(): void
     {
         $filter = $this->makeFilter('birthday', 'Birthday');
 
-        $this->assertEquals('Birthday', $filter->getLabel());
+        $this->assertSame('Birthday', $filter->getLabel());
     }
 }

@@ -168,7 +168,7 @@ class FooterTest extends TestCase
         $refData = new \ReflectionProperty($footer, 'data');
         $refData->setAccessible(true);
 
-        $this->assertEquals('custom.view', $refView->getValue($footer));
-        $this->assertEquals(['key' => 'value'], $refData->getValue($footer));
+        $this->assertSame('custom.view', $refView->getValue($footer));
+        $this->assertSame(['key' => 'value'], $refData->getValue($footer));
     }
 }

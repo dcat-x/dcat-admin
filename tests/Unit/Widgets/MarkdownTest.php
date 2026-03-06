@@ -20,7 +20,7 @@ class MarkdownTest extends TestCase
     {
         $md = new Markdown('# Hello');
 
-        $this->assertEquals('# Hello', $this->getProtectedProperty($md, 'content'));
+        $this->assertSame('# Hello', $this->getProtectedProperty($md, 'content'));
     }
 
     public function test_constructor_without_content(): void
@@ -36,7 +36,7 @@ class MarkdownTest extends TestCase
         $result = $md->content('## World');
 
         $this->assertSame($md, $result);
-        $this->assertEquals('## World', $this->getProtectedProperty($md, 'content'));
+        $this->assertSame('## World', $this->getProtectedProperty($md, 'content'));
     }
 
     public function test_content_method_overwrites_previous_content(): void
@@ -44,7 +44,7 @@ class MarkdownTest extends TestCase
         $md = new Markdown('Initial');
         $md->content('Replaced');
 
-        $this->assertEquals('Replaced', $this->getProtectedProperty($md, 'content'));
+        $this->assertSame('Replaced', $this->getProtectedProperty($md, 'content'));
     }
 
     public function test_constructor_sets_id_with_prefix(): void
@@ -54,7 +54,7 @@ class MarkdownTest extends TestCase
         $id = $md->id();
 
         $this->assertStringStartsWith('mkd-', $id);
-        $this->assertEquals(12, strlen($id)); // mkd- + 8 random chars
+        $this->assertSame(12, strlen($id)); // mkd- + 8 random chars
     }
 
     public function test_each_instance_gets_unique_id(): void
@@ -70,7 +70,7 @@ class MarkdownTest extends TestCase
         $md = new Markdown;
         $options = $md->getOptions();
 
-        $this->assertEquals('style,script,iframe', $options['htmlDecode']);
+        $this->assertSame('style,script,iframe', $options['htmlDecode']);
         $this->assertTrue($options['emoji']);
         $this->assertTrue($options['taskList']);
         $this->assertTrue($options['tex']);
@@ -83,7 +83,7 @@ class MarkdownTest extends TestCase
         $md = Markdown::make('# Test');
 
         $this->assertInstanceOf(Markdown::class, $md);
-        $this->assertEquals('# Test', $this->getProtectedProperty($md, 'content'));
+        $this->assertSame('# Test', $this->getProtectedProperty($md, 'content'));
     }
 
     public function test_static_make_without_content(): void
@@ -98,6 +98,6 @@ class MarkdownTest extends TestCase
     {
         $md = new Markdown;
 
-        $this->assertEquals('admin::widgets.markdown', $this->getProtectedProperty($md, 'view'));
+        $this->assertSame('admin::widgets.markdown', $this->getProtectedProperty($md, 'view'));
     }
 }

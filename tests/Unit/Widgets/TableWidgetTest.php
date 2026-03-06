@@ -28,7 +28,7 @@ class TableWidgetTest extends TestCase
         $this->assertSame($table, $result);
         $ref = new \ReflectionProperty($table, 'headers');
         $ref->setAccessible(true);
-        $this->assertEquals(['Col1', 'Col2'], $ref->getValue($table));
+        $this->assertSame(['Col1', 'Col2'], $ref->getValue($table));
     }
 
     public function test_set_rows_indexed_array(): void
@@ -50,8 +50,8 @@ class TableWidgetTest extends TestCase
         $ref->setAccessible(true);
         $rows = $ref->getValue($table);
         $this->assertCount(2, $rows);
-        $this->assertEquals('name', $rows[0][0]);
-        $this->assertEquals('John', $rows[0][1]);
+        $this->assertSame('name', $rows[0][0]);
+        $this->assertSame('John', $rows[0][1]);
     }
 
     public function test_set_style(): void
@@ -68,7 +68,7 @@ class TableWidgetTest extends TestCase
         $this->assertSame($table, $result);
         $ref = new \ReflectionProperty($table, 'depth');
         $ref->setAccessible(true);
-        $this->assertEquals(2, $ref->getValue($table));
+        $this->assertSame(2, $ref->getValue($table));
     }
 
     public function test_with_border(): void

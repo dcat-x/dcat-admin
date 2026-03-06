@@ -41,7 +41,7 @@ class RowTest extends TestCase
         $data = ['id' => 123, 'name' => 'Test'];
         $row = new Row($grid, $data);
 
-        $this->assertEquals(123, $row->getKey());
+        $this->assertSame(123, $row->getKey());
     }
 
     public function test_row_get_key_custom_key_name(): void
@@ -50,7 +50,7 @@ class RowTest extends TestCase
         $data = ['uuid' => 'abc-123', 'name' => 'Test'];
         $row = new Row($grid, $data);
 
-        $this->assertEquals('abc-123', $row->getKey());
+        $this->assertSame('abc-123', $row->getKey());
     }
 
     public function test_row_magic_get(): void
@@ -59,8 +59,8 @@ class RowTest extends TestCase
         $data = ['id' => 1, 'name' => 'Test Name', 'email' => 'test@example.com'];
         $row = new Row($grid, $data);
 
-        $this->assertEquals('Test Name', $row->name);
-        $this->assertEquals('test@example.com', $row->email);
+        $this->assertSame('Test Name', $row->name);
+        $this->assertSame('test@example.com', $row->email);
     }
 
     public function test_row_magic_set(): void
@@ -70,7 +70,7 @@ class RowTest extends TestCase
         $row = new Row($grid, $data);
 
         $row->name = 'New Name';
-        $this->assertEquals('New Name', $row->name);
+        $this->assertSame('New Name', $row->name);
     }
 
     public function test_row_column_get_value(): void
@@ -79,7 +79,7 @@ class RowTest extends TestCase
         $data = ['id' => 1, 'name' => 'Test'];
         $row = new Row($grid, $data);
 
-        $this->assertEquals('Test', $row->column('name'));
+        $this->assertSame('Test', $row->column('name'));
     }
 
     public function test_row_column_set_value(): void
@@ -89,7 +89,7 @@ class RowTest extends TestCase
         $row = new Row($grid, $data);
 
         $row->column('name', 'New Value');
-        $this->assertEquals('New Value', $row->column('name'));
+        $this->assertSame('New Value', $row->column('name'));
     }
 
     public function test_row_column_with_closure(): void
@@ -101,7 +101,7 @@ class RowTest extends TestCase
         $row->column('name', function ($value) {
             return strtoupper($value);
         });
-        $this->assertEquals('TEST', $row->column('name'));
+        $this->assertSame('TEST', $row->column('name'));
     }
 
     public function test_row_to_array(): void
@@ -112,9 +112,9 @@ class RowTest extends TestCase
 
         $array = $row->toArray();
         $this->assertIsArray($array);
-        $this->assertEquals(1, $array['id']);
-        $this->assertEquals('Test', $array['name']);
-        $this->assertEquals('test@example.com', $array['email']);
+        $this->assertSame(1, $array['id']);
+        $this->assertSame('Test', $array['name']);
+        $this->assertSame('test@example.com', $array['email']);
     }
 
     public function test_row_set_attributes(): void
@@ -163,7 +163,7 @@ class RowTest extends TestCase
 
         $model = $row->model();
         $this->assertInstanceOf(Fluent::class, $model);
-        $this->assertEquals(1, $model->id);
-        $this->assertEquals('Test', $model->name);
+        $this->assertSame(1, $model->id);
+        $this->assertSame('Test', $model->name);
     }
 }

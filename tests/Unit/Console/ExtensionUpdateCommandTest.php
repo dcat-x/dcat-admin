@@ -45,7 +45,7 @@ class ExtensionUpdateCommandTest extends TestCase
         $ref = new \ReflectionProperty(ExtensionUpdateCommand::class, 'description');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('Update an existing extension', $defaultValue);
+        $this->assertSame('Update an existing extension', $defaultValue);
     }
 
     public function test_handle_signature_is_public_and_parameterless(): void

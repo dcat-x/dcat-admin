@@ -296,7 +296,7 @@ class DataPermissionApplyConditionTest extends TestCase
             'value_type' => DataRule::VALUE_TYPE_FIXED,
         ]);
 
-        $this->assertEquals('test_value', $dp->resolveValue($rule));
+        $this->assertSame('test_value', $dp->resolveValue($rule));
     }
 
     public function test_resolve_variable_value_without_user(): void
@@ -309,7 +309,7 @@ class DataPermissionApplyConditionTest extends TestCase
         ]);
 
         // 没有用户时，变量不会被替换
-        $this->assertEquals('{user_id}', $dp->resolveValue($rule));
+        $this->assertSame('{user_id}', $dp->resolveValue($rule));
     }
 
     public function test_between_with_insufficient_values(): void

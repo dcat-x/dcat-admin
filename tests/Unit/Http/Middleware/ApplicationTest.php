@@ -39,7 +39,7 @@ class ApplicationTest extends TestCase
         $ref = new \ReflectionMethod(Application::class, 'handle');
         $params = $ref->getParameters();
 
-        $this->assertEquals('request', $params[0]->getName());
+        $this->assertSame('request', $params[0]->getName());
     }
 
     public function test_handle_second_parameter_is_next(): void
@@ -47,7 +47,7 @@ class ApplicationTest extends TestCase
         $ref = new \ReflectionMethod(Application::class, 'handle');
         $params = $ref->getParameters();
 
-        $this->assertEquals('next', $params[1]->getName());
+        $this->assertSame('next', $params[1]->getName());
     }
 
     public function test_handle_third_parameter_is_app(): void
@@ -55,7 +55,7 @@ class ApplicationTest extends TestCase
         $ref = new \ReflectionMethod(Application::class, 'handle');
         $params = $ref->getParameters();
 
-        $this->assertEquals('app', $params[2]->getName());
+        $this->assertSame('app', $params[2]->getName());
     }
 
     public function test_handle_app_parameter_has_null_default(): void
@@ -73,7 +73,7 @@ class ApplicationTest extends TestCase
         $params = $ref->getParameters();
 
         $this->assertNotNull($params[1]->getType());
-        $this->assertEquals('Closure', $params[1]->getType()->getName());
+        $this->assertSame('Closure', $params[1]->getType()->getName());
     }
 
     public function test_handle_passes_through_when_app_is_null(): void
@@ -89,6 +89,6 @@ class ApplicationTest extends TestCase
         });
 
         $this->assertTrue($called);
-        $this->assertEquals('next', $response);
+        $this->assertSame('next', $response);
     }
 }

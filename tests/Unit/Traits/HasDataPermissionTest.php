@@ -72,7 +72,7 @@ class HasDataPermissionTest extends TestCase
     {
         DataPermissionTestModel::setCurrentMenuId(5);
 
-        $this->assertEquals(5, DataPermissionTestModel::getCurrentMenuId());
+        $this->assertSame(5, DataPermissionTestModel::getCurrentMenuId());
     }
 
     public function test_set_current_menu_id_null(): void
@@ -117,7 +117,7 @@ class HasDataPermissionTest extends TestCase
 
         // 回调后应该恢复
         $this->assertTrue($reflection->getValue());
-        $this->assertEquals('callback_result', $result);
+        $this->assertSame('callback_result', $result);
     }
 
     public function test_without_data_permission_restores_state_on_exception(): void
@@ -146,13 +146,13 @@ class HasDataPermissionTest extends TestCase
         DataPermissionTestModel::setCurrentMenuId(1);
 
         $result = DataPermissionTestModel::withMenuId(99, function () {
-            $this->assertEquals(99, DataPermissionTestModel::getCurrentMenuId());
+            $this->assertSame(99, DataPermissionTestModel::getCurrentMenuId());
 
             return 'from_callback';
         });
 
-        $this->assertEquals(1, DataPermissionTestModel::getCurrentMenuId());
-        $this->assertEquals('from_callback', $result);
+        $this->assertSame(1, DataPermissionTestModel::getCurrentMenuId());
+        $this->assertSame('from_callback', $result);
     }
 
     public function test_with_menu_id_restores_state_on_exception(): void
@@ -164,7 +164,7 @@ class HasDataPermissionTest extends TestCase
                 throw new \RuntimeException('test');
             });
         } catch (\RuntimeException $e) {
-            $this->assertEquals(1, DataPermissionTestModel::getCurrentMenuId());
+            $this->assertSame(1, DataPermissionTestModel::getCurrentMenuId());
 
             return;
         }

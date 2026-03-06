@@ -99,7 +99,7 @@ class PresenterTest extends TestCase
 
         $presenter->setParent($filter);
 
-        $this->assertEquals('search_term', $presenter->value());
+        $this->assertSame('search_term', $presenter->value());
     }
 
     public function test_value_returns_default_when_value_is_null(): void
@@ -111,7 +111,7 @@ class PresenterTest extends TestCase
 
         $presenter->setParent($filter);
 
-        $this->assertEquals('fallback', $presenter->value());
+        $this->assertSame('fallback', $presenter->value());
     }
 
     public function test_value_returns_default_when_value_is_empty_string(): void
@@ -123,13 +123,13 @@ class PresenterTest extends TestCase
 
         $presenter->setParent($filter);
 
-        $this->assertEquals('fallback', $presenter->value());
+        $this->assertSame('fallback', $presenter->value());
     }
 
     public function test_view_returns_default_view_name(): void
     {
         $presenter = $this->makePresenter();
 
-        $this->assertEquals('admin::filter.text', $presenter->view());
+        $this->assertSame('admin::filter.text', $presenter->view());
     }
 }

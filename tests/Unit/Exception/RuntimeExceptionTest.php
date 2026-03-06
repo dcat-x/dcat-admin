@@ -27,14 +27,14 @@ class RuntimeExceptionTest extends TestCase
     {
         $e = new RuntimeException('runtime failure');
 
-        $this->assertEquals('runtime failure', $e->getMessage());
+        $this->assertSame('runtime failure', $e->getMessage());
     }
 
     public function test_custom_code(): void
     {
         $e = new RuntimeException('error', 500);
 
-        $this->assertEquals(500, $e->getCode());
+        $this->assertSame(500, $e->getCode());
     }
 
     public function test_can_be_thrown_and_caught(): void
@@ -56,6 +56,6 @@ class RuntimeExceptionTest extends TestCase
         }
 
         $this->assertInstanceOf(RuntimeException::class, $caught);
-        $this->assertEquals('catch as admin', $caught->getMessage());
+        $this->assertSame('catch as admin', $caught->getMessage());
     }
 }

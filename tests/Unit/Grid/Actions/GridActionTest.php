@@ -19,7 +19,7 @@ class GridActionTest extends TestCase
     public function test_constructor_with_title(): void
     {
         $action = new ConcreteAction('Test Action');
-        $this->assertEquals('Test Action', $action->title());
+        $this->assertSame('Test Action', $action->title());
     }
 
     public function test_constructor_without_title(): void
@@ -57,7 +57,7 @@ class GridActionTest extends TestCase
         $action = new ConcreteAction;
         $result = $action->setKey(42);
         $this->assertSame($action, $result);
-        $this->assertEquals(42, $action->getKey());
+        $this->assertSame(42, $action->getKey());
     }
 
     public function test_get_key_returns_null_by_default(): void
@@ -70,7 +70,7 @@ class GridActionTest extends TestCase
     {
         $action = new ConcreteAction;
         $action->setKey('abc-123');
-        $this->assertEquals('abc-123', $action->getKey());
+        $this->assertSame('abc-123', $action->getKey());
     }
 
     public function test_selector_generates_string(): void
@@ -111,6 +111,6 @@ class GridActionTest extends TestCase
     {
         $action = ConcreteAction::make('Factory Title');
         $this->assertInstanceOf(ConcreteAction::class, $action);
-        $this->assertEquals('Factory Title', $action->title());
+        $this->assertSame('Factory Title', $action->title());
     }
 }

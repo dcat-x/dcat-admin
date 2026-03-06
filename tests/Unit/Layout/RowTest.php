@@ -126,7 +126,7 @@ class RowTest extends TestCase
         $this->assertStringContainsString('col1', $html);
         $this->assertStringContainsString('col2', $html);
         $this->assertStringContainsString('col3', $html);
-        $this->assertEquals(3, substr_count($html, 'col-md-4'));
+        $this->assertSame(3, substr_count($html, 'col-md-4'));
     }
 
     public function test_render_empty_row(): void
@@ -135,7 +135,7 @@ class RowTest extends TestCase
 
         $html = $row->render();
 
-        $this->assertEquals('<div class="row "></div>', $html);
+        $this->assertSame('<div class="row "></div>', $html);
     }
 
     public function test_constructor_with_empty_string_creates_no_columns(): void

@@ -18,7 +18,7 @@ class CalloutTest extends TestCase
         $callout = new Callout;
         $callout->content('My Content');
         $vars = $callout->defaultVariables();
-        $this->assertEquals('My Content', $vars['content']);
+        $this->assertSame('My Content', $vars['content']);
     }
 
     public function test_title(): void
@@ -26,7 +26,7 @@ class CalloutTest extends TestCase
         $callout = new Callout;
         $callout->title('My Title');
         $vars = $callout->defaultVariables();
-        $this->assertEquals('My Title', $vars['title']);
+        $this->assertSame('My Title', $vars['title']);
     }
 
     public function test_info_style(): void

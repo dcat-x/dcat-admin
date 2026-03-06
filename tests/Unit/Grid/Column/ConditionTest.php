@@ -50,7 +50,7 @@ class ConditionTest extends TestCase
 
         $ref = new \ReflectionProperty(Condition::class, 'condition');
         $ref->setAccessible(true);
-        $this->assertEquals('test_value', $ref->getValue($condition));
+        $this->assertSame('test_value', $ref->getValue($condition));
     }
 
     public function test_then_stores_closure(): void

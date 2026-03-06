@@ -28,35 +28,35 @@ class RoundTest extends TestCase
     {
         $round = new Round;
 
-        $this->assertEquals(250, $this->getProtectedProperty($round, 'height'));
+        $this->assertSame(250, $this->getProtectedProperty($round, 'height'));
     }
 
     public function test_default_chart_height_is_210(): void
     {
         $round = new Round;
 
-        $this->assertEquals(210, $this->getProtectedProperty($round, 'chartHeight'));
+        $this->assertSame(210, $this->getProtectedProperty($round, 'chartHeight'));
     }
 
     public function test_default_content_width(): void
     {
         $round = new Round;
 
-        $this->assertEquals([5, 7], $this->getProtectedProperty($round, 'contentWidth'));
+        $this->assertSame([5, 7], $this->getProtectedProperty($round, 'contentWidth'));
     }
 
     public function test_default_chart_margin_top(): void
     {
         $round = new Round;
 
-        $this->assertEquals(-10, $this->getProtectedProperty($round, 'chartMarginTop'));
+        $this->assertSame(-10, $this->getProtectedProperty($round, 'chartMarginTop'));
     }
 
     public function test_default_chart_margin_bottom(): void
     {
         $round = new Round;
 
-        $this->assertEquals(-20, $this->getProtectedProperty($round, 'chartMarginBottom'));
+        $this->assertSame(-20, $this->getProtectedProperty($round, 'chartMarginBottom'));
     }
 
     public function test_chart_radial_bar_size(): void
@@ -67,7 +67,7 @@ class RoundTest extends TestCase
         $this->assertSame($round, $result);
 
         $options = $this->getProtectedProperty($round, 'chartOptions');
-        $this->assertEquals(120, $options['plotOptions']['radialBar']['size']);
+        $this->assertSame(120, $options['plotOptions']['radialBar']['size']);
     }
 
     public function test_chart_radial_bar_margin(): void
@@ -78,7 +78,7 @@ class RoundTest extends TestCase
         $this->assertSame($round, $result);
 
         $options = $this->getProtectedProperty($round, 'chartOptions');
-        $this->assertEquals(20, $options['plotOptions']['radialBar']['track']['margin']);
+        $this->assertSame(20, $options['plotOptions']['radialBar']['track']['margin']);
     }
 
     public function test_chart_total(): void
@@ -91,7 +91,7 @@ class RoundTest extends TestCase
         $options = $this->getProtectedProperty($round, 'chartOptions');
         $total = $options['plotOptions']['radialBar']['dataLabels']['total'];
         $this->assertTrue($total['show']);
-        $this->assertEquals('Total', $total['label']);
+        $this->assertSame('Total', $total['label']);
     }
 
     public function test_chart_label_name_font_size(): void
@@ -102,7 +102,7 @@ class RoundTest extends TestCase
         $this->assertSame($round, $result);
 
         $options = $this->getProtectedProperty($round, 'chartOptions');
-        $this->assertEquals('16px', $options['plotOptions']['radialBar']['dataLabels']['name']['fontSize']);
+        $this->assertSame('16px', $options['plotOptions']['radialBar']['dataLabels']['name']['fontSize']);
     }
 
     public function test_chart_label_name_offset_y(): void
@@ -113,7 +113,7 @@ class RoundTest extends TestCase
         $this->assertSame($round, $result);
 
         $options = $this->getProtectedProperty($round, 'chartOptions');
-        $this->assertEquals(-5, $options['plotOptions']['radialBar']['dataLabels']['name']['offsetY']);
+        $this->assertSame(-5, $options['plotOptions']['radialBar']['dataLabels']['name']['offsetY']);
     }
 
     public function test_chart_label_value_font_size(): void
@@ -124,7 +124,7 @@ class RoundTest extends TestCase
         $this->assertSame($round, $result);
 
         $options = $this->getProtectedProperty($round, 'chartOptions');
-        $this->assertEquals('14px', $options['plotOptions']['radialBar']['dataLabels']['value']['fontSize']);
+        $this->assertSame('14px', $options['plotOptions']['radialBar']['dataLabels']['value']['fontSize']);
     }
 
     public function test_chart_label_value_offset_y(): void
@@ -135,7 +135,7 @@ class RoundTest extends TestCase
         $this->assertSame($round, $result);
 
         $options = $this->getProtectedProperty($round, 'chartOptions');
-        $this->assertEquals(10, $options['plotOptions']['radialBar']['dataLabels']['value']['offsetY']);
+        $this->assertSame(10, $options['plotOptions']['radialBar']['dataLabels']['value']['offsetY']);
     }
 
     public function test_default_chart_options_type(): void
@@ -143,7 +143,7 @@ class RoundTest extends TestCase
         $round = new Round;
 
         $options = $this->getProtectedProperty($round, 'chartOptions');
-        $this->assertEquals('radialBar', $options['chart']['type']);
+        $this->assertSame('radialBar', $options['chart']['type']);
     }
 
     public function test_default_chart_options_stroke(): void
@@ -151,7 +151,7 @@ class RoundTest extends TestCase
         $round = new Round;
 
         $options = $this->getProtectedProperty($round, 'chartOptions');
-        $this->assertEquals('round', $options['stroke']['lineCap']);
+        $this->assertSame('round', $options['stroke']['lineCap']);
     }
 
     public function test_default_chart_options_hollow_size(): void
@@ -159,7 +159,7 @@ class RoundTest extends TestCase
         $round = new Round;
 
         $options = $this->getProtectedProperty($round, 'chartOptions');
-        $this->assertEquals('20%', $options['plotOptions']['radialBar']['hollow']['size']);
+        $this->assertSame('20%', $options['plotOptions']['radialBar']['hollow']['size']);
     }
 
     public function test_default_chart_options_track_stroke_width(): void
@@ -167,7 +167,7 @@ class RoundTest extends TestCase
         $round = new Round;
 
         $options = $this->getProtectedProperty($round, 'chartOptions');
-        $this->assertEquals('100%', $options['plotOptions']['radialBar']['track']['strokeWidth']);
+        $this->assertSame('100%', $options['plotOptions']['radialBar']['track']['strokeWidth']);
     }
 
     public function test_default_options_array(): void

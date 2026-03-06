@@ -18,14 +18,14 @@ class WidgetTest extends TestCase
         $result = $w->options(['a' => 1]);
         $this->assertSame($w, $result);
         $w->options(['b' => 2]);
-        $this->assertEquals(['a' => 1, 'b' => 2], $w->getOptions());
+        $this->assertSame(['a' => 1, 'b' => 2], $w->getOptions());
     }
 
     public function test_option_getter(): void
     {
         $w = new ConcreteWidget;
         $w->options(['key' => 'val']);
-        $this->assertEquals('val', $w->option('key'));
+        $this->assertSame('val', $w->option('key'));
     }
 
     public function test_option_getter_returns_null(): void
@@ -39,7 +39,7 @@ class WidgetTest extends TestCase
         $w = new ConcreteWidget;
         $result = $w->option('key', 'val');
         $this->assertSame($w, $result);
-        $this->assertEquals('val', $w->option('key'));
+        $this->assertSame('val', $w->option('key'));
     }
 
     public function test_get_element_class_default(): void
@@ -56,14 +56,14 @@ class WidgetTest extends TestCase
         $w = new ConcreteWidget;
         $result = $w->setElementClass('custom-class');
         $this->assertSame($w, $result);
-        $this->assertEquals('custom-class', $w->getElementClass());
+        $this->assertSame('custom-class', $w->getElementClass());
     }
 
     public function test_get_element_selector(): void
     {
         $w = new ConcreteWidget;
         $w->setElementClass('my-widget');
-        $this->assertEquals('.my-widget', $w->getElementSelector());
+        $this->assertSame('.my-widget', $w->getElementSelector());
     }
 
     public function test_when_true_executes_callback(): void
@@ -108,14 +108,14 @@ class WidgetTest extends TestCase
     public function test_get_script_default_empty(): void
     {
         $w = new ConcreteWidget;
-        $this->assertEquals('', $w->getScript());
+        $this->assertSame('', $w->getScript());
     }
 
     public function test_magic_set_and_get(): void
     {
         $w = new ConcreteWidget;
         $w->customAttr = 'value';
-        $this->assertEquals('value', $w->customAttr);
+        $this->assertSame('value', $w->customAttr);
     }
 
     public function test_magic_get_returns_null_for_missing(): void

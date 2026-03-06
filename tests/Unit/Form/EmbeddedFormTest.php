@@ -47,8 +47,8 @@ class EmbeddedFormTest extends TestCase
         $ref = new \ReflectionProperty($form, 'original');
         $ref->setAccessible(true);
         $original = $ref->getValue($form);
-        $this->assertEquals('test', $original['name']);
-        $this->assertEquals(25, $original['age']);
+        $this->assertSame('test', $original['name']);
+        $this->assertSame(25, $original['age']);
     }
 
     public function test_set_original_with_json_string(): void
@@ -59,7 +59,7 @@ class EmbeddedFormTest extends TestCase
         $ref = new \ReflectionProperty($form, 'original');
         $ref->setAccessible(true);
         $original = $ref->getValue($form);
-        $this->assertEquals('test', $original['name']);
+        $this->assertSame('test', $original['name']);
     }
 
     public function test_set_original_with_empty_returns_this(): void
@@ -86,7 +86,7 @@ class EmbeddedFormTest extends TestCase
 
         $ref = new \ReflectionProperty($form, 'column');
         $ref->setAccessible(true);
-        $this->assertEquals('user_data', $ref->getValue($form));
+        $this->assertSame('user_data', $ref->getValue($form));
     }
 
     public function test_resolving_field_adds_callback(): void

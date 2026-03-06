@@ -52,12 +52,12 @@ class MinifyCommandTest extends TestCase
         $ref = new \ReflectionProperty(MinifyCommand::class, 'description');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('Minify the CSS and JS', $defaultValue);
+        $this->assertSame('Minify the CSS and JS', $defaultValue);
     }
 
     public function test_all_constant_equals_all(): void
     {
-        $this->assertEquals('all', MinifyCommand::ALL);
+        $this->assertSame('all', MinifyCommand::ALL);
     }
 
     public function test_default_constant_equals_default(): void
@@ -66,7 +66,7 @@ class MinifyCommandTest extends TestCase
         $constants = $ref->getConstants();
 
         $this->assertContains('DEFAULT', array_keys($constants));
-        $this->assertEquals('default', $constants['DEFAULT']);
+        $this->assertSame('default', $constants['DEFAULT']);
     }
 
     public function test_colors_is_array_with_four_entries(): void
@@ -85,7 +85,7 @@ class MinifyCommandTest extends TestCase
         $defaultValue = $ref->getDefaultValue();
 
         $this->assertContains($key, array_keys($defaultValue));
-        $this->assertEquals($expected, $defaultValue[$key]);
+        $this->assertSame($expected, $defaultValue[$key]);
     }
 
     #[DataProvider('requiredMethodProvider')]

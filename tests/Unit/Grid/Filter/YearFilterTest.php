@@ -42,27 +42,27 @@ class YearFilterTest extends TestCase
     {
         $filter = $this->makeFilter('created_at');
 
-        $this->assertEquals('whereYear', $this->getProtectedProperty($filter, 'query'));
+        $this->assertSame('whereYear', $this->getProtectedProperty($filter, 'query'));
     }
 
     public function test_field_name_property_is_year(): void
     {
         $filter = $this->makeFilter('created_at');
 
-        $this->assertEquals('year', $this->getProtectedProperty($filter, 'fieldName'));
+        $this->assertSame('year', $this->getProtectedProperty($filter, 'fieldName'));
     }
 
     public function test_constructor_sets_column(): void
     {
         $filter = $this->makeFilter('updated_at', 'Updated At');
 
-        $this->assertEquals('updated_at', $filter->originalColumn());
+        $this->assertSame('updated_at', $filter->originalColumn());
     }
 
     public function test_constructor_sets_label(): void
     {
         $filter = $this->makeFilter('updated_at', 'Updated At');
 
-        $this->assertEquals('Updated At', $filter->getLabel());
+        $this->assertSame('Updated At', $filter->getLabel());
     }
 }

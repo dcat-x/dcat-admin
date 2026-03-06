@@ -55,7 +55,7 @@ class HasFormResponseTest extends TestCase
         $reflection->setAccessible(true);
 
         $result = $reflection->invoke($user, 'plain string');
-        $this->assertEquals('plain string', $result);
+        $this->assertSame('plain string', $result);
     }
 
     public function test_send_response_calls_send_on_json_response(): void

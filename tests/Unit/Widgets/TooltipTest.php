@@ -24,7 +24,7 @@ class TooltipTest extends TestCase
         $property = $reflection->getProperty('selector');
         $property->setAccessible(true);
 
-        $this->assertEquals('.target-element', $property->getValue($tooltip));
+        $this->assertSame('.target-element', $property->getValue($tooltip));
     }
 
     public function test_tooltip_constructor_sets_selector(): void
@@ -35,7 +35,7 @@ class TooltipTest extends TestCase
         $property = $reflection->getProperty('selector');
         $property->setAccessible(true);
 
-        $this->assertEquals('#my-id', $property->getValue($tooltip));
+        $this->assertSame('#my-id', $property->getValue($tooltip));
     }
 
     public function test_tooltip_title(): void
@@ -49,7 +49,7 @@ class TooltipTest extends TestCase
         $property = $reflection->getProperty('title');
         $property->setAccessible(true);
 
-        $this->assertEquals('Hover text', $property->getValue($tooltip));
+        $this->assertSame('Hover text', $property->getValue($tooltip));
     }
 
     public function test_tooltip_max_width(): void
@@ -63,7 +63,7 @@ class TooltipTest extends TestCase
         $property = $reflection->getProperty('maxWidth');
         $property->setAccessible(true);
 
-        $this->assertEquals(300, $property->getValue($tooltip));
+        $this->assertSame(300, $property->getValue($tooltip));
     }
 
     public function test_tooltip_default_max_width(): void
@@ -74,7 +74,7 @@ class TooltipTest extends TestCase
         $property = $reflection->getProperty('maxWidth');
         $property->setAccessible(true);
 
-        $this->assertEquals(210, $property->getValue($tooltip));
+        $this->assertSame(210, $property->getValue($tooltip));
     }
 
     public function test_tooltip_background(): void
@@ -88,7 +88,7 @@ class TooltipTest extends TestCase
         $property = $reflection->getProperty('background');
         $property->setAccessible(true);
 
-        $this->assertEquals('#ff0000', $property->getValue($tooltip));
+        $this->assertSame('#ff0000', $property->getValue($tooltip));
     }
 
     public function test_tooltip_placement_top(): void
@@ -100,7 +100,7 @@ class TooltipTest extends TestCase
         $property = $reflection->getProperty('placement');
         $property->setAccessible(true);
 
-        $this->assertEquals(1, $property->getValue($tooltip));
+        $this->assertSame(1, $property->getValue($tooltip));
     }
 
     public function test_tooltip_placement_right(): void
@@ -112,7 +112,7 @@ class TooltipTest extends TestCase
         $property = $reflection->getProperty('placement');
         $property->setAccessible(true);
 
-        $this->assertEquals(2, $property->getValue($tooltip));
+        $this->assertSame(2, $property->getValue($tooltip));
     }
 
     public function test_tooltip_placement_bottom(): void
@@ -124,7 +124,7 @@ class TooltipTest extends TestCase
         $property = $reflection->getProperty('placement');
         $property->setAccessible(true);
 
-        $this->assertEquals(3, $property->getValue($tooltip));
+        $this->assertSame(3, $property->getValue($tooltip));
     }
 
     public function test_tooltip_placement_left(): void
@@ -136,7 +136,7 @@ class TooltipTest extends TestCase
         $property = $reflection->getProperty('placement');
         $property->setAccessible(true);
 
-        $this->assertEquals(4, $property->getValue($tooltip));
+        $this->assertSame(4, $property->getValue($tooltip));
     }
 
     public function test_tooltip_placement_unknown_defaults_to_top(): void
@@ -148,7 +148,7 @@ class TooltipTest extends TestCase
         $property = $reflection->getProperty('placement');
         $property->setAccessible(true);
 
-        $this->assertEquals(1, $property->getValue($tooltip));
+        $this->assertSame(1, $property->getValue($tooltip));
     }
 
     public function test_tooltip_default_placement(): void
@@ -159,7 +159,7 @@ class TooltipTest extends TestCase
         $property = $reflection->getProperty('placement');
         $property->setAccessible(true);
 
-        $this->assertEquals(1, $property->getValue($tooltip));
+        $this->assertSame(1, $property->getValue($tooltip));
     }
 
     public function test_tooltip_chaining(): void
@@ -174,19 +174,19 @@ class TooltipTest extends TestCase
 
         $titleProp = $reflection->getProperty('title');
         $titleProp->setAccessible(true);
-        $this->assertEquals('My tip', $titleProp->getValue($tooltip));
+        $this->assertSame('My tip', $titleProp->getValue($tooltip));
 
         $maxWidthProp = $reflection->getProperty('maxWidth');
         $maxWidthProp->setAccessible(true);
-        $this->assertEquals(400, $maxWidthProp->getValue($tooltip));
+        $this->assertSame(400, $maxWidthProp->getValue($tooltip));
 
         $bgProp = $reflection->getProperty('background');
         $bgProp->setAccessible(true);
-        $this->assertEquals('#333', $bgProp->getValue($tooltip));
+        $this->assertSame('#333', $bgProp->getValue($tooltip));
 
         $placementProp = $reflection->getProperty('placement');
         $placementProp->setAccessible(true);
-        $this->assertEquals(3, $placementProp->getValue($tooltip));
+        $this->assertSame(3, $placementProp->getValue($tooltip));
     }
 
     public function test_tooltip_render_sets_built_flag(): void

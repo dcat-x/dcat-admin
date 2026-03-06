@@ -34,7 +34,7 @@ class FeeTest extends TestCase
         $displayer = $this->makeDisplayer(10000);
         $result = $displayer->display();
 
-        $this->assertEquals('$100.00', $result);
+        $this->assertSame('$100.00', $result);
     }
 
     public function test_display_with_custom_symbol(): void
@@ -42,7 +42,7 @@ class FeeTest extends TestCase
         $displayer = $this->makeDisplayer(5099);
         $result = $displayer->display('¥');
 
-        $this->assertEquals('¥50.99', $result);
+        $this->assertSame('¥50.99', $result);
     }
 
     public function test_display_with_custom_decimals(): void
@@ -50,7 +50,7 @@ class FeeTest extends TestCase
         $displayer = $this->makeDisplayer(12345);
         $result = $displayer->display('$', 3);
 
-        $this->assertEquals('$123.450', $result);
+        $this->assertSame('$123.450', $result);
     }
 
     public function test_display_zero_value(): void
@@ -58,7 +58,7 @@ class FeeTest extends TestCase
         $displayer = $this->makeDisplayer(0);
         $result = $displayer->display();
 
-        $this->assertEquals('$0.00', $result);
+        $this->assertSame('$0.00', $result);
     }
 
     public function test_display_null_value(): void
@@ -66,7 +66,7 @@ class FeeTest extends TestCase
         $displayer = $this->makeDisplayer(null);
         $result = $displayer->display();
 
-        $this->assertEquals('$0.00', $result);
+        $this->assertSame('$0.00', $result);
     }
 
     public function test_display_small_value(): void
@@ -74,6 +74,6 @@ class FeeTest extends TestCase
         $displayer = $this->makeDisplayer(1);
         $result = $displayer->display();
 
-        $this->assertEquals('$0.01', $result);
+        $this->assertSame('$0.01', $result);
     }
 }

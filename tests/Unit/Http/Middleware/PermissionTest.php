@@ -114,7 +114,7 @@ class PermissionTest extends TestCase
 
         // 没有登录用户时，应该直接 pass through
         $this->assertTrue($called);
-        $this->assertEquals('next', $response);
+        $this->assertSame('next', $response);
     }
 
     public function test_handle_passes_through_when_permission_disabled(): void
@@ -182,7 +182,7 @@ class PermissionTest extends TestCase
             });
         } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
             $exceptionCaught = true;
-            $this->assertEquals(403, $e->getStatusCode());
+            $this->assertSame(403, $e->getStatusCode());
         }
 
         // 关键断言：$next 不应被调用
@@ -224,7 +224,7 @@ class PermissionTest extends TestCase
         });
 
         $this->assertTrue($called);
-        $this->assertEquals('next', $response);
+        $this->assertSame('next', $response);
     }
 
     public function test_should_pass_through_returns_false_for_unmatched_route(): void

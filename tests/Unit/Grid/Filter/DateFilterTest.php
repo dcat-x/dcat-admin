@@ -35,14 +35,14 @@ class DateFilterTest extends TestCase
     {
         $filter = $this->makeFilter('created_at');
 
-        $this->assertEquals('whereDate', $this->getProtectedProperty($filter, 'query'));
+        $this->assertSame('whereDate', $this->getProtectedProperty($filter, 'query'));
     }
 
     public function test_field_name_property_is_date(): void
     {
         $filter = $this->makeFilter('created_at');
 
-        $this->assertEquals('date', $this->getProtectedProperty($filter, 'fieldName'));
+        $this->assertSame('date', $this->getProtectedProperty($filter, 'fieldName'));
     }
 
     public function test_extends_abstract_filter(): void
@@ -56,20 +56,20 @@ class DateFilterTest extends TestCase
     {
         $filter = $this->makeFilter('created_at', 'Created At');
 
-        $this->assertEquals('created_at', $filter->originalColumn());
+        $this->assertSame('created_at', $filter->originalColumn());
     }
 
     public function test_constructor_sets_label(): void
     {
         $filter = $this->makeFilter('created_at', 'Created At');
 
-        $this->assertEquals('Created At', $filter->getLabel());
+        $this->assertSame('Created At', $filter->getLabel());
     }
 
     public function test_constructor_without_label(): void
     {
         $filter = $this->makeFilter('created_at');
 
-        $this->assertEquals('created_at', $filter->originalColumn());
+        $this->assertSame('created_at', $filter->originalColumn());
     }
 }

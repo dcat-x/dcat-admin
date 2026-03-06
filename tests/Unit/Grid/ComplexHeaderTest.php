@@ -34,7 +34,7 @@ class ComplexHeaderTest extends TestCase
         $grid = $this->createMockGrid();
         $header = new ComplexHeader($grid, 'test_column', ['col1', 'col2'], 'Test Label');
 
-        $this->assertEquals('test_column', $header->getName());
+        $this->assertSame('test_column', $header->getName());
     }
 
     public function test_constructor_sets_label_from_parameter(): void
@@ -42,7 +42,7 @@ class ComplexHeaderTest extends TestCase
         $grid = $this->createMockGrid();
         $header = new ComplexHeader($grid, 'test_column', ['col1', 'col2'], 'My Custom Label');
 
-        $this->assertEquals('My Custom Label', $header->getLabel());
+        $this->assertSame('My Custom Label', $header->getLabel());
     }
 
     public function test_get_column_names_returns_collection(): void
@@ -53,7 +53,7 @@ class ComplexHeaderTest extends TestCase
         $result = $header->getColumnNames();
 
         $this->assertInstanceOf(Collection::class, $result);
-        $this->assertEquals(['col1', 'col2'], $result->values()->all());
+        $this->assertSame(['col1', 'col2'], $result->values()->all());
     }
 
     public function test_get_name_returns_column(): void
@@ -61,7 +61,7 @@ class ComplexHeaderTest extends TestCase
         $grid = $this->createMockGrid();
         $header = new ComplexHeader($grid, 'my_column', ['col1'], 'Label');
 
-        $this->assertEquals('my_column', $header->getName());
+        $this->assertSame('my_column', $header->getName());
     }
 
     public function test_get_label_returns_label(): void
@@ -69,7 +69,7 @@ class ComplexHeaderTest extends TestCase
         $grid = $this->createMockGrid();
         $header = new ComplexHeader($grid, 'col', ['col1'], 'Expected Label');
 
-        $this->assertEquals('Expected Label', $header->getLabel());
+        $this->assertSame('Expected Label', $header->getLabel());
     }
 
     public function test_append_adds_html_and_returns_this(): void
@@ -92,7 +92,7 @@ class ComplexHeaderTest extends TestCase
 
         $attributes = $header->getHtmlAttributes();
 
-        $this->assertEquals(2, $attributes['rowspan'] ?? null);
+        $this->assertSame(2, $attributes['rowspan'] ?? null);
         $this->assertArrayNotHasKey('colspan', $attributes);
     }
 
@@ -103,7 +103,7 @@ class ComplexHeaderTest extends TestCase
 
         $attributes = $header->getHtmlAttributes();
 
-        $this->assertEquals(3, $attributes['colspan'] ?? null);
+        $this->assertSame(3, $attributes['colspan'] ?? null);
         $this->assertArrayNotHasKey('rowspan', $attributes);
     }
 
@@ -161,7 +161,7 @@ class ComplexHeaderTest extends TestCase
 
         $this->assertInstanceOf(Collection::class, $columns);
         $this->assertCount(2, $columns);
-        $this->assertEquals('Column 1', $columns->first());
-        $this->assertEquals('Column 3', $columns->last());
+        $this->assertSame('Column 1', $columns->first());
+        $this->assertSame('Column 3', $columns->last());
     }
 }

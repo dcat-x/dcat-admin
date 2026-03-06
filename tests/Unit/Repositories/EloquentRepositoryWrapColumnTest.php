@@ -34,7 +34,7 @@ class EloquentRepositoryWrapColumnTest extends TestCase
 
         // SQLite 使用双引号，不使用反引号 — 这里断言使用了双引号
         // 如果仍然是 `column_name`（反引号），说明还在硬编码
-        $this->assertEquals('"column_name"', $result);
+        $this->assertSame('"column_name"', $result);
     }
 
     public function test_wrap_column_handles_dotted_notation(): void
@@ -52,7 +52,7 @@ class EloquentRepositoryWrapColumnTest extends TestCase
         $this->assertStringContainsString('column', $result);
 
         // SQLite grammar 应产生 "table"."column"
-        $this->assertEquals('"table"."column"', $result);
+        $this->assertSame('"table"."column"', $result);
     }
 
     public function test_wrap_column_delegates_to_connection_grammar(): void
@@ -68,6 +68,6 @@ class EloquentRepositoryWrapColumnTest extends TestCase
         $result = $reflection->invoke($repo, 'my_col');
 
         // 确认结果与直接调用 grammar->wrap() 一致
-        $this->assertEquals($grammar->wrap('my_col'), $result);
+        $this->assertSame($grammar->wrap('my_col'), $result);
     }
 }

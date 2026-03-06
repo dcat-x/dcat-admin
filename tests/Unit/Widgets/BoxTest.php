@@ -18,8 +18,8 @@ class BoxTest extends TestCase
         $box = new Box;
 
         $variables = $box->defaultVariables();
-        $this->assertEquals('Box header', $variables['title']);
-        $this->assertEquals('here is the box content.', $variables['content']);
+        $this->assertSame('Box header', $variables['title']);
+        $this->assertSame('here is the box content.', $variables['content']);
     }
 
     public function test_box_title(): void
@@ -28,7 +28,7 @@ class BoxTest extends TestCase
         $box->title('Custom Title');
 
         $variables = $box->defaultVariables();
-        $this->assertEquals('Custom Title', $variables['title']);
+        $this->assertSame('Custom Title', $variables['title']);
     }
 
     public function test_box_content(): void
@@ -37,7 +37,7 @@ class BoxTest extends TestCase
         $box->content('Custom Content');
 
         $variables = $box->defaultVariables();
-        $this->assertEquals('Custom Content', $variables['content']);
+        $this->assertSame('Custom Content', $variables['content']);
     }
 
     public function test_box_padding(): void
@@ -46,7 +46,7 @@ class BoxTest extends TestCase
         $box->padding('15px');
 
         $variables = $box->defaultVariables();
-        $this->assertEquals('padding:15px', $variables['padding']);
+        $this->assertSame('padding:15px', $variables['padding']);
     }
 
     public function test_box_tool(): void
@@ -120,9 +120,9 @@ class BoxTest extends TestCase
             ->padding('20px');
 
         $variables = $box->defaultVariables();
-        $this->assertEquals('Chained Title', $variables['title']);
-        $this->assertEquals('Chained Content', $variables['content']);
+        $this->assertSame('Chained Title', $variables['title']);
+        $this->assertSame('Chained Content', $variables['content']);
         $this->assertCount(3, $variables['tools']); // 1 custom + 1 collapse + 1 remove
-        $this->assertEquals('padding:20px', $variables['padding']);
+        $this->assertSame('padding:20px', $variables['padding']);
     }
 }

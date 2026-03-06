@@ -25,8 +25,8 @@ class FindInSetTest extends TestCase
     public function test_constructor_sets_column_and_label(): void
     {
         $filter = new FindInSet('tags', 'Tags');
-        $this->assertEquals('tags', $filter->originalColumn());
-        $this->assertEquals('Tags', $filter->getLabel());
+        $this->assertSame('tags', $filter->originalColumn());
+        $this->assertSame('Tags', $filter->getLabel());
     }
 
     public function test_condition_returns_null_when_value_is_null(): void
@@ -51,8 +51,8 @@ class FindInSetTest extends TestCase
         $filter = $this->makeFilter('tags');
         $filter->condition(['tags' => 'laravel']);
 
-        $this->assertEquals('laravel', $filter->getValue());
-        $this->assertEquals('laravel', $filter->input);
+        $this->assertSame('laravel', $filter->getValue());
+        $this->assertSame('laravel', $filter->input);
     }
 
     public function test_condition_with_numeric_value(): void

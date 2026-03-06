@@ -41,7 +41,7 @@ class SwitchDisplayTest extends TestCase
         $reflection->setAccessible(true);
         $url = $reflection->invoke($displayer);
 
-        $this->assertEquals('/admin/users/5', $url);
+        $this->assertSame('/admin/users/5', $url);
     }
 
     public function test_get_key_returns_row_key(): void
@@ -49,7 +49,7 @@ class SwitchDisplayTest extends TestCase
         $displayer = $this->makeDisplayer(1);
         $key = $displayer->getKey();
 
-        $this->assertEquals(5, $key);
+        $this->assertSame(5, $key);
     }
 
     public function test_color_sets_color_property(): void
@@ -87,7 +87,7 @@ class SwitchDisplayTest extends TestCase
         $displayer = $this->makeDisplayer(1);
         $name = $displayer->getElementName();
 
-        $this->assertEquals('is_active', $name);
+        $this->assertSame('is_active', $name);
     }
 
     public function test_element_name_with_dots(): void
@@ -105,7 +105,7 @@ class SwitchDisplayTest extends TestCase
         $displayer = new SwitchDisplay(1, $grid, $column, $row);
         $name = $displayer->getElementName();
 
-        $this->assertEquals('settings[notifications][email]', $name);
+        $this->assertSame('settings[notifications][email]', $name);
     }
 
     public function test_resource_returns_grid_resource(): void
@@ -113,6 +113,6 @@ class SwitchDisplayTest extends TestCase
         $displayer = $this->makeDisplayer(1);
         $resource = $displayer->resource();
 
-        $this->assertEquals('/admin/users', $resource);
+        $this->assertSame('/admin/users', $resource);
     }
 }

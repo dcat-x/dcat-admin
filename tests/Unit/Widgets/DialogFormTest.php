@@ -22,7 +22,7 @@ class DialogFormTest extends TestCase
         $property->setAccessible(true);
 
         $options = $property->getValue($form);
-        $this->assertEquals('My Form', $options['title']);
+        $this->assertSame('My Form', $options['title']);
     }
 
     public function test_dialog_form_title_method(): void
@@ -37,7 +37,7 @@ class DialogFormTest extends TestCase
         $property->setAccessible(true);
 
         $options = $property->getValue($form);
-        $this->assertEquals('New Title', $options['title']);
+        $this->assertSame('New Title', $options['title']);
     }
 
     public function test_dialog_form_default_options(): void
@@ -51,7 +51,7 @@ class DialogFormTest extends TestCase
         $options = $property->getValue($form);
         // Constructor calls title(null), so title becomes null
         $this->assertNull($options['title']);
-        $this->assertEquals(['700px', '670px'], $options['area']);
+        $this->assertSame(['700px', '670px'], $options['area']);
         $this->assertNull($options['defaultUrl']);
         $this->assertNull($options['buttonSelector']);
         $this->assertFalse($options['forceRefresh']);
@@ -70,7 +70,7 @@ class DialogFormTest extends TestCase
         $property->setAccessible(true);
 
         $options = $property->getValue($form);
-        $this->assertEquals('.open-dialog', $options['buttonSelector']);
+        $this->assertSame('.open-dialog', $options['buttonSelector']);
     }
 
     public function test_dialog_form_force_refresh(): void
@@ -128,7 +128,7 @@ class DialogFormTest extends TestCase
         $property->setAccessible(true);
 
         $options = $property->getValue($form);
-        $this->assertEquals(['800px', '500px'], $options['area']);
+        $this->assertSame(['800px', '500px'], $options['area']);
     }
 
     public function test_dialog_form_width(): void
@@ -143,9 +143,9 @@ class DialogFormTest extends TestCase
         $property->setAccessible(true);
 
         $options = $property->getValue($form);
-        $this->assertEquals('900px', $options['area'][0]);
+        $this->assertSame('900px', $options['area'][0]);
         // Height should remain default
-        $this->assertEquals('670px', $options['area'][1]);
+        $this->assertSame('670px', $options['area'][1]);
     }
 
     public function test_dialog_form_height(): void
@@ -160,8 +160,8 @@ class DialogFormTest extends TestCase
         $property->setAccessible(true);
 
         $options = $property->getValue($form);
-        $this->assertEquals('700px', $options['area'][0]);
-        $this->assertEquals('400px', $options['area'][1]);
+        $this->assertSame('700px', $options['area'][0]);
+        $this->assertSame('400px', $options['area'][1]);
     }
 
     public function test_dialog_form_saved_handler(): void
@@ -176,7 +176,7 @@ class DialogFormTest extends TestCase
         $property->setAccessible(true);
 
         $handlers = $property->getValue($form);
-        $this->assertEquals('console.log("saved")', $handlers['saved']);
+        $this->assertSame('console.log("saved")', $handlers['saved']);
     }
 
     public function test_dialog_form_success_handler(): void
@@ -191,7 +191,7 @@ class DialogFormTest extends TestCase
         $property->setAccessible(true);
 
         $handlers = $property->getValue($form);
-        $this->assertEquals('alert("ok")', $handlers['success']);
+        $this->assertSame('alert("ok")', $handlers['success']);
     }
 
     public function test_dialog_form_error_handler(): void
@@ -206,7 +206,7 @@ class DialogFormTest extends TestCase
         $property->setAccessible(true);
 
         $handlers = $property->getValue($form);
-        $this->assertEquals('alert("error")', $handlers['error']);
+        $this->assertSame('alert("error")', $handlers['error']);
     }
 
     public function test_dialog_form_default_handlers(): void
@@ -235,7 +235,7 @@ class DialogFormTest extends TestCase
         $property->setAccessible(true);
 
         $options = $property->getValue($form);
-        $this->assertEquals('Merged', $options['title']);
+        $this->assertSame('Merged', $options['title']);
         $this->assertTrue($options['forceRefresh']);
         // Other defaults should remain
         $this->assertTrue($options['resetButton']);
@@ -243,12 +243,12 @@ class DialogFormTest extends TestCase
 
     public function test_dialog_form_query_name_constant(): void
     {
-        $this->assertEquals('_dialog_form_', DialogForm::QUERY_NAME);
+        $this->assertSame('_dialog_form_', DialogForm::QUERY_NAME);
     }
 
     public function test_dialog_form_content_view(): void
     {
-        $this->assertEquals('admin::layouts.form-content', DialogForm::$contentView);
+        $this->assertSame('admin::layouts.form-content', DialogForm::$contentView);
     }
 
     public function test_dialog_form_chaining(): void
@@ -269,9 +269,9 @@ class DialogFormTest extends TestCase
         $optionsProp->setAccessible(true);
         $options = $optionsProp->getValue($form);
 
-        $this->assertEquals('Chain Test', $options['title']);
-        $this->assertEquals('#open-btn', $options['buttonSelector']);
-        $this->assertEquals(['50%', '60%'], $options['area']);
+        $this->assertSame('Chain Test', $options['title']);
+        $this->assertSame('#open-btn', $options['buttonSelector']);
+        $this->assertSame(['50%', '60%'], $options['area']);
         $this->assertTrue($options['forceRefresh']);
         $this->assertFalse($options['resetButton']);
 
@@ -279,8 +279,8 @@ class DialogFormTest extends TestCase
         $handlersProp->setAccessible(true);
         $handlers = $handlersProp->getValue($form);
 
-        $this->assertEquals('console.log("done")', $handlers['saved']);
-        $this->assertEquals('location.reload()', $handlers['success']);
-        $this->assertEquals('alert("fail")', $handlers['error']);
+        $this->assertSame('console.log("done")', $handlers['saved']);
+        $this->assertSame('location.reload()', $handlers['success']);
+        $this->assertSame('alert("fail")', $handlers['error']);
     }
 }

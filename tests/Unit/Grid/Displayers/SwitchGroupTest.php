@@ -52,7 +52,7 @@ class SwitchGroupTest extends TestCase
         $displayer = $this->makeDisplayer(null);
         $key = $displayer->getKey();
 
-        $this->assertEquals(1, $key);
+        $this->assertSame(1, $key);
     }
 
     public function test_resource_returns_grid_resource(): void
@@ -60,7 +60,7 @@ class SwitchGroupTest extends TestCase
         $displayer = $this->makeDisplayer(null);
         $resource = $displayer->resource();
 
-        $this->assertEquals('/admin/users', $resource);
+        $this->assertSame('/admin/users', $resource);
     }
 
     public function test_color_sets_color_property(): void

@@ -42,27 +42,27 @@ class MonthFilterTest extends TestCase
     {
         $filter = $this->makeFilter('created_at');
 
-        $this->assertEquals('whereMonth', $this->getProtectedProperty($filter, 'query'));
+        $this->assertSame('whereMonth', $this->getProtectedProperty($filter, 'query'));
     }
 
     public function test_field_name_property_is_month(): void
     {
         $filter = $this->makeFilter('created_at');
 
-        $this->assertEquals('month', $this->getProtectedProperty($filter, 'fieldName'));
+        $this->assertSame('month', $this->getProtectedProperty($filter, 'fieldName'));
     }
 
     public function test_constructor_sets_column(): void
     {
         $filter = $this->makeFilter('published_at', 'Published At');
 
-        $this->assertEquals('published_at', $filter->originalColumn());
+        $this->assertSame('published_at', $filter->originalColumn());
     }
 
     public function test_constructor_sets_label(): void
     {
         $filter = $this->makeFilter('published_at', 'Published At');
 
-        $this->assertEquals('Published At', $filter->getLabel());
+        $this->assertSame('Published At', $filter->getLabel());
     }
 }

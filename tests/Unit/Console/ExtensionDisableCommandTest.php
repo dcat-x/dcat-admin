@@ -44,7 +44,7 @@ class ExtensionDisableCommandTest extends TestCase
         $ref = new \ReflectionProperty(ExtensionDiableCommand::class, 'description');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('Disable an existing extension', $defaultValue);
+        $this->assertSame('Disable an existing extension', $defaultValue);
     }
 
     public function test_handle_signature_is_public_and_parameterless(): void

@@ -52,14 +52,14 @@ class HelpTest extends TestCase
 
         $messageRef = new \ReflectionProperty(Help::class, 'message');
         $messageRef->setAccessible(true);
-        $this->assertEquals('msg', $messageRef->getValue($help));
+        $this->assertSame('msg', $messageRef->getValue($help));
 
         $styleRef = new \ReflectionProperty(Help::class, 'style');
         $styleRef->setAccessible(true);
-        $this->assertEquals('green', $styleRef->getValue($help));
+        $this->assertSame('green', $styleRef->getValue($help));
 
         $placementRef = new \ReflectionProperty(Help::class, 'placement');
         $placementRef->setAccessible(true);
-        $this->assertEquals('top', $placementRef->getValue($help));
+        $this->assertSame('top', $placementRef->getValue($help));
     }
 }

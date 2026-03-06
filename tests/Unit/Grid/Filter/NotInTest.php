@@ -26,8 +26,8 @@ class NotInTest extends TestCase
     {
         $filter = new NotIn('status', 'Exclude Status');
 
-        $this->assertEquals('status', $filter->originalColumn());
-        $this->assertEquals('Exclude Status', $filter->getLabel());
+        $this->assertSame('status', $filter->originalColumn());
+        $this->assertSame('Exclude Status', $filter->getLabel());
     }
 
     public function test_condition_returns_where_not_in_with_array_value(): void
@@ -37,7 +37,7 @@ class NotInTest extends TestCase
         $condition = $filter->condition(['status' => ['deleted', 'banned']]);
 
         $this->assertConditionHasWhereNotIn($condition);
-        $this->assertEquals(['status', ['deleted', 'banned']], $condition['whereNotIn']);
+        $this->assertSame(['status', ['deleted', 'banned']], $condition['whereNotIn']);
     }
 
     public function test_condition_splits_comma_separated_string(): void
@@ -47,7 +47,7 @@ class NotInTest extends TestCase
         $condition = $filter->condition(['status' => 'deleted,banned']);
 
         $this->assertConditionHasWhereNotIn($condition);
-        $this->assertEquals(['status', ['deleted', 'banned']], $condition['whereNotIn']);
+        $this->assertSame(['status', ['deleted', 'banned']], $condition['whereNotIn']);
     }
 
     public function test_condition_returns_null_when_value_is_null(): void
@@ -66,7 +66,7 @@ class NotInTest extends TestCase
         $condition = $filter->condition(['role' => 'admin']);
 
         $this->assertConditionHasWhereNotIn($condition);
-        $this->assertEquals(['role', ['admin']], $condition['whereNotIn']);
+        $this->assertSame(['role', ['admin']], $condition['whereNotIn']);
     }
 
     public function test_condition_sets_array_value_on_filter(): void
@@ -75,7 +75,7 @@ class NotInTest extends TestCase
 
         $filter->condition(['status' => ['x', 'y']]);
 
-        $this->assertEquals(['x', 'y'], $filter->getValue());
+        $this->assertSame(['x', 'y'], $filter->getValue());
     }
 
     public function test_ignore_returns_null_condition(): void

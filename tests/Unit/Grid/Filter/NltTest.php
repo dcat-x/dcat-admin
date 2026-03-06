@@ -34,15 +34,15 @@ class NltTest extends TestCase
     {
         $filter = $this->makeFilter('price');
 
-        $this->assertEquals('admin::filter.lt', $this->getProtectedProperty($filter, 'view'));
+        $this->assertSame('admin::filter.lt', $this->getProtectedProperty($filter, 'view'));
     }
 
     public function test_constructor_sets_column_and_label(): void
     {
         $filter = new Nlt('price', 'Min Price');
 
-        $this->assertEquals('price', $filter->originalColumn());
-        $this->assertEquals('Min Price', $filter->getLabel());
+        $this->assertSame('price', $filter->originalColumn());
+        $this->assertSame('Min Price', $filter->getLabel());
     }
 
     public function test_condition_returns_where_with_gte_operator(): void
@@ -52,7 +52,7 @@ class NltTest extends TestCase
         $condition = $filter->condition(['price' => '100']);
 
         $this->assertConditionHasWhere($condition);
-        $this->assertEquals(['price', '>=', '100'], $condition['where']);
+        $this->assertSame(['price', '>=', '100'], $condition['where']);
     }
 
     public function test_condition_returns_null_when_value_is_null(): void
@@ -70,7 +70,7 @@ class NltTest extends TestCase
 
         $filter->condition(['price' => '50']);
 
-        $this->assertEquals('50', $filter->getValue());
+        $this->assertSame('50', $filter->getValue());
     }
 
     public function test_condition_with_zero_value(): void
@@ -80,7 +80,7 @@ class NltTest extends TestCase
         $condition = $filter->condition(['score' => '0']);
 
         $this->assertConditionHasWhere($condition);
-        $this->assertEquals(['score', '>=', '0'], $condition['where']);
+        $this->assertSame(['score', '>=', '0'], $condition['where']);
     }
 
     public function test_ignore_returns_null_condition(): void

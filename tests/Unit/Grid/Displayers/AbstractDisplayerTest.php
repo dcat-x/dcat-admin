@@ -59,7 +59,7 @@ class AbstractDisplayerTest extends TestCase
         $displayer = $this->createConcreteDisplayer('test', $grid, $column, $row);
 
         $this->assertInstanceOf(Fluent::class, $displayer->row);
-        $this->assertEquals(1, $displayer->row->id);
+        $this->assertSame(1, $displayer->row->id);
     }
 
     public function test_get_key(): void
@@ -69,7 +69,7 @@ class AbstractDisplayerTest extends TestCase
 
         $displayer = $this->createConcreteDisplayer('test', $grid, $column, $row);
 
-        $this->assertEquals(42, $displayer->getKey());
+        $this->assertSame(42, $displayer->getKey());
     }
 
     public function test_resource(): void
@@ -79,7 +79,7 @@ class AbstractDisplayerTest extends TestCase
 
         $displayer = $this->createConcreteDisplayer('test', $grid, $column, $row);
 
-        $this->assertEquals('/admin/users', $displayer->resource());
+        $this->assertSame('/admin/users', $displayer->resource());
     }
 
     public function test_display_returns_value(): void
@@ -89,7 +89,7 @@ class AbstractDisplayerTest extends TestCase
 
         $displayer = $this->createConcreteDisplayer('Hello', $grid, $column, $row);
 
-        $this->assertEquals('Hello', $displayer->display());
+        $this->assertSame('Hello', $displayer->display());
     }
 
     public function test_get_element_name_simple(): void
@@ -99,7 +99,7 @@ class AbstractDisplayerTest extends TestCase
 
         $displayer = $this->createConcreteDisplayer('test', $grid, $column, $row);
 
-        $this->assertEquals('name', $displayer->getElementName());
+        $this->assertSame('name', $displayer->getElementName());
     }
 
     public function test_get_element_name_nested(): void
@@ -113,6 +113,6 @@ class AbstractDisplayerTest extends TestCase
         $row = ['id' => 1];
         $displayer = $this->createConcreteDisplayer('test', $grid, $column, $row);
 
-        $this->assertEquals('address[city]', $displayer->getElementName());
+        $this->assertSame('address[city]', $displayer->getElementName());
     }
 }

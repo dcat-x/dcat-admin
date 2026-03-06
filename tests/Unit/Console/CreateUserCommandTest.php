@@ -35,7 +35,7 @@ class CreateUserCommandTest extends TestCase
         $ref = new \ReflectionProperty(CreateUserCommand::class, 'signature');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('admin:create-user', $defaultValue);
+        $this->assertSame('admin:create-user', $defaultValue);
     }
 
     public function test_description_default_value(): void
@@ -43,7 +43,7 @@ class CreateUserCommandTest extends TestCase
         $ref = new \ReflectionProperty(CreateUserCommand::class, 'description');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('Create a admin user', $defaultValue);
+        $this->assertSame('Create a admin user', $defaultValue);
     }
 
     public function test_handle_method_signature(): void

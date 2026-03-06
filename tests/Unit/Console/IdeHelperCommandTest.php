@@ -50,7 +50,7 @@ class IdeHelperCommandTest extends TestCase
         $ref = new \ReflectionProperty(IdeHelperCommand::class, 'description');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('Create the ide-helper file', $defaultValue);
+        $this->assertSame('Create the ide-helper file', $defaultValue);
     }
 
     public function test_patterns_is_array_with_five_keys(): void
@@ -94,7 +94,7 @@ class IdeHelperCommandTest extends TestCase
         $ref = new \ReflectionProperty(IdeHelperCommand::class, 'path');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('dcat_admin_ide_helper.php', $defaultValue);
+        $this->assertSame('dcat_admin_ide_helper.php', $defaultValue);
     }
 
     #[DataProvider('requiredMethodProvider')]

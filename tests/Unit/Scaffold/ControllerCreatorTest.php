@@ -105,7 +105,7 @@ class ControllerCreatorTest extends TestCase
         $ref = new \ReflectionProperty($creator, 'name');
         $ref->setAccessible(true);
 
-        $this->assertEquals('App\\Admin\\Controllers\\PostController', $ref->getValue($creator));
+        $this->assertSame('App\\Admin\\Controllers\\PostController', $ref->getValue($creator));
     }
 
     public function test_constructor_uses_app_files_when_null(): void

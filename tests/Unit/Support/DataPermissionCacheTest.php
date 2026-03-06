@@ -89,7 +89,7 @@ class DataPermissionCacheTest extends TestCase
         $this->assertArrayNotHasKey('old_data', $cache);
 
         // 新请求哈希应更新
-        $this->assertEquals(spl_object_id($request2), $hashRef->getValue());
+        $this->assertSame(spl_object_id($request2), $hashRef->getValue());
     }
 
     public function test_cache_persists_within_same_request(): void
@@ -117,7 +117,7 @@ class DataPermissionCacheTest extends TestCase
         // 返回的应该是缓存的集合
         $this->assertSame($cachedResult, $result);
         $this->assertCount(1, $result);
-        $this->assertEquals('cached_rule', $result->first());
+        $this->assertSame('cached_rule', $result->first());
     }
 
     public function test_cache_key_is_user_and_menu_specific(): void

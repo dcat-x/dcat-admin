@@ -48,7 +48,7 @@ class SizeableTest extends TestCase
 
         $reflection = new \ReflectionProperty($user, 'size');
         $reflection->setAccessible(true);
-        $this->assertEquals('sm', $reflection->getValue($user));
+        $this->assertSame('sm', $reflection->getValue($user));
     }
 
     public function test_large_sets_lg_size(): void
@@ -60,7 +60,7 @@ class SizeableTest extends TestCase
 
         $reflection = new \ReflectionProperty($user, 'size');
         $reflection->setAccessible(true);
-        $this->assertEquals('lg', $reflection->getValue($user));
+        $this->assertSame('lg', $reflection->getValue($user));
     }
 
     public function test_size_sets_custom_value(): void
@@ -72,7 +72,7 @@ class SizeableTest extends TestCase
 
         $reflection = new \ReflectionProperty($user, 'size');
         $reflection->setAccessible(true);
-        $this->assertEquals('xl', $reflection->getValue($user));
+        $this->assertSame('xl', $reflection->getValue($user));
     }
 
     public function test_size_can_be_null(): void
@@ -116,6 +116,6 @@ class SizeableTest extends TestCase
 
         $reflection = new \ReflectionProperty($user, 'size');
         $reflection->setAccessible(true);
-        $this->assertEquals('', $reflection->getValue($user));
+        $this->assertSame('', $reflection->getValue($user));
     }
 }

@@ -10,13 +10,13 @@ class ColumnTest extends TestCase
     public function test_column_name(): void
     {
         $column = new Column('name', 'Name');
-        $this->assertEquals('name', $column->getName());
+        $this->assertSame('name', $column->getName());
     }
 
     public function test_column_label(): void
     {
         $column = new Column('name', 'Name Label');
-        $this->assertEquals('Name Label', $column->getLabel());
+        $this->assertSame('Name Label', $column->getLabel());
     }
 
     public function test_column_label_auto_format(): void
@@ -41,8 +41,8 @@ class ColumnTest extends TestCase
         $column->setAttributes(['class' => 'custom-class', 'data-id' => '123']);
 
         $attributes = $column->getAttributes();
-        $this->assertEquals('custom-class', $attributes['class']);
-        $this->assertEquals('123', $attributes['data-id']);
+        $this->assertSame('custom-class', $attributes['class']);
+        $this->assertSame('123', $attributes['data-id']);
     }
 
     public function test_column_style(): void
@@ -53,7 +53,7 @@ class ColumnTest extends TestCase
         // style 返回 $this
         $this->assertInstanceOf(Column::class, $result);
         $attributes = $column->getAttributes();
-        $this->assertEquals('color: red;', $attributes['style']);
+        $this->assertSame('color: red;', $attributes['style']);
     }
 
     public function test_column_extensions(): void
@@ -74,13 +74,13 @@ class ColumnTest extends TestCase
     {
         $column = new Column('name', 'Name');
         $column->setOriginal('original_value');
-        $this->assertEquals('original_value', $column->getOriginal());
+        $this->assertSame('original_value', $column->getOriginal());
     }
 
     public function test_column_constants(): void
     {
-        $this->assertEquals('__row_selector__', Column::SELECT_COLUMN_NAME);
-        $this->assertEquals('__actions__', Column::ACTION_COLUMN_NAME);
+        $this->assertSame('__row_selector__', Column::SELECT_COLUMN_NAME);
+        $this->assertSame('__actions__', Column::ACTION_COLUMN_NAME);
     }
 
     private function assertArrayContainsKeys(array $expectedKeys, array $actual): void

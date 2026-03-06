@@ -34,14 +34,14 @@ class ToggleFilterTest extends TestCase
     {
         $filter = $this->makeFilter('active');
 
-        $this->assertEquals(1, $this->getProtectedProperty($filter, 'onValue'));
+        $this->assertSame(1, $this->getProtectedProperty($filter, 'onValue'));
     }
 
     public function test_default_off_value_is_zero(): void
     {
         $filter = $this->makeFilter('active');
 
-        $this->assertEquals(0, $this->getProtectedProperty($filter, 'offValue'));
+        $this->assertSame(0, $this->getProtectedProperty($filter, 'offValue'));
     }
 
     public function test_values_setter_is_fluent(): void
@@ -59,8 +59,8 @@ class ToggleFilterTest extends TestCase
 
         $filter->values('yes', 'no');
 
-        $this->assertEquals('yes', $this->getProtectedProperty($filter, 'onValue'));
-        $this->assertEquals('no', $this->getProtectedProperty($filter, 'offValue'));
+        $this->assertSame('yes', $this->getProtectedProperty($filter, 'onValue'));
+        $this->assertSame('no', $this->getProtectedProperty($filter, 'offValue'));
     }
 
     public function test_condition_returns_null_when_value_is_null(): void
@@ -88,7 +88,7 @@ class ToggleFilterTest extends TestCase
         $condition = $filter->condition(['active' => '1']);
 
         $this->assertConditionHasWhere($condition);
-        $this->assertEquals(['active', '1'], $condition['where']);
+        $this->assertSame(['active', '1'], $condition['where']);
     }
 
     public function test_condition_sets_value_on_filter(): void
@@ -97,7 +97,7 @@ class ToggleFilterTest extends TestCase
 
         $filter->condition(['active' => '1']);
 
-        $this->assertEquals('1', $filter->getValue());
+        $this->assertSame('1', $filter->getValue());
     }
 
     private function assertConditionHasWhere(mixed $condition): void

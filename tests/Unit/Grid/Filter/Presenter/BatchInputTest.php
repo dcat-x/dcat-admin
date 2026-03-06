@@ -44,7 +44,7 @@ class BatchInputTest extends TestCase
     {
         $batch = $this->makeBatchInput();
 
-        $this->assertEquals('admin::filter.batchinput', $batch->view());
+        $this->assertSame('admin::filter.batchinput', $batch->view());
     }
 
     // ===== Constructor =====
@@ -53,7 +53,7 @@ class BatchInputTest extends TestCase
     {
         $batch = $this->makeBatchInput('/api/custom-lookup');
 
-        $this->assertEquals('/api/custom-lookup', $this->getProtectedProperty($batch, 'lookupUrl'));
+        $this->assertSame('/api/custom-lookup', $this->getProtectedProperty($batch, 'lookupUrl'));
     }
 
     public function test_constructor_generates_id(): void
@@ -62,7 +62,7 @@ class BatchInputTest extends TestCase
         $id = $this->getProtectedProperty($batch, 'id');
 
         $this->assertStringStartsWith('batch-input-', $id);
-        $this->assertEquals(20, strlen($id)); // 'batch-input-' (12) + random(8)
+        $this->assertSame(20, strlen($id)); // 'batch-input-' (12) + random(8)
     }
 
     public function test_constructor_generates_unique_ids(): void
@@ -147,7 +147,7 @@ class BatchInputTest extends TestCase
 
         $batch->validationPattern('^\d{6}$');
 
-        $this->assertEquals('^\d{6}$', $this->getProtectedProperty($batch, 'validationPattern'));
+        $this->assertSame('^\d{6}$', $this->getProtectedProperty($batch, 'validationPattern'));
     }
 
     public function test_validation_pattern_sets_message(): void
@@ -156,7 +156,7 @@ class BatchInputTest extends TestCase
 
         $batch->validationPattern('^\d+$', 'Must be numeric');
 
-        $this->assertEquals('Must be numeric', $this->getProtectedProperty($batch, 'validationMessage'));
+        $this->assertSame('Must be numeric', $this->getProtectedProperty($batch, 'validationMessage'));
     }
 
     public function test_validation_pattern_without_message_keeps_empty(): void
@@ -165,7 +165,7 @@ class BatchInputTest extends TestCase
 
         $batch->validationPattern('^\d+$');
 
-        $this->assertEquals('', $this->getProtectedProperty($batch, 'validationMessage'));
+        $this->assertSame('', $this->getProtectedProperty($batch, 'validationMessage'));
     }
 
     public function test_model_is_fluent(): void
@@ -181,7 +181,7 @@ class BatchInputTest extends TestCase
 
         $batch->model('App\\Models\\User');
 
-        $this->assertEquals('App\\Models\\User', $this->getProtectedProperty($batch, 'model'));
+        $this->assertSame('App\\Models\\User', $this->getProtectedProperty($batch, 'model'));
     }
 
     public function test_model_sets_key_and_text(): void
@@ -190,8 +190,8 @@ class BatchInputTest extends TestCase
 
         $batch->model('App\\Models\\User', 'uid', 'username');
 
-        $this->assertEquals('uid', $this->getProtectedProperty($batch, 'modelKey'));
-        $this->assertEquals('username', $this->getProtectedProperty($batch, 'modelText'));
+        $this->assertSame('uid', $this->getProtectedProperty($batch, 'modelKey'));
+        $this->assertSame('username', $this->getProtectedProperty($batch, 'modelText'));
     }
 
     public function test_model_uses_default_key_and_text(): void
@@ -200,8 +200,8 @@ class BatchInputTest extends TestCase
 
         $batch->model('App\\Models\\User');
 
-        $this->assertEquals('id', $this->getProtectedProperty($batch, 'modelKey'));
-        $this->assertEquals('name', $this->getProtectedProperty($batch, 'modelText'));
+        $this->assertSame('id', $this->getProtectedProperty($batch, 'modelKey'));
+        $this->assertSame('name', $this->getProtectedProperty($batch, 'modelText'));
     }
 
     // ===== Fluent chaining =====
@@ -224,11 +224,11 @@ class BatchInputTest extends TestCase
             ->model('App\\Models\\User', 'id', 'name');
 
         $this->assertSame($batch, $result);
-        $this->assertEquals('Search...', $this->getProtectedProperty($batch, 'placeholder'));
-        $this->assertEquals('Batch Lookup', $this->getProtectedProperty($batch, 'batchTitle'));
-        $this->assertEquals(50, $this->getProtectedProperty($batch, 'batchMax'));
-        $this->assertEquals('Enter IDs here...', $this->getProtectedProperty($batch, 'batchPlaceholder'));
-        $this->assertEquals('ids', $this->getProtectedProperty($batch, 'queryField'));
+        $this->assertSame('Search...', $this->getProtectedProperty($batch, 'placeholder'));
+        $this->assertSame('Batch Lookup', $this->getProtectedProperty($batch, 'batchTitle'));
+        $this->assertSame(50, $this->getProtectedProperty($batch, 'batchMax'));
+        $this->assertSame('Enter IDs here...', $this->getProtectedProperty($batch, 'batchPlaceholder'));
+        $this->assertSame('ids', $this->getProtectedProperty($batch, 'queryField'));
     }
 
     // ===== Protected methods =====
@@ -246,7 +246,7 @@ class BatchInputTest extends TestCase
         $filter->method('getDefault')->willReturn(null);
         $batch->setParent($filter);
 
-        $this->assertEquals([], $ref->invoke($batch));
+        $this->assertSame([], $ref->invoke($batch));
     }
 
     public function test_resolve_display_items_returns_empty_when_value_is_empty(): void
@@ -261,7 +261,7 @@ class BatchInputTest extends TestCase
         $ref = new \ReflectionMethod($batch, 'resolveDisplayItems');
         $ref->setAccessible(true);
 
-        $this->assertEquals([], $ref->invoke($batch));
+        $this->assertSame([], $ref->invoke($batch));
     }
 
     public function test_resolve_display_items_returns_empty_when_no_model(): void
@@ -277,7 +277,7 @@ class BatchInputTest extends TestCase
         $ref->setAccessible(true);
 
         // model is null, so should return empty
-        $this->assertEquals([], $ref->invoke($batch));
+        $this->assertSame([], $ref->invoke($batch));
     }
 
     public function test_add_script_is_protected(): void

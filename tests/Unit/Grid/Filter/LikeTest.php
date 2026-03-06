@@ -26,8 +26,8 @@ class LikeTest extends TestCase
     {
         $filter = new Like('name', 'Name');
 
-        $this->assertEquals('name', $filter->originalColumn());
-        $this->assertEquals('Name', $filter->getLabel());
+        $this->assertSame('name', $filter->originalColumn());
+        $this->assertSame('Name', $filter->getLabel());
     }
 
     public function test_condition_returns_where_with_like_operator(): void
@@ -37,7 +37,7 @@ class LikeTest extends TestCase
         $condition = $filter->condition(['name' => 'john']);
 
         $this->assertConditionHasWhere($condition);
-        $this->assertEquals(['name', 'like', '%john%'], $condition['where']);
+        $this->assertSame(['name', 'like', '%john%'], $condition['where']);
     }
 
     public function test_condition_wraps_value_with_wildcards(): void
@@ -46,7 +46,7 @@ class LikeTest extends TestCase
 
         $condition = $filter->condition(['title' => 'test']);
 
-        $this->assertEquals('%test%', $condition['where'][2]);
+        $this->assertSame('%test%', $condition['where'][2]);
     }
 
     public function test_condition_returns_null_when_value_is_null(): void
@@ -65,7 +65,7 @@ class LikeTest extends TestCase
         $condition = $filter->condition(['name' => '']);
 
         $this->assertConditionHasWhere($condition);
-        $this->assertEquals(['name', 'like', '%%'], $condition['where']);
+        $this->assertSame(['name', 'like', '%%'], $condition['where']);
     }
 
     public function test_condition_sets_value_on_filter(): void
@@ -74,7 +74,7 @@ class LikeTest extends TestCase
 
         $filter->condition(['name' => 'search_term']);
 
-        $this->assertEquals('search_term', $filter->getValue());
+        $this->assertSame('search_term', $filter->getValue());
     }
 
     public function test_ignore_returns_null_condition(): void

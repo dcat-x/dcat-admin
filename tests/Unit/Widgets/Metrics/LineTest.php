@@ -29,7 +29,7 @@ class LineTest extends TestCase
     {
         $line = new Line;
 
-        $this->assertEquals(57, $this->getProtectedProperty($line, 'chartHeight'));
+        $this->assertSame(57, $this->getProtectedProperty($line, 'chartHeight'));
     }
 
     public function test_chart_options_type_is_area(): void
@@ -38,7 +38,7 @@ class LineTest extends TestCase
 
         $options = $this->getProtectedProperty($line, 'chartOptions');
 
-        $this->assertEquals('area', $options['chart']['type']);
+        $this->assertSame('area', $options['chart']['type']);
     }
 
     public function test_chart_options_sparkline_enabled(): void
@@ -56,7 +56,7 @@ class LineTest extends TestCase
 
         $options = $this->getProtectedProperty($line, 'chartOptions');
 
-        $this->assertEquals('smooth', $options['stroke']['curve']);
+        $this->assertSame('smooth', $options['stroke']['curve']);
     }
 
     public function test_chart_straight_fluent(): void
@@ -74,7 +74,7 @@ class LineTest extends TestCase
 
         $options = $this->getProtectedProperty($line, 'chartOptions');
 
-        $this->assertEquals('straight', $options['stroke']['curve']);
+        $this->assertSame('straight', $options['stroke']['curve']);
     }
 
     public function test_chart_smooth_fluent(): void
@@ -93,7 +93,7 @@ class LineTest extends TestCase
 
         $options = $this->getProtectedProperty($line, 'chartOptions');
 
-        $this->assertEquals('smooth', $options['stroke']['curve']);
+        $this->assertSame('smooth', $options['stroke']['curve']);
     }
 
     public function test_init_creates_chart(): void

@@ -59,7 +59,7 @@ class WebUploaderTest extends TestCase
         $ref = new \ReflectionMethod(WebUploader::class, 'handle');
         $params = $ref->getParameters();
 
-        $this->assertEquals('request', $params[0]->getName());
+        $this->assertSame('request', $params[0]->getName());
     }
 
     public function test_handle_second_parameter_is_next(): void
@@ -67,7 +67,7 @@ class WebUploaderTest extends TestCase
         $ref = new \ReflectionMethod(WebUploader::class, 'handle');
         $params = $ref->getParameters();
 
-        $this->assertEquals('next', $params[1]->getName());
+        $this->assertSame('next', $params[1]->getName());
     }
 
     public function test_handle_request_parameter_is_typed(): void
@@ -76,7 +76,7 @@ class WebUploaderTest extends TestCase
         $params = $ref->getParameters();
 
         $this->assertNotNull($params[0]->getType());
-        $this->assertEquals('Illuminate\Http\Request', $params[0]->getType()->getName());
+        $this->assertSame('Illuminate\Http\Request', $params[0]->getType()->getName());
     }
 
     public function test_handle_next_parameter_is_closure(): void
@@ -85,6 +85,6 @@ class WebUploaderTest extends TestCase
         $params = $ref->getParameters();
 
         $this->assertNotNull($params[1]->getType());
-        $this->assertEquals('Closure', $params[1]->getType()->getName());
+        $this->assertSame('Closure', $params[1]->getType()->getName());
     }
 }

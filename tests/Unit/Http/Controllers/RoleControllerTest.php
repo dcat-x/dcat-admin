@@ -40,7 +40,7 @@ class RoleControllerTest extends TestCase
 
         $result = $controller->title();
 
-        $this->assertEquals(trans('admin.roles'), $result);
+        $this->assertSame(trans('admin.roles'), $result);
         $this->assertIsString($result);
     }
 

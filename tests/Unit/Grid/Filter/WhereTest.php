@@ -27,8 +27,8 @@ class WhereTest extends TestCase
         $query = function ($q) {};
         $filter = new Where('keyword', $query, 'Keyword');
 
-        $this->assertEquals('keyword', $filter->originalColumn());
-        $this->assertEquals('Keyword', $filter->getLabel());
+        $this->assertSame('keyword', $filter->originalColumn());
+        $this->assertSame('Keyword', $filter->getLabel());
     }
 
     public function test_condition_returns_null_when_value_is_null(): void
@@ -59,8 +59,8 @@ class WhereTest extends TestCase
         $filter = $this->makeFilter('keyword', $query);
         $filter->condition(['keyword' => 'hello']);
 
-        $this->assertEquals('hello', $filter->getValue());
-        $this->assertEquals('hello', $filter->input);
+        $this->assertSame('hello', $filter->getValue());
+        $this->assertSame('hello', $filter->input);
     }
 
     public function test_condition_with_complex_closure(): void
@@ -93,7 +93,7 @@ class WhereTest extends TestCase
         $mockQuery = $this->createMock(\Illuminate\Database\Query\Builder::class);
         $closure($mockQuery);
 
-        $this->assertEquals('bound_test', $capturedInput);
+        $this->assertSame('bound_test', $capturedInput);
     }
 
     private function assertConditionHasWhere(mixed $condition): void

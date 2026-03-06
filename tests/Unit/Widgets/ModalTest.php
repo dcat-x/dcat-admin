@@ -20,7 +20,7 @@ class ModalTest extends TestCase
         $this->assertSame($modal, $result);
         $ref = new \ReflectionProperty($modal, 'title');
         $ref->setAccessible(true);
-        $this->assertEquals('My Title', $ref->getValue($modal));
+        $this->assertSame('My Title', $ref->getValue($modal));
     }
 
     public function test_content_sets_string(): void
@@ -30,7 +30,7 @@ class ModalTest extends TestCase
         $this->assertSame($modal, $result);
         $ref = new \ReflectionProperty($modal, 'content');
         $ref->setAccessible(true);
-        $this->assertEquals('My Content', $ref->getValue($modal));
+        $this->assertSame('My Content', $ref->getValue($modal));
     }
 
     public function test_body_is_alias_for_content(): void
@@ -39,7 +39,7 @@ class ModalTest extends TestCase
         $modal->body('Body Content');
         $ref = new \ReflectionProperty($modal, 'content');
         $ref->setAccessible(true);
-        $this->assertEquals('Body Content', $ref->getValue($modal));
+        $this->assertSame('Body Content', $ref->getValue($modal));
     }
 
     public function test_footer_sets_value(): void
@@ -49,7 +49,7 @@ class ModalTest extends TestCase
         $this->assertSame($modal, $result);
         $ref = new \ReflectionProperty($modal, 'footer');
         $ref->setAccessible(true);
-        $this->assertEquals('Footer Content', $ref->getValue($modal));
+        $this->assertSame('Footer Content', $ref->getValue($modal));
     }
 
     public function test_button_sets_value(): void
@@ -59,7 +59,7 @@ class ModalTest extends TestCase
         $this->assertSame($modal, $result);
         $ref = new \ReflectionProperty($modal, 'button');
         $ref->setAccessible(true);
-        $this->assertEquals('Click Me', $ref->getValue($modal));
+        $this->assertSame('Click Me', $ref->getValue($modal));
     }
 
     public function test_size_sets_value(): void
@@ -69,7 +69,7 @@ class ModalTest extends TestCase
         $this->assertSame($modal, $result);
         $ref = new \ReflectionProperty($modal, 'size');
         $ref->setAccessible(true);
-        $this->assertEquals('lg', $ref->getValue($modal));
+        $this->assertSame('lg', $ref->getValue($modal));
     }
 
     public function test_sm_sets_size(): void
@@ -78,7 +78,7 @@ class ModalTest extends TestCase
         $modal->sm();
         $ref = new \ReflectionProperty($modal, 'size');
         $ref->setAccessible(true);
-        $this->assertEquals('sm', $ref->getValue($modal));
+        $this->assertSame('sm', $ref->getValue($modal));
     }
 
     public function test_lg_sets_size(): void
@@ -87,7 +87,7 @@ class ModalTest extends TestCase
         $modal->lg();
         $ref = new \ReflectionProperty($modal, 'size');
         $ref->setAccessible(true);
-        $this->assertEquals('lg', $ref->getValue($modal));
+        $this->assertSame('lg', $ref->getValue($modal));
     }
 
     public function test_xl_sets_size(): void
@@ -96,7 +96,7 @@ class ModalTest extends TestCase
         $modal->xl();
         $ref = new \ReflectionProperty($modal, 'size');
         $ref->setAccessible(true);
-        $this->assertEquals('xl', $ref->getValue($modal));
+        $this->assertSame('xl', $ref->getValue($modal));
     }
 
     public function test_centered(): void
@@ -106,7 +106,7 @@ class ModalTest extends TestCase
         $this->assertSame($modal, $result);
         $ref = new \ReflectionProperty($modal, 'centered');
         $ref->setAccessible(true);
-        $this->assertEquals('modal-dialog-centered', $ref->getValue($modal));
+        $this->assertSame('modal-dialog-centered', $ref->getValue($modal));
     }
 
     public function test_centered_false(): void
@@ -115,7 +115,7 @@ class ModalTest extends TestCase
         $modal->centered(false);
         $ref = new \ReflectionProperty($modal, 'centered');
         $ref->setAccessible(true);
-        $this->assertEquals('', $ref->getValue($modal));
+        $this->assertSame('', $ref->getValue($modal));
     }
 
     public function test_scrollable(): void
@@ -124,7 +124,7 @@ class ModalTest extends TestCase
         $modal->scrollable();
         $ref = new \ReflectionProperty($modal, 'scrollable');
         $ref->setAccessible(true);
-        $this->assertEquals('modal-dialog-scrollable', $ref->getValue($modal));
+        $this->assertSame('modal-dialog-scrollable', $ref->getValue($modal));
     }
 
     public function test_delay_sets_value(): void
@@ -134,7 +134,7 @@ class ModalTest extends TestCase
         $this->assertSame($modal, $result);
         $ref = new \ReflectionProperty($modal, 'delay');
         $ref->setAccessible(true);
-        $this->assertEquals(500, $ref->getValue($modal));
+        $this->assertSame(500, $ref->getValue($modal));
     }
 
     public function test_join_sets_value(): void
@@ -156,7 +156,7 @@ class ModalTest extends TestCase
         $ref->setAccessible(true);
         $events = $ref->getValue($modal);
         $this->assertCount(1, $events);
-        $this->assertEquals('show.bs.modal', $events[0]['event']);
+        $this->assertSame('show.bs.modal', $events[0]['event']);
     }
 
     public function test_on_show_registers_event(): void
@@ -166,7 +166,7 @@ class ModalTest extends TestCase
         $ref = new \ReflectionProperty($modal, 'events');
         $ref->setAccessible(true);
         $events = $ref->getValue($modal);
-        $this->assertEquals('show.bs.modal', $events[0]['event']);
+        $this->assertSame('show.bs.modal', $events[0]['event']);
     }
 
     public function test_on_hidden_registers_event(): void
@@ -176,7 +176,7 @@ class ModalTest extends TestCase
         $ref = new \ReflectionProperty($modal, 'events');
         $ref->setAccessible(true);
         $events = $ref->getValue($modal);
-        $this->assertEquals('hidden.bs.modal', $events[0]['event']);
+        $this->assertSame('hidden.bs.modal', $events[0]['event']);
     }
 
     public function test_html_output_contains_modal_structure(): void
@@ -195,6 +195,6 @@ class ModalTest extends TestCase
         $modal = new Modal;
         $ref = new \ReflectionProperty($modal, 'size');
         $ref->setAccessible(true);
-        $this->assertEquals('', $ref->getValue($modal));
+        $this->assertSame('', $ref->getValue($modal));
     }
 }

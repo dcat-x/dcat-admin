@@ -47,7 +47,7 @@ class AdminControllerTest extends TestCase
     {
         $controller = $this->makeController(['title' => 'Custom Title']);
 
-        $this->assertEquals('Custom Title', $controller->exposedTitle());
+        $this->assertSame('Custom Title', $controller->exposedTitle());
     }
 
     public function test_title_falls_back_to_admin_trans_label_when_not_set(): void
@@ -79,10 +79,10 @@ class AdminControllerTest extends TestCase
         ]);
 
         $result = $controller->exposedDescription();
-        $this->assertEquals('List Page', $result['index']);
-        $this->assertEquals('Detail Page', $result['show']);
-        $this->assertEquals('Edit Page', $result['edit']);
-        $this->assertEquals('Create Page', $result['create']);
+        $this->assertSame('List Page', $result['index']);
+        $this->assertSame('Detail Page', $result['show']);
+        $this->assertSame('Edit Page', $result['edit']);
+        $this->assertSame('Create Page', $result['create']);
     }
 
     public function test_translation_returns_null_by_default(): void
@@ -96,7 +96,7 @@ class AdminControllerTest extends TestCase
     {
         $controller = $this->makeController(['translation' => 'admin.custom']);
 
-        $this->assertEquals('admin.custom', $controller->exposedTranslation());
+        $this->assertSame('admin.custom', $controller->exposedTranslation());
     }
 
     public function test_controller_extends_illuminate_controller(): void

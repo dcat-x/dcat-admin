@@ -18,7 +18,7 @@ class RadioTest extends TestCase
         $radio = new Radio;
         $radio->options([1 => 'A', 2 => 'B']);
         $vars = $radio->defaultVariables();
-        $this->assertEquals([1 => 'A', 2 => 'B'], $vars['options']);
+        $this->assertSame([1 => 'A', 2 => 'B'], $vars['options']);
     }
 
     public function test_check(): void
@@ -27,7 +27,7 @@ class RadioTest extends TestCase
         $result = $radio->check(1);
         $this->assertSame($radio, $result);
         $vars = $radio->defaultVariables();
-        $this->assertEquals(1, $vars['checked']);
+        $this->assertSame(1, $vars['checked']);
     }
 
     public function test_inline(): void
@@ -52,7 +52,7 @@ class RadioTest extends TestCase
         $result = $radio->size('lg');
         $this->assertSame($radio, $result);
         $vars = $radio->defaultVariables();
-        $this->assertEquals('lg', $vars['size']);
+        $this->assertSame('lg', $vars['size']);
     }
 
     public function test_style(): void
@@ -60,14 +60,14 @@ class RadioTest extends TestCase
         $radio = new Radio;
         $radio->style('danger');
         $vars = $radio->defaultVariables();
-        $this->assertEquals('danger', $vars['style']);
+        $this->assertSame('danger', $vars['style']);
     }
 
     public function test_default_style_primary(): void
     {
         $radio = new Radio;
         $vars = $radio->defaultVariables();
-        $this->assertEquals('primary', $vars['style']);
+        $this->assertSame('primary', $vars['style']);
     }
 
     public function test_disable_with_values(): void
@@ -76,7 +76,7 @@ class RadioTest extends TestCase
         $result = $radio->disable([1, 3]);
         $this->assertSame($radio, $result);
         $vars = $radio->defaultVariables();
-        $this->assertEquals([1, 3], $vars['disabled']);
+        $this->assertSame([1, 3], $vars['disabled']);
     }
 
     public function test_right(): void
@@ -84,13 +84,13 @@ class RadioTest extends TestCase
         $radio = new Radio;
         $radio->right('20px');
         $vars = $radio->defaultVariables();
-        $this->assertEquals('20px', $vars['right']);
+        $this->assertSame('20px', $vars['right']);
     }
 
     public function test_default_right(): void
     {
         $radio = new Radio;
         $vars = $radio->defaultVariables();
-        $this->assertEquals('16px', $vars['right']);
+        $this->assertSame('16px', $vars['right']);
     }
 }

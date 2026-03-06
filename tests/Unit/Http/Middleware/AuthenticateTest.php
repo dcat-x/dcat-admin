@@ -115,7 +115,7 @@ class AuthenticateTest extends TestCase
         $params = $reflection->getParameters();
 
         $this->assertCount(1, $params);
-        $this->assertEquals('request', $params[0]->getName());
+        $this->assertSame('request', $params[0]->getName());
     }
 
     public function test_handle_method_signature(): void
@@ -124,8 +124,8 @@ class AuthenticateTest extends TestCase
         $params = $reflection->getParameters();
 
         $this->assertCount(2, $params);
-        $this->assertEquals('request', $params[0]->getName());
-        $this->assertEquals('next', $params[1]->getName());
+        $this->assertSame('request', $params[0]->getName());
+        $this->assertSame('next', $params[1]->getName());
     }
 
     public function test_middleware_class_is_not_abstract(): void

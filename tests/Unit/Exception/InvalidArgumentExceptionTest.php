@@ -27,14 +27,14 @@ class InvalidArgumentExceptionTest extends TestCase
     {
         $e = new InvalidArgumentException('invalid argument provided');
 
-        $this->assertEquals('invalid argument provided', $e->getMessage());
+        $this->assertSame('invalid argument provided', $e->getMessage());
     }
 
     public function test_custom_code(): void
     {
         $e = new InvalidArgumentException('error', 422);
 
-        $this->assertEquals(422, $e->getCode());
+        $this->assertSame(422, $e->getCode());
     }
 
     public function test_can_be_thrown_and_caught(): void
@@ -56,6 +56,6 @@ class InvalidArgumentExceptionTest extends TestCase
         }
 
         $this->assertInstanceOf(InvalidArgumentException::class, $caught);
-        $this->assertEquals('catch as admin', $caught->getMessage());
+        $this->assertSame('catch as admin', $caught->getMessage());
     }
 }

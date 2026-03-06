@@ -51,7 +51,7 @@ class CascadeGroupTest extends TestCase
         $dependency = ['column' => 'type', 'class' => 'type-1', 'index' => 3];
         $group = new CascadeGroup($dependency);
 
-        $this->assertEquals(3, $group->index());
+        $this->assertSame(3, $group->index());
     }
 
     public function test_visiable_removes_hide_class(): void
@@ -81,6 +81,6 @@ class CascadeGroupTest extends TestCase
         $dependency = ['column' => 'type', 'class' => 'type-1', 'index' => 0];
         $group = new CascadeGroup($dependency);
 
-        $this->assertEquals('</div>', $group->end());
+        $this->assertSame('</div>', $group->end());
     }
 }

@@ -45,7 +45,7 @@ class MenuTest extends TestCase
 
         $menu = new Menu;
 
-        $this->assertEquals('custom_menu', $menu->getTable());
+        $this->assertSame('custom_menu', $menu->getTable());
     }
 
     public function test_connection_from_config(): void
@@ -54,7 +54,7 @@ class MenuTest extends TestCase
 
         $menu = new Menu;
 
-        $this->assertEquals('mysql', $menu->getConnectionName());
+        $this->assertSame('mysql', $menu->getConnectionName());
     }
 
     public function test_connection_defaults_to_database_default(): void
@@ -64,7 +64,7 @@ class MenuTest extends TestCase
 
         $menu = new Menu;
 
-        $this->assertEquals('testing', $menu->getConnectionName());
+        $this->assertSame('testing', $menu->getConnectionName());
     }
 
     public function test_with_permission_returns_true_when_both_enabled(): void

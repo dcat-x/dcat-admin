@@ -60,21 +60,21 @@ class HasPaginatorTest extends TestCase
     {
         $helper = $this->createHelper();
 
-        $this->assertEquals(20, $helper->getPerPage());
+        $this->assertSame(20, $helper->getPerPage());
     }
 
     public function test_default_per_pages_array(): void
     {
         $helper = $this->createHelper();
 
-        $this->assertEquals([10, 20, 30, 50, 100, 200], $helper->getPerPages());
+        $this->assertSame([10, 20, 30, 50, 100, 200], $helper->getPerPages());
     }
 
     public function test_get_per_page(): void
     {
         $helper = $this->createHelper();
 
-        $this->assertEquals(20, $helper->getPerPage());
+        $this->assertSame(20, $helper->getPerPage());
     }
 
     public function test_per_pages_sets_array(): void
@@ -83,7 +83,7 @@ class HasPaginatorTest extends TestCase
         $result = $helper->perPages([5, 10, 25]);
 
         $this->assertSame($helper, $result);
-        $this->assertEquals([5, 10, 25], $helper->getPerPages());
+        $this->assertSame([5, 10, 25], $helper->getPerPages());
     }
 
     public function test_get_per_pages_returns_array(): void
@@ -92,7 +92,7 @@ class HasPaginatorTest extends TestCase
         $helper->perPages([15, 30, 60]);
 
         $this->assertIsArray($helper->getPerPages());
-        $this->assertEquals([15, 30, 60], $helper->getPerPages());
+        $this->assertSame([15, 30, 60], $helper->getPerPages());
     }
 
     public function test_disable_per_pages_sets_empty_array(): void
@@ -100,7 +100,7 @@ class HasPaginatorTest extends TestCase
         $helper = $this->createHelper();
         $helper->disablePerPages();
 
-        $this->assertEquals([], $helper->getPerPages());
+        $this->assertSame([], $helper->getPerPages());
     }
 
     public function test_allow_pagination_reads_options(): void
@@ -117,7 +117,7 @@ class HasPaginatorTest extends TestCase
 
         $helper->paginate(50);
 
-        $this->assertEquals(50, $helper->getPerPage());
+        $this->assertSame(50, $helper->getPerPage());
     }
 
     public function test_show_pagination_enables(): void

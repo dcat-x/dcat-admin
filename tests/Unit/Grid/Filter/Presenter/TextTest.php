@@ -36,7 +36,7 @@ class TextTest extends TestCase
         $ref = new ReflectionProperty($text, 'placeholder');
         $ref->setAccessible(true);
 
-        $this->assertEquals('Enter name...', $ref->getValue($text));
+        $this->assertSame('Enter name...', $ref->getValue($text));
     }
 
     public function test_constructor_with_empty_placeholder(): void
@@ -46,7 +46,7 @@ class TextTest extends TestCase
         $ref = new ReflectionProperty($text, 'placeholder');
         $ref->setAccessible(true);
 
-        $this->assertEquals('', $ref->getValue($text));
+        $this->assertSame('', $ref->getValue($text));
     }
 
     public function test_placeholder_sets_and_returns_self(): void
@@ -60,7 +60,7 @@ class TextTest extends TestCase
         $ref = new ReflectionProperty($text, 'placeholder');
         $ref->setAccessible(true);
 
-        $this->assertEquals('Search here...', $ref->getValue($text));
+        $this->assertSame('Search here...', $ref->getValue($text));
     }
 
     public function test_default_type_is_text(): void
@@ -70,7 +70,7 @@ class TextTest extends TestCase
         $ref = new ReflectionProperty($text, 'type');
         $ref->setAccessible(true);
 
-        $this->assertEquals('text', $ref->getValue($text));
+        $this->assertSame('text', $ref->getValue($text));
     }
 
     public function test_default_icon_is_pencil(): void
@@ -80,7 +80,7 @@ class TextTest extends TestCase
         $ref = new ReflectionProperty($text, 'icon');
         $ref->setAccessible(true);
 
-        $this->assertEquals('pencil', $ref->getValue($text));
+        $this->assertSame('pencil', $ref->getValue($text));
     }
 
     #[DataProvider('defaultVariableKeyProvider')]
@@ -92,16 +92,16 @@ class TextTest extends TestCase
         $vars = $text->defaultVariables();
 
         $this->assertContains($key, array_keys($vars));
-        $this->assertEquals('My placeholder', $vars['placeholder']);
-        $this->assertEquals('pencil', $vars['icon']);
-        $this->assertEquals('text', $vars['type']);
+        $this->assertSame('My placeholder', $vars['placeholder']);
+        $this->assertSame('pencil', $vars['icon']);
+        $this->assertSame('text', $vars['type']);
     }
 
     public function test_view_returns_text_view(): void
     {
         $text = $this->makeText();
 
-        $this->assertEquals('admin::filter.text', $text->view());
+        $this->assertSame('admin::filter.text', $text->view());
     }
 
     public function test_url_sets_icon_to_internet_explorer(): void
@@ -114,7 +114,7 @@ class TextTest extends TestCase
         $ref = new ReflectionProperty($text, 'icon');
         $ref->setAccessible(true);
 
-        $this->assertEquals('internet-explorer', $ref->getValue($text));
+        $this->assertSame('internet-explorer', $ref->getValue($text));
     }
 
     public function test_email_sets_icon_to_envelope(): void
@@ -127,7 +127,7 @@ class TextTest extends TestCase
         $ref = new ReflectionProperty($text, 'icon');
         $ref->setAccessible(true);
 
-        $this->assertEquals('envelope', $ref->getValue($text));
+        $this->assertSame('envelope', $ref->getValue($text));
     }
 
     public static function defaultVariableKeyProvider(): array

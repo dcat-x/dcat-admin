@@ -60,8 +60,8 @@ class HandleCascadeFieldsTest extends TestCase
         $params = $ref->getParameters();
 
         $this->assertCount(2, $params);
-        $this->assertEquals('closure', $params[0]->getName());
-        $this->assertEquals('dependency', $params[1]->getName());
+        $this->assertSame('closure', $params[0]->getName());
+        $this->assertSame('dependency', $params[1]->getName());
     }
 
     public function test_trait_can_be_used_in_class(): void
@@ -78,10 +78,10 @@ class HandleCascadeFieldsTest extends TestCase
 
         $closureType = $params[0]->getType();
         $this->assertNotNull($closureType);
-        $this->assertEquals('Closure', $closureType->getName());
+        $this->assertSame('Closure', $closureType->getName());
 
         $arrayType = $params[1]->getType();
         $this->assertNotNull($arrayType);
-        $this->assertEquals('array', $arrayType->getName());
+        $this->assertSame('array', $arrayType->getName());
     }
 }

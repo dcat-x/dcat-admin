@@ -10,13 +10,13 @@ class FieldTest extends TestCase
     public function test_field_column(): void
     {
         $field = new Field\Text('name');
-        $this->assertEquals('name', $field->column());
+        $this->assertSame('name', $field->column());
     }
 
     public function test_field_label(): void
     {
         $field = new Field\Text('user_name', ['User Name']);
-        $this->assertEquals('User Name', $field->label());
+        $this->assertSame('User Name', $field->label());
     }
 
     public function test_field_label_auto_format(): void
@@ -30,14 +30,14 @@ class FieldTest extends TestCase
     {
         $field = new Field\Text('name');
         $field->value('Test Value');
-        $this->assertEquals('Test Value', $field->value());
+        $this->assertSame('Test Value', $field->value());
     }
 
     public function test_field_default(): void
     {
         $field = new Field\Text('name');
         $field->default('Default Value');
-        $this->assertEquals('Default Value', $field->default());
+        $this->assertSame('Default Value', $field->default());
     }
 
     public function test_field_help(): void
@@ -53,7 +53,7 @@ class FieldTest extends TestCase
         $field = new Field\Text('name');
         $field->placeholder('Enter name...');
         // placeholder 返回设置的值
-        $this->assertEquals('Enter name...', $field->placeholder());
+        $this->assertSame('Enter name...', $field->placeholder());
     }
 
     public function test_field_required(): void
@@ -109,34 +109,34 @@ class FieldTest extends TestCase
     public function test_field_element_name(): void
     {
         $field = new Field\Text('user.name');
-        $this->assertEquals('user[name]', $field->getElementName());
+        $this->assertSame('user[name]', $field->getElementName());
     }
 
     public function test_field_element_name_simple(): void
     {
         $field = new Field\Text('name');
-        $this->assertEquals('name', $field->getElementName());
+        $this->assertSame('name', $field->getElementName());
     }
 
     public function test_field_set_element_name(): void
     {
         $field = new Field\Text('name');
         $field->setElementName('custom_name');
-        $this->assertEquals('custom_name', $field->getElementName());
+        $this->assertSame('custom_name', $field->getElementName());
     }
 
     public function test_field_fill(): void
     {
         $field = new Field\Text('name');
         $field->fill(['name' => 'John']);
-        $this->assertEquals('John', $field->value());
+        $this->assertSame('John', $field->value());
     }
 
     public function test_field_fill_nested(): void
     {
         $field = new Field\Text('profile.name');
         $field->fill(['profile' => ['name' => 'Jane']]);
-        $this->assertEquals('Jane', $field->value());
+        $this->assertSame('Jane', $field->value());
     }
 
     public function test_field_custom_format(): void
@@ -146,14 +146,14 @@ class FieldTest extends TestCase
             return strtoupper($value);
         });
         $field->fill(['name' => 'john']);
-        $this->assertEquals('JOHN', $field->value());
+        $this->assertSame('JOHN', $field->value());
     }
 
     public function test_field_constants(): void
     {
-        $this->assertEquals('_file_del_', Field::FILE_DELETE_FLAG);
-        $this->assertEquals('field_', Field::FIELD_CLASS_PREFIX);
-        $this->assertEquals('build-ignore', Field::BUILD_IGNORE);
+        $this->assertSame('_file_del_', Field::FILE_DELETE_FLAG);
+        $this->assertSame('field_', Field::FIELD_CLASS_PREFIX);
+        $this->assertSame('build-ignore', Field::BUILD_IGNORE);
     }
 
     public function test_text_field(): void

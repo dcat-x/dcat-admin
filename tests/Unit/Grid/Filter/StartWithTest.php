@@ -25,8 +25,8 @@ class StartWithTest extends TestCase
     public function test_constructor_sets_column_and_label(): void
     {
         $filter = new StartWith('name', 'Name');
-        $this->assertEquals('name', $filter->originalColumn());
-        $this->assertEquals('Name', $filter->getLabel());
+        $this->assertSame('name', $filter->originalColumn());
+        $this->assertSame('Name', $filter->getLabel());
     }
 
     public function test_condition_returns_like_with_trailing_wildcard(): void
@@ -35,9 +35,9 @@ class StartWithTest extends TestCase
         $condition = $filter->condition(['name' => 'foo']);
 
         $this->assertConditionHasWhere($condition);
-        $this->assertEquals('name', $condition['where'][0]);
-        $this->assertEquals('like', $condition['where'][1]);
-        $this->assertEquals('foo%', $condition['where'][2]);
+        $this->assertSame('name', $condition['where'][0]);
+        $this->assertSame('like', $condition['where'][1]);
+        $this->assertSame('foo%', $condition['where'][2]);
     }
 
     public function test_condition_returns_null_when_value_is_null(): void
@@ -57,8 +57,8 @@ class StartWithTest extends TestCase
 
         $condition = $filter->condition(['name' => 'foo']);
 
-        $this->assertEquals('ilike', $condition['where'][1]);
-        $this->assertEquals('foo%', $condition['where'][2]);
+        $this->assertSame('ilike', $condition['where'][1]);
+        $this->assertSame('foo%', $condition['where'][2]);
     }
 
     public function test_condition_sets_value(): void
@@ -66,7 +66,7 @@ class StartWithTest extends TestCase
         $filter = $this->makeFilter('name');
         $filter->condition(['name' => 'test']);
 
-        $this->assertEquals('test', $filter->getValue());
+        $this->assertSame('test', $filter->getValue());
     }
 
     public function test_condition_with_empty_string_value(): void
@@ -76,7 +76,7 @@ class StartWithTest extends TestCase
 
         // Empty string is not null, so condition should be returned
         $this->assertIsArray($condition);
-        $this->assertEquals('%', $condition['where'][2]);
+        $this->assertSame('%', $condition['where'][2]);
     }
 
     private function assertConditionHasWhere(mixed $condition): void

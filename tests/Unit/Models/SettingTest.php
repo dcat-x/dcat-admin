@@ -18,7 +18,7 @@ class SettingTest extends TestCase
     {
         $setting = new Setting;
 
-        $this->assertEquals('slug', $setting->getKeyName());
+        $this->assertSame('slug', $setting->getKeyName());
     }
 
     public function test_incrementing_is_false(): void
@@ -45,7 +45,7 @@ class SettingTest extends TestCase
 
         $setting = new Setting;
 
-        $this->assertEquals('custom_settings', $setting->getTable());
+        $this->assertSame('custom_settings', $setting->getTable());
     }
 
     public function test_table_name_defaults_to_admin_settings(): void
@@ -54,7 +54,7 @@ class SettingTest extends TestCase
 
         $setting = new Setting;
 
-        $this->assertEquals('admin_settings', $setting->getTable());
+        $this->assertSame('admin_settings', $setting->getTable());
     }
 
     public function test_connection_from_config(): void
@@ -63,7 +63,7 @@ class SettingTest extends TestCase
 
         $setting = new Setting;
 
-        $this->assertEquals('mysql', $setting->getConnectionName());
+        $this->assertSame('mysql', $setting->getConnectionName());
     }
 
     public function test_creation_with_attributes(): void
@@ -74,7 +74,7 @@ class SettingTest extends TestCase
         ]);
 
         $this->assertInstanceOf(Setting::class, $setting);
-        $this->assertEquals('site.title', $setting->slug);
-        $this->assertEquals('My Admin', $setting->value);
+        $this->assertSame('site.title', $setting->slug);
+        $this->assertSame('My Admin', $setting->value);
     }
 }

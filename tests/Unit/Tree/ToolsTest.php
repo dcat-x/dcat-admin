@@ -84,7 +84,7 @@ class ToolsTest extends TestCase
 
         $rendered = $tools->render();
 
-        $this->assertEquals('', $rendered);
+        $this->assertSame('', $rendered);
     }
 
     public function test_render_joins_tools_with_space(): void
@@ -97,7 +97,7 @@ class ToolsTest extends TestCase
 
         $rendered = $tools->render();
 
-        $this->assertEquals('A B', $rendered);
+        $this->assertSame('A B', $rendered);
     }
 
     public function test_add_chaining(): void
@@ -121,7 +121,7 @@ class ToolsTest extends TestCase
 
         $rendered = $tools->render();
 
-        $this->assertEquals('OnlyTool', $rendered);
+        $this->assertSame('OnlyTool', $rendered);
     }
 
     protected function tearDown(): void

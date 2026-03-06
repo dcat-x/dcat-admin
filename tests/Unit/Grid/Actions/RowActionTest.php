@@ -112,7 +112,7 @@ class RowActionTest extends TestCase
         $result = $actions->setResource('/admin/posts');
 
         $this->assertSame($actions, $result);
-        $this->assertEquals('/admin/posts', $actions->resource());
+        $this->assertSame('/admin/posts', $actions->resource());
     }
 
     public function test_append_returns_this(): void
@@ -161,8 +161,8 @@ class RowActionTest extends TestCase
         $ref2 = new \ReflectionProperty($actions, 'deleteIcon');
         $ref2->setAccessible(true);
 
-        $this->assertEquals('Remove', $ref1->getValue($actions));
-        $this->assertEquals('trash-2', $ref2->getValue($actions));
+        $this->assertSame('Remove', $ref1->getValue($actions));
+        $this->assertSame('trash-2', $ref2->getValue($actions));
     }
 
     public function test_set_quick_edit_text(): void
@@ -173,7 +173,7 @@ class RowActionTest extends TestCase
         $ref = new \ReflectionProperty($actions, 'quickEditText');
         $ref->setAccessible(true);
 
-        $this->assertEquals('Quick', $ref->getValue($actions));
+        $this->assertSame('Quick', $ref->getValue($actions));
     }
 
     public function test_set_quick_edit_icon(): void
@@ -184,7 +184,7 @@ class RowActionTest extends TestCase
         $ref = new \ReflectionProperty($actions, 'quickEditIcon');
         $ref->setAccessible(true);
 
-        $this->assertEquals('zap', $ref->getValue($actions));
+        $this->assertSame('zap', $ref->getValue($actions));
     }
 
     public function test_set_edit_icon(): void
@@ -195,7 +195,7 @@ class RowActionTest extends TestCase
         $ref = new \ReflectionProperty($actions, 'editIcon');
         $ref->setAccessible(true);
 
-        $this->assertEquals('pencil', $ref->getValue($actions));
+        $this->assertSame('pencil', $ref->getValue($actions));
     }
 
     public function test_set_view_text(): void
@@ -206,6 +206,6 @@ class RowActionTest extends TestCase
         $ref = new \ReflectionProperty($actions, 'viewText');
         $ref->setAccessible(true);
 
-        $this->assertEquals('Detail', $ref->getValue($actions));
+        $this->assertSame('Detail', $ref->getValue($actions));
     }
 }

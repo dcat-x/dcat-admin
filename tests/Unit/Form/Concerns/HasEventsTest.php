@@ -152,7 +152,7 @@ class HasEventsTest extends TestCase
             $ref = new \ReflectionMethod($helper, $method);
             $params = $ref->getParameters();
             $this->assertCount(1, $params, "Method {$method} should accept exactly one parameter");
-            $this->assertEquals('Closure', $params[0]->getType()->getName(), "Method {$method} should accept a Closure");
+            $this->assertSame('Closure', $params[0]->getType()->getName(), "Method {$method} should accept a Closure");
         }
     }
 }

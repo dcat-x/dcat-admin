@@ -15,8 +15,8 @@ class TabWidgetTest extends TestCase
 
     public function test_type_constants(): void
     {
-        $this->assertEquals(1, Tab::TYPE_CONTENT);
-        $this->assertEquals(2, Tab::TYPE_LINK);
+        $this->assertSame(1, Tab::TYPE_CONTENT);
+        $this->assertSame(2, Tab::TYPE_LINK);
     }
 
     public function test_add_tab(): void
@@ -29,7 +29,7 @@ class TabWidgetTest extends TestCase
         $ref->setAccessible(true);
         $data = $ref->getValue($tab);
         $this->assertCount(1, $data['tabs']);
-        $this->assertEquals('Tab 1', $data['tabs'][0]['title']);
+        $this->assertSame('Tab 1', $data['tabs'][0]['title']);
     }
 
     public function test_add_active_tab(): void
@@ -41,7 +41,7 @@ class TabWidgetTest extends TestCase
         $ref = new \ReflectionProperty($tab, 'data');
         $ref->setAccessible(true);
         $data = $ref->getValue($tab);
-        $this->assertEquals(1, $data['active']);
+        $this->assertSame(1, $data['active']);
     }
 
     public function test_add_tab_with_custom_id(): void
@@ -52,7 +52,7 @@ class TabWidgetTest extends TestCase
         $ref = new \ReflectionProperty($tab, 'data');
         $ref->setAccessible(true);
         $data = $ref->getValue($tab);
-        $this->assertEquals('custom-id', $data['tabs'][0]['id']);
+        $this->assertSame('custom-id', $data['tabs'][0]['id']);
     }
 
     public function test_add_link(): void
@@ -64,8 +64,8 @@ class TabWidgetTest extends TestCase
         $ref = new \ReflectionProperty($tab, 'data');
         $ref->setAccessible(true);
         $data = $ref->getValue($tab);
-        $this->assertEquals(Tab::TYPE_LINK, $data['tabs'][0]['type']);
-        $this->assertEquals('https://google.com', $data['tabs'][0]['href']);
+        $this->assertSame(Tab::TYPE_LINK, $data['tabs'][0]['type']);
+        $this->assertSame('https://google.com', $data['tabs'][0]['href']);
     }
 
     public function test_title(): void
@@ -76,7 +76,7 @@ class TabWidgetTest extends TestCase
 
         $ref = new \ReflectionProperty($tab, 'data');
         $ref->setAccessible(true);
-        $this->assertEquals('My Tabs', $ref->getValue($tab)['title']);
+        $this->assertSame('My Tabs', $ref->getValue($tab)['title']);
     }
 
     public function test_padding(): void
@@ -87,7 +87,7 @@ class TabWidgetTest extends TestCase
 
         $ref = new \ReflectionProperty($tab, 'data');
         $ref->setAccessible(true);
-        $this->assertEquals('padding:10px', $ref->getValue($tab)['padding']);
+        $this->assertSame('padding:10px', $ref->getValue($tab)['padding']);
     }
 
     public function test_no_padding(): void
@@ -97,7 +97,7 @@ class TabWidgetTest extends TestCase
 
         $ref = new \ReflectionProperty($tab, 'data');
         $ref->setAccessible(true);
-        $this->assertEquals('padding:0', $ref->getValue($tab)['padding']);
+        $this->assertSame('padding:0', $ref->getValue($tab)['padding']);
     }
 
     public function test_tab_style(): void
@@ -108,7 +108,7 @@ class TabWidgetTest extends TestCase
 
         $ref = new \ReflectionProperty($tab, 'data');
         $ref->setAccessible(true);
-        $this->assertEquals('nav-pills', $ref->getValue($tab)['tabStyle']);
+        $this->assertSame('nav-pills', $ref->getValue($tab)['tabStyle']);
     }
 
     public function test_default_active_is_zero(): void
@@ -116,6 +116,6 @@ class TabWidgetTest extends TestCase
         $tab = new Tab;
         $ref = new \ReflectionProperty($tab, 'data');
         $ref->setAccessible(true);
-        $this->assertEquals(0, $ref->getValue($tab)['active']);
+        $this->assertSame(0, $ref->getValue($tab)['active']);
     }
 }

@@ -30,14 +30,14 @@ class RoleTest extends TestCase
         ]);
 
         $this->assertInstanceOf(Role::class, $role);
-        $this->assertEquals('Test Role', $role->name);
-        $this->assertEquals('test-role', $role->slug);
+        $this->assertSame('Test Role', $role->name);
+        $this->assertSame('test-role', $role->slug);
     }
 
     public function test_role_constants(): void
     {
-        $this->assertEquals('administrator', Role::ADMINISTRATOR);
-        $this->assertEquals(1, Role::ADMINISTRATOR_ID);
+        $this->assertSame('administrator', Role::ADMINISTRATOR);
+        $this->assertSame(1, Role::ADMINISTRATOR_ID);
     }
 
     public function test_is_administrator_static(): void
@@ -137,7 +137,7 @@ class RoleTest extends TestCase
             'slug' => Role::ADMINISTRATOR,
         ]);
 
-        $this->assertEquals(Role::ADMINISTRATOR, $adminRole->slug);
+        $this->assertSame(Role::ADMINISTRATOR, $adminRole->slug);
         $this->assertTrue(Role::isAdministrator($adminRole->slug));
     }
 
@@ -148,7 +148,7 @@ class RoleTest extends TestCase
             'slug' => 'manager',
         ]);
 
-        $this->assertEquals('manager', $managerRole->slug);
+        $this->assertSame('manager', $managerRole->slug);
         $this->assertFalse(Role::isAdministrator($managerRole->slug));
     }
 

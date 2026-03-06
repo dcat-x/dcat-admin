@@ -20,7 +20,7 @@ class TerminalTest extends TestCase
 
         $reflection = new \ReflectionProperty(Terminal::class, 'content');
         $reflection->setAccessible(true);
-        $this->assertEquals('Hello World', $reflection->getValue($terminal));
+        $this->assertSame('Hello World', $reflection->getValue($terminal));
     }
 
     public function test_content_method_sets_content(): void
@@ -32,7 +32,7 @@ class TerminalTest extends TestCase
 
         $reflection = new \ReflectionProperty(Terminal::class, 'content');
         $reflection->setAccessible(true);
-        $this->assertEquals('New content', $reflection->getValue($terminal));
+        $this->assertSame('New content', $reflection->getValue($terminal));
     }
 
     public function test_dark_returns_self(): void

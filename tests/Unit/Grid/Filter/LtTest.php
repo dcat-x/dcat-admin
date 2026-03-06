@@ -26,8 +26,8 @@ class LtTest extends TestCase
     {
         $filter = new Lt('price', 'Max Price');
 
-        $this->assertEquals('price', $filter->originalColumn());
-        $this->assertEquals('Max Price', $filter->getLabel());
+        $this->assertSame('price', $filter->originalColumn());
+        $this->assertSame('Max Price', $filter->getLabel());
     }
 
     public function test_condition_returns_where_with_lt_operator(): void
@@ -37,7 +37,7 @@ class LtTest extends TestCase
         $condition = $filter->condition(['price' => '500']);
 
         $this->assertConditionHasWhere($condition);
-        $this->assertEquals(['price', '<', '500'], $condition['where']);
+        $this->assertSame(['price', '<', '500'], $condition['where']);
     }
 
     public function test_condition_returns_null_when_value_is_null(): void
@@ -56,7 +56,7 @@ class LtTest extends TestCase
         $condition = $filter->condition(['score' => '0']);
 
         $this->assertConditionHasWhere($condition);
-        $this->assertEquals(['score', '<', '0'], $condition['where']);
+        $this->assertSame(['score', '<', '0'], $condition['where']);
     }
 
     public function test_condition_sets_value_on_filter(): void
@@ -65,7 +65,7 @@ class LtTest extends TestCase
 
         $filter->condition(['price' => '200']);
 
-        $this->assertEquals('200', $filter->getValue());
+        $this->assertSame('200', $filter->getValue());
     }
 
     public function test_ignore_returns_null_condition(): void

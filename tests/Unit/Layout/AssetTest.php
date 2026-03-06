@@ -116,8 +116,8 @@ class AssetTest extends TestCase
 
         $result = $this->asset->getAlias('@custom');
 
-        $this->assertEquals(['custom.js'], $result['js']);
-        $this->assertEquals(['custom.css'], $result['css']);
+        $this->assertSame(['custom.js'], $result['js']);
+        $this->assertSame(['custom.css'], $result['css']);
     }
 
     public function test_alias_auto_prepends_at_sign(): void
@@ -128,7 +128,7 @@ class AssetTest extends TestCase
 
         $result = $this->asset->getAlias('mylib');
 
-        $this->assertEquals(['mylib.js'], $result['js']);
+        $this->assertSame(['mylib.js'], $result['js']);
     }
 
     public function test_alias_with_array_sets_multiple(): void
@@ -138,22 +138,22 @@ class AssetTest extends TestCase
             '@lib2' => ['js' => 'lib2.js'],
         ]);
 
-        $this->assertEquals(['lib1.js'], $this->asset->getAlias('@lib1')['js']);
-        $this->assertEquals(['lib2.js'], $this->asset->getAlias('@lib2')['js']);
+        $this->assertSame(['lib1.js'], $this->asset->getAlias('@lib1')['js']);
+        $this->assertSame(['lib2.js'], $this->asset->getAlias('@lib2')['js']);
     }
 
     public function test_get_alias_returns_path_string_for_path_alias(): void
     {
         $result = $this->asset->getAlias('@admin');
 
-        $this->assertEquals('vendor/dcat-admin', $result);
+        $this->assertSame('vendor/dcat-admin', $result);
     }
 
     public function test_get_alias_returns_empty_for_nonexistent(): void
     {
         $result = $this->asset->getAlias('@nonexistent');
 
-        $this->assertEquals(['js' => null, 'css' => null], $result);
+        $this->assertSame(['js' => null, 'css' => null], $result);
     }
 
     public function test_has_alias_returns_true_for_existing(): void
@@ -186,14 +186,14 @@ class AssetTest extends TestCase
     {
         $result = $this->asset->getRealPath('@admin/js/app.js');
 
-        $this->assertEquals('vendor/dcat-admin/js/app.js', $result);
+        $this->assertSame('vendor/dcat-admin/js/app.js', $result);
     }
 
     public function test_get_real_path_returns_plain_path_unchanged(): void
     {
         $result = $this->asset->getRealPath('plain/path.js');
 
-        $this->assertEquals('plain/path.js', $result);
+        $this->assertSame('plain/path.js', $result);
     }
 
     public function test_get_real_path_handles_null(): void
@@ -207,7 +207,7 @@ class AssetTest extends TestCase
     {
         $this->asset->baseCss(['custom' => '@custom']);
 
-        $this->assertEquals(['custom' => '@custom'], $this->asset->baseCss);
+        $this->assertSame(['custom' => '@custom'], $this->asset->baseCss);
     }
 
     public function test_base_css_merges_when_merge_true(): void
@@ -223,7 +223,7 @@ class AssetTest extends TestCase
     {
         $this->asset->baseJs(['only' => '@only'], false);
 
-        $this->assertEquals(['only' => '@only'], $this->asset->baseJs);
+        $this->assertSame(['only' => '@only'], $this->asset->baseJs);
     }
 
     public function test_base_js_merges_when_merge_true(): void
@@ -248,7 +248,7 @@ class AssetTest extends TestCase
     {
         $this->asset->headerJs(['only' => '@only'], false);
 
-        $this->assertEquals(['only' => '@only'], $this->asset->headerJs);
+        $this->assertSame(['only' => '@only'], $this->asset->headerJs);
     }
 
     public function test_require_adds_js_and_css_from_alias(): void

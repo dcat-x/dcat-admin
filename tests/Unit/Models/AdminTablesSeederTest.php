@@ -38,6 +38,6 @@ class AdminTablesSeederTest extends TestCase
     public function test_run_method_declared_in_seeder_class(): void
     {
         $reflection = new \ReflectionMethod(AdminTablesSeeder::class, 'run');
-        $this->assertEquals(AdminTablesSeeder::class, $reflection->getDeclaringClass()->getName());
+        $this->assertSame(AdminTablesSeeder::class, $reflection->getDeclaringClass()->getName());
     }
 }

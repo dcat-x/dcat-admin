@@ -33,7 +33,7 @@ class ResetPasswordCommandTest extends TestCase
         $ref = new \ReflectionProperty(ResetPasswordCommand::class, 'signature');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('admin:reset-password', $defaultValue);
+        $this->assertSame('admin:reset-password', $defaultValue);
     }
 
     public function test_description_default_value(): void
@@ -41,7 +41,7 @@ class ResetPasswordCommandTest extends TestCase
         $ref = new \ReflectionProperty(ResetPasswordCommand::class, 'description');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('Reset password for a specific admin user', $defaultValue);
+        $this->assertSame('Reset password for a specific admin user', $defaultValue);
     }
 
     public function test_handle_method_signature(): void

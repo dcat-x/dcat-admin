@@ -103,6 +103,6 @@ class HandleActionControllerTest extends TestCase
         $input = 'Dcat_Admin_Tests_Unit_Http_Controllers_StubAction';
         $expected = StubAction::class;
 
-        $this->assertEquals($expected, str_replace('_', '\\', $input));
+        $this->assertSame($expected, str_replace('_', '\\', $input));
     }
 }

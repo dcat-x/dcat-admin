@@ -22,7 +22,7 @@ class CodeTest extends TestCase
         $property = $reflection->getProperty('content');
         $property->setAccessible(true);
 
-        $this->assertEquals('echo "hello";', $property->getValue($code));
+        $this->assertSame('echo "hello";', $property->getValue($code));
     }
 
     public function test_code_with_array_content(): void
@@ -35,7 +35,7 @@ class CodeTest extends TestCase
         $property->setAccessible(true);
 
         $expected = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        $this->assertEquals($expected, $property->getValue($code));
+        $this->assertSame($expected, $property->getValue($code));
     }
 
     public function test_code_with_object_content(): void
@@ -48,7 +48,7 @@ class CodeTest extends TestCase
         $property->setAccessible(true);
 
         $expected = json_encode($obj, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        $this->assertEquals($expected, $property->getValue($code));
+        $this->assertSame($expected, $property->getValue($code));
     }
 
     public function test_code_default_lang_is_php(): void
@@ -59,7 +59,7 @@ class CodeTest extends TestCase
         $property = $reflection->getProperty('lang');
         $property->setAccessible(true);
 
-        $this->assertEquals('php', $property->getValue($code));
+        $this->assertSame('php', $property->getValue($code));
     }
 
     public function test_code_lang_setter(): void
@@ -73,7 +73,7 @@ class CodeTest extends TestCase
         $property = $reflection->getProperty('lang');
         $property->setAccessible(true);
 
-        $this->assertEquals('ruby', $property->getValue($code));
+        $this->assertSame('ruby', $property->getValue($code));
     }
 
     public function test_code_javascript_shortcut(): void
@@ -85,7 +85,7 @@ class CodeTest extends TestCase
         $property = $reflection->getProperty('lang');
         $property->setAccessible(true);
 
-        $this->assertEquals('javascript', $property->getValue($code));
+        $this->assertSame('javascript', $property->getValue($code));
     }
 
     public function test_code_html_shortcut(): void
@@ -97,7 +97,7 @@ class CodeTest extends TestCase
         $property = $reflection->getProperty('lang');
         $property->setAccessible(true);
 
-        $this->assertEquals('html', $property->getValue($code));
+        $this->assertSame('html', $property->getValue($code));
     }
 
     public function test_code_java_shortcut(): void
@@ -109,7 +109,7 @@ class CodeTest extends TestCase
         $property = $reflection->getProperty('lang');
         $property->setAccessible(true);
 
-        $this->assertEquals('java', $property->getValue($code));
+        $this->assertSame('java', $property->getValue($code));
     }
 
     public function test_code_python_shortcut(): void
@@ -121,7 +121,7 @@ class CodeTest extends TestCase
         $property = $reflection->getProperty('lang');
         $property->setAccessible(true);
 
-        $this->assertEquals('python', $property->getValue($code));
+        $this->assertSame('python', $property->getValue($code));
     }
 
     public function test_code_lang_chaining(): void

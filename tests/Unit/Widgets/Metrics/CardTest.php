@@ -28,8 +28,8 @@ class CardTest extends TestCase
     {
         $card = new Card('Total Users', 'fa-users');
 
-        $this->assertEquals('Total Users', $this->getProtectedProperty($card, 'title'));
-        $this->assertEquals('fa-users', $this->getProtectedProperty($card, 'icon'));
+        $this->assertSame('Total Users', $this->getProtectedProperty($card, 'title'));
+        $this->assertSame('fa-users', $this->getProtectedProperty($card, 'icon'));
     }
 
     public function test_constructor_with_null_arguments(): void
@@ -46,7 +46,7 @@ class CardTest extends TestCase
         $result = $card->title('Revenue');
 
         $this->assertSame($card, $result);
-        $this->assertEquals('Revenue', $this->getProtectedProperty($card, 'title'));
+        $this->assertSame('Revenue', $this->getProtectedProperty($card, 'title'));
     }
 
     public function test_sub_title_method(): void
@@ -55,7 +55,7 @@ class CardTest extends TestCase
         $result = $card->subTitle('Monthly');
 
         $this->assertSame($card, $result);
-        $this->assertEquals('Monthly', $this->getProtectedProperty($card, 'subTitle'));
+        $this->assertSame('Monthly', $this->getProtectedProperty($card, 'subTitle'));
     }
 
     public function test_icon_method(): void
@@ -64,7 +64,7 @@ class CardTest extends TestCase
         $result = $card->icon('fa-chart-bar');
 
         $this->assertSame($card, $result);
-        $this->assertEquals('fa-chart-bar', $this->getProtectedProperty($card, 'icon'));
+        $this->assertSame('fa-chart-bar', $this->getProtectedProperty($card, 'icon'));
     }
 
     public function test_header_method(): void
@@ -73,7 +73,7 @@ class CardTest extends TestCase
         $result = $card->header('<strong>Header</strong>');
 
         $this->assertSame($card, $result);
-        $this->assertEquals('<strong>Header</strong>', $card->renderHeader());
+        $this->assertSame('<strong>Header</strong>', $card->renderHeader());
     }
 
     public function test_content_method(): void
@@ -82,7 +82,7 @@ class CardTest extends TestCase
         $result = $card->content('<p>Content here</p>');
 
         $this->assertSame($card, $result);
-        $this->assertEquals('<p>Content here</p>', $card->renderContent());
+        $this->assertSame('<p>Content here</p>', $card->renderContent());
     }
 
     public function test_style_method(): void
@@ -91,14 +91,14 @@ class CardTest extends TestCase
         $result = $card->style('danger');
 
         $this->assertSame($card, $result);
-        $this->assertEquals('danger', $this->getProtectedProperty($card, 'style'));
+        $this->assertSame('danger', $this->getProtectedProperty($card, 'style'));
     }
 
     public function test_default_style_is_primary(): void
     {
         $card = new Card;
 
-        $this->assertEquals('primary', $this->getProtectedProperty($card, 'style'));
+        $this->assertSame('primary', $this->getProtectedProperty($card, 'style'));
     }
 
     public function test_dropdown_method(): void
@@ -108,7 +108,7 @@ class CardTest extends TestCase
         $result = $card->dropdown($items);
 
         $this->assertSame($card, $result);
-        $this->assertEquals($items, $this->getProtectedProperty($card, 'dropdown'));
+        $this->assertSame($items, $this->getProtectedProperty($card, 'dropdown'));
     }
 
     public function test_dropdown_empty_array(): void
@@ -116,7 +116,7 @@ class CardTest extends TestCase
         $card = new Card;
         $card->dropdown([]);
 
-        $this->assertEquals([], $this->getProtectedProperty($card, 'dropdown'));
+        $this->assertSame([], $this->getProtectedProperty($card, 'dropdown'));
     }
 
     public function test_height_method(): void
@@ -125,7 +125,7 @@ class CardTest extends TestCase
         $result = $card->height(200);
 
         $this->assertSame($card, $result);
-        $this->assertEquals(200, $this->getProtectedProperty($card, 'height'));
+        $this->assertSame(200, $this->getProtectedProperty($card, 'height'));
     }
 
     public function test_height_accepts_string(): void
@@ -133,14 +133,14 @@ class CardTest extends TestCase
         $card = new Card;
         $card->height('auto');
 
-        $this->assertEquals('auto', $this->getProtectedProperty($card, 'height'));
+        $this->assertSame('auto', $this->getProtectedProperty($card, 'height'));
     }
 
     public function test_default_height(): void
     {
         $card = new Card;
 
-        $this->assertEquals(165, $this->getProtectedProperty($card, 'height'));
+        $this->assertSame(165, $this->getProtectedProperty($card, 'height'));
     }
 
     public function test_chart_height_method(): void
@@ -149,7 +149,7 @@ class CardTest extends TestCase
         $result = $card->chartHeight(120);
 
         $this->assertSame($card, $result);
-        $this->assertEquals(120, $this->getProtectedProperty($card, 'chartHeight'));
+        $this->assertSame(120, $this->getProtectedProperty($card, 'chartHeight'));
     }
 
     public function test_chart_height_creates_chart(): void
@@ -168,7 +168,7 @@ class CardTest extends TestCase
         $result = $card->chartMarginTop(10);
 
         $this->assertSame($card, $result);
-        $this->assertEquals(10, $this->getProtectedProperty($card, 'chartMarginTop'));
+        $this->assertSame(10, $this->getProtectedProperty($card, 'chartMarginTop'));
     }
 
     public function test_chart_margin_bottom(): void
@@ -177,14 +177,14 @@ class CardTest extends TestCase
         $result = $card->chartMarginBottom(15);
 
         $this->assertSame($card, $result);
-        $this->assertEquals(15, $this->getProtectedProperty($card, 'chartMarginBottom'));
+        $this->assertSame(15, $this->getProtectedProperty($card, 'chartMarginBottom'));
     }
 
     public function test_default_chart_margin_right(): void
     {
         $card = new Card;
 
-        $this->assertEquals(1, $this->getProtectedProperty($card, 'chartMarginRight'));
+        $this->assertSame(1, $this->getProtectedProperty($card, 'chartMarginRight'));
     }
 
     public function test_chart_labels(): void
@@ -195,7 +195,7 @@ class CardTest extends TestCase
         $this->assertSame($card, $result);
 
         $options = $this->getProtectedProperty($card, 'chartOptions');
-        $this->assertEquals(['Jan', 'Feb', 'Mar'], $options['labels']);
+        $this->assertSame(['Jan', 'Feb', 'Mar'], $options['labels']);
     }
 
     public function test_chart_labels_string_converted_to_array(): void
@@ -204,7 +204,7 @@ class CardTest extends TestCase
         $card->chartLabels('Total');
 
         $options = $this->getProtectedProperty($card, 'chartOptions');
-        $this->assertEquals(['Total'], $options['labels']);
+        $this->assertSame(['Total'], $options['labels']);
     }
 
     public function test_chart_colors(): void
@@ -215,7 +215,7 @@ class CardTest extends TestCase
         $this->assertSame($card, $result);
 
         $options = $this->getProtectedProperty($card, 'chartOptions');
-        $this->assertEquals(['#ff0000', '#00ff00'], $options['colors']);
+        $this->assertSame(['#ff0000', '#00ff00'], $options['colors']);
     }
 
     public function test_chart_colors_string_converted_to_array(): void
@@ -224,7 +224,7 @@ class CardTest extends TestCase
         $card->chartColors('#ff0000');
 
         $options = $this->getProtectedProperty($card, 'chartOptions');
-        $this->assertEquals(['#ff0000'], $options['colors']);
+        $this->assertSame(['#ff0000'], $options['colors']);
     }
 
     public function test_chart_option_sets_nested_value(): void
@@ -235,7 +235,7 @@ class CardTest extends TestCase
         $this->assertSame($card, $result);
 
         $options = $this->getProtectedProperty($card, 'chartOptions');
-        $this->assertEquals('line', $options['chart']['type']);
+        $this->assertSame('line', $options['chart']['type']);
     }
 
     public function test_chart_option_deeply_nested(): void
@@ -244,7 +244,7 @@ class CardTest extends TestCase
         $card->chartOption('plotOptions.radialBar.hollow.size', '65%');
 
         $options = $this->getProtectedProperty($card, 'chartOptions');
-        $this->assertEquals('65%', $options['plotOptions']['radialBar']['hollow']['size']);
+        $this->assertSame('65%', $options['plotOptions']['radialBar']['hollow']['size']);
     }
 
     public function test_chart_with_array_options(): void
@@ -255,7 +255,7 @@ class CardTest extends TestCase
         $this->assertSame($card, $result);
 
         $options = $this->getProtectedProperty($card, 'chartOptions');
-        $this->assertEquals('bar', $options['chart']['type']);
+        $this->assertSame('bar', $options['chart']['type']);
     }
 
     public function test_chart_with_closure(): void
@@ -275,7 +275,7 @@ class CardTest extends TestCase
         $card->chart(['chart' => ['height' => 200]]);
 
         $options = $this->getProtectedProperty($card, 'chartOptions');
-        $this->assertEquals(200, $options['chart']['height']);
+        $this->assertSame(200, $options['chart']['height']);
     }
 
     public function test_use_chart_returns_chart_instance(): void
@@ -299,14 +299,14 @@ class CardTest extends TestCase
     {
         $card = new Card;
 
-        $this->assertEquals('', $card->renderHeader());
+        $this->assertSame('', $card->renderHeader());
     }
 
     public function test_render_content_returns_empty_by_default(): void
     {
         $card = new Card;
 
-        $this->assertEquals('', $card->renderContent());
+        $this->assertSame('', $card->renderContent());
     }
 
     public function test_render_chart_returns_empty_without_chart(): void
@@ -315,7 +315,7 @@ class CardTest extends TestCase
 
         $this->setProtectedProperty($card, 'chart', null);
 
-        $this->assertEquals('', $card->renderChart());
+        $this->assertSame('', $card->renderChart());
     }
 
     public function test_init_sets_id_with_prefix(): void
@@ -339,8 +339,8 @@ class CardTest extends TestCase
         $card = Card::make('My Title', 'fa-star');
 
         $this->assertInstanceOf(Card::class, $card);
-        $this->assertEquals('My Title', $this->getProtectedProperty($card, 'title'));
-        $this->assertEquals('fa-star', $this->getProtectedProperty($card, 'icon'));
+        $this->assertSame('My Title', $this->getProtectedProperty($card, 'title'));
+        $this->assertSame('fa-star', $this->getProtectedProperty($card, 'icon'));
     }
 
     public function test_method_chaining(): void
@@ -355,13 +355,13 @@ class CardTest extends TestCase
             ->content('<p>Body</p>')
             ->dropdown(['7d' => '7 Days']);
 
-        $this->assertEquals('Users', $this->getProtectedProperty($card, 'title'));
-        $this->assertEquals('Active', $this->getProtectedProperty($card, 'subTitle'));
-        $this->assertEquals('fa-users', $this->getProtectedProperty($card, 'icon'));
-        $this->assertEquals('success', $this->getProtectedProperty($card, 'style'));
-        $this->assertEquals(300, $this->getProtectedProperty($card, 'height'));
-        $this->assertEquals('<b>Header</b>', $card->renderHeader());
-        $this->assertEquals('<p>Body</p>', $card->renderContent());
+        $this->assertSame('Users', $this->getProtectedProperty($card, 'title'));
+        $this->assertSame('Active', $this->getProtectedProperty($card, 'subTitle'));
+        $this->assertSame('fa-users', $this->getProtectedProperty($card, 'icon'));
+        $this->assertSame('success', $this->getProtectedProperty($card, 'style'));
+        $this->assertSame(300, $this->getProtectedProperty($card, 'height'));
+        $this->assertSame('<b>Header</b>', $card->renderHeader());
+        $this->assertSame('<p>Body</p>', $card->renderContent());
     }
 
     public function test_default_chart_options_empty(): void
@@ -369,7 +369,7 @@ class CardTest extends TestCase
         $card = new Card;
 
         $options = $this->getProtectedProperty($card, 'chartOptions');
-        $this->assertEquals([], $options);
+        $this->assertSame([], $options);
     }
 
     public function test_value_result_without_chart(): void
@@ -382,8 +382,8 @@ class CardTest extends TestCase
 
         $result = $card->valueResult();
 
-        $this->assertEquals(1, $result['status']);
-        $this->assertEquals('Test Header', $result['header']);
-        $this->assertEquals('Test Content', $result['content']);
+        $this->assertSame(1, $result['status']);
+        $this->assertSame('Test Header', $result['header']);
+        $this->assertSame('Test Content', $result['content']);
     }
 }

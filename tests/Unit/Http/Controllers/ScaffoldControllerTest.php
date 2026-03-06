@@ -21,18 +21,18 @@ class ScaffoldControllerTest extends TestCase
     public function test_data_type_map_is_not_empty(): void
     {
         $this->assertNotEmpty(ScaffoldController::$dataTypeMap);
-        $this->assertEquals('integer', ScaffoldController::$dataTypeMap['int']);
-        $this->assertEquals('string', ScaffoldController::$dataTypeMap['varchar']);
-        $this->assertEquals('text', ScaffoldController::$dataTypeMap['text']);
-        $this->assertEquals('dateTime', ScaffoldController::$dataTypeMap['datetime']);
+        $this->assertSame('integer', ScaffoldController::$dataTypeMap['int']);
+        $this->assertSame('string', ScaffoldController::$dataTypeMap['varchar']);
+        $this->assertSame('text', ScaffoldController::$dataTypeMap['text']);
+        $this->assertSame('dateTime', ScaffoldController::$dataTypeMap['datetime']);
     }
 
     public function test_data_type_map_covers_unsigned_types(): void
     {
-        $this->assertEquals('unsignedInteger', ScaffoldController::$dataTypeMap['int@unsigned']);
-        $this->assertEquals('unsignedTinyInteger', ScaffoldController::$dataTypeMap['tinyint@unsigned']);
-        $this->assertEquals('unsignedSmallInteger', ScaffoldController::$dataTypeMap['smallint@unsigned']);
-        $this->assertEquals('unsignedBigInteger', ScaffoldController::$dataTypeMap['bigint@unsigned']);
+        $this->assertSame('unsignedInteger', ScaffoldController::$dataTypeMap['int@unsigned']);
+        $this->assertSame('unsignedTinyInteger', ScaffoldController::$dataTypeMap['tinyint@unsigned']);
+        $this->assertSame('unsignedSmallInteger', ScaffoldController::$dataTypeMap['smallint@unsigned']);
+        $this->assertSame('unsignedBigInteger', ScaffoldController::$dataTypeMap['bigint@unsigned']);
     }
 
     public function test_get_database_columns_uses_parameterized_bindings(): void
@@ -82,8 +82,8 @@ class ScaffoldControllerTest extends TestCase
         $this->assertStringContainsString('TABLE_NAME = ?', $capturedSql);
 
         // 验证绑定参数正确
-        $this->assertEquals('test_db', $capturedBindings[0]);
-        $this->assertEquals('pre_users', $capturedBindings[1]);
+        $this->assertSame('test_db', $capturedBindings[0]);
+        $this->assertSame('pre_users', $capturedBindings[1]);
 
         // 验证没有不安全的字符串拼接
         $this->assertStringNotContainsString('table_schema = "test_db"', $capturedSql);
@@ -132,6 +132,6 @@ class ScaffoldControllerTest extends TestCase
         $this->assertStringContainsString('table_schema = ?', $capturedSql);
         $this->assertStringNotContainsString('TABLE_NAME = ?', $capturedSql);
         $this->assertCount(1, $capturedBindings);
-        $this->assertEquals('test_db2', $capturedBindings[0]);
+        $this->assertSame('test_db2', $capturedBindings[0]);
     }
 }

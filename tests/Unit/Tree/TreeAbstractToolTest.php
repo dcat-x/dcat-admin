@@ -51,7 +51,7 @@ class TreeAbstractToolTest extends TestCase
 
         $reflection = new \ReflectionProperty(AbstractTool::class, 'style');
         $reflection->setAccessible(true);
-        $this->assertEquals('btn btn-sm btn-primary', $reflection->getValue($tool));
+        $this->assertSame('btn btn-sm btn-primary', $reflection->getValue($tool));
     }
 
     public function test_parent_initially_null(): void

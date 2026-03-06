@@ -58,7 +58,7 @@ class FormAbstractToolTest extends TestCase
         $form->shouldReceive('getKey')->andReturn(42);
 
         $tool->setForm($form);
-        $this->assertEquals(42, $tool->getKey());
+        $this->assertSame(42, $tool->getKey());
     }
 
     public function test_get_key_returns_primary_key_when_set(): void
@@ -66,7 +66,7 @@ class FormAbstractToolTest extends TestCase
         $tool = $this->createConcreteTool();
         $tool->setKey(99);
 
-        $this->assertEquals(99, $tool->getKey());
+        $this->assertSame(99, $tool->getKey());
     }
 
     public function test_allow_only_creating_defaults_false(): void
@@ -87,6 +87,6 @@ class FormAbstractToolTest extends TestCase
 
         $reflection = new \ReflectionProperty(AbstractTool::class, 'style');
         $reflection->setAccessible(true);
-        $this->assertEquals('btn btn-sm btn-primary', $reflection->getValue($tool));
+        $this->assertSame('btn btn-sm btn-primary', $reflection->getValue($tool));
     }
 }

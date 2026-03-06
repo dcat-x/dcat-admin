@@ -48,7 +48,7 @@ class HasActionHandlerTest extends TestCase
     public function test_method_returns_value(): void
     {
         $user = $this->createTraitUser();
-        $this->assertEquals('POST', $user->method());
+        $this->assertSame('POST', $user->method());
     }
 
     public function test_make_called_class(): void

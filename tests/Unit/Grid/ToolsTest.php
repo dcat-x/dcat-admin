@@ -103,7 +103,7 @@ class ToolsTest extends TestCase
         $tools->append('appended tool');
         $countAfter = $property->getValue($tools)->count();
 
-        $this->assertEquals($countBefore + 1, $countAfter);
+        $this->assertSame($countBefore + 1, $countAfter);
     }
 
     public function test_append_with_string_tool(): void

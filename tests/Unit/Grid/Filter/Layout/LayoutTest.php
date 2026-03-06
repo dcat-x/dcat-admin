@@ -98,7 +98,7 @@ class LayoutTest extends TestCase
 
         $currentAfter = $this->getProtectedProperty($layout, 'current');
         $this->assertSame($currentBefore, $currentAfter);
-        $this->assertEquals(6, $currentAfter->width());
+        $this->assertSame(6, $currentAfter->width());
     }
 
     public function test_column_creates_new_column(): void

@@ -53,7 +53,7 @@ class CanImportMenuTest extends TestCase
     {
         $helper = new CanImportMenuTestHelper;
 
-        $this->assertEquals([], $helper->exposeMenu());
+        $this->assertSame([], $helper->exposeMenu());
     }
 
     public function test_menu_validation_rules_has_title_required(): void
@@ -62,7 +62,7 @@ class CanImportMenuTest extends TestCase
 
         $rules = $helper->exposeMenuValidationRules();
 
-        $this->assertEquals('required', $rules['title'] ?? null);
+        $this->assertSame('required', $rules['title'] ?? null);
     }
 
     public function test_validate_menu_passes_with_title(): void
@@ -94,8 +94,8 @@ class CanImportMenuTest extends TestCase
     {
         $helper = new CanImportMenuTestHelper;
 
-        $this->assertEquals(5, $helper->exposeGetParentMenuId(5));
-        $this->assertEquals(0, $helper->exposeGetParentMenuId(0));
-        $this->assertEquals('123', $helper->exposeGetParentMenuId('123'));
+        $this->assertSame(5, $helper->exposeGetParentMenuId(5));
+        $this->assertSame(0, $helper->exposeGetParentMenuId(0));
+        $this->assertSame('123', $helper->exposeGetParentMenuId('123'));
     }
 }

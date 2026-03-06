@@ -31,7 +31,7 @@ class DateTimeTest extends TestCase
         $ref->setAccessible(true);
         $options = $ref->getValue($dt);
 
-        $this->assertEquals('YYYY-MM-DD HH:mm:ss', $options['format']);
+        $this->assertSame('YYYY-MM-DD HH:mm:ss', $options['format']);
     }
 
     public function test_constructor_with_custom_format(): void
@@ -42,7 +42,7 @@ class DateTimeTest extends TestCase
         $ref->setAccessible(true);
         $options = $ref->getValue($dt);
 
-        $this->assertEquals('YYYY-MM-DD', $options['format']);
+        $this->assertSame('YYYY-MM-DD', $options['format']);
     }
 
     public function test_constructor_sets_locale_from_config(): void
@@ -53,7 +53,7 @@ class DateTimeTest extends TestCase
         $ref->setAccessible(true);
         $options = $ref->getValue($dt);
 
-        $this->assertEquals(config('app.locale'), $options['locale'] ?? null);
+        $this->assertSame(config('app.locale'), $options['locale'] ?? null);
     }
 
     public function test_constructor_with_custom_locale(): void
@@ -64,7 +64,7 @@ class DateTimeTest extends TestCase
         $ref->setAccessible(true);
         $options = $ref->getValue($dt);
 
-        $this->assertEquals('zh-CN', $options['locale']);
+        $this->assertSame('zh-CN', $options['locale']);
     }
 
     public function test_constructor_preserves_extra_options(): void
@@ -75,8 +75,8 @@ class DateTimeTest extends TestCase
         $ref->setAccessible(true);
         $options = $ref->getValue($dt);
 
-        $this->assertEquals('2020-01-01', $options['minDate']);
-        $this->assertEquals('2025-12-31', $options['maxDate']);
+        $this->assertSame('2020-01-01', $options['minDate']);
+        $this->assertSame('2025-12-31', $options['maxDate']);
         $this->assertIsString($options['format'] ?? null);
     }
 
@@ -95,7 +95,7 @@ class DateTimeTest extends TestCase
     {
         $dt = $this->makeDateTime();
 
-        $this->assertEquals('admin::filter.datetime', $dt->view());
+        $this->assertSame('admin::filter.datetime', $dt->view());
     }
 
     private function assertArrayContainsKeys(array $expectedKeys, array $actual): void

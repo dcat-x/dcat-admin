@@ -54,26 +54,26 @@ class RepositoryTest extends TestCase
     public function test_get_key_name_default(): void
     {
         $repo = new TestRepository;
-        $this->assertEquals('id', $repo->getKeyName());
+        $this->assertSame('id', $repo->getKeyName());
     }
 
     public function test_set_key_name(): void
     {
         $repo = new TestRepository;
         $repo->setKeyName('uuid');
-        $this->assertEquals('uuid', $repo->getKeyName());
+        $this->assertSame('uuid', $repo->getKeyName());
     }
 
     public function test_get_created_at_column(): void
     {
         $repo = new TestRepository;
-        $this->assertEquals('created_at', $repo->getCreatedAtColumn());
+        $this->assertSame('created_at', $repo->getCreatedAtColumn());
     }
 
     public function test_get_updated_at_column(): void
     {
         $repo = new TestRepository;
-        $this->assertEquals('updated_at', $repo->getUpdatedAtColumn());
+        $this->assertSame('updated_at', $repo->getUpdatedAtColumn());
     }
 
     public function test_is_soft_deletes_default(): void
@@ -92,25 +92,25 @@ class RepositoryTest extends TestCase
     public function test_get_primary_key_column(): void
     {
         $repo = new TestRepository;
-        $this->assertEquals('id', $repo->getPrimaryKeyColumn());
+        $this->assertSame('id', $repo->getPrimaryKeyColumn());
     }
 
     public function test_get_parent_column_with_tree_model(): void
     {
         $repo = new TestTreeRepository;
-        $this->assertEquals('parent_id', $repo->getParentColumn());
+        $this->assertSame('parent_id', $repo->getParentColumn());
     }
 
     public function test_get_title_column_with_tree_model(): void
     {
         $repo = new TestTreeRepository;
-        $this->assertEquals('title', $repo->getTitleColumn());
+        $this->assertSame('title', $repo->getTitleColumn());
     }
 
     public function test_get_order_column_with_tree_model(): void
     {
         $repo = new TestTreeRepository;
-        $this->assertEquals('order', $repo->getOrderColumn());
+        $this->assertSame('order', $repo->getOrderColumn());
     }
 
     public function test_get_parent_column_without_tree_model(): void
@@ -137,19 +137,19 @@ class RepositoryTest extends TestCase
     public function test_get_grid_columns(): void
     {
         $repo = new TestRepository;
-        $this->assertEquals(['*'], $repo->getGridColumns());
+        $this->assertSame(['*'], $repo->getGridColumns());
     }
 
     public function test_get_form_columns(): void
     {
         $repo = new TestRepository;
-        $this->assertEquals(['*'], $repo->getFormColumns());
+        $this->assertSame(['*'], $repo->getFormColumns());
     }
 
     public function test_get_detail_columns(): void
     {
         $repo = new TestRepository;
-        $this->assertEquals(['*'], $repo->getDetailColumns());
+        $this->assertSame(['*'], $repo->getDetailColumns());
     }
 
     public function test_set_relations(): void
@@ -162,6 +162,6 @@ class RepositoryTest extends TestCase
         $property = $reflection->getProperty('relations');
         $property->setAccessible(true);
 
-        $this->assertEquals(['users', 'roles'], $property->getValue($repo));
+        $this->assertSame(['users', 'roles'], $property->getValue($repo));
     }
 }

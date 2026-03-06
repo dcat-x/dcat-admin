@@ -23,7 +23,7 @@ class RelationTest extends TestCase
     public function test_default_width(): void
     {
         $relation = new Relation('comments', function () {}, 'Comments');
-        $this->assertEquals(12, $relation->width);
+        $this->assertSame(12, $relation->width);
     }
 
     public function test_width_can_be_set(): void
@@ -32,7 +32,7 @@ class RelationTest extends TestCase
         $result = $relation->width(6);
 
         $this->assertSame($relation, $result);
-        $this->assertEquals(6, $relation->width);
+        $this->assertSame(6, $relation->width);
     }
 
     public function test_model_getter_and_setter(): void

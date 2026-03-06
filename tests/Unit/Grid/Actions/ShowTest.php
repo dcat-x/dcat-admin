@@ -50,7 +50,7 @@ class ShowTest extends TestCase
         $ref->setAccessible(true);
         $ref->setValue($action, 'View Details');
 
-        $this->assertEquals('View Details', $action->title());
+        $this->assertSame('View Details', $action->title());
     }
 
     public function test_href_returns_resource_with_key(): void
@@ -58,7 +58,7 @@ class ShowTest extends TestCase
         $action = $this->makeAction(5);
         $href = $action->href();
 
-        $this->assertEquals('/admin/users/5', $href);
+        $this->assertSame('/admin/users/5', $href);
     }
 
     public function test_href_with_different_key(): void
@@ -66,7 +66,7 @@ class ShowTest extends TestCase
         $action = $this->makeAction(42);
         $href = $action->href();
 
-        $this->assertEquals('/admin/users/42', $href);
+        $this->assertSame('/admin/users/42', $href);
     }
 
     public function test_get_key_returns_row_key(): void
@@ -74,7 +74,7 @@ class ShowTest extends TestCase
         $action = $this->makeAction(99);
         $key = $action->getKey();
 
-        $this->assertEquals(99, $key);
+        $this->assertSame(99, $key);
     }
 
     public function test_resource_returns_grid_resource(): void
@@ -82,6 +82,6 @@ class ShowTest extends TestCase
         $action = $this->makeAction();
         $resource = $action->resource();
 
-        $this->assertEquals('/admin/users', $resource);
+        $this->assertSame('/admin/users', $resource);
     }
 }

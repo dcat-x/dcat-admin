@@ -39,7 +39,7 @@ class CheckboxTest extends TestCase
         $ref = new ReflectionProperty($checkbox, 'options');
         $ref->setAccessible(true);
 
-        $this->assertEquals($options, $ref->getValue($checkbox));
+        $this->assertSame($options, $ref->getValue($checkbox));
     }
 
     public function test_constructor_accepts_arrayable(): void
@@ -50,7 +50,7 @@ class CheckboxTest extends TestCase
         $ref = new ReflectionProperty($checkbox, 'options');
         $ref->setAccessible(true);
 
-        $this->assertEquals(['a' => 'Alpha', 'b' => 'Beta'], $ref->getValue($checkbox));
+        $this->assertSame(['a' => 'Alpha', 'b' => 'Beta'], $ref->getValue($checkbox));
     }
 
     public function test_stacked_works_like_radio(): void
@@ -74,7 +74,7 @@ class CheckboxTest extends TestCase
 
         $vars = $checkbox->defaultVariables();
 
-        $this->assertEquals($options, $vars['options'] ?? null);
+        $this->assertSame($options, $vars['options'] ?? null);
         $this->assertTrue($vars['inline']);
         $this->assertTrue($vars['showLabel']);
     }
@@ -96,6 +96,6 @@ class CheckboxTest extends TestCase
     {
         $checkbox = $this->makeCheckbox();
 
-        $this->assertEquals('admin::filter.checkbox', $checkbox->view());
+        $this->assertSame('admin::filter.checkbox', $checkbox->view());
     }
 }

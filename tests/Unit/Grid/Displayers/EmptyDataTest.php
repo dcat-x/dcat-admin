@@ -34,7 +34,7 @@ class EmptyDataTest extends TestCase
         $displayer = $this->makeDisplayer('Hello World');
         $result = $displayer->display();
 
-        $this->assertEquals('Hello World', $result);
+        $this->assertSame('Hello World', $result);
     }
 
     public function test_display_returns_default_placeholder_for_null(): void
@@ -42,7 +42,7 @@ class EmptyDataTest extends TestCase
         $displayer = $this->makeDisplayer(null);
         $result = $displayer->display();
 
-        $this->assertEquals('-', $result);
+        $this->assertSame('-', $result);
     }
 
     public function test_display_returns_default_placeholder_for_empty_string(): void
@@ -50,7 +50,7 @@ class EmptyDataTest extends TestCase
         $displayer = $this->makeDisplayer('');
         $result = $displayer->display();
 
-        $this->assertEquals('-', $result);
+        $this->assertSame('-', $result);
     }
 
     public function test_display_returns_custom_placeholder_for_empty(): void
@@ -58,7 +58,7 @@ class EmptyDataTest extends TestCase
         $displayer = $this->makeDisplayer('');
         $result = $displayer->display('N/A');
 
-        $this->assertEquals('N/A', $result);
+        $this->assertSame('N/A', $result);
     }
 
     public function test_display_returns_custom_placeholder_for_null(): void
@@ -66,7 +66,7 @@ class EmptyDataTest extends TestCase
         $displayer = $this->makeDisplayer(null);
         $result = $displayer->display('--');
 
-        $this->assertEquals('--', $result);
+        $this->assertSame('--', $result);
     }
 
     public function test_display_returns_numeric_value(): void
@@ -74,6 +74,6 @@ class EmptyDataTest extends TestCase
         $displayer = $this->makeDisplayer(42);
         $result = $displayer->display();
 
-        $this->assertEquals(42, $result);
+        $this->assertSame(42, $result);
     }
 }

@@ -44,7 +44,7 @@ class ModelCreatorTest extends TestCase
         $input = "line1\n\n\nline2";
         $result = $creator->replaceSpace($input);
 
-        $this->assertEquals("line1\n\nline2", $result);
+        $this->assertSame("line1\n\nline2", $result);
     }
 
     public function test_replace_space_removes_indented_empty_lines(): void
@@ -54,7 +54,7 @@ class ModelCreatorTest extends TestCase
         $input = "line1\n    \nline2";
         $result = $creator->replaceSpace($input);
 
-        $this->assertEquals('line1line2', $result);
+        $this->assertSame('line1line2', $result);
     }
 
     public function test_create_throws_if_file_exists(): void
@@ -100,11 +100,11 @@ class ModelCreatorTest extends TestCase
 
         $ref = new \ReflectionProperty($creator, 'tableName');
         $ref->setAccessible(true);
-        $this->assertEquals('posts', $ref->getValue($creator));
+        $this->assertSame('posts', $ref->getValue($creator));
 
         $ref2 = new \ReflectionProperty($creator, 'name');
         $ref2->setAccessible(true);
-        $this->assertEquals('App\\Models\\Post', $ref2->getValue($creator));
+        $this->assertSame('App\\Models\\Post', $ref2->getValue($creator));
     }
 
     public function test_constructor_uses_app_files_when_null(): void

@@ -43,7 +43,7 @@ class InTest extends TestCase
 
         $ref = new \ReflectionProperty(In::class, 'options');
         $ref->setAccessible(true);
-        $this->assertEquals($options, $ref->getValue($filter));
+        $this->assertSame($options, $ref->getValue($filter));
     }
 
     public function test_constructor_creates_class_array(): void
@@ -73,8 +73,8 @@ class InTest extends TestCase
 
         $filter->addBinding(['a', 'b'], $model);
 
-        $this->assertEquals('whereIn', $filter->lastMethod);
-        $this->assertEquals([['a', 'b']], $filter->lastParams);
+        $this->assertSame('whereIn', $filter->lastMethod);
+        $this->assertSame([['a', 'b']], $filter->lastParams);
     }
 
     public function test_add_binding_skips_empty_array(): void
@@ -95,7 +95,7 @@ class InTest extends TestCase
 
         $filter->addBinding(['x'], $model);
 
-        $this->assertEquals('whereIn', $filter->lastMethod);
+        $this->assertSame('whereIn', $filter->lastMethod);
     }
 
     public function test_make_factory_method(): void

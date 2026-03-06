@@ -33,7 +33,7 @@ class UpdateCommandTest extends TestCase
         $ref = new \ReflectionProperty(UpdateCommand::class, 'signature');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('admin:update', $defaultValue);
+        $this->assertSame('admin:update', $defaultValue);
     }
 
     public function test_description_default_value(): void
@@ -41,7 +41,7 @@ class UpdateCommandTest extends TestCase
         $ref = new \ReflectionProperty(UpdateCommand::class, 'description');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('Update the admin package', $defaultValue);
+        $this->assertSame('Update the admin package', $defaultValue);
     }
 
     public function test_handle_method_signature(): void

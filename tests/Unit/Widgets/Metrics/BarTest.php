@@ -29,14 +29,14 @@ class BarTest extends TestCase
     {
         $bar = new Bar;
 
-        $this->assertEquals([4, 8], $this->getProtectedProperty($bar, 'contentWidth'));
+        $this->assertSame([4, 8], $this->getProtectedProperty($bar, 'contentWidth'));
     }
 
     public function test_default_chart_height_is_180(): void
     {
         $bar = new Bar;
 
-        $this->assertEquals(180, $this->getProtectedProperty($bar, 'chartHeight'));
+        $this->assertSame(180, $this->getProtectedProperty($bar, 'chartHeight'));
     }
 
     public function test_default_chart_pull_right_is_true(): void
@@ -52,7 +52,7 @@ class BarTest extends TestCase
 
         $options = $this->getProtectedProperty($bar, 'chartOptions');
 
-        $this->assertEquals('bar', $options['chart']['type']);
+        $this->assertSame('bar', $options['chart']['type']);
     }
 
     public function test_chart_options_sparkline_enabled(): void

@@ -45,7 +45,7 @@ class IlikeTest extends TestCase
         $condition = $filter->condition(['name' => 'john']);
 
         $this->assertConditionHasWhere($condition);
-        $this->assertEquals(['name', 'ilike', '%john%'], $condition['where']);
+        $this->assertSame(['name', 'ilike', '%john%'], $condition['where']);
     }
 
     public function test_condition_returns_null_when_value_is_null(): void
@@ -63,7 +63,7 @@ class IlikeTest extends TestCase
 
         $filter->condition(['name' => 'search_term']);
 
-        $this->assertEquals('search_term', $filter->getValue());
+        $this->assertSame('search_term', $filter->getValue());
     }
 
     public function test_condition_wraps_value_with_wildcards(): void
@@ -72,7 +72,7 @@ class IlikeTest extends TestCase
 
         $condition = $filter->condition(['title' => 'test']);
 
-        $this->assertEquals('%test%', $condition['where'][2]);
+        $this->assertSame('%test%', $condition['where'][2]);
     }
 
     public function test_condition_with_empty_string_returns_wildcards(): void
@@ -82,7 +82,7 @@ class IlikeTest extends TestCase
         $condition = $filter->condition(['name' => '']);
 
         $this->assertConditionHasWhere($condition);
-        $this->assertEquals(['name', 'ilike', '%%'], $condition['where']);
+        $this->assertSame(['name', 'ilike', '%%'], $condition['where']);
     }
 
     private function assertConditionHasWhere(mixed $condition): void

@@ -36,35 +36,35 @@ class DataRuleTest extends TestCase
         ]);
 
         $this->assertInstanceOf(DataRule::class, $rule);
-        $this->assertEquals('Test Rule', $rule->name);
-        $this->assertEquals('department_id', $rule->field);
+        $this->assertSame('Test Rule', $rule->name);
+        $this->assertSame('department_id', $rule->field);
     }
 
     public function test_data_rule_scope_constants(): void
     {
-        $this->assertEquals('row', DataRule::SCOPE_ROW);
-        $this->assertEquals('column', DataRule::SCOPE_COLUMN);
-        $this->assertEquals('form', DataRule::SCOPE_FORM);
+        $this->assertSame('row', DataRule::SCOPE_ROW);
+        $this->assertSame('column', DataRule::SCOPE_COLUMN);
+        $this->assertSame('form', DataRule::SCOPE_FORM);
     }
 
     public function test_data_rule_value_type_constants(): void
     {
-        $this->assertEquals('fixed', DataRule::VALUE_TYPE_FIXED);
-        $this->assertEquals('variable', DataRule::VALUE_TYPE_VARIABLE);
+        $this->assertSame('fixed', DataRule::VALUE_TYPE_FIXED);
+        $this->assertSame('variable', DataRule::VALUE_TYPE_VARIABLE);
     }
 
     public function test_data_rule_condition_constants(): void
     {
-        $this->assertEquals('=', DataRule::CONDITION_EQUAL);
-        $this->assertEquals('!=', DataRule::CONDITION_NOT_EQUAL);
-        $this->assertEquals('>', DataRule::CONDITION_GREATER);
-        $this->assertEquals('>=', DataRule::CONDITION_GREATER_EQUAL);
-        $this->assertEquals('<', DataRule::CONDITION_LESS);
-        $this->assertEquals('<=', DataRule::CONDITION_LESS_EQUAL);
-        $this->assertEquals('like', DataRule::CONDITION_LIKE);
-        $this->assertEquals('in', DataRule::CONDITION_IN);
-        $this->assertEquals('not_in', DataRule::CONDITION_NOT_IN);
-        $this->assertEquals('between', DataRule::CONDITION_BETWEEN);
+        $this->assertSame('=', DataRule::CONDITION_EQUAL);
+        $this->assertSame('!=', DataRule::CONDITION_NOT_EQUAL);
+        $this->assertSame('>', DataRule::CONDITION_GREATER);
+        $this->assertSame('>=', DataRule::CONDITION_GREATER_EQUAL);
+        $this->assertSame('<', DataRule::CONDITION_LESS);
+        $this->assertSame('<=', DataRule::CONDITION_LESS_EQUAL);
+        $this->assertSame('like', DataRule::CONDITION_LIKE);
+        $this->assertSame('in', DataRule::CONDITION_IN);
+        $this->assertSame('not_in', DataRule::CONDITION_NOT_IN);
+        $this->assertSame('between', DataRule::CONDITION_BETWEEN);
     }
 
     public function test_is_row_scope(): void

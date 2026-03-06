@@ -42,7 +42,7 @@ class SessionTest extends TestCase
             return new Response('OK');
         });
 
-        $this->assertEquals('/admin', config('session.path'));
+        $this->assertSame('/admin', config('session.path'));
     }
 
     public function test_handle_sets_session_path_when_multi_app(): void
@@ -59,7 +59,7 @@ class SessionTest extends TestCase
             return new Response('OK');
         });
 
-        $this->assertEquals('/admin', config('session.path'));
+        $this->assertSame('/admin', config('session.path'));
     }
 
     public function test_handle_includes_app_url_path_prefix(): void
@@ -75,7 +75,7 @@ class SessionTest extends TestCase
             return new Response('OK');
         });
 
-        $this->assertEquals('/sub-path/admin', config('session.path'));
+        $this->assertSame('/sub-path/admin', config('session.path'));
     }
 
     public function test_handle_trims_trailing_slash_from_app_path(): void
@@ -91,7 +91,7 @@ class SessionTest extends TestCase
             return new Response('OK');
         });
 
-        $this->assertEquals('/base/admin', config('session.path'));
+        $this->assertSame('/base/admin', config('session.path'));
     }
 
     public function test_handle_trims_admin_prefix_slashes(): void
@@ -107,7 +107,7 @@ class SessionTest extends TestCase
             return new Response('OK');
         });
 
-        $this->assertEquals('/dashboard', config('session.path'));
+        $this->assertSame('/dashboard', config('session.path'));
     }
 
     public function test_handle_returns_next_response(): void
@@ -140,6 +140,6 @@ class SessionTest extends TestCase
             return new Response('OK');
         });
 
-        $this->assertEquals('/backend', config('session.path'));
+        $this->assertSame('/backend', config('session.path'));
     }
 }

@@ -73,6 +73,6 @@ class ShowCreatorTest extends TestCase
         $creator = $this->createShowCreator();
         $result = $creator->generateShow('id', []);
 
-        $this->assertEquals($result, trim($result));
+        $this->assertSame($result, trim($result));
     }
 }

@@ -42,7 +42,7 @@ class ActionsTest extends TestCase
 
         $appends = $this->getProtectedProperty($actions, 'appends');
         $this->assertCount(1, $appends);
-        $this->assertEquals('<button>Custom</button>', $appends[0]);
+        $this->assertSame('<button>Custom</button>', $appends[0]);
     }
 
     public function test_append_multiple_actions_preserves_order(): void
@@ -54,9 +54,9 @@ class ActionsTest extends TestCase
 
         $appends = $this->getProtectedProperty($actions, 'appends');
         $this->assertCount(3, $appends);
-        $this->assertEquals('First', $appends[0]);
-        $this->assertEquals('Second', $appends[1]);
-        $this->assertEquals('Third', $appends[2]);
+        $this->assertSame('First', $appends[0]);
+        $this->assertSame('Second', $appends[1]);
+        $this->assertSame('Third', $appends[2]);
     }
 
     public function test_prepend_adds_action_to_prepends(): void
@@ -69,8 +69,8 @@ class ActionsTest extends TestCase
 
         $this->assertCount(2, $prepends);
         // prepend uses array_unshift, so most recent is first
-        $this->assertEquals('<button>Second</button>', $prepends[0]);
-        $this->assertEquals('<button>First</button>', $prepends[1]);
+        $this->assertSame('<button>Second</button>', $prepends[0]);
+        $this->assertSame('<button>First</button>', $prepends[1]);
     }
 
     public function test_disable_delete(): void

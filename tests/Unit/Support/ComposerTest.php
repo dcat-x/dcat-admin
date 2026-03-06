@@ -23,8 +23,8 @@ class ComposerTest extends TestCase
         $path = $this->createTempJsonFile(['name' => 'vendor/package', 'version' => '1.0.0']);
         $result = Composer::fromJson($path);
         $this->assertIsArray($result);
-        $this->assertEquals('vendor/package', $result['name']);
-        $this->assertEquals('1.0.0', $result['version']);
+        $this->assertSame('vendor/package', $result['name']);
+        $this->assertSame('1.0.0', $result['version']);
     }
 
     public function test_from_json_caches_result(): void
@@ -34,25 +34,25 @@ class ComposerTest extends TestCase
         // Modify file content - should still return cached version
         file_put_contents($path, json_encode(['name' => 'changed']));
         $result2 = Composer::fromJson($path);
-        $this->assertEquals($result1, $result2);
+        $this->assertSame($result1, $result2);
     }
 
     public function test_from_json_with_null_path(): void
     {
         $result = Composer::fromJson(null);
-        $this->assertEquals([], $result);
+        $this->assertSame([], $result);
     }
 
     public function test_from_json_with_nonexistent_file(): void
     {
         $result = Composer::fromJson('/nonexistent/path/composer.json');
-        $this->assertEquals([], $result);
+        $this->assertSame([], $result);
     }
 
     public function test_from_json_with_empty_string_path(): void
     {
         $result = Composer::fromJson('');
-        $this->assertEquals([], $result);
+        $this->assertSame([], $result);
     }
 
     public function test_parse_returns_composer_property(): void
@@ -65,15 +65,15 @@ class ComposerTest extends TestCase
 
         $result = Composer::parse($path);
         $this->assertInstanceOf(ComposerProperty::class, $result);
-        $this->assertEquals('vendor/package', $result->name);
-        $this->assertEquals('A test package', $result->description);
+        $this->assertSame('vendor/package', $result->name);
+        $this->assertSame('A test package', $result->description);
     }
 
     public function test_parse_with_null_returns_empty_property(): void
     {
         $result = Composer::parse(null);
         $this->assertInstanceOf(ComposerProperty::class, $result);
-        $this->assertEquals([], $result->toArray());
+        $this->assertSame([], $result->toArray());
     }
 
     public function test_get_version_returns_version_string(): void
@@ -88,7 +88,7 @@ class ComposerTest extends TestCase
         $lockFile = $this->createTempJsonFile($lockContent);
 
         $result = Composer::getVersion('dcat/laravel-admin', $lockFile);
-        $this->assertEquals('v1.5.0', $result);
+        $this->assertSame('v1.5.0', $result);
     }
 
     public function test_get_version_returns_null_for_missing_package(): void

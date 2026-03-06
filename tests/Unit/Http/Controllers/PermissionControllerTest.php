@@ -47,7 +47,7 @@ class PermissionControllerTest extends TestCase
 
         $result = $controller->exposeTitle();
 
-        $this->assertEquals(trans('admin.permissions'), $result);
+        $this->assertSame(trans('admin.permissions'), $result);
         $this->assertIsString($result);
     }
 
@@ -132,7 +132,7 @@ class PermissionControllerTest extends TestCase
 
         // array_combine means keys === values
         foreach ($result as $key => $value) {
-            $this->assertEquals($key, $value);
+            $this->assertSame($key, $value);
         }
     }
 }

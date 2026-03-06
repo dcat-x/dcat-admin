@@ -23,7 +23,7 @@ class DialogTableTest extends TestCase
 
         $reflection = new \ReflectionProperty(DialogTable::class, 'title');
         $reflection->setAccessible(true);
-        $this->assertEquals('Test Title', $reflection->getValue($dialog));
+        $this->assertSame('Test Title', $reflection->getValue($dialog));
     }
 
     public function test_width_sets_value(): void
@@ -35,7 +35,7 @@ class DialogTableTest extends TestCase
 
         $reflection = new \ReflectionProperty(DialogTable::class, 'width');
         $reflection->setAccessible(true);
-        $this->assertEquals('600px', $reflection->getValue($dialog));
+        $this->assertSame('600px', $reflection->getValue($dialog));
     }
 
     public function test_default_width(): void
@@ -44,7 +44,7 @@ class DialogTableTest extends TestCase
 
         $reflection = new \ReflectionProperty(DialogTable::class, 'width');
         $reflection->setAccessible(true);
-        $this->assertEquals('825px', $reflection->getValue($dialog));
+        $this->assertSame('825px', $reflection->getValue($dialog));
     }
 
     public function test_maxmin_sets_value(): void
@@ -80,7 +80,7 @@ class DialogTableTest extends TestCase
 
         $reflection = new \ReflectionProperty(DialogTable::class, 'button');
         $reflection->setAccessible(true);
-        $this->assertEquals('Click me', $reflection->getValue($dialog));
+        $this->assertSame('Click me', $reflection->getValue($dialog));
     }
 
     public function test_footer_sets_value(): void
@@ -92,7 +92,7 @@ class DialogTableTest extends TestCase
 
         $reflection = new \ReflectionProperty(DialogTable::class, 'footer');
         $reflection->setAccessible(true);
-        $this->assertEquals('Footer content', $reflection->getValue($dialog));
+        $this->assertSame('Footer content', $reflection->getValue($dialog));
     }
 
     public function test_on_shown_appends_script(): void

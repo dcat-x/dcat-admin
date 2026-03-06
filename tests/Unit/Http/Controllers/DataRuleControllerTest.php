@@ -40,7 +40,7 @@ class DataRuleControllerTest extends TestCase
         };
 
         $result = $controller->exposeTitle();
-        $this->assertEquals(trans('admin.data_rule.title'), $result);
+        $this->assertSame(trans('admin.data_rule.title'), $result);
         $this->assertIsString($result);
     }
 

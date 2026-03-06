@@ -51,7 +51,7 @@ class ExtensionUninstallCommandTest extends TestCase
         $ref = new \ReflectionProperty(ExtensionUninstallCommand::class, 'description');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('Uninstall an existing extension', $defaultValue);
+        $this->assertSame('Uninstall an existing extension', $defaultValue);
     }
 
     public function test_handle_method_signature(): void

@@ -20,7 +20,7 @@ class StringOutputTest extends TestCase
     {
         $output = new StringOutput;
 
-        $this->assertEquals('', $output->output);
+        $this->assertSame('', $output->output);
     }
 
     public function test_default_formatter_is_output_formatter_instance(): void
@@ -45,7 +45,7 @@ class StringOutputTest extends TestCase
         $output = new StringOutput;
         $output->write('hello');
 
-        $this->assertEquals('hello', $output->output);
+        $this->assertSame('hello', $output->output);
     }
 
     public function test_clear_resets_output_to_empty_string(): void
@@ -54,7 +54,7 @@ class StringOutputTest extends TestCase
         $output->writeln('some content');
         $output->clear();
 
-        $this->assertEquals('', $output->output);
+        $this->assertSame('', $output->output);
     }
 
     public function test_get_content_returns_trimmed_output(): void
@@ -62,7 +62,7 @@ class StringOutputTest extends TestCase
         $output = new StringOutput;
         $output->writeln('  trimmed  ');
 
-        $this->assertEquals('trimmed', $output->getContent());
+        $this->assertSame('trimmed', $output->getContent());
     }
 
     public function test_get_content_trims_trailing_newlines(): void

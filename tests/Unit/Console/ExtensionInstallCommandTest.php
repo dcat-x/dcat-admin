@@ -45,7 +45,7 @@ class ExtensionInstallCommandTest extends TestCase
         $ref = new \ReflectionProperty(ExtensionInstallCommand::class, 'description');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('Install an extension', $defaultValue);
+        $this->assertSame('Install an extension', $defaultValue);
     }
 
     public function test_handle_signature_is_public_and_parameterless(): void

@@ -34,7 +34,7 @@ class WhereNullTest extends TestCase
     {
         $filter = $this->makeFilter('deleted_at');
 
-        $this->assertEquals('whereNull', $this->getProtectedProperty($filter, 'query'));
+        $this->assertSame('whereNull', $this->getProtectedProperty($filter, 'query'));
     }
 
     public function test_condition_returns_null_when_value_is_null(): void
@@ -62,7 +62,7 @@ class WhereNullTest extends TestCase
         $condition = $filter->condition(['deleted_at' => '1']);
 
         $this->assertConditionHasWhereNull($condition);
-        $this->assertEquals(['deleted_at'], $condition['whereNull']);
+        $this->assertSame(['deleted_at'], $condition['whereNull']);
     }
 
     public function test_condition_returns_null_for_falsy_value(): void
@@ -80,15 +80,15 @@ class WhereNullTest extends TestCase
 
         $filter->condition(['deleted_at' => '1']);
 
-        $this->assertEquals('1', $filter->getValue());
+        $this->assertSame('1', $filter->getValue());
     }
 
     public function test_constructor_sets_column_and_label(): void
     {
         $filter = new WhereNull('deleted_at', 'Is Deleted');
 
-        $this->assertEquals('deleted_at', $filter->originalColumn());
-        $this->assertEquals('Is Deleted', $filter->getLabel());
+        $this->assertSame('deleted_at', $filter->originalColumn());
+        $this->assertSame('Is Deleted', $filter->getLabel());
     }
 
     private function assertConditionHasWhereNull(mixed $condition): void

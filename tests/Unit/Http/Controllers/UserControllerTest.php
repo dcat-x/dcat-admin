@@ -36,7 +36,7 @@ class UserControllerTest extends TestCase
 
         $result = $controller->title();
 
-        $this->assertEquals(trans('admin.administrator'), $result);
+        $this->assertSame(trans('admin.administrator'), $result);
         $this->assertIsString($result);
     }
 
@@ -89,7 +89,7 @@ class UserControllerTest extends TestCase
 
     public function test_controller_references_default_id_constant(): void
     {
-        $this->assertEquals(1, AdministratorModel::DEFAULT_ID);
+        $this->assertSame(1, AdministratorModel::DEFAULT_ID);
     }
 
     public function test_index_and_show_are_callable(): void

@@ -52,7 +52,7 @@ class FormCommandTest extends TestCase
         $ref = new \ReflectionProperty(FormCommand::class, 'description');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('Make admin form widget', $defaultValue);
+        $this->assertSame('Make admin form widget', $defaultValue);
     }
 
     #[DataProvider('requiredMethodProvider')]

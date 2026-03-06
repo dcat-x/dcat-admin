@@ -52,7 +52,7 @@ class ExtensionRefreshCommandTest extends TestCase
         $ref = new \ReflectionProperty(ExtensionRefreshCommand::class, 'description');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('Removes and re-adds an existing extension', $defaultValue);
+        $this->assertSame('Removes and re-adds an existing extension', $defaultValue);
     }
 
     public function test_handle_method_signature(): void

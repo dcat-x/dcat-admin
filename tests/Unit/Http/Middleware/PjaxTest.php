@@ -96,7 +96,7 @@ class PjaxTest extends TestCase
         });
 
         $this->assertTrue($result->headers->has('X-PJAX-URL'));
-        $this->assertEquals('/admin/dashboard', $result->headers->get('X-PJAX-URL'));
+        $this->assertSame('/admin/dashboard', $result->headers->get('X-PJAX-URL'));
     }
 
     public function test_set_uri_header_method(): void
@@ -111,7 +111,7 @@ class PjaxTest extends TestCase
         $method->setAccessible(true);
         $method->invoke($middleware, $response, $request);
 
-        $this->assertEquals('/admin/users?page=2', $response->headers->get('X-PJAX-URL'));
+        $this->assertSame('/admin/users?page=2', $response->headers->get('X-PJAX-URL'));
     }
 
     public function test_handle_error_response_in_debug_mode(): void

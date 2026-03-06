@@ -34,7 +34,7 @@ class WhereNotNullTest extends TestCase
     {
         $filter = $this->makeFilter('name');
 
-        $this->assertEquals('whereNotNull', $this->getProtectedProperty($filter, 'query'));
+        $this->assertSame('whereNotNull', $this->getProtectedProperty($filter, 'query'));
     }
 
     public function test_condition_returns_null_when_value_is_null(): void
@@ -62,7 +62,7 @@ class WhereNotNullTest extends TestCase
         $condition = $filter->condition(['name' => '1']);
 
         $this->assertConditionHasWhereNotNull($condition);
-        $this->assertEquals(['name'], $condition['whereNotNull']);
+        $this->assertSame(['name'], $condition['whereNotNull']);
     }
 
     public function test_condition_returns_null_for_falsy_value(): void
@@ -80,15 +80,15 @@ class WhereNotNullTest extends TestCase
 
         $filter->condition(['name' => '1']);
 
-        $this->assertEquals('1', $filter->getValue());
+        $this->assertSame('1', $filter->getValue());
     }
 
     public function test_constructor_sets_column_and_label(): void
     {
         $filter = new WhereNotNull('name', 'Has Name');
 
-        $this->assertEquals('name', $filter->originalColumn());
-        $this->assertEquals('Has Name', $filter->getLabel());
+        $this->assertSame('name', $filter->originalColumn());
+        $this->assertSame('Has Name', $filter->getLabel());
     }
 
     private function assertConditionHasWhereNotNull(mixed $condition): void

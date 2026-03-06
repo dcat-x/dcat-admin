@@ -26,8 +26,8 @@ class BetweenTest extends TestCase
     {
         $filter = new Between('price', 'Price Range');
 
-        $this->assertEquals('price', $filter->originalColumn());
-        $this->assertEquals('Price Range', $filter->getLabel());
+        $this->assertSame('price', $filter->originalColumn());
+        $this->assertSame('Price Range', $filter->getLabel());
     }
 
     public function test_condition_with_both_start_and_end(): void
@@ -37,7 +37,7 @@ class BetweenTest extends TestCase
         $condition = $filter->condition(['price' => ['start' => '100', 'end' => '500']]);
 
         $this->assertConditionHasKey($condition, 'whereBetween');
-        $this->assertEquals(['price', ['100', '500']], $condition['whereBetween']);
+        $this->assertSame(['price', ['100', '500']], $condition['whereBetween']);
     }
 
     public function test_condition_with_start_only(): void
@@ -47,7 +47,7 @@ class BetweenTest extends TestCase
         $condition = $filter->condition(['price' => ['start' => '100', 'end' => '']]);
 
         $this->assertConditionHasKey($condition, 'where');
-        $this->assertEquals(['price', '>=', '100'], $condition['where']);
+        $this->assertSame(['price', '>=', '100'], $condition['where']);
     }
 
     public function test_condition_with_end_only(): void
@@ -57,7 +57,7 @@ class BetweenTest extends TestCase
         $condition = $filter->condition(['price' => ['start' => '', 'end' => '500']]);
 
         $this->assertConditionHasKey($condition, 'where');
-        $this->assertEquals(['price', '<=', '500'], $condition['where']);
+        $this->assertSame(['price', '<=', '500'], $condition['where']);
     }
 
     public function test_condition_returns_null_when_both_empty(): void
@@ -88,8 +88,8 @@ class BetweenTest extends TestCase
         $this->assertConditionHasKey($condition, 'whereBetween');
 
         $values = $condition['whereBetween'][1];
-        $this->assertEquals(strtotime('2024-01-01'), $values[0]);
-        $this->assertEquals(strtotime('2024-12-31'), $values[1]);
+        $this->assertSame(strtotime('2024-01-01'), $values[0]);
+        $this->assertSame(strtotime('2024-12-31'), $values[1]);
     }
 
     public function test_to_timestamp_with_start_only(): void
@@ -100,7 +100,7 @@ class BetweenTest extends TestCase
         $condition = $filter->condition(['created_at' => ['start' => '2024-06-15', 'end' => '']]);
 
         $this->assertConditionHasKey($condition, 'where');
-        $this->assertEquals(strtotime('2024-06-15'), $condition['where'][2]);
+        $this->assertSame(strtotime('2024-06-15'), $condition['where'][2]);
     }
 
     public function test_to_timestamp_returns_self(): void
@@ -120,8 +120,8 @@ class BetweenTest extends TestCase
 
         $this->assertIsArray($id);
         $this->assertArrayContainsKeys(['start', 'end'], $id);
-        $this->assertEquals('filter-column-price-start', $id['start']);
-        $this->assertEquals('filter-column-price-end', $id['end']);
+        $this->assertSame('filter-column-price-start', $id['start']);
+        $this->assertSame('filter-column-price-end', $id['end']);
     }
 
     public function test_ignore_returns_null_condition(): void
@@ -140,7 +140,7 @@ class BetweenTest extends TestCase
 
         $filter->condition(['price' => ['start' => '10', 'end' => '20']]);
 
-        $this->assertEquals(['start' => '10', 'end' => '20'], $filter->getValue());
+        $this->assertSame(['start' => '10', 'end' => '20'], $filter->getValue());
     }
 
     private function assertConditionHasKey(mixed $condition, string $key): void

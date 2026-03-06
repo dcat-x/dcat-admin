@@ -85,7 +85,7 @@ class DataPermissionTest extends TestCase
         $dataPermission = new DataPermission(null);
         $resolved = $dataPermission->resolveValue($rule);
 
-        $this->assertEquals('fixed_value', $resolved);
+        $this->assertSame('fixed_value', $resolved);
     }
 
     public function test_get_hidden_columns_empty(): void

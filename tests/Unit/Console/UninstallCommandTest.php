@@ -33,7 +33,7 @@ class UninstallCommandTest extends TestCase
         $ref = new \ReflectionProperty(UninstallCommand::class, 'signature');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('admin:uninstall', $defaultValue);
+        $this->assertSame('admin:uninstall', $defaultValue);
     }
 
     public function test_description_default_value(): void
@@ -41,7 +41,7 @@ class UninstallCommandTest extends TestCase
         $ref = new \ReflectionProperty(UninstallCommand::class, 'description');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('Uninstall the admin package', $defaultValue);
+        $this->assertSame('Uninstall the admin package', $defaultValue);
     }
 
     public function test_handle_method_signature(): void

@@ -31,7 +31,7 @@ class RadioTest extends TestCase
         $ref = new ReflectionProperty($radio, 'options');
         $ref->setAccessible(true);
 
-        $this->assertEquals($options, $ref->getValue($radio));
+        $this->assertSame($options, $ref->getValue($radio));
     }
 
     public function test_constructor_accepts_arrayable(): void
@@ -42,7 +42,7 @@ class RadioTest extends TestCase
         $ref = new ReflectionProperty($radio, 'options');
         $ref->setAccessible(true);
 
-        $this->assertEquals([1 => 'Yes', 0 => 'No'], $ref->getValue($radio));
+        $this->assertSame([1 => 'Yes', 0 => 'No'], $ref->getValue($radio));
     }
 
     public function test_constructor_with_empty_options(): void
@@ -52,7 +52,7 @@ class RadioTest extends TestCase
         $ref = new ReflectionProperty($radio, 'options');
         $ref->setAccessible(true);
 
-        $this->assertEquals([], $ref->getValue($radio));
+        $this->assertSame([], $ref->getValue($radio));
     }
 
     public function test_inline_is_true_by_default(): void
@@ -119,6 +119,6 @@ class RadioTest extends TestCase
     {
         $radio = $this->makeRadio();
 
-        $this->assertEquals('admin::filter.radio', $radio->view());
+        $this->assertSame('admin::filter.radio', $radio->view());
     }
 }

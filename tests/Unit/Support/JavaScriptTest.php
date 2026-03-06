@@ -28,14 +28,14 @@ class JavaScriptTest extends TestCase
     public function test_value_getter_returns_script(): void
     {
         $js = new JavaScript('console.log("hello")');
-        $this->assertEquals('console.log("hello")', $js->value());
+        $this->assertSame('console.log("hello")', $js->value());
     }
 
     public function test_value_setter_updates_script(): void
     {
         $js = new JavaScript('old');
         $js->value('new');
-        $this->assertEquals('new', $js->value());
+        $this->assertSame('new', $js->value());
     }
 
     public function test_to_string_returns_id(): void
@@ -74,7 +74,7 @@ class JavaScriptTest extends TestCase
 
     public function test_all_returns_empty_array_initially(): void
     {
-        $this->assertEquals([], JavaScript::all());
+        $this->assertSame([], JavaScript::all());
     }
 
     public function test_delete_removes_script_by_id(): void
@@ -99,14 +99,14 @@ class JavaScriptTest extends TestCase
     public function test_format_with_string_value(): void
     {
         $result = JavaScript::format('plain string');
-        $this->assertEquals('plain string', $result);
+        $this->assertSame('plain string', $result);
     }
 
     public function test_format_with_array_without_js_ids(): void
     {
         $result = JavaScript::format(['key' => 'value']);
         $decoded = json_decode($result, true);
-        $this->assertEquals(['key' => 'value'], $decoded);
+        $this->assertSame(['key' => 'value'], $decoded);
     }
 
     public function test_multiple_scripts_in_format(): void

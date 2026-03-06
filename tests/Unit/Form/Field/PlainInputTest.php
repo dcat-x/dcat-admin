@@ -26,7 +26,7 @@ class PlainInputTest extends TestCase
 
         $reflection = new \ReflectionProperty($user, 'prepend');
         $reflection->setAccessible(true);
-        $this->assertEquals('$', $reflection->getValue($user));
+        $this->assertSame('$', $reflection->getValue($user));
     }
 
     public function test_append_sets_value(): void
@@ -38,7 +38,7 @@ class PlainInputTest extends TestCase
 
         $reflection = new \ReflectionProperty($user, 'append');
         $reflection->setAccessible(true);
-        $this->assertEquals('.00', $reflection->getValue($user));
+        $this->assertSame('.00', $reflection->getValue($user));
     }
 
     public function test_init_plain_input_sets_default_view(): void
@@ -50,7 +50,7 @@ class PlainInputTest extends TestCase
         $reflection->setAccessible(true);
         $reflection->invoke($user);
 
-        $this->assertEquals('admin::form.input', $user->view);
+        $this->assertSame('admin::form.input', $user->view);
     }
 
     public function test_init_plain_input_does_not_override_existing_view(): void
@@ -62,7 +62,7 @@ class PlainInputTest extends TestCase
         $reflection->setAccessible(true);
         $reflection->invoke($user);
 
-        $this->assertEquals('custom::view', $user->view);
+        $this->assertSame('custom::view', $user->view);
     }
 
     public function test_prepend_and_append_default_null(): void

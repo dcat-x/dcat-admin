@@ -45,7 +45,7 @@ class FilterTest extends TestCase
 
         $ref = new \ReflectionProperty(Filter::class, 'columnName');
         $ref->setAccessible(true);
-        $this->assertEquals('test_column', $ref->getValue($filter));
+        $this->assertSame('test_column', $ref->getValue($filter));
     }
 
     public function test_get_column_name_replaces_dot_with_underscore(): void
@@ -53,7 +53,7 @@ class FilterTest extends TestCase
         $filter = new ConcreteFilter;
         $filter->setColumnName('relation.column');
 
-        $this->assertEquals('relation_column', $filter->getColumnName());
+        $this->assertSame('relation_column', $filter->getColumnName());
     }
 
     public function test_get_column_name_replaces_arrow_with_underscore(): void
@@ -61,7 +61,7 @@ class FilterTest extends TestCase
         $filter = new ConcreteFilter;
         $filter->setColumnName('json->key');
 
-        $this->assertEquals('json_key', $filter->getColumnName());
+        $this->assertSame('json_key', $filter->getColumnName());
     }
 
     public function test_get_original_column_name_returns_set_name(): void
@@ -69,7 +69,7 @@ class FilterTest extends TestCase
         $filter = new ConcreteFilter;
         $filter->setColumnName('my_column');
 
-        $this->assertEquals('my_column', $filter->getOriginalColumnName());
+        $this->assertSame('my_column', $filter->getOriginalColumnName());
     }
 
     public function test_get_original_column_name_falls_back_to_parent(): void
@@ -83,7 +83,7 @@ class FilterTest extends TestCase
         $ref->setAccessible(true);
         $ref->setValue($filter, $column);
 
-        $this->assertEquals('parent_column', $filter->getOriginalColumnName());
+        $this->assertSame('parent_column', $filter->getOriginalColumnName());
     }
 
     public function test_display_sets_display_true(): void
@@ -178,7 +178,7 @@ class FilterTest extends TestCase
     public function test_render_returns_rendered_string(): void
     {
         $filter = new ConcreteFilter;
-        $this->assertEquals('rendered', $filter->render());
+        $this->assertSame('rendered', $filter->render());
     }
 
     public function test_parent_returns_null_by_default(): void

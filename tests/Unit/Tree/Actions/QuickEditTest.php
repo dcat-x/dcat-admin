@@ -31,7 +31,7 @@ class QuickEditTest extends TestCase
         $ref->setAccessible(true);
         $dimensions = $ref->getValue($action);
 
-        $this->assertEquals(['700px', '670px'], $dimensions);
+        $this->assertSame(['700px', '670px'], $dimensions);
     }
 
     public function test_html_method_signature_is_public_and_parameterless(): void

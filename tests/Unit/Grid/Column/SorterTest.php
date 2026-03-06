@@ -47,7 +47,7 @@ class SorterTest extends TestCase
 
         $ref = new \ReflectionProperty(Sorter::class, 'columnName');
         $ref->setAccessible(true);
-        $this->assertEquals('my_column', $ref->getValue($sorter));
+        $this->assertSame('my_column', $ref->getValue($sorter));
     }
 
     public function test_constructor_stores_cast(): void
@@ -56,7 +56,7 @@ class SorterTest extends TestCase
 
         $ref = new \ReflectionProperty(Sorter::class, 'cast');
         $ref->setAccessible(true);
-        $this->assertEquals('integer', $ref->getValue($sorter));
+        $this->assertSame('integer', $ref->getValue($sorter));
     }
 
     public function test_implements_renderable(): void

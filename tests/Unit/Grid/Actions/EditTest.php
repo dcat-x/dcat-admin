@@ -50,7 +50,7 @@ class EditTest extends TestCase
         $ref->setAccessible(true);
         $ref->setValue($action, 'Modify');
 
-        $this->assertEquals('Modify', $action->title());
+        $this->assertSame('Modify', $action->title());
     }
 
     public function test_href_returns_edit_url_with_key(): void
@@ -58,7 +58,7 @@ class EditTest extends TestCase
         $action = $this->makeAction(5);
         $href = $action->href();
 
-        $this->assertEquals('/admin/users/5/edit', $href);
+        $this->assertSame('/admin/users/5/edit', $href);
     }
 
     public function test_href_with_different_key(): void
@@ -66,7 +66,7 @@ class EditTest extends TestCase
         $action = $this->makeAction(100);
         $href = $action->href();
 
-        $this->assertEquals('/admin/users/100/edit', $href);
+        $this->assertSame('/admin/users/100/edit', $href);
     }
 
     public function test_get_key_returns_row_key(): void
@@ -74,7 +74,7 @@ class EditTest extends TestCase
         $action = $this->makeAction(77);
         $key = $action->getKey();
 
-        $this->assertEquals(77, $key);
+        $this->assertSame(77, $key);
     }
 
     public function test_resource_returns_grid_resource(): void
@@ -82,6 +82,6 @@ class EditTest extends TestCase
         $action = $this->makeAction();
         $resource = $action->resource();
 
-        $this->assertEquals('/admin/users', $resource);
+        $this->assertSame('/admin/users', $resource);
     }
 }

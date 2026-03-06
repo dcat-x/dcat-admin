@@ -61,7 +61,7 @@ class HelperGuessClassFileNameTest extends TestCase
         $parts = explode('\\', $class);
 
         // 第一个部分应该是命名空间前缀
-        $this->assertEquals('App', $parts[0]);
+        $this->assertSame('App', $parts[0]);
         $this->assertCount(3, $parts);
     }
 }

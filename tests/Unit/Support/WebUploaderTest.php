@@ -42,8 +42,8 @@ class WebUploaderTest extends TestCase
         ]);
 
         $this->assertSame('upload-123', $uploader->_id);
-        $this->assertEquals(0, $uploader->chunk);
-        $this->assertEquals(3, $uploader->chunks);
+        $this->assertSame(0, $uploader->chunk);
+        $this->assertSame(3, $uploader->chunks);
         $this->assertSame('avatar', $uploader->upload_column);
     }
 

@@ -53,7 +53,7 @@ class ExtensionRollbackCommandTest extends TestCase
         $ref = new \ReflectionProperty(ExtensionRollbackCommand::class, 'description');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('Rollback an existing extension', $defaultValue);
+        $this->assertSame('Rollback an existing extension', $defaultValue);
     }
 
     public function test_handle_method_signature(): void

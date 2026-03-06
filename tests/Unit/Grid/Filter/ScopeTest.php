@@ -17,13 +17,13 @@ class ScopeTest extends TestCase
     public function test_constructor_sets_key(): void
     {
         $scope = $this->makeScope('active');
-        $this->assertEquals('active', $scope->key);
+        $this->assertSame('active', $scope->key);
     }
 
     public function test_constructor_sets_label(): void
     {
         $scope = $this->makeScope('active', 'Active Users');
-        $this->assertEquals('Active Users', $scope->getLabel());
+        $this->assertSame('Active Users', $scope->getLabel());
     }
 
     public function test_condition_returns_empty_array_when_no_queries(): void
@@ -45,7 +45,7 @@ class ScopeTest extends TestCase
         $conditions = $scope->condition();
         $this->assertCount(1, $conditions);
         $this->assertConditionEntryHasKey($conditions, 0, 'where');
-        $this->assertEquals(['status', 'active'], $conditions[0]['where']);
+        $this->assertSame(['status', 'active'], $conditions[0]['where']);
     }
 
     public function test_chained_query_methods(): void
@@ -55,8 +55,8 @@ class ScopeTest extends TestCase
 
         $conditions = $scope->condition();
         $this->assertCount(2, $conditions);
-        $this->assertEquals(['role', 'admin'], $conditions[0]['where']);
-        $this->assertEquals(['active', 1], $conditions[1]['where']);
+        $this->assertSame(['role', 'admin'], $conditions[0]['where']);
+        $this->assertSame(['active', 1], $conditions[1]['where']);
     }
 
     public function test_where_between_query(): void
@@ -77,7 +77,7 @@ class ScopeTest extends TestCase
         $conditions = $scope->condition();
         $this->assertCount(1, $conditions);
         $this->assertConditionEntryHasKey($conditions, 0, 'orderBy');
-        $this->assertEquals(['created_at', 'desc'], $conditions[0]['orderBy']);
+        $this->assertSame(['created_at', 'desc'], $conditions[0]['orderBy']);
     }
 
     public function test_multiple_different_query_types(): void
@@ -97,7 +97,7 @@ class ScopeTest extends TestCase
     public function test_get_label(): void
     {
         $scope = $this->makeScope('trashed', 'Trashed Items');
-        $this->assertEquals('Trashed Items', $scope->getLabel());
+        $this->assertSame('Trashed Items', $scope->getLabel());
     }
 
     private function assertConditionEntryHasKey(array $conditions, int $index, string $key): void

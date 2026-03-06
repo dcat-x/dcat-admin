@@ -83,7 +83,7 @@ class TreeWidgetTest extends TestCase
         $property = $reflection->getProperty('value');
         $property->setAccessible(true);
 
-        $this->assertEquals([1, 3, 5], $property->getValue($tree));
+        $this->assertSame([1, 3, 5], $property->getValue($tree));
     }
 
     public function test_tree_set_id_column(): void
@@ -98,7 +98,7 @@ class TreeWidgetTest extends TestCase
         $property->setAccessible(true);
 
         $columns = $property->getValue($tree);
-        $this->assertEquals('uid', $columns['id']);
+        $this->assertSame('uid', $columns['id']);
     }
 
     public function test_tree_set_title_column(): void
@@ -113,7 +113,7 @@ class TreeWidgetTest extends TestCase
         $property->setAccessible(true);
 
         $columns = $property->getValue($tree);
-        $this->assertEquals('label', $columns['text']);
+        $this->assertSame('label', $columns['text']);
     }
 
     public function test_tree_set_parent_column(): void
@@ -128,7 +128,7 @@ class TreeWidgetTest extends TestCase
         $property->setAccessible(true);
 
         $columns = $property->getValue($tree);
-        $this->assertEquals('pid', $columns['parent']);
+        $this->assertSame('pid', $columns['parent']);
     }
 
     public function test_tree_default_column_names(): void
@@ -140,9 +140,9 @@ class TreeWidgetTest extends TestCase
         $property->setAccessible(true);
 
         $columns = $property->getValue($tree);
-        $this->assertEquals('id', $columns['id']);
-        $this->assertEquals('name', $columns['text']);
-        $this->assertEquals('parent_id', $columns['parent']);
+        $this->assertSame('id', $columns['id']);
+        $this->assertSame('name', $columns['text']);
+        $this->assertSame('parent_id', $columns['parent']);
     }
 
     public function test_tree_default_options(): void
@@ -233,8 +233,8 @@ class TreeWidgetTest extends TestCase
         $formatted = $nodesProperty->getValue($tree);
 
         // parent_id = 0 (empty) becomes '#'
-        $this->assertEquals('#', $formatted[0]['parent']);
-        $this->assertEquals(1, $formatted[1]['parent']);
+        $this->assertSame('#', $formatted[0]['parent']);
+        $this->assertSame(1, $formatted[1]['parent']);
     }
 
     public function test_tree_format_nodes_skips_empty_id(): void
@@ -256,7 +256,7 @@ class TreeWidgetTest extends TestCase
         $formatted = $nodesProperty->getValue($tree);
 
         $this->assertCount(1, $formatted);
-        $this->assertEquals(1, $formatted[0]['id']);
+        $this->assertSame(1, $formatted[0]['id']);
     }
 
     public function test_tree_format_nodes_with_empty_array(): void
@@ -318,8 +318,8 @@ class TreeWidgetTest extends TestCase
         $formatted = $nodesProperty->getValue($tree);
 
         $this->assertCount(1, $formatted);
-        $this->assertEquals(10, $formatted[0]['id']);
-        $this->assertEquals('Custom Node', $formatted[0]['text']);
-        $this->assertEquals('#', $formatted[0]['parent']);
+        $this->assertSame(10, $formatted[0]['id']);
+        $this->assertSame('Custom Node', $formatted[0]['text']);
+        $this->assertSame('#', $formatted[0]['parent']);
     }
 }

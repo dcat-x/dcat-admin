@@ -33,8 +33,8 @@ class DepartmentTest extends TestCase
         ]);
 
         $this->assertInstanceOf(Department::class, $department);
-        $this->assertEquals('Test Department', $department->name);
-        $this->assertEquals('TEST001', $department->code);
+        $this->assertSame('Test Department', $department->name);
+        $this->assertSame('TEST001', $department->code);
     }
 
     public function test_department_fillable_attributes(): void
@@ -73,7 +73,7 @@ class DepartmentTest extends TestCase
         $childDepartment = new Department(['parent_id' => 1]);
 
         // 通过 parent_id 判断是否为根部门
-        $this->assertEquals(0, $rootDepartment->parent_id);
+        $this->assertSame(0, $rootDepartment->parent_id);
         $this->assertNotEquals(0, $childDepartment->parent_id);
     }
 
@@ -89,9 +89,9 @@ class DepartmentTest extends TestCase
         $department = new Department;
 
         // 验证树结构必须的列
-        $this->assertEquals('parent_id', $department->getParentColumn());
-        $this->assertEquals('order', $department->getOrderColumn());
-        $this->assertEquals('name', $department->getTitleColumn());
+        $this->assertSame('parent_id', $department->getParentColumn());
+        $this->assertSame('order', $department->getOrderColumn());
+        $this->assertSame('name', $department->getTitleColumn());
     }
 
     public function test_department_casts(): void
@@ -109,9 +109,9 @@ class DepartmentTest extends TestCase
         $department = new Department;
 
         // 默认值检查
-        $this->assertEquals(0, $department->parent_id ?? 0);
-        $this->assertEquals(1, $department->status ?? 1);
-        $this->assertEquals(0, $department->order ?? 0);
+        $this->assertSame(0, $department->parent_id ?? 0);
+        $this->assertSame(1, $department->status ?? 1);
+        $this->assertSame(0, $department->order ?? 0);
     }
 
     public function test_users_relationship_declares_belongs_to_many_return_type(): void

@@ -62,7 +62,7 @@ class ExceptionHandlerTest extends TestCase
         $basePath = str_replace('\\', '/', base_path().'/');
         $result = $ref->invoke($handler, $basePath.'app/Models/User.php');
 
-        $this->assertEquals('app/Models/User.php', $result);
+        $this->assertSame('app/Models/User.php', $result);
     }
 
     public function test_replace_base_path_handles_backslashes(): void
@@ -74,6 +74,6 @@ class ExceptionHandlerTest extends TestCase
         $basePath = base_path().'\\';
         $result = $ref->invoke($handler, $basePath.'app\\Models\\User.php');
 
-        $this->assertEquals('app/Models/User.php', $result);
+        $this->assertSame('app/Models/User.php', $result);
     }
 }

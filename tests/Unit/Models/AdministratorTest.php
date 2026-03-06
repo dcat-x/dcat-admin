@@ -28,7 +28,7 @@ class AdministratorTest extends TestCase
 
     public function test_default_id_constant(): void
     {
-        $this->assertEquals(1, Administrator::DEFAULT_ID);
+        $this->assertSame(1, Administrator::DEFAULT_ID);
     }
 
     public function test_fillable_attributes(): void
@@ -50,7 +50,7 @@ class AdministratorTest extends TestCase
 
         $admin = new Administrator;
 
-        $this->assertEquals('custom_users', $admin->getTable());
+        $this->assertSame('custom_users', $admin->getTable());
     }
 
     public function test_connection_from_config(): void
@@ -59,7 +59,7 @@ class AdministratorTest extends TestCase
 
         $admin = new Administrator;
 
-        $this->assertEquals('mysql', $admin->getConnectionName());
+        $this->assertSame('mysql', $admin->getConnectionName());
     }
 
     public function test_can_see_menu_always_returns_true(): void

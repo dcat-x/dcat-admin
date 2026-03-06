@@ -32,14 +32,14 @@ class ApplicationTest extends TestCase
 
     public function test_default_constant(): void
     {
-        $this->assertEquals('admin', Application::DEFAULT);
+        $this->assertSame('admin', Application::DEFAULT);
     }
 
     public function test_get_name_returns_default_when_no_name_set(): void
     {
         $app = new Application($this->app);
 
-        $this->assertEquals('admin', $app->getName());
+        $this->assertSame('admin', $app->getName());
     }
 
     public function test_with_name_sets_name(): void
@@ -47,21 +47,21 @@ class ApplicationTest extends TestCase
         $app = new Application($this->app);
         $app->withName('backend');
 
-        $this->assertEquals('backend', $app->getName());
+        $this->assertSame('backend', $app->getName());
     }
 
     public function test_get_route_prefix_with_default(): void
     {
         $app = new Application($this->app);
 
-        $this->assertEquals('dcat.admin.', $app->getRoutePrefix());
+        $this->assertSame('dcat.admin.', $app->getRoutePrefix());
     }
 
     public function test_get_route_prefix_with_custom_app(): void
     {
         $app = new Application($this->app);
 
-        $this->assertEquals('dcat.api.', $app->getRoutePrefix('api'));
+        $this->assertSame('dcat.api.', $app->getRoutePrefix('api'));
     }
 
     public function test_get_route_prefix_uses_current_name(): void
@@ -69,28 +69,28 @@ class ApplicationTest extends TestCase
         $app = new Application($this->app);
         $app->withName('dashboard');
 
-        $this->assertEquals('dcat.dashboard.', $app->getRoutePrefix());
+        $this->assertSame('dcat.dashboard.', $app->getRoutePrefix());
     }
 
     public function test_get_api_route_prefix_default(): void
     {
         $app = new Application($this->app);
 
-        $this->assertEquals('dcat.admin.dcat-api.', $app->getApiRoutePrefix());
+        $this->assertSame('dcat.admin.dcat-api.', $app->getApiRoutePrefix());
     }
 
     public function test_get_api_route_prefix_with_custom_app(): void
     {
         $app = new Application($this->app);
 
-        $this->assertEquals('dcat.backend.dcat-api.', $app->getApiRoutePrefix('backend'));
+        $this->assertSame('dcat.backend.dcat-api.', $app->getApiRoutePrefix('backend'));
     }
 
     public function test_get_current_api_route_prefix(): void
     {
         $app = new Application($this->app);
 
-        $this->assertEquals('dcat.admin.dcat-api.', $app->getCurrentApiRoutePrefix());
+        $this->assertSame('dcat.admin.dcat-api.', $app->getCurrentApiRoutePrefix());
     }
 
     public function test_get_current_api_route_prefix_after_name_change(): void
@@ -98,7 +98,7 @@ class ApplicationTest extends TestCase
         $app = new Application($this->app);
         $app->withName('dashboard');
 
-        $this->assertEquals('dcat.dashboard.dcat-api.', $app->getCurrentApiRoutePrefix());
+        $this->assertSame('dcat.dashboard.dcat-api.', $app->getCurrentApiRoutePrefix());
     }
 
     public function test_get_apps_returns_config(): void

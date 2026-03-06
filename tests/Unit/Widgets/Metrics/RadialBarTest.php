@@ -29,21 +29,21 @@ class RadialBarTest extends TestCase
     {
         $bar = new RadialBar;
 
-        $this->assertEquals(250, $this->getProtectedProperty($bar, 'height'));
+        $this->assertSame(250, $this->getProtectedProperty($bar, 'height'));
     }
 
     public function test_default_chart_height_is_150(): void
     {
         $bar = new RadialBar;
 
-        $this->assertEquals(150, $this->getProtectedProperty($bar, 'chartHeight'));
+        $this->assertSame(150, $this->getProtectedProperty($bar, 'chartHeight'));
     }
 
     public function test_default_content_width(): void
     {
         $bar = new RadialBar;
 
-        $this->assertEquals([2, 10], $this->getProtectedProperty($bar, 'contentWidth'));
+        $this->assertSame([2, 10], $this->getProtectedProperty($bar, 'contentWidth'));
     }
 
     public function test_default_chart_pull_right_is_false(): void
@@ -59,14 +59,14 @@ class RadialBarTest extends TestCase
         $result = $bar->footer('<span>Footer</span>');
 
         $this->assertSame($bar, $result);
-        $this->assertEquals('<span>Footer</span>', $bar->renderFooter());
+        $this->assertSame('<span>Footer</span>', $bar->renderFooter());
     }
 
     public function test_render_footer_empty_by_default(): void
     {
         $bar = new RadialBar;
 
-        $this->assertEquals('', $bar->renderFooter());
+        $this->assertSame('', $bar->renderFooter());
     }
 
     public function test_content_width_method(): void
@@ -75,7 +75,7 @@ class RadialBarTest extends TestCase
         $result = $bar->contentWidth(4, 8);
 
         $this->assertSame($bar, $result);
-        $this->assertEquals([4, 8], $this->getProtectedProperty($bar, 'contentWidth'));
+        $this->assertSame([4, 8], $this->getProtectedProperty($bar, 'contentWidth'));
     }
 
     public function test_chart_pull_right(): void
@@ -102,7 +102,7 @@ class RadialBarTest extends TestCase
 
         $options = $this->getProtectedProperty($bar, 'chartOptions');
 
-        $this->assertEquals('radialBar', $options['chart']['type']);
+        $this->assertSame('radialBar', $options['chart']['type']);
     }
 
     public function test_default_chart_options_has_plot_options(): void
@@ -113,7 +113,7 @@ class RadialBarTest extends TestCase
 
         $this->assertIsArray($options['plotOptions'] ?? null);
         $this->assertIsArray($options['plotOptions']['radialBar'] ?? null);
-        $this->assertEquals(200, $options['plotOptions']['radialBar']['size']);
+        $this->assertSame(200, $options['plotOptions']['radialBar']['size']);
     }
 
     public function test_default_chart_options_has_fill(): void
@@ -123,9 +123,9 @@ class RadialBarTest extends TestCase
         $options = $this->getProtectedProperty($bar, 'chartOptions');
 
         $this->assertIsArray($options['fill'] ?? null);
-        $this->assertEquals('gradient', $options['fill']['type']);
-        $this->assertEquals('dark', $options['fill']['gradient']['shade']);
-        $this->assertEquals('horizontal', $options['fill']['gradient']['type']);
+        $this->assertSame('gradient', $options['fill']['type']);
+        $this->assertSame('dark', $options['fill']['gradient']['shade']);
+        $this->assertSame('horizontal', $options['fill']['gradient']['type']);
     }
 
     public function test_default_chart_options_stroke_dash_array(): void
@@ -134,7 +134,7 @@ class RadialBarTest extends TestCase
 
         $options = $this->getProtectedProperty($bar, 'chartOptions');
 
-        $this->assertEquals(8, $options['stroke']['dashArray']);
+        $this->assertSame(8, $options['stroke']['dashArray']);
     }
 
     public function test_init_creates_chart(): void
@@ -151,6 +151,6 @@ class RadialBarTest extends TestCase
         $bar = RadialBar::make('Revenue', 'fa-dollar');
 
         $this->assertInstanceOf(RadialBar::class, $bar);
-        $this->assertEquals('Revenue', $this->getProtectedProperty($bar, 'title'));
+        $this->assertSame('Revenue', $this->getProtectedProperty($bar, 'title'));
     }
 }

@@ -76,7 +76,7 @@ class BetweenTest extends TestCase
 
         $ref = new \ReflectionProperty(Between::class, 'dateFormat');
         $ref->setAccessible(true);
-        $this->assertEquals('YYYY-MM-DD', $ref->getValue($filter));
+        $this->assertSame('YYYY-MM-DD', $ref->getValue($filter));
     }
 
     public function test_time_sets_format(): void
@@ -88,7 +88,7 @@ class BetweenTest extends TestCase
 
         $ref = new \ReflectionProperty(Between::class, 'dateFormat');
         $ref->setAccessible(true);
-        $this->assertEquals('HH:mm:ss', $ref->getValue($filter));
+        $this->assertSame('HH:mm:ss', $ref->getValue($filter));
     }
 
     public function test_datetime_sets_format(): void
@@ -100,7 +100,7 @@ class BetweenTest extends TestCase
 
         $ref = new \ReflectionProperty(Between::class, 'dateFormat');
         $ref->setAccessible(true);
-        $this->assertEquals('YYYY-MM-DD HH:mm:ss', $ref->getValue($filter));
+        $this->assertSame('YYYY-MM-DD HH:mm:ss', $ref->getValue($filter));
     }
 
     public function test_add_binding_skips_empty_array(): void
@@ -121,8 +121,8 @@ class BetweenTest extends TestCase
 
         $filter->addBinding(['end' => '2024-12-31'], $model);
 
-        $this->assertEquals('where', $filter->lastMethod);
-        $this->assertEquals(['<=', '2024-12-31'], $filter->lastParams);
+        $this->assertSame('where', $filter->lastMethod);
+        $this->assertSame(['<=', '2024-12-31'], $filter->lastParams);
     }
 
     public function test_add_binding_start_only_uses_gte(): void
@@ -133,8 +133,8 @@ class BetweenTest extends TestCase
 
         $filter->addBinding(['start' => '2024-01-01'], $model);
 
-        $this->assertEquals('where', $filter->lastMethod);
-        $this->assertEquals(['>=', '2024-01-01'], $filter->lastParams);
+        $this->assertSame('where', $filter->lastMethod);
+        $this->assertSame(['>=', '2024-01-01'], $filter->lastParams);
     }
 
     public function test_add_binding_both_uses_where_between(): void
@@ -145,8 +145,8 @@ class BetweenTest extends TestCase
 
         $filter->addBinding(['start' => '2024-01-01', 'end' => '2024-12-31'], $model);
 
-        $this->assertEquals('whereBetween', $filter->lastMethod);
-        $this->assertEquals([['2024-01-01', '2024-12-31']], $filter->lastParams);
+        $this->assertSame('whereBetween', $filter->lastMethod);
+        $this->assertSame([['2024-01-01', '2024-12-31']], $filter->lastParams);
     }
 
     public function test_add_binding_with_timestamp_conversion(): void
@@ -158,9 +158,9 @@ class BetweenTest extends TestCase
 
         $filter->addBinding(['start' => '2024-01-01', 'end' => '2024-12-31'], $model);
 
-        $this->assertEquals('whereBetween', $filter->lastMethod);
+        $this->assertSame('whereBetween', $filter->lastMethod);
         $expectedStart = strtotime('2024-01-01');
         $expectedEnd = strtotime('2024-12-31');
-        $this->assertEquals([[$expectedStart, $expectedEnd]], $filter->lastParams);
+        $this->assertSame([[$expectedStart, $expectedEnd]], $filter->lastParams);
     }
 }

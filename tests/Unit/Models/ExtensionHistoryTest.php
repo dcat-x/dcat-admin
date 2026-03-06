@@ -33,7 +33,7 @@ class ExtensionHistoryTest extends TestCase
 
         $history = new ExtensionHistory;
 
-        $this->assertEquals('custom_extension_histories', $history->getTable());
+        $this->assertSame('custom_extension_histories', $history->getTable());
     }
 
     public function test_table_name_defaults_to_admin_extension_histories(): void
@@ -42,7 +42,7 @@ class ExtensionHistoryTest extends TestCase
 
         $history = new ExtensionHistory;
 
-        $this->assertEquals('admin_extension_histories', $history->getTable());
+        $this->assertSame('admin_extension_histories', $history->getTable());
     }
 
     public function test_connection_from_config(): void
@@ -51,7 +51,7 @@ class ExtensionHistoryTest extends TestCase
 
         $history = new ExtensionHistory;
 
-        $this->assertEquals('mysql', $history->getConnectionName());
+        $this->assertSame('mysql', $history->getConnectionName());
     }
 
     public function test_connection_defaults_to_database_default(): void
@@ -61,7 +61,7 @@ class ExtensionHistoryTest extends TestCase
 
         $history = new ExtensionHistory;
 
-        $this->assertEquals('testing', $history->getConnectionName());
+        $this->assertSame('testing', $history->getConnectionName());
     }
 
     public function test_creation_with_attributes(): void
@@ -74,9 +74,9 @@ class ExtensionHistoryTest extends TestCase
         ]);
 
         $this->assertInstanceOf(ExtensionHistory::class, $history);
-        $this->assertEquals('test-extension', $history->name);
-        $this->assertEquals(1, $history->type);
-        $this->assertEquals('1.0.0', $history->version);
-        $this->assertEquals('Initial installation', $history->detail);
+        $this->assertSame('test-extension', $history->name);
+        $this->assertSame(1, $history->type);
+        $this->assertSame('1.0.0', $history->version);
+        $this->assertSame('Initial installation', $history->detail);
     }
 }

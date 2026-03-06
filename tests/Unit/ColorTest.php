@@ -32,7 +32,7 @@ class ColorTest extends TestCase
 
     public function test_default_color_constant(): void
     {
-        $this->assertEquals('default', Color::DEFAULT_COLOR);
+        $this->assertSame('default', Color::DEFAULT_COLOR);
     }
 
     public function test_get_name_returns_default(): void
@@ -40,7 +40,7 @@ class ColorTest extends TestCase
         $this->app['config']->set('admin.layout.color', null);
         $color = new Color;
 
-        $this->assertEquals('default', $color->getName());
+        $this->assertSame('default', $color->getName());
     }
 
     public function test_get_name_from_config(): void
@@ -48,7 +48,7 @@ class ColorTest extends TestCase
         $this->app['config']->set('admin.layout.color', 'blue');
         $color = new Color;
 
-        $this->assertEquals('blue', $color->getName());
+        $this->assertSame('blue', $color->getName());
     }
 
     public function test_set_name(): void
@@ -56,7 +56,7 @@ class ColorTest extends TestCase
         $color = new Color;
         $color->setName('green');
 
-        $this->assertEquals('green', $color->getName());
+        $this->assertSame('green', $color->getName());
     }
 
     public function test_get_returns_color_value(): void
@@ -64,7 +64,7 @@ class ColorTest extends TestCase
         $color = $this->createColor();
         $result = $color->get('dark');
 
-        $this->assertEquals('#22292f', $result);
+        $this->assertSame('#22292f', $result);
     }
 
     public function test_get_returns_default_for_missing(): void
@@ -72,7 +72,7 @@ class ColorTest extends TestCase
         $color = $this->createColor();
         $result = $color->get('nonexistent', '#000');
 
-        $this->assertEquals('#000', $result);
+        $this->assertSame('#000', $result);
     }
 
     public function test_get_returns_null_for_missing_without_default(): void
@@ -89,7 +89,7 @@ class ColorTest extends TestCase
         // info -> blue -> '#3085d6'
         $result = $color->get('info');
 
-        $this->assertEquals('#3085d6', $result);
+        $this->assertSame('#3085d6', $result);
     }
 
     public function test_get_resolves_primary_from_extension(): void
@@ -98,7 +98,7 @@ class ColorTest extends TestCase
         $color->setName('default');
         $result = $color->get('primary');
 
-        $this->assertEquals('#586cb1', $result);
+        $this->assertSame('#586cb1', $result);
     }
 
     public function test_all_returns_array(): void
@@ -115,7 +115,7 @@ class ColorTest extends TestCase
         $all = $color->all();
 
         // 'info' alias should be resolved to the actual color value, not 'blue'
-        $this->assertEquals('#3085d6', $all['info']);
+        $this->assertSame('#3085d6', $all['info']);
     }
 
     public function test_all_caches_result(): void
@@ -159,7 +159,7 @@ class ColorTest extends TestCase
 
         $this->assertIsString($result);
         // primary-darker in default theme is '#4c60a3'
-        $this->assertEquals('#4c60a3', $result);
+        $this->assertSame('#4c60a3', $result);
     }
 
     public function test_magic_call_with_amount(): void
@@ -181,7 +181,7 @@ class ColorTest extends TestCase
         $ref->setAccessible(true);
         $extensions = $ref->getValue();
 
-        $this->assertEquals('#ff0000', $extensions['custom-test-theme']['colors']['primary'] ?? null);
+        $this->assertSame('#ff0000', $extensions['custom-test-theme']['colors']['primary'] ?? null);
     }
 
     public function test_extend_theme_colors_used_when_selected(): void
@@ -192,7 +192,7 @@ class ColorTest extends TestCase
         $color->setName('custom-test-selected');
         $result = $color->get('primary');
 
-        $this->assertEquals('#abcdef', $result);
+        $this->assertSame('#abcdef', $result);
     }
 
     public function test_get_colors_merges_extension(): void
@@ -202,11 +202,11 @@ class ColorTest extends TestCase
 
         // default theme overrides 'primary' from allColors
         $result = $color->get('primary');
-        $this->assertEquals('#586cb1', $result);
+        $this->assertSame('#586cb1', $result);
 
         // But standard colors from allColors should still be available
         $dark = $color->get('dark');
-        $this->assertEquals('#22292f', $dark);
+        $this->assertSame('#22292f', $dark);
     }
 
     #[DataProvider('extensionExistsProvider')]
@@ -236,7 +236,7 @@ class ColorTest extends TestCase
         $result = $color->darken('primary', 0);
 
         // darken with 0 should return the original color
-        $this->assertEquals('#586cb1', $result);
+        $this->assertSame('#586cb1', $result);
     }
 
     public static function extensionExistsProvider(): array

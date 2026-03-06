@@ -129,8 +129,8 @@ class FormTest extends TestCase
         $reflection = new \ReflectionProperty(Form::class, 'confirm');
         $reflection->setAccessible(true);
         $confirmValue = $reflection->getValue($form);
-        $this->assertEquals('Are you sure?', $confirmValue['title']);
-        $this->assertEquals('Confirmation', $confirmValue['content']);
+        $this->assertSame('Are you sure?', $confirmValue['title']);
+        $this->assertSame('Confirmation', $confirmValue['content']);
     }
 
     public function test_form_width_method(): void
@@ -142,7 +142,7 @@ class FormTest extends TestCase
         $reflection = new \ReflectionProperty(Form::class, 'width');
         $reflection->setAccessible(true);
         $widthValue = $reflection->getValue($form);
-        $this->assertEquals(['label' => 3, 'field' => 6], $widthValue);
+        $this->assertSame(['label' => 3, 'field' => 6], $widthValue);
     }
 
     public function test_form_disable_reset_button(): void
@@ -184,7 +184,7 @@ class FormTest extends TestCase
     {
         $form = new Form;
         $form->setKey(42);
-        $this->assertEquals(42, $form->getKey());
+        $this->assertSame(42, $form->getKey());
     }
 
     public function test_form_static_make(): void
@@ -195,17 +195,17 @@ class FormTest extends TestCase
 
     public function test_form_request_name_constant(): void
     {
-        $this->assertEquals('_form_', Form::REQUEST_NAME);
+        $this->assertSame('_form_', Form::REQUEST_NAME);
     }
 
     public function test_form_current_url_name_constant(): void
     {
-        $this->assertEquals('_current_', Form::CURRENT_URL_NAME);
+        $this->assertSame('_current_', Form::CURRENT_URL_NAME);
     }
 
     public function test_form_lazy_payload_name_constant(): void
     {
-        $this->assertEquals('_payload_', Form::LAZY_PAYLOAD_NAME);
+        $this->assertSame('_payload_', Form::LAZY_PAYLOAD_NAME);
     }
 
     public function test_method_and_action_set_html_attributes(): void

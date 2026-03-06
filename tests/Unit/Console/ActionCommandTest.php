@@ -36,7 +36,7 @@ class ActionCommandTest extends TestCase
         $ref = new \ReflectionProperty(ActionCommand::class, 'signature');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('admin:action', $defaultValue);
+        $this->assertSame('admin:action', $defaultValue);
     }
 
     public function test_description_default_value(): void
@@ -44,7 +44,7 @@ class ActionCommandTest extends TestCase
         $ref = new \ReflectionProperty(ActionCommand::class, 'description');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('Make a admin action', $defaultValue);
+        $this->assertSame('Make a admin action', $defaultValue);
     }
 
     #[DataProvider('protectedPropertyProvider')]
@@ -84,13 +84,13 @@ class ActionCommandTest extends TestCase
         $ref = new \ReflectionProperty(ActionCommand::class, 'namespaceMap');
         $map = $ref->getDefaultValue();
 
-        $this->assertEquals('Grid', $map['grid-batch']);
-        $this->assertEquals('Grid', $map['grid-row']);
-        $this->assertEquals('Grid', $map['grid-tool']);
-        $this->assertEquals('Form', $map['form-tool']);
-        $this->assertEquals('Show', $map['show-tool']);
-        $this->assertEquals('Tree', $map['tree-row']);
-        $this->assertEquals('Tree', $map['tree-tool']);
+        $this->assertSame('Grid', $map['grid-batch']);
+        $this->assertSame('Grid', $map['grid-row']);
+        $this->assertSame('Grid', $map['grid-tool']);
+        $this->assertSame('Form', $map['form-tool']);
+        $this->assertSame('Show', $map['show-tool']);
+        $this->assertSame('Tree', $map['tree-row']);
+        $this->assertSame('Tree', $map['tree-tool']);
     }
 
     #[DataProvider('requiredMethodProvider')]

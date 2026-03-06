@@ -17,7 +17,7 @@ class RefreshButtonTest extends TestCase
     {
         $button = new RefreshButton;
         $vars = $button->defaultVariables();
-        $this->assertEquals('feather icon-refresh-cw', $vars['icon']);
+        $this->assertSame('feather icon-refresh-cw', $vars['icon']);
     }
 
     public function test_custom_icon(): void
@@ -26,7 +26,7 @@ class RefreshButtonTest extends TestCase
         $result = $button->icon('fa fa-sync');
         $this->assertSame($button, $result);
         $vars = $button->defaultVariables();
-        $this->assertEquals('fa fa-sync', $vars['icon']);
+        $this->assertSame('fa fa-sync', $vars['icon']);
     }
 
     public function test_tooltip_default_null(): void
@@ -42,7 +42,7 @@ class RefreshButtonTest extends TestCase
         $result = $button->tooltip('Refresh Page');
         $this->assertSame($button, $result);
         $vars = $button->defaultVariables();
-        $this->assertEquals('Refresh Page', $vars['tooltip']);
+        $this->assertSame('Refresh Page', $vars['tooltip']);
     }
 
     public function test_default_variables_has_parent_keys(): void

@@ -31,7 +31,7 @@ class TranslatorTest extends TestCase
     {
         $translator = new Translator;
         $translator->setPath('custom/path');
-        $this->assertEquals('custom/path', $translator->getPath());
+        $this->assertSame('custom/path', $translator->getPath());
     }
 
     public function test_set_path_to_null(): void
@@ -54,7 +54,7 @@ class TranslatorTest extends TestCase
 
         $translator = $this->createTranslator();
         $result = $translator->trans('test-path.fields.name');
-        $this->assertEquals('Name Field', $result);
+        $this->assertSame('Name Field', $result);
     }
 
     public function test_trans_falls_back_to_global_prefix(): void
@@ -67,21 +67,21 @@ class TranslatorTest extends TestCase
         $translator = $this->createTranslator();
         // Try a key under non-existing path; should fallback to global
         $result = $translator->trans('users.fields.email');
-        $this->assertEquals('Email Address', $result);
+        $this->assertSame('Email Address', $result);
     }
 
     public function test_trans_returns_last_segment_when_no_translation(): void
     {
         $translator = $this->createTranslator();
         $result = $translator->trans('some.path.unknown_field');
-        $this->assertEquals('unknown_field', $result);
+        $this->assertSame('unknown_field', $result);
     }
 
     public function test_trans_with_single_segment_key_returns_key(): void
     {
         $translator = $this->createTranslator();
         $result = $translator->trans('standalone');
-        $this->assertEquals('standalone', $result);
+        $this->assertSame('standalone', $result);
     }
 
     public function test_trans_field_delegates_correctly(): void
@@ -92,14 +92,14 @@ class TranslatorTest extends TestCase
 
         $translator = $this->createTranslator();
         $result = $translator->transField('username');
-        $this->assertEquals('User Name', $result);
+        $this->assertSame('User Name', $result);
     }
 
     public function test_trans_field_fallback_to_last_segment(): void
     {
         $translator = $this->createTranslator();
         $result = $translator->transField('nonexistent_field');
-        $this->assertEquals('nonexistent_field', $result);
+        $this->assertSame('nonexistent_field', $result);
     }
 
     public function test_trans_label_delegates_correctly(): void
@@ -110,14 +110,14 @@ class TranslatorTest extends TestCase
 
         $translator = $this->createTranslator();
         $result = $translator->transLabel('User');
-        $this->assertEquals('User Label', $result);
+        $this->assertSame('User Label', $result);
     }
 
     public function test_trans_label_fallback_to_last_segment(): void
     {
         $translator = $this->createTranslator();
         $result = $translator->transLabel('MissingLabel');
-        $this->assertEquals('MissingLabel', $result);
+        $this->assertSame('MissingLabel', $result);
     }
 
     public function test_trans_with_replace_parameters(): void
@@ -128,7 +128,7 @@ class TranslatorTest extends TestCase
 
         $translator = $this->createTranslator();
         $result = $translator->trans('test-path.messages.welcome', ['name' => 'Admin']);
-        $this->assertEquals('Hello Admin', $result);
+        $this->assertSame('Hello Admin', $result);
     }
 
     public function test_trans_global_key_is_not_re_prefixed(): void
@@ -140,7 +140,7 @@ class TranslatorTest extends TestCase
         $translator = $this->createTranslator();
         // When key already starts with 'global.', it should not re-prefix
         $result = $translator->trans('global.labels.title');
-        $this->assertEquals('Global Title', $result);
+        $this->assertSame('Global Title', $result);
     }
 
     public function test_trans_global_fallback_when_global_also_missing(): void
@@ -148,6 +148,6 @@ class TranslatorTest extends TestCase
         $translator = $this->createTranslator();
         // Neither original key nor global key exist
         $result = $translator->trans('some-path.fields.missing');
-        $this->assertEquals('missing', $result);
+        $this->assertSame('missing', $result);
     }
 }

@@ -42,7 +42,7 @@ class ShowAbstractToolTest extends TestCase
         $tool = $this->createConcreteTool();
         $tool->setKey(99);
 
-        $this->assertEquals(99, $tool->getKey());
+        $this->assertSame(99, $tool->getKey());
     }
 
     public function test_default_style(): void
@@ -51,7 +51,7 @@ class ShowAbstractToolTest extends TestCase
         $reflection->setAccessible(true);
 
         $tool = $this->createConcreteTool();
-        $this->assertEquals('btn btn-sm btn-primary', $reflection->getValue($tool));
+        $this->assertSame('btn btn-sm btn-primary', $reflection->getValue($tool));
     }
 
     public function test_parent_initially_null(): void

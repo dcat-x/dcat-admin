@@ -10,33 +10,33 @@ class HelperTest extends TestCase
 {
     public function test_array_with_null(): void
     {
-        $this->assertEquals([], Helper::array(null));
+        $this->assertSame([], Helper::array(null));
     }
 
     public function test_array_with_empty_string(): void
     {
-        $this->assertEquals([], Helper::array(''));
+        $this->assertSame([], Helper::array(''));
     }
 
     public function test_array_with_empty_array(): void
     {
-        $this->assertEquals([], Helper::array([]));
+        $this->assertSame([], Helper::array([]));
     }
 
     public function test_array_with_array(): void
     {
         $input = ['a', 'b', 'c'];
-        $this->assertEquals(['a', 'b', 'c'], Helper::array($input));
+        $this->assertSame(['a', 'b', 'c'], Helper::array($input));
     }
 
     public function test_array_with_comma_separated_string(): void
     {
-        $this->assertEquals(['a', 'b', 'c'], Helper::array('a,b,c'));
+        $this->assertSame(['a', 'b', 'c'], Helper::array('a,b,c'));
     }
 
     public function test_array_with_json_string(): void
     {
-        $this->assertEquals(['a', 'b', 'c'], Helper::array('["a","b","c"]'));
+        $this->assertSame(['a', 'b', 'c'], Helper::array('["a","b","c"]'));
     }
 
     public function test_array_with_closure(): void
@@ -44,20 +44,20 @@ class HelperTest extends TestCase
         $result = Helper::array(function () {
             return ['a', 'b'];
         });
-        $this->assertEquals(['a', 'b'], $result);
+        $this->assertSame(['a', 'b'], $result);
     }
 
     public function test_array_with_collection(): void
     {
         $collection = new Collection(['a', 'b', 'c']);
-        $this->assertEquals(['a', 'b', 'c'], Helper::array($collection));
+        $this->assertSame(['a', 'b', 'c'], Helper::array($collection));
     }
 
     public function test_array_filter_empty_values(): void
     {
         $input = ['a', '', null, 'b'];
         $result = Helper::array($input, true);
-        $this->assertEquals(['a', 'b'], array_values($result));
+        $this->assertSame(['a', 'b'], array_values($result));
     }
 
     public function test_array_without_filter(): void
@@ -69,7 +69,7 @@ class HelperTest extends TestCase
 
     public function test_render_string(): void
     {
-        $this->assertEquals('hello', Helper::render('hello'));
+        $this->assertSame('hello', Helper::render('hello'));
     }
 
     public function test_render_closure(): void
@@ -77,7 +77,7 @@ class HelperTest extends TestCase
         $result = Helper::render(function () {
             return 'from closure';
         });
-        $this->assertEquals('from closure', $result);
+        $this->assertSame('from closure', $result);
     }
 
     public function test_render_closure_with_params(): void
@@ -85,14 +85,14 @@ class HelperTest extends TestCase
         $result = Helper::render(function ($a, $b) {
             return $a.$b;
         }, ['hello', 'world']);
-        $this->assertEquals('helloworld', $result);
+        $this->assertSame('helloworld', $result);
     }
 
     public function test_url_with_query(): void
     {
         $url = 'http://example.com/path';
         $result = Helper::urlWithQuery($url, ['foo' => 'bar']);
-        $this->assertEquals('http://example.com/path?foo=bar', $result);
+        $this->assertSame('http://example.com/path?foo=bar', $result);
     }
 
     public function test_url_with_query_merge_existing(): void
@@ -107,28 +107,28 @@ class HelperTest extends TestCase
     {
         $url = 'http://example.com/path';
         $result = Helper::urlWithQuery($url, []);
-        $this->assertEquals('http://example.com/path', $result);
+        $this->assertSame('http://example.com/path', $result);
     }
 
     public function test_url_without_query(): void
     {
         $url = 'http://example.com/path?foo=bar&baz=qux';
         $result = Helper::urlWithoutQuery($url, 'foo');
-        $this->assertEquals('http://example.com/path?baz=qux', $result);
+        $this->assertSame('http://example.com/path?baz=qux', $result);
     }
 
     public function test_url_without_query_multiple_keys(): void
     {
         $url = 'http://example.com/path?foo=bar&baz=qux&test=value';
         $result = Helper::urlWithoutQuery($url, ['foo', 'baz']);
-        $this->assertEquals('http://example.com/path?test=value', $result);
+        $this->assertSame('http://example.com/path?test=value', $result);
     }
 
     public function test_url_without_query_no_query_string(): void
     {
         $url = 'http://example.com/path';
         $result = Helper::urlWithoutQuery($url, 'foo');
-        $this->assertEquals('http://example.com/path', $result);
+        $this->assertSame('http://example.com/path', $result);
     }
 
     public function test_url_has_query(): void
@@ -147,14 +147,14 @@ class HelperTest extends TestCase
 
     public function test_slug(): void
     {
-        $this->assertEquals('user-name', Helper::slug('UserName'));
-        $this->assertEquals('user-name', Helper::slug('userName'));
-        $this->assertEquals('user-name', Helper::slug('user_name'));
+        $this->assertSame('user-name', Helper::slug('UserName'));
+        $this->assertSame('user-name', Helper::slug('userName'));
+        $this->assertSame('user-name', Helper::slug('user_name'));
     }
 
     public function test_slug_with_custom_symbol(): void
     {
-        $this->assertEquals('user_name', Helper::slug('UserName', '_'));
+        $this->assertSame('user_name', Helper::slug('UserName', '_'));
     }
 
     public function test_build_nested_array(): void
@@ -169,9 +169,9 @@ class HelperTest extends TestCase
         $result = Helper::buildNestedArray($nodes);
 
         $this->assertCount(1, $result);
-        $this->assertEquals('Root', $result[0]['name']);
+        $this->assertSame('Root', $result[0]['name']);
         $this->assertCount(2, $result[0]['children']);
-        $this->assertEquals('Child 1', $result[0]['children'][0]['name']);
+        $this->assertSame('Child 1', $result[0]['children'][0]['name']);
         $this->assertCount(1, $result[0]['children'][0]['children']);
     }
 
@@ -185,7 +185,7 @@ class HelperTest extends TestCase
         $result = Helper::buildNestedArray($nodes, 0, 'pk', 'pid', 'items');
 
         $this->assertCount(1, $result);
-        $this->assertEquals('Root', $result[0]['name']);
+        $this->assertSame('Root', $result[0]['name']);
         $this->assertIsArray($result[0]['items'] ?? null);
     }
 
@@ -193,30 +193,30 @@ class HelperTest extends TestCase
     {
         $array = ['a', 'b', 'c', 'd'];
         Helper::deleteByValue($array, 'b');
-        $this->assertEquals(['a', 'c', 'd'], array_values($array));
+        $this->assertSame(['a', 'c', 'd'], array_values($array));
     }
 
     public function test_delete_by_value_multiple(): void
     {
         $array = ['a', 'b', 'c', 'd'];
         Helper::deleteByValue($array, ['b', 'd']);
-        $this->assertEquals(['a', 'c'], array_values($array));
+        $this->assertSame(['a', 'c'], array_values($array));
     }
 
     public function test_delete_contains(): void
     {
         $array = ['foo', 'foobar', 'baz', 'qux'];
         Helper::deleteContains($array, 'bar');
-        $this->assertEquals(['foo', 'baz', 'qux'], array_values($array));
+        $this->assertSame(['foo', 'baz', 'qux'], array_values($array));
     }
 
     public function test_color_to_rbg(): void
     {
         $result = Helper::colorToRBG('ffffff');
-        $this->assertEquals([255, 255, 255], $result);
+        $this->assertSame([255, 255, 255], $result);
 
         $result = Helper::colorToRBG('000000');
-        $this->assertEquals([0, 0, 0], $result);
+        $this->assertSame([0, 0, 0], $result);
     }
 
     public function test_color_lighten(): void
@@ -243,26 +243,26 @@ class HelperTest extends TestCase
     public function test_color_alpha_no_change(): void
     {
         $result = Helper::colorAlpha('#ffffff', 1);
-        $this->assertEquals('#ffffff', $result);
+        $this->assertSame('#ffffff', $result);
     }
 
     public function test_validate_extension_name(): void
     {
-        $this->assertEquals(1, Helper::validateExtensionName('vendor/package'));
-        $this->assertEquals(1, Helper::validateExtensionName('my-vendor/my-package'));
-        $this->assertEquals(0, Helper::validateExtensionName('invalid'));
-        $this->assertEquals(0, Helper::validateExtensionName('vendor/'));
+        $this->assertSame(1, Helper::validateExtensionName('vendor/package'));
+        $this->assertSame(1, Helper::validateExtensionName('my-vendor/my-package'));
+        $this->assertSame(0, Helper::validateExtensionName('invalid'));
+        $this->assertSame(0, Helper::validateExtensionName('vendor/'));
     }
 
     public function test_get_file_icon(): void
     {
-        $this->assertEquals('fa fa-file-image-o', Helper::getFileIcon('photo.jpg'));
-        $this->assertEquals('fa fa-file-image-o', Helper::getFileIcon('photo.png'));
-        $this->assertEquals('fa fa-file-pdf-o', Helper::getFileIcon('document.pdf'));
-        $this->assertEquals('fa fa-file-word-o', Helper::getFileIcon('document.doc'));
-        $this->assertEquals('fa fa-file-excel-o', Helper::getFileIcon('data.xlsx'));
-        $this->assertEquals('fa fa-file-code-o', Helper::getFileIcon('script.php'));
-        $this->assertEquals('fa fa-file-o', Helper::getFileIcon('unknown.xyz'));
+        $this->assertSame('fa fa-file-image-o', Helper::getFileIcon('photo.jpg'));
+        $this->assertSame('fa fa-file-image-o', Helper::getFileIcon('photo.png'));
+        $this->assertSame('fa fa-file-pdf-o', Helper::getFileIcon('document.pdf'));
+        $this->assertSame('fa fa-file-word-o', Helper::getFileIcon('document.doc'));
+        $this->assertSame('fa fa-file-excel-o', Helper::getFileIcon('data.xlsx'));
+        $this->assertSame('fa fa-file-code-o', Helper::getFileIcon('script.php'));
+        $this->assertSame('fa fa-file-o', Helper::getFileIcon('unknown.xyz'));
     }
 
     public function test_equal(): void
@@ -285,27 +285,27 @@ class HelperTest extends TestCase
 
     public function test_str_limit(): void
     {
-        $this->assertEquals('hello', Helper::strLimit('hello', 10));
-        $this->assertEquals('hel...', Helper::strLimit('hello', 3));
-        $this->assertEquals('hel##', Helper::strLimit('hello', 3, '##'));
+        $this->assertSame('hello', Helper::strLimit('hello', 10));
+        $this->assertSame('hel...', Helper::strLimit('hello', 3));
+        $this->assertSame('hel##', Helper::strLimit('hello', 3, '##'));
     }
 
     public function test_str_limit_unicode(): void
     {
-        $this->assertEquals('你好...', Helper::strLimit('你好世界', 2));
+        $this->assertSame('你好...', Helper::strLimit('你好世界', 2));
     }
 
     public function test_format_element_name(): void
     {
-        $this->assertEquals('name', Helper::formatElementName('name'));
-        $this->assertEquals('user[name]', Helper::formatElementName('user.name'));
-        $this->assertEquals('user[profile][name]', Helper::formatElementName('user.profile.name'));
+        $this->assertSame('name', Helper::formatElementName('name'));
+        $this->assertSame('user[name]', Helper::formatElementName('user.name'));
+        $this->assertSame('user[profile][name]', Helper::formatElementName('user.profile.name'));
     }
 
     public function test_format_element_name_array(): void
     {
         $result = Helper::formatElementName(['user.name', 'user.email']);
-        $this->assertEquals(['user[name]', 'user[email]'], $result);
+        $this->assertSame(['user[name]', 'user[email]'], $result);
     }
 
     public function test_build_html_attributes(): void
@@ -340,9 +340,9 @@ class HelperTest extends TestCase
 
     public function test_basename(): void
     {
-        $this->assertEquals('file.txt', Helper::basename('/path/to/file.txt'));
-        $this->assertEquals('file.txt', Helper::basename('path/to/file.txt'));
-        $this->assertEquals('file.txt', Helper::basename('file.txt'));
+        $this->assertSame('file.txt', Helper::basename('/path/to/file.txt'));
+        $this->assertSame('file.txt', Helper::basename('path/to/file.txt'));
+        $this->assertSame('file.txt', Helper::basename('file.txt'));
     }
 
     public function test_key_exists(): void
@@ -357,10 +357,10 @@ class HelperTest extends TestCase
     {
         $array = [];
         Helper::arraySet($array, 'user.name', 'John');
-        $this->assertEquals('John', $array['user']['name']);
+        $this->assertSame('John', $array['user']['name']);
 
         Helper::arraySet($array, 'user.email', 'john@example.com');
-        $this->assertEquals('john@example.com', $array['user']['email']);
+        $this->assertSame('john@example.com', $array['user']['email']);
     }
 
     public function test_camel_array(): void

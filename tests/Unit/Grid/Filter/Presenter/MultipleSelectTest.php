@@ -42,7 +42,7 @@ class MultipleSelectTest extends TestCase
         $ref = new ReflectionProperty($ms, 'options');
         $ref->setAccessible(true);
 
-        $this->assertEquals($options, $ref->getValue($ms));
+        $this->assertSame($options, $ref->getValue($ms));
     }
 
     public function test_inherits_config_from_select(): void
@@ -56,7 +56,7 @@ class MultipleSelectTest extends TestCase
         $ref = new ReflectionProperty($ms, 'config');
         $ref->setAccessible(true);
 
-        $this->assertEquals(['minimumInputLength' => 2], $ref->getValue($ms));
+        $this->assertSame(['minimumInputLength' => 2], $ref->getValue($ms));
     }
 
     public function test_inherits_disable_select_all(): void
@@ -84,7 +84,7 @@ class MultipleSelectTest extends TestCase
         $ref = new ReflectionProperty($ms, 'placeholder');
         $ref->setAccessible(true);
 
-        $this->assertEquals('Select tags...', $ref->getValue($ms));
+        $this->assertSame('Select tags...', $ref->getValue($ms));
     }
 
     public function test_get_element_class(): void
@@ -94,7 +94,7 @@ class MultipleSelectTest extends TestCase
 
         $class = $ms->getElementClass();
 
-        $this->assertEquals('tag_ids', $class);
+        $this->assertSame('tag_ids', $class);
     }
 
     public function test_get_element_class_selector(): void
@@ -104,13 +104,13 @@ class MultipleSelectTest extends TestCase
 
         $selector = $ms->getElementClassSelector();
 
-        $this->assertEquals('.tag_ids', $selector);
+        $this->assertSame('.tag_ids', $selector);
     }
 
     public function test_view_returns_multipleselect_view(): void
     {
         $ms = $this->makeMultipleSelect();
 
-        $this->assertEquals('admin::filter.multipleselect', $ms->view());
+        $this->assertSame('admin::filter.multipleselect', $ms->view());
     }
 }

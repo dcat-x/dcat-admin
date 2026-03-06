@@ -23,8 +23,8 @@ class NoteTest extends TestCase
         $user->note('World');
 
         $this->assertCount(2, $user->notes);
-        $this->assertEquals('Hello', $user->notes[0]);
-        $this->assertEquals('World', $user->notes[1]);
+        $this->assertSame('Hello', $user->notes[0]);
+        $this->assertSame('World', $user->notes[1]);
     }
 
     public function test_note_writes_to_output_when_set(): void

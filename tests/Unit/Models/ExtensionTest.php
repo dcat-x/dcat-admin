@@ -33,7 +33,7 @@ class ExtensionTest extends TestCase
 
         $casts = $extension->getCasts();
 
-        $this->assertEquals('json', $casts['options'] ?? null);
+        $this->assertSame('json', $casts['options'] ?? null);
     }
 
     public function test_table_name_from_config(): void
@@ -42,7 +42,7 @@ class ExtensionTest extends TestCase
 
         $extension = new Extension;
 
-        $this->assertEquals('custom_extensions', $extension->getTable());
+        $this->assertSame('custom_extensions', $extension->getTable());
     }
 
     public function test_table_name_defaults_to_admin_extensions(): void
@@ -51,7 +51,7 @@ class ExtensionTest extends TestCase
 
         $extension = new Extension;
 
-        $this->assertEquals('admin_extensions', $extension->getTable());
+        $this->assertSame('admin_extensions', $extension->getTable());
     }
 
     public function test_connection_from_config(): void
@@ -60,7 +60,7 @@ class ExtensionTest extends TestCase
 
         $extension = new Extension;
 
-        $this->assertEquals('mysql', $extension->getConnectionName());
+        $this->assertSame('mysql', $extension->getConnectionName());
     }
 
     public function test_connection_defaults_to_database_default(): void
@@ -70,7 +70,7 @@ class ExtensionTest extends TestCase
 
         $extension = new Extension;
 
-        $this->assertEquals('testing', $extension->getConnectionName());
+        $this->assertSame('testing', $extension->getConnectionName());
     }
 
     public function test_creation_with_attributes(): void
@@ -83,8 +83,8 @@ class ExtensionTest extends TestCase
         ]);
 
         $this->assertInstanceOf(Extension::class, $extension);
-        $this->assertEquals('test-extension', $extension->name);
-        $this->assertEquals(1, $extension->is_enabled);
-        $this->assertEquals('1.0.0', $extension->version);
+        $this->assertSame('test-extension', $extension->name);
+        $this->assertSame(1, $extension->is_enabled);
+        $this->assertSame('1.0.0', $extension->version);
     }
 }

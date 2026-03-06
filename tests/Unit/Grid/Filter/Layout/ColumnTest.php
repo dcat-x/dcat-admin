@@ -20,14 +20,14 @@ class ColumnTest extends TestCase
     {
         $column = new Column;
 
-        $this->assertEquals(12, $column->width());
+        $this->assertSame(12, $column->width());
     }
 
     public function test_constructor_custom_width(): void
     {
         $column = new Column(6);
 
-        $this->assertEquals(6, $column->width());
+        $this->assertSame(6, $column->width());
     }
 
     public function test_filters_returns_collection(): void
@@ -59,7 +59,7 @@ class ColumnTest extends TestCase
     {
         $column = new Column(8);
 
-        $this->assertEquals(8, $column->width());
+        $this->assertSame(8, $column->width());
     }
 
     public function test_width_setter_sets_width(): void
@@ -68,7 +68,7 @@ class ColumnTest extends TestCase
 
         $column->width(4);
 
-        $this->assertEquals(4, $column->width());
+        $this->assertSame(4, $column->width());
     }
 
     public function test_remove_filter_by_id(): void
@@ -89,6 +89,6 @@ class ColumnTest extends TestCase
         $column->removeFilterByID('name');
 
         $this->assertCount(1, $column->filters());
-        $this->assertEquals('email', $column->filters()->first()->getId());
+        $this->assertSame('email', $column->filters()->first()->getId());
     }
 }

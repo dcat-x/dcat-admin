@@ -26,8 +26,8 @@ class InTest extends TestCase
     {
         $filter = new In('status', 'Status');
 
-        $this->assertEquals('status', $filter->originalColumn());
-        $this->assertEquals('Status', $filter->getLabel());
+        $this->assertSame('status', $filter->originalColumn());
+        $this->assertSame('Status', $filter->getLabel());
     }
 
     public function test_condition_returns_where_in_with_array_value(): void
@@ -37,7 +37,7 @@ class InTest extends TestCase
         $condition = $filter->condition(['status' => ['active', 'pending']]);
 
         $this->assertConditionHasWhereIn($condition);
-        $this->assertEquals(['status', ['active', 'pending']], $condition['whereIn']);
+        $this->assertSame(['status', ['active', 'pending']], $condition['whereIn']);
     }
 
     public function test_condition_splits_comma_separated_string(): void
@@ -47,7 +47,7 @@ class InTest extends TestCase
         $condition = $filter->condition(['status' => 'active,pending,closed']);
 
         $this->assertConditionHasWhereIn($condition);
-        $this->assertEquals(['status', ['active', 'pending', 'closed']], $condition['whereIn']);
+        $this->assertSame(['status', ['active', 'pending', 'closed']], $condition['whereIn']);
     }
 
     public function test_condition_returns_null_when_value_is_null(): void
@@ -66,7 +66,7 @@ class InTest extends TestCase
         $condition = $filter->condition(['category' => 'news']);
 
         $this->assertConditionHasWhereIn($condition);
-        $this->assertEquals(['category', ['news']], $condition['whereIn']);
+        $this->assertSame(['category', ['news']], $condition['whereIn']);
     }
 
     public function test_condition_sets_array_value_on_filter(): void
@@ -75,7 +75,7 @@ class InTest extends TestCase
 
         $filter->condition(['status' => ['a', 'b']]);
 
-        $this->assertEquals(['a', 'b'], $filter->getValue());
+        $this->assertSame(['a', 'b'], $filter->getValue());
     }
 
     public function test_condition_converts_string_to_array_value(): void
@@ -84,7 +84,7 @@ class InTest extends TestCase
 
         $filter->condition(['status' => 'x,y']);
 
-        $this->assertEquals(['x', 'y'], $filter->getValue());
+        $this->assertSame(['x', 'y'], $filter->getValue());
     }
 
     public function test_ignore_returns_null_condition(): void

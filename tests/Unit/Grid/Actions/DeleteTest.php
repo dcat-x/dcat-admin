@@ -39,7 +39,7 @@ class DeleteTest extends TestCase
         $ref->setAccessible(true);
         $ref->setValue($action, 'Custom Delete');
 
-        $this->assertEquals('Custom Delete', $action->title());
+        $this->assertSame('Custom Delete', $action->title());
     }
 
     public function test_url_uses_parent_resource_and_row_key(): void

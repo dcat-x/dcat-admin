@@ -28,15 +28,15 @@ class PermissionTest extends TestCase
         ]);
 
         $this->assertInstanceOf(Permission::class, $permission);
-        $this->assertEquals('Test Permission', $permission->name);
-        $this->assertEquals('test-permission', $permission->slug);
+        $this->assertSame('Test Permission', $permission->name);
+        $this->assertSame('test-permission', $permission->slug);
     }
 
     public function test_permission_type_constants(): void
     {
-        $this->assertEquals(1, Permission::TYPE_MENU);
-        $this->assertEquals(2, Permission::TYPE_BUTTON);
-        $this->assertEquals(3, Permission::TYPE_DATA);
+        $this->assertSame(1, Permission::TYPE_MENU);
+        $this->assertSame(2, Permission::TYPE_BUTTON);
+        $this->assertSame(3, Permission::TYPE_DATA);
     }
 
     public function test_is_menu_permission(): void
@@ -86,8 +86,8 @@ class PermissionTest extends TestCase
             'menu_id' => 1,
         ]);
 
-        $this->assertEquals('user:add', $permission->permission_key);
-        $this->assertEquals(1, $permission->menu_id);
+        $this->assertSame('user:add', $permission->permission_key);
+        $this->assertSame(1, $permission->menu_id);
         $this->assertTrue($permission->isButtonPermission());
     }
 
@@ -99,7 +99,7 @@ class PermissionTest extends TestCase
         ]);
 
         // 默认类型应该是菜单权限
-        $this->assertEquals(Permission::TYPE_MENU, $permission->type ?? Permission::TYPE_MENU);
+        $this->assertSame(Permission::TYPE_MENU, $permission->type ?? Permission::TYPE_MENU);
     }
 
     public function test_menu_relationship_returns_belongs_to(): void
@@ -135,7 +135,7 @@ class PermissionTest extends TestCase
     {
         $permission = new Permission;
 
-        $this->assertEquals('parent_id', $permission->getParentColumn());
+        $this->assertSame('parent_id', $permission->getParentColumn());
         $this->assertTrue((new \ReflectionClass(Permission::class))->hasMethod('allNodes'));
     }
 
@@ -170,9 +170,9 @@ class PermissionTest extends TestCase
             'http_path' => '/orders/*',
         ]);
 
-        $this->assertEquals(Permission::TYPE_BUTTON, $permission->type);
-        $this->assertEquals('order:delete', $permission->permission_key);
-        $this->assertEquals(5, $permission->menu_id);
+        $this->assertSame(Permission::TYPE_BUTTON, $permission->type);
+        $this->assertSame('order:delete', $permission->permission_key);
+        $this->assertSame(5, $permission->menu_id);
         $this->assertTrue($permission->isButtonPermission());
         $this->assertFalse($permission->isMenuPermission());
     }
@@ -185,7 +185,7 @@ class PermissionTest extends TestCase
             'type' => Permission::TYPE_DATA,
         ]);
 
-        $this->assertEquals(Permission::TYPE_DATA, $permission->type);
+        $this->assertSame(Permission::TYPE_DATA, $permission->type);
         $this->assertFalse($permission->isMenuPermission());
         $this->assertFalse($permission->isButtonPermission());
     }

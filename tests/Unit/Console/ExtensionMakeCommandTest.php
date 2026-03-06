@@ -54,7 +54,7 @@ class ExtensionMakeCommandTest extends TestCase
         $ref = new \ReflectionProperty(ExtensionMakeCommand::class, 'description');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('Build a dcat-admin extension', $defaultValue);
+        $this->assertSame('Build a dcat-admin extension', $defaultValue);
     }
 
     public function test_base_path_default_is_empty_string(): void
@@ -62,7 +62,7 @@ class ExtensionMakeCommandTest extends TestCase
         $ref = new \ReflectionProperty(ExtensionMakeCommand::class, 'basePath');
 
         $this->assertTrue($ref->isProtected());
-        $this->assertEquals('', $ref->getDefaultValue());
+        $this->assertSame('', $ref->getDefaultValue());
     }
 
     #[DataProvider('dirsProvider')]

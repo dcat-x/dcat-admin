@@ -36,7 +36,7 @@ class AppCommandTest extends TestCase
         $ref = new \ReflectionProperty(AppCommand::class, 'signature');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('admin:app {name}', $defaultValue);
+        $this->assertSame('admin:app {name}', $defaultValue);
     }
 
     public function test_description_default_value(): void
@@ -44,7 +44,7 @@ class AppCommandTest extends TestCase
         $ref = new \ReflectionProperty(AppCommand::class, 'description');
         $defaultValue = $ref->getDefaultValue();
 
-        $this->assertEquals('Create new application', $defaultValue);
+        $this->assertSame('Create new application', $defaultValue);
     }
 
     #[DataProvider('requiredMethodProvider')]

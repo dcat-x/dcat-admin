@@ -108,6 +108,6 @@ class ValueControllerTest extends TestCase
 
         $result = $this->controller->handle($request);
 
-        $this->assertEquals('value result', $result);
+        $this->assertSame('value result', $result);
     }
 }

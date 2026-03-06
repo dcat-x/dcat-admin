@@ -34,7 +34,7 @@ class RateDisplayerTest extends TestCase
         $displayer = $this->makeDisplayer(85);
         $result = $displayer->display();
 
-        $this->assertEquals('85%', $result);
+        $this->assertSame('85%', $result);
     }
 
     public function test_display_with_custom_suffix(): void
@@ -42,7 +42,7 @@ class RateDisplayerTest extends TestCase
         $displayer = $this->makeDisplayer(75);
         $result = $displayer->display('‰');
 
-        $this->assertEquals('75‰', $result);
+        $this->assertSame('75‰', $result);
     }
 
     public function test_display_with_decimals(): void
@@ -50,7 +50,7 @@ class RateDisplayerTest extends TestCase
         $displayer = $this->makeDisplayer(33.333);
         $result = $displayer->display('%', 2);
 
-        $this->assertEquals('33.33%', $result);
+        $this->assertSame('33.33%', $result);
     }
 
     public function test_display_null_value_returns_zero(): void
@@ -58,7 +58,7 @@ class RateDisplayerTest extends TestCase
         $displayer = $this->makeDisplayer(null);
         $result = $displayer->display();
 
-        $this->assertEquals('0%', $result);
+        $this->assertSame('0%', $result);
     }
 
     public function test_display_empty_string_returns_zero(): void
@@ -66,7 +66,7 @@ class RateDisplayerTest extends TestCase
         $displayer = $this->makeDisplayer('');
         $result = $displayer->display();
 
-        $this->assertEquals('0%', $result);
+        $this->assertSame('0%', $result);
     }
 
     public function test_display_without_decimals_preserves_original(): void
@@ -74,6 +74,6 @@ class RateDisplayerTest extends TestCase
         $displayer = $this->makeDisplayer(99.9);
         $result = $displayer->display('%', null);
 
-        $this->assertEquals('99.9%', $result);
+        $this->assertSame('99.9%', $result);
     }
 }

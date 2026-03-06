@@ -34,7 +34,7 @@ class DateRangeFilterTest extends TestCase
     {
         $filter = $this->makeFilter('created_at');
 
-        $this->assertEquals(12, $this->getProtectedProperty($filter, 'width'));
+        $this->assertSame(12, $this->getProtectedProperty($filter, 'width'));
     }
 
     public function test_default_timestamp_is_false(): void
@@ -87,7 +87,7 @@ class DateRangeFilterTest extends TestCase
         $condition = $filter->condition(['created_at' => ['start' => '2024-01-01', 'end' => '']]);
 
         $this->assertConditionHasKey($condition, 'where');
-        $this->assertEquals(['created_at', '>=', '2024-01-01'], $condition['where']);
+        $this->assertSame(['created_at', '>=', '2024-01-01'], $condition['where']);
     }
 
     public function test_condition_with_end_only_returns_lte(): void
@@ -97,7 +97,7 @@ class DateRangeFilterTest extends TestCase
         $condition = $filter->condition(['created_at' => ['start' => '', 'end' => '2024-12-31']]);
 
         $this->assertConditionHasKey($condition, 'where');
-        $this->assertEquals(['created_at', '<=', '2024-12-31'], $condition['where']);
+        $this->assertSame(['created_at', '<=', '2024-12-31'], $condition['where']);
     }
 
     public function test_condition_with_both_start_and_end_returns_where_between(): void
@@ -107,7 +107,7 @@ class DateRangeFilterTest extends TestCase
         $condition = $filter->condition(['created_at' => ['start' => '2024-01-01', 'end' => '2024-12-31']]);
 
         $this->assertConditionHasKey($condition, 'whereBetween');
-        $this->assertEquals(['created_at', ['2024-01-01', '2024-12-31']], $condition['whereBetween']);
+        $this->assertSame(['created_at', ['2024-01-01', '2024-12-31']], $condition['whereBetween']);
     }
 
     public function test_condition_converts_to_timestamp_when_enabled(): void
@@ -119,8 +119,8 @@ class DateRangeFilterTest extends TestCase
 
         $this->assertConditionHasKey($condition, 'whereBetween');
         $values = $condition['whereBetween'][1];
-        $this->assertEquals(strtotime('2024-01-01'), $values[0]);
-        $this->assertEquals(strtotime('2024-12-31'), $values[1]);
+        $this->assertSame(strtotime('2024-01-01'), $values[0]);
+        $this->assertSame(strtotime('2024-12-31'), $values[1]);
     }
 
     public function test_condition_sets_value_on_filter(): void
@@ -129,7 +129,7 @@ class DateRangeFilterTest extends TestCase
 
         $filter->condition(['created_at' => ['start' => '2024-01-01', 'end' => '2024-12-31']]);
 
-        $this->assertEquals(['start' => '2024-01-01', 'end' => '2024-12-31'], $filter->getValue());
+        $this->assertSame(['start' => '2024-01-01', 'end' => '2024-12-31'], $filter->getValue());
     }
 
     private function assertConditionHasKey(mixed $condition, string $key): void

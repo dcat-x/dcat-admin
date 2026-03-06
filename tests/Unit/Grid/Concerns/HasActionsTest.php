@@ -51,7 +51,7 @@ class HasActionsTest extends TestCase
         $result = $helper->setActionClass('App\\MyActions');
 
         $this->assertSame($helper, $result);
-        $this->assertEquals('App\\MyActions', $helper->options['actions_class']);
+        $this->assertSame('App\\MyActions', $helper->options['actions_class']);
     }
 
     public function test_get_action_class_returns_custom_class(): void
@@ -59,14 +59,14 @@ class HasActionsTest extends TestCase
         $helper = $this->createHelper();
         $helper->setActionClass('App\\CustomActions');
 
-        $this->assertEquals('App\\CustomActions', $helper->getActionClass());
+        $this->assertSame('App\\CustomActions', $helper->getActionClass());
     }
 
     public function test_get_action_class_default_fallback(): void
     {
         $helper = $this->createHelper();
 
-        $this->assertEquals(Actions::class, $helper->getActionClass());
+        $this->assertSame(Actions::class, $helper->getActionClass());
     }
 
     public function test_actions_callback_stores_closure(): void

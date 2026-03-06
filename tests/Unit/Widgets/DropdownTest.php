@@ -20,7 +20,7 @@ class DropdownTest extends TestCase
         $this->assertSame($dropdown, $result);
         $ref = new \ReflectionProperty($dropdown, 'button');
         $ref->setAccessible(true);
-        $this->assertEquals('Click Me', $ref->getValue($dropdown)['text']);
+        $this->assertSame('Click Me', $ref->getValue($dropdown)['text']);
     }
 
     public function test_button_class(): void
@@ -30,7 +30,7 @@ class DropdownTest extends TestCase
         $this->assertSame($dropdown, $result);
         $ref = new \ReflectionProperty($dropdown, 'button');
         $ref->setAccessible(true);
-        $this->assertEquals('btn-primary', $ref->getValue($dropdown)['class']);
+        $this->assertSame('btn-primary', $ref->getValue($dropdown)['class']);
     }
 
     public function test_button_style(): void
@@ -39,7 +39,7 @@ class DropdownTest extends TestCase
         $dropdown->buttonStyle('color:red');
         $ref = new \ReflectionProperty($dropdown, 'button');
         $ref->setAccessible(true);
-        $this->assertEquals('color:red', $ref->getValue($dropdown)['style']);
+        $this->assertSame('color:red', $ref->getValue($dropdown)['style']);
     }
 
     public function test_direction_default_down(): void
@@ -47,7 +47,7 @@ class DropdownTest extends TestCase
         $dropdown = new Dropdown;
         $ref = new \ReflectionProperty($dropdown, 'direction');
         $ref->setAccessible(true);
-        $this->assertEquals('down', $ref->getValue($dropdown));
+        $this->assertSame('down', $ref->getValue($dropdown));
     }
 
     public function test_up(): void
@@ -57,7 +57,7 @@ class DropdownTest extends TestCase
         $this->assertSame($dropdown, $result);
         $ref = new \ReflectionProperty($dropdown, 'direction');
         $ref->setAccessible(true);
-        $this->assertEquals('up', $ref->getValue($dropdown));
+        $this->assertSame('up', $ref->getValue($dropdown));
     }
 
     public function test_down(): void
@@ -67,7 +67,7 @@ class DropdownTest extends TestCase
         $dropdown->down();
         $ref = new \ReflectionProperty($dropdown, 'direction');
         $ref->setAccessible(true);
-        $this->assertEquals('down', $ref->getValue($dropdown));
+        $this->assertSame('down', $ref->getValue($dropdown));
     }
 
     public function test_divider(): void
@@ -109,6 +109,6 @@ class DropdownTest extends TestCase
         $ref->setAccessible(true);
         $options = $ref->getValue($dropdown);
         $this->assertCount(1, $options);
-        $this->assertEquals('Group', $options[0][0]);
+        $this->assertSame('Group', $options[0][0]);
     }
 }

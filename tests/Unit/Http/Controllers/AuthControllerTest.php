@@ -286,7 +286,7 @@ class AuthControllerTest extends TestCase
     {
         $controller = $this->makeController();
 
-        $this->assertEquals('username', $controller->exposeUsername());
+        $this->assertSame('username', $controller->exposeUsername());
     }
 
     protected function tearDown(): void
