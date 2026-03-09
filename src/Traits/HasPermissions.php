@@ -4,6 +4,7 @@ namespace Dcat\Admin\Traits;
 
 use Dcat\Admin\Support\Helper;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
 
 trait HasPermissions
@@ -56,8 +57,14 @@ trait HasPermissions
 
         // 获取所有角色（直接 + 部门继承）
         $allRoles = method_exists($this, 'allRoles')
-            ? collect($this->allRoles())
+            ? $this->allRoles()
             : $this->roles;
+
+        if ($allRoles instanceof EloquentCollection) {
+            $allRoles->loadMissing('permissions');
+        }
+
+        $allRoles = $allRoles instanceof Collection ? $allRoles : collect($allRoles);
 
         return $this->allPermissions =
             $allRoles

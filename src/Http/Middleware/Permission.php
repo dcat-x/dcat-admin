@@ -33,6 +33,20 @@ class Permission
     protected static $menuPrefixCandidates = [];
 
     /**
+     * 菜单候选全集缓存（请求级）
+     *
+     * @var array<int, mixed>|null
+     */
+    protected static $allMenuCandidates;
+
+    /**
+     * 菜单候选按首段索引（请求级）
+     *
+     * @var array<string, array<int, mixed>>|null
+     */
+    protected static $menuCandidatesBySegment;
+
+    /**
      * 缓存所属的请求哈希，用于检测跨请求
      */
     protected static $cacheRequestHash;
@@ -135,31 +149,25 @@ class Permission
             return static::$menuPermissionCache[$cacheKey];
         }
 
-        $menuModel = config('admin.database.menu_model');
-
-        // 精确匹配或模式匹配
-        $menu = $menuModel::with('roles')->where(function ($query) use ($path, $pathPattern) {
-            $query->where('uri', $path)
-                ->orWhere('uri', $pathPattern);
-        })->first();
-
-        // 如果没有精确匹配，尝试前缀匹配（子路径）
-        if (! $menu) {
-            $menu = $this->findPrefixMatchedMenu($path);
-        }
-
-        return static::$menuPermissionCache[$cacheKey] = $menu;
-    }
-
-    protected function findPrefixMatchedMenu(string $path)
-    {
+        $menu = null;
         $matched = null;
         $matchedUriLength = -1;
 
         foreach ($this->getPrefixCandidates($path) as $candidate) {
             $uri = trim((string) ($candidate->uri ?? ''), '/');
 
-            if ($uri === '' || ! $this->matchesPathPrefix($path, $uri)) {
+            if ($uri === '') {
+                continue;
+            }
+
+            // 优先精确匹配或通配匹配
+            if ($uri === $path || $uri === $pathPattern) {
+                $menu = $candidate;
+                break;
+            }
+
+            // 再执行前缀匹配，取最长前缀
+            if (! $this->matchesPathPrefix($path, $uri)) {
                 continue;
             }
 
@@ -170,7 +178,9 @@ class Permission
             }
         }
 
-        return $matched;
+        $menu = $menu ?: $matched;
+
+        return static::$menuPermissionCache[$cacheKey] = $menu;
     }
 
     protected function matchesPathPrefix(string $path, string $uri): bool
@@ -201,14 +211,15 @@ class Permission
             return static::$menuPrefixCandidates[$cacheKey];
         }
 
-        $menuModel = config('admin.database.menu_model');
-        $query = $menuModel::with('roles')->where('uri', '!=', '');
+        $allCandidates = $this->getAllMenuCandidates();
 
-        if ($segment) {
-            $query->where('uri', 'like', $segment.'%');
+        if (! $segment) {
+            return static::$menuPrefixCandidates[$cacheKey] = $allCandidates;
         }
 
-        return static::$menuPrefixCandidates[$cacheKey] = $query->get()->all();
+        $indexed = $this->getMenuCandidatesBySegment();
+
+        return static::$menuPrefixCandidates[$cacheKey] = $indexed[$segment] ?? [];
     }
 
     protected function refreshRequestCacheIfNeeded(): void
@@ -222,6 +233,52 @@ class Permission
         static::$cacheRequestHash = $requestHash;
         static::$menuPermissionCache = [];
         static::$menuPrefixCandidates = [];
+        static::$allMenuCandidates = null;
+        static::$menuCandidatesBySegment = null;
+    }
+
+    /**
+     * @return array<int, mixed>
+     */
+    protected function getAllMenuCandidates(): array
+    {
+        if (static::$allMenuCandidates !== null) {
+            return static::$allMenuCandidates;
+        }
+
+        $menuModel = config('admin.database.menu_model');
+
+        return static::$allMenuCandidates = $menuModel::with('roles')
+            ->where('uri', '!=', '')
+            ->get()
+            ->all();
+    }
+
+    /**
+     * @return array<string, array<int, mixed>>
+     */
+    protected function getMenuCandidatesBySegment(): array
+    {
+        if (static::$menuCandidatesBySegment !== null) {
+            return static::$menuCandidatesBySegment;
+        }
+
+        $indexed = [];
+        foreach ($this->getAllMenuCandidates() as $candidate) {
+            $uri = trim((string) ($candidate->uri ?? ''), '/');
+            if ($uri === '') {
+                continue;
+            }
+
+            $segment = strtok($uri, '/');
+            if (! $segment) {
+                continue;
+            }
+
+            $indexed[$segment][] = $candidate;
+        }
+
+        return static::$menuCandidatesBySegment = $indexed;
     }
 
     /**

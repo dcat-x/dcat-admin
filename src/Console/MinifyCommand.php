@@ -2,7 +2,6 @@
 
 namespace Dcat\Admin\Console;
 
-use Dcat\Admin\Support\Helper;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Symfony\Component\Process\Process;
@@ -58,32 +57,42 @@ class MinifyCommand extends Command
         $this->files = $this->laravel['files'];
 
         $name = $this->argument('name');
+        $publish = (bool) $this->option('publish');
 
         if ($name === static::ALL) {
             // 编译所有内置主题色
-            return $this->compileAllColors();
-        }
-
-        $publish = $this->option('publish');
-        $color = $this->getColor($name);
-
-        $this->backupFiles();
-        $this->replaceFiles($name, $color);
-
-        try {
-            $this->npmInstall();
-
-            $this->info("[$name][$color] npm run production...");
-
-            // 编译
-            $this->runProcess("cd {$this->packagePath} && npm run prod", 1800);
+            $this->compileAllColors();
 
             if ($publish) {
                 $this->publishAssets();
             }
-        } finally {
-            // 重置文件
-            $this->resetFiles();
+
+            return;
+        }
+
+        $color = $this->getColor($name);
+
+        $this->npmInstall();
+
+        if ($name === static::DEFAULT) {
+            $this->info("[{$name}] npm run prod...");
+            $this->runProcess('npm run prod', 1800);
+        } else {
+            $env = [
+                'THEME' => $name,
+                'BUILD_THEME_ONLY' => '1',
+            ];
+
+            if ($color && (! isset($this->colors[$name]) || $color !== $this->colors[$name])) {
+                $env['CUSTOM_THEME_PRIMARY'] = $color;
+            }
+
+            $this->info("[$name][$color] npm run production...");
+            $this->runProcess('npm run production', 1800, $env);
+        }
+
+        if ($publish) {
+            $this->publishAssets();
         }
     }
 
@@ -92,8 +101,21 @@ class MinifyCommand extends Command
      */
     protected function compileAllColors()
     {
-        foreach ($this->colors as $name => $_) {
-            $this->call('admin:minify', ['name' => $name]);
+        $this->npmInstall();
+
+        $this->info('[default] npm run prod...');
+        $this->runProcess('npm run prod', 1800);
+
+        foreach ($this->colors as $name => $color) {
+            if ($name === static::DEFAULT) {
+                continue;
+            }
+
+            $this->info("[$name][$color] npm run production...");
+            $this->runProcess('npm run production', 1800, [
+                'THEME' => $name,
+                'BUILD_THEME_ONLY' => '1',
+            ]);
         }
     }
 
@@ -208,7 +230,7 @@ class MinifyCommand extends Command
 
         $this->info('npm install...');
 
-        $this->runProcess("cd {$this->packagePath} && npm install");
+        $this->runProcess('npm install');
     }
 
     /**
@@ -261,9 +283,14 @@ class MinifyCommand extends Command
      * @param  string  $command
      * @param  int  $timeout
      */
-    protected function runProcess($command, $timeout = 1800)
+    protected function runProcess($command, $timeout = 1800, array $env = [])
     {
-        $process = Helper::process($command, $timeout);
+        $process = Process::fromShellCommandline(
+            $command,
+            $this->packagePath,
+            $env
+        );
+        $process->setTimeout($timeout);
 
         $process->run(function ($type, $data) {
             if ($type === Process::ERR) {

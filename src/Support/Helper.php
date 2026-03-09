@@ -285,34 +285,43 @@ class Helper
         ?string $parentKeyName = null,
         ?string $childrenKeyName = null
     ) {
-        $branch = [];
         $primaryKeyName = $primaryKeyName ?: 'id';
         $parentKeyName = $parentKeyName ?: 'parent_id';
         $childrenKeyName = $childrenKeyName ?: 'children';
 
-        $parentId = is_numeric($parentId) ? (int) $parentId : $parentId;
+        $normalizeId = static function ($value): string {
+            if (is_numeric($value)) {
+                return 'n:'.(int) $value;
+            }
+            if ($value === null) {
+                return 'null';
+            }
 
+            return 's:'.$value;
+        };
+
+        $childrenByParent = [];
         foreach ($nodes as $node) {
-            $pk = $node[$parentKeyName];
-            $pk = is_numeric($pk) ? (int) $pk : $pk;
+            $pk = $node[$parentKeyName] ?? null;
+            $childrenByParent[$normalizeId($pk)][] = $node;
+        }
 
-            if ($pk === $parentId) {
-                $children = static::buildNestedArray(
-                    $nodes,
-                    $node[$primaryKeyName],
-                    $primaryKeyName,
-                    $parentKeyName,
-                    $childrenKeyName
-                );
+        $build = static function ($currentParentId) use (&$build, $childrenByParent, $normalizeId, $primaryKeyName, $childrenKeyName) {
+            $branch = [];
+            $currentNodes = $childrenByParent[$normalizeId($currentParentId)] ?? [];
 
+            foreach ($currentNodes as $node) {
+                $children = $build($node[$primaryKeyName] ?? null);
                 if ($children) {
                     $node[$childrenKeyName] = $children;
                 }
                 $branch[] = $node;
             }
-        }
 
-        return $branch;
+            return $branch;
+        };
+
+        return $build($parentId);
     }
 
     /**

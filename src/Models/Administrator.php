@@ -7,6 +7,7 @@ use Dcat\Admin\Traits\HasPermissions;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Filesystem\FilesystemAdapter;
@@ -38,6 +39,11 @@ class Administrator extends Model implements AuthenticatableContract, Authorizab
      * 所有角色缓存（直接角色 + 部门角色）
      */
     protected ?Collection $allRolesCache = null;
+
+    /**
+     * 用户部门ID缓存
+     */
+    protected ?array $departmentIdsCache = null;
 
     /**
      * Create a new Eloquent model instance.
@@ -181,10 +187,22 @@ class Administrator extends Model implements AuthenticatableContract, Authorizab
             return $this->allRolesCache;
         }
 
-        $directRoles = collect($this->roles);
+        $directRoles = $this->relationLoaded('roles')
+            ? $this->getRelation('roles')
+            : $this->roles()->with('permissions')->get();
+
+        if ($directRoles instanceof EloquentCollection) {
+            $directRoles->loadMissing('permissions');
+        }
+
         $departmentRoles = $this->getDepartmentRoles();
 
-        return $this->allRolesCache = $directRoles->merge($departmentRoles)->unique('id');
+        $roles = $directRoles->merge($departmentRoles)->unique('id')->values();
+        if ($roles instanceof EloquentCollection) {
+            $roles->loadMissing('permissions');
+        }
+
+        return $this->allRolesCache = $roles;
     }
 
     /**
@@ -200,17 +218,25 @@ class Administrator extends Model implements AuthenticatableContract, Authorizab
 
     protected function resolveDepartmentIds(): array
     {
-        return $this->departments()->pluck('id')->toArray();
+        if ($this->departmentIdsCache !== null) {
+            return $this->departmentIdsCache;
+        }
+
+        return $this->departmentIdsCache = $this->departments()->pluck('id')->toArray();
     }
 
     protected function queryDepartmentRolesByIds(array $departmentIds): Collection
     {
         $roleModel = config('admin.database.roles_model');
         $pivotTable = config('admin.database.department_roles_table', 'admin_department_roles');
+        $roleTable = (new $roleModel)->getTable();
 
         return $roleModel::query()
-            ->join($pivotTable, 'role_id', '=', 'id')
-            ->whereIn('department_id', $departmentIds)
+            ->select($roleTable.'.*')
+            ->join($pivotTable, $pivotTable.'.role_id', '=', $roleTable.'.id')
+            ->whereIn($pivotTable.'.department_id', $departmentIds)
+            ->distinct()
+            ->with('permissions')
             ->get();
     }
 }

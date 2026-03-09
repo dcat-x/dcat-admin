@@ -103,19 +103,20 @@ class Setting extends Fluent
             $this->set($data);
         }
 
+        $rows = [];
         foreach ($this->attributes as $key => $value) {
             if (is_array($value)) {
                 $value = json_encode($value);
             }
 
-            $model = Model::query()
-                ->where('slug', $key)
-                ->first() ?: new Model;
-
-            $model->fill([
+            $rows[] = [
                 'slug' => $key,
                 'value' => (string) $value,
-            ])->save();
+            ];
+        }
+
+        if ($rows) {
+            Model::query()->upsert($rows, ['slug'], ['value']);
         }
 
         return $this;

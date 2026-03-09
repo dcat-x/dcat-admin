@@ -43,11 +43,17 @@ class FakeMenuPermissionQueryForMiddlewareTest
     {
         static::$fallbackGetCalls++;
 
-        if (static::$fallbackResult === null) {
-            return collect();
+        $results = [];
+
+        if (static::$exactResult !== null) {
+            $results[] = static::$exactResult;
         }
 
-        return collect(static::$fallbackResult);
+        if (static::$fallbackResult !== null) {
+            $results = array_merge($results, static::$fallbackResult);
+        }
+
+        return collect($results);
     }
 
     public static function reset(): void
@@ -268,7 +274,10 @@ class PermissionTest extends TestCase
 
     public function test_find_matched_menu_uses_request_level_cache(): void
     {
-        FakeMenuPermissionQueryForMiddlewareTest::$exactResult = (object) ['id' => 66, 'roles' => collect()];
+        FakeMenuPermissionQueryForMiddlewareTest::$exactResult = null;
+        FakeMenuPermissionQueryForMiddlewareTest::$fallbackResult = [
+            (object) ['id' => 66, 'uri' => 'orders', 'roles' => collect()],
+        ];
         $this->app->instance('request', Request::create('/admin/orders', 'GET'));
 
         $middleware = new TestablePermissionMiddleware;
@@ -278,7 +287,7 @@ class PermissionTest extends TestCase
 
         $this->assertSame(66, $first->id);
         $this->assertSame(66, $second->id);
-        $this->assertSame(1, FakeMenuPermissionQueryForMiddlewareTest::$exactFirstCalls);
+        $this->assertSame(1, FakeMenuPermissionQueryForMiddlewareTest::$fallbackGetCalls);
     }
 
     public function test_find_matched_menu_fallback_uses_longest_prefix(): void
@@ -334,6 +343,25 @@ class PermissionTest extends TestCase
         $this->assertSame(1, FakeMenuPermissionQueryForMiddlewareTest::$fallbackGetCalls);
     }
 
+    public function test_find_matched_menu_reuses_all_candidates_across_segments(): void
+    {
+        FakeMenuPermissionQueryForMiddlewareTest::$exactResult = null;
+        FakeMenuPermissionQueryForMiddlewareTest::$fallbackResult = [
+            (object) ['id' => 1, 'uri' => 'orders', 'roles' => collect()],
+            (object) ['id' => 2, 'uri' => 'users', 'roles' => collect()],
+        ];
+        $this->app->instance('request', Request::create('/admin/orders', 'GET'));
+
+        $middleware = new TestablePermissionMiddleware;
+
+        $first = $middleware->callFindMatchedMenu('orders/export', 'orders/export');
+        $second = $middleware->callFindMatchedMenu('users/list', 'users/list');
+
+        $this->assertNotNull($first);
+        $this->assertNotNull($second);
+        $this->assertSame(1, FakeMenuPermissionQueryForMiddlewareTest::$fallbackGetCalls);
+    }
+
     public function test_handle_allows_when_no_menu_matched(): void
     {
         $this->app['config']->set('admin.permission.enable', true);
@@ -380,9 +408,9 @@ class PermissionTest extends TestCase
         $this->app['config']->set('admin.permission.enable', true);
         $this->app['config']->set('admin.permission.except', []);
         $this->app['config']->set('admin.menu.role_bind_menu', true);
-        FakeMenuPermissionQueryForMiddlewareTest::$exactResult = (object) [
-            'id' => 9,
-            'roles' => collect(),
+        FakeMenuPermissionQueryForMiddlewareTest::$exactResult = null;
+        FakeMenuPermissionQueryForMiddlewareTest::$fallbackResult = [
+            (object) ['id' => 9, 'uri' => 'deny-path', 'roles' => collect()],
         ];
 
         $user = Mockery::mock(\Dcat\Admin\Models\Administrator::class)->makePartial();
@@ -432,9 +460,9 @@ class PermissionTest extends TestCase
         $this->app['config']->set('admin.permission.enable', true);
         $this->app['config']->set('admin.permission.except', []);
         $this->app['config']->set('admin.menu.role_bind_menu', true);
-        FakeMenuPermissionQueryForMiddlewareTest::$exactResult = (object) [
-            'id' => 10,
-            'roles' => collect([(object) ['slug' => 'editor']]),
+        FakeMenuPermissionQueryForMiddlewareTest::$exactResult = null;
+        FakeMenuPermissionQueryForMiddlewareTest::$fallbackResult = [
+            (object) ['id' => 10, 'uri' => 'allow-path', 'roles' => collect([(object) ['slug' => 'editor']])],
         ];
 
         $user = Mockery::mock(\Dcat\Admin\Models\Administrator::class)->makePartial();

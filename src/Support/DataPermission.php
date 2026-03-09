@@ -40,6 +40,13 @@ class DataPermission
      */
     protected static $cacheRequestHash;
 
+    /**
+     * scope 规则缓存（实例级）
+     *
+     * @var array<string, Collection>
+     */
+    protected array $scopedRulesCache = [];
+
     public function __construct($user = null)
     {
         $this->user = $user ?: Admin::user();
@@ -90,7 +97,7 @@ class DataPermission
      */
     public function getRowRules(int $menuId): Collection
     {
-        return $this->getRulesForMenu($menuId)->filter(function ($rule) {
+        return $this->getScopedRules($menuId, 'row', function ($rule) {
             return $rule->isRowScope();
         });
     }
@@ -100,7 +107,7 @@ class DataPermission
      */
     public function getColumnRules(int $menuId): Collection
     {
-        return $this->getRulesForMenu($menuId)->filter(function ($rule) {
+        return $this->getScopedRules($menuId, 'column', function ($rule) {
             return $rule->isColumnScope();
         });
     }
@@ -110,7 +117,7 @@ class DataPermission
      */
     public function getFormRules(int $menuId): Collection
     {
-        return $this->getRulesForMenu($menuId)->filter(function ($rule) {
+        return $this->getScopedRules($menuId, 'form', function ($rule) {
             return $rule->isFormScope();
         });
     }
@@ -375,6 +382,19 @@ class DataPermission
             static::$rulesCache = [];
             static::$cacheRequestHash = $requestHash;
         }
+    }
+
+    protected function getScopedRules(int $menuId, string $scope, callable $resolver): Collection
+    {
+        $key = $menuId.'_'.$scope;
+
+        if (isset($this->scopedRulesCache[$key])) {
+            return $this->scopedRulesCache[$key];
+        }
+
+        return $this->scopedRulesCache[$key] = $this->getRulesForMenu($menuId)
+            ->filter($resolver)
+            ->values();
     }
 
     protected function canUsePrimaryDepartment(): bool

@@ -14,6 +14,8 @@ require('dotenv').config();
 const glob = require('glob')
 
 let theme = process.env.THEME || null;
+let buildThemeOnly = ['1', 'true', 'yes'].includes(String(process.env.BUILD_THEME_ONLY || '').toLowerCase());
+let customThemePrimary = process.env.CUSTOM_THEME_PRIMARY || null;
 
 // Theme color mappings (Tailwind CSS colors)
 const themeColors = {
@@ -45,7 +47,7 @@ const themeColors = {
 };
 
 // Get primary color based on theme
-const primaryColor = themeColors[theme] || themeColors['default'];
+const primaryColor = customThemePrimary || themeColors[theme] || themeColors['default'];
 
 let distPath = mix.inProduction() ? 'resources/dist' : 'resources/pre-dist';
 
@@ -70,6 +72,10 @@ function dcatDistPath(path) {
   return distPath + '/dcat/' + path;
 }
 
+function withSourceMaps(builder) {
+  return mix.inProduction() ? builder : builder.sourceMaps();
+}
+
 /*
  |--------------------------------------------------------------------------
  | Sass Configuration - Silence deprecation warnings
@@ -92,21 +98,38 @@ const sassLoaderOptions = {
  |--------------------------------------------------------------------------
  */
 
-mix.copyDirectory('resources/assets/images', distPath + '/images');
-mix.copyDirectory('resources/assets/fonts', distPath + '/fonts');
+if (buildThemeOnly) {
+  withSourceMaps(
+    mix.sass('resources/assets/adminlte/scss/AdminLTE.scss', themeCss('adminlte/adminlte'), sassLoaderOptions)
+  );
+  withSourceMaps(
+    mix.sass(dcatPath('sass/dcat-app.scss'), themeCss('dcat/css/dcat-app'), sassLoaderOptions)
+  );
+} else {
+  mix.copyDirectory('resources/assets/images', distPath + '/images');
+  mix.copyDirectory('resources/assets/fonts', distPath + '/fonts');
 
-// AdminLTE3.0
-mix.sass('resources/assets/adminlte/scss/AdminLTE.scss', themeCss('adminlte/adminlte'), sassLoaderOptions).sourceMaps();
-mix.js('resources/assets/adminlte/js/AdminLTE.js', distPath + '/adminlte/adminlte.js').sourceMaps();
+  // AdminLTE3.0
+  withSourceMaps(
+    mix.sass('resources/assets/adminlte/scss/AdminLTE.scss', themeCss('adminlte/adminlte'), sassLoaderOptions)
+  );
+  withSourceMaps(
+    mix.js('resources/assets/adminlte/js/AdminLTE.js', distPath + '/adminlte/adminlte.js')
+  );
 
-// 复制第三方插件文件夹
-mix.copyDirectory(dcatPath('plugins'), dcatDistPath('plugins'));
-// 打包app.js
-mix.js(dcatPath('js/dcat-app.js'), dcatDistPath('js/dcat-app.js')).sourceMaps();
-// 打包app.scss
-mix.sass(dcatPath('sass/dcat-app.scss'), themeCss('dcat/css/dcat-app'), sassLoaderOptions).sourceMaps();
-mix.copy(dcatPath('sass/nunito.css'), `${distPath}/dcat/css/nunito.css`);
+  // 复制第三方插件文件夹
+  mix.copyDirectory(dcatPath('plugins'), dcatDistPath('plugins'));
+  // 打包app.js
+  withSourceMaps(
+    mix.js(dcatPath('js/dcat-app.js'), dcatDistPath('js/dcat-app.js'))
+  );
+  // 打包app.scss
+  withSourceMaps(
+    mix.sass(dcatPath('sass/dcat-app.scss'), themeCss('dcat/css/dcat-app'), sassLoaderOptions)
+  );
+  mix.copy(dcatPath('sass/nunito.css'), `${distPath}/dcat/css/nunito.css`);
 
-// 打包所有 extra 里面的所有js和css
-mixAssetsDir('dcat/extra/*.js', (src, dest) => mix.js(src, dest));
-mixAssetsDir('dcat/extra/*.scss', (src, dest) => mix.sass(src, dest.replace('scss', 'css'), sassLoaderOptions));
+  // 打包所有 extra 里面的所有js和css
+  mixAssetsDir('dcat/extra/*.js', (src, dest) => mix.js(src, dest));
+  mixAssetsDir('dcat/extra/*.scss', (src, dest) => mix.sass(src, dest.replace('scss', 'css'), sassLoaderOptions));
+}

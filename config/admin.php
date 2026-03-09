@@ -234,7 +234,7 @@ return [
     'menu' => [
         'cache' => [
             // enable cache or not
-            'enable' => false,
+            'enable' => env('ADMIN_MENU_CACHE', false),
             'store' => 'file',
         ],
 
