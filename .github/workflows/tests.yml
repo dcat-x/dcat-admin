@@ -41,15 +41,9 @@ jobs:
     needs: quality
 
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         include:
-          - php: '8.2'
-            suite: 'tests'
-            label: 'full'
-          - php: '8.4'
-            suite: 'tests'
-            label: 'full'
           - php: '8.3'
             suite: 'tests/Unit/Actions tests/Unit/Console tests/Unit/Contracts tests/Unit/Exception tests/Unit/Extend tests/Unit/Form'
             label: 'unit-a'
@@ -59,6 +53,12 @@ jobs:
           - php: '8.3'
             suite: 'tests/Feature tests/Unit/ApplicationTest.php tests/Unit/AdminTest.php tests/Unit/ColorTest.php tests/Unit/FormTest.php tests/Unit/GridTest.php tests/Unit/AdminServiceProviderTest.php tests/Unit/ShowTest.php tests/Unit/Layout tests/Unit/Models tests/Unit/Octane tests/Unit/Repositories tests/Unit/Scaffold tests/Unit/Services tests/Unit/Show tests/Unit/Support tests/Unit/Traits tests/Unit/Tree tests/Unit/Widgets'
             label: 'unit-misc'
+          - php: '8.2'
+            suite: 'tests/Feature tests/Unit/ApplicationTest.php tests/Unit/AdminTest.php tests/Unit/ColorTest.php tests/Unit/FormTest.php tests/Unit/GridTest.php tests/Unit/AdminServiceProviderTest.php tests/Unit/ShowTest.php'
+            label: 'compat-smoke-82'
+          - php: '8.4'
+            suite: 'tests/Feature tests/Unit/ApplicationTest.php tests/Unit/AdminTest.php tests/Unit/ColorTest.php tests/Unit/FormTest.php tests/Unit/GridTest.php tests/Unit/AdminServiceProviderTest.php tests/Unit/ShowTest.php'
+            label: 'compat-smoke-84'
 
     name: PHP ${{ matrix.php }} / ${{ matrix.label }}
 

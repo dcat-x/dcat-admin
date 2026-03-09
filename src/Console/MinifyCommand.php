@@ -44,17 +44,11 @@ class MinifyCommand extends Command
     protected $packagePath;
 
     /**
-     * @var \Illuminate\Filesystem\Filesystem
-     */
-    protected $files;
-
-    /**
      * Execute the console command.
      */
     public function handle()
     {
         $this->packagePath = realpath(__DIR__.'/../..');
-        $this->files = $this->laravel['files'];
 
         $name = $this->argument('name');
         $publish = (bool) $this->option('publish');
@@ -127,96 +121,6 @@ class MinifyCommand extends Command
         $options = ['--provider' => 'Dcat\Admin\AdminServiceProvider', '--force' => true, '--tag' => 'dcat-admin-assets'];
 
         $this->call('vendor:publish', $options);
-    }
-
-    /**
-     * 替换文件.
-     */
-    protected function replaceFiles($name, $color)
-    {
-        if ($name === static::DEFAULT) {
-            return;
-        }
-
-        $mixFile = $this->getMixFile();
-        $contents = str_replace('let theme = null', "let theme = '{$name}'", $this->files->get($mixFile));
-        $this->files->put($mixFile, $contents);
-
-        $colorFile = $this->getColorFile();
-        $this->files->put($colorFile, "\$primary: $color;");
-    }
-
-    /**
-     * 备份文件.
-     */
-    protected function backupFiles()
-    {
-        if (! is_file($this->getMixBakFile())) {
-            $this->files->copy($this->getMixFile(), $this->getMixBakFile());
-        } else {
-            $this->files->delete($this->getMixFile());
-            $this->files->copy($this->getMixBakFile(), $this->getMixFile());
-        }
-
-        if (! is_file($this->getColorBakFile())) {
-            $this->files->copy($this->getColorFile(), $this->getColorBakFile());
-        }
-    }
-
-    /**
-     * 重置文件.
-     */
-    protected function resetFiles()
-    {
-        $mixFile = $this->getMixFile();
-        $mixBakFile = $this->getMixBakFile();
-
-        if (is_file($mixBakFile)) {
-            $this->files->delete($mixFile);
-            $this->files->copy($mixBakFile, $mixFile);
-            $this->files->delete($mixBakFile);
-        }
-
-        $colorFile = $this->getColorFile();
-        $colorBakFile = $this->getColorBakFile();
-
-        if (is_file($colorBakFile)) {
-            $this->files->delete($colorFile);
-            $this->files->copy($colorBakFile, $colorFile);
-            $this->files->delete($colorBakFile);
-        }
-    }
-
-    /**
-     * @return string
-     */
-    protected function getMixFile()
-    {
-        return $this->packagePath.'/webpack.mix.js';
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function getMixBakFile()
-    {
-        return str_replace('.js', '.bak.js', $this->getMixFile());
-    }
-
-    /**
-     * @return string
-     */
-    protected function getColorFile()
-    {
-        return $this->packagePath.'/resources/assets/dcat/sass/theme/_primary.scss';
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function getColorBakFile()
-    {
-        return str_replace('.scss', '.bak.scss', $this->getColorFile());
     }
 
     /**

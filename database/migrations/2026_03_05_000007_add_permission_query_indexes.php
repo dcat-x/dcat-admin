@@ -28,6 +28,7 @@ return new class extends Migration
 
         Schema::table($roleDataRulesTable, function (Blueprint $table) {
             $table->index(['data_rule_id', 'role_id'], 'admin_role_data_rules_data_rule_role_index');
+            $table->index(['role_id', 'data_rule_id'], 'admin_role_data_rules_role_data_rule_index');
         });
     }
 
@@ -48,6 +49,7 @@ return new class extends Migration
 
         Schema::table($roleDataRulesTable, function (Blueprint $table) {
             $table->dropIndex('admin_role_data_rules_data_rule_role_index');
+            $table->dropIndex('admin_role_data_rules_role_data_rule_index');
         });
     }
 };

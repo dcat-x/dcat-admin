@@ -47,6 +47,13 @@ class Permission
     protected static $menuCandidatesBySegment;
 
     /**
+     * 菜单候选按URI索引（请求级）
+     *
+     * @var array<string, mixed>|null
+     */
+    protected static $menuCandidatesByUri;
+
+    /**
      * 缓存所属的请求哈希，用于检测跨请求
      */
     protected static $cacheRequestHash;
@@ -149,6 +156,14 @@ class Permission
             return static::$menuPermissionCache[$cacheKey];
         }
 
+        $menuByUri = $this->getMenuCandidatesByUri();
+        if (isset($menuByUri[$path])) {
+            return static::$menuPermissionCache[$cacheKey] = $menuByUri[$path];
+        }
+        if ($pathPattern !== $path && isset($menuByUri[$pathPattern])) {
+            return static::$menuPermissionCache[$cacheKey] = $menuByUri[$pathPattern];
+        }
+
         $menu = null;
         $matched = null;
         $matchedUriLength = -1;
@@ -235,6 +250,7 @@ class Permission
         static::$menuPrefixCandidates = [];
         static::$allMenuCandidates = null;
         static::$menuCandidatesBySegment = null;
+        static::$menuCandidatesByUri = null;
     }
 
     /**
@@ -279,6 +295,31 @@ class Permission
         }
 
         return static::$menuCandidatesBySegment = $indexed;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function getMenuCandidatesByUri(): array
+    {
+        if (static::$menuCandidatesByUri !== null) {
+            return static::$menuCandidatesByUri;
+        }
+
+        $indexed = [];
+        foreach ($this->getAllMenuCandidates() as $candidate) {
+            $uri = trim((string) ($candidate->uri ?? ''), '/');
+            if ($uri === '') {
+                continue;
+            }
+
+            // 保留首个匹配，避免重复 URI 时后写覆盖
+            if (! isset($indexed[$uri])) {
+                $indexed[$uri] = $candidate;
+            }
+        }
+
+        return static::$menuCandidatesByUri = $indexed;
     }
 
     /**

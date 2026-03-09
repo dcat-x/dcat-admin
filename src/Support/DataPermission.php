@@ -47,6 +47,11 @@ class DataPermission
      */
     protected array $scopedRulesCache = [];
 
+    /**
+     * 用户角色ID缓存（实例级）
+     */
+    protected ?array $roleIdsCache = null;
+
     public function __construct($user = null)
     {
         $this->user = $user ?: Admin::user();
@@ -69,12 +74,7 @@ class DataPermission
             return static::$rulesCache[$cacheKey];
         }
 
-        // 获取用户所有角色（包括从部门继承的角色）
-        $roles = method_exists($this->user, 'allRoles')
-            ? $this->user->allRoles()
-            : $this->user->roles;
-
-        $roleIds = $roles->pluck('id')->toArray();
+        $roleIds = $this->resolveRoleIds();
 
         if (empty($roleIds)) {
             return static::$rulesCache[$cacheKey] = collect();
@@ -382,6 +382,19 @@ class DataPermission
             static::$rulesCache = [];
             static::$cacheRequestHash = $requestHash;
         }
+    }
+
+    protected function resolveRoleIds(): array
+    {
+        if ($this->roleIdsCache !== null) {
+            return $this->roleIdsCache;
+        }
+
+        $roles = method_exists($this->user, 'allRoles')
+            ? $this->user->allRoles()
+            : $this->user->roles;
+
+        return $this->roleIdsCache = $roles->pluck('id')->unique()->values()->all();
     }
 
     protected function getScopedRules(int $menuId, string $scope, callable $resolver): Collection

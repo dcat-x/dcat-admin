@@ -133,13 +133,6 @@ class MinifyCommandTest extends TestCase
             ['handle'],
             ['compileAllColors'],
             ['publishAssets'],
-            ['replaceFiles'],
-            ['backupFiles'],
-            ['resetFiles'],
-            ['getMixFile'],
-            ['getMixBakFile'],
-            ['getColorFile'],
-            ['getColorBakFile'],
             ['npmInstall'],
             ['getColor'],
             ['formatColor'],
@@ -152,7 +145,7 @@ class MinifyCommandTest extends TestCase
         return [
             ['formatColor'],
             ['compileAllColors'],
-            ['getMixFile'],
+            ['npmInstall'],
         ];
     }
 }

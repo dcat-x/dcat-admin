@@ -119,30 +119,41 @@ class Menu
      */
     public function isActive($item, ?string $path = null)
     {
-        if (empty($path)) {
-            $path = request()->path();
+        $path = $this->normalizeCurrentPath($path);
+
+        $children = (array) ($item['children'] ?? []);
+        if (empty($children)) {
+            $uri = $item['uri'] ?? '';
+
+            return $uri !== '' && $this->normalizeItemPath($uri) === $path;
         }
 
-        if (empty($item['children'])) {
-            if (empty($item['uri'])) {
-                return false;
-            }
-
-            return trim($this->getPath($item['uri']), '/') == $path;
-        }
-
-        foreach ($item['children'] as $v) {
-            if ($path == trim($this->getPath($v['uri']), '/')) {
+        $stack = array_values($children);
+        while ($current = array_pop($stack)) {
+            $uri = $current['uri'] ?? '';
+            if ($uri !== '' && $this->normalizeItemPath($uri) === $path) {
                 return true;
             }
-            if (! empty($v['children'])) {
-                if ($this->isActive($v, $path)) {
-                    return true;
-                }
+
+            $nested = (array) ($current['children'] ?? []);
+            if (! empty($nested)) {
+                array_push($stack, ...array_values($nested));
             }
         }
 
         return false;
+    }
+
+    protected function normalizeCurrentPath(?string $path): string
+    {
+        $path = $path === null || $path === '' ? request()->path() : $path;
+
+        return trim((string) $path, '/');
+    }
+
+    protected function normalizeItemPath(string $uri): string
+    {
+        return trim((string) $this->getPath($uri), '/');
     }
 
     /**
