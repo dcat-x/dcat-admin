@@ -4,6 +4,7 @@ namespace Dcat\Admin\Support;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class ConfigHealthInspector
@@ -13,6 +14,40 @@ class ConfigHealthInspector
      */
     public function inspect(): array
     {
+        return $this->inspectByScope('all');
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function inspectByScope(string $scope, bool $forceRefresh = false): array
+    {
+        $scope = strtolower(trim($scope));
+        if (! in_array($scope, ['all', 'menu', 'permission'], true)) {
+            $scope = 'all';
+        }
+
+        $ttl = (int) config('admin.health_check.cache_ttl', 0);
+        if (! $forceRefresh && $ttl > 0) {
+            $cacheKey = sprintf(
+                'admin:health-check:%s:%s',
+                $scope,
+                md5((string) config('admin.database.connection').':'.(string) config('admin.route.prefix'))
+            );
+
+            return Cache::remember($cacheKey, now()->addSeconds($ttl), function () use ($scope) {
+                return $this->inspectByScope($scope, true);
+            });
+        }
+
+        if ($scope === 'menu') {
+            return $this->inspectMenuConfig();
+        }
+
+        if ($scope === 'permission') {
+            return $this->inspectPermissionConfig();
+        }
+
         return array_merge(
             $this->inspectMenuConfig(),
             $this->inspectPermissionConfig()
@@ -48,6 +83,7 @@ class ConfigHealthInspector
             if (preg_match('/\s/', $uri)) {
                 $issues[] = [
                     'type' => 'menu.uri.whitespace',
+                    'severity' => 'warning',
                     'message' => "Menu URI contains whitespace: {$uri}",
                     'ids' => [(int) $menu->id],
                     'value' => $uri,
@@ -62,6 +98,7 @@ class ConfigHealthInspector
 
             $issues[] = [
                 'type' => 'menu.uri.duplicate',
+                'severity' => 'warning',
                 'message' => "Duplicate menu URI detected: {$uri}",
                 'ids' => $ids,
                 'value' => $uri,
@@ -108,6 +145,7 @@ class ConfigHealthInspector
                 if (preg_match('/\s/', $path)) {
                     $issues[] = [
                         'type' => 'permission.path.whitespace',
+                        'severity' => 'warning',
                         'message' => "Permission path contains whitespace: {$path}",
                         'ids' => [(int) $permission->id],
                         'value' => $path,
@@ -124,6 +162,7 @@ class ConfigHealthInspector
                     if ($invalidMethods) {
                         $issues[] = [
                             'type' => 'permission.path.invalid_method',
+                            'severity' => 'error',
                             'message' => 'Permission path contains invalid HTTP method prefix',
                             'ids' => [(int) $permission->id],
                             'value' => $path,
@@ -141,6 +180,7 @@ class ConfigHealthInspector
 
             $issues[] = [
                 'type' => 'permission.slug.duplicate',
+                'severity' => 'error',
                 'message' => "Duplicate permission slug detected: {$slug}",
                 'ids' => $ids,
                 'value' => $slug,

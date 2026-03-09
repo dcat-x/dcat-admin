@@ -450,6 +450,49 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Log emission control
+    |--------------------------------------------------------------------------
+    |
+    | Used by audit/permission/data-permission/config-health logging enhancements.
+    | `sample_rate` range: 0 ~ 1
+    |
+    */
+    'log_control' => [
+        'audit' => [
+            'sample_rate' => 1.0,
+            'only_paths' => [],
+            'except_paths' => [],
+        ],
+        'permission_denied' => [
+            'sample_rate' => 1.0,
+            'only_paths' => [],
+            'except_paths' => [],
+        ],
+        'data_permission' => [
+            'sample_rate' => 1.0,
+            'only_paths' => [],
+            'except_paths' => [],
+        ],
+        'config_health' => [
+            'sample_rate' => 1.0,
+            'only_paths' => [],
+            'except_paths' => [],
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Health check settings
+    |--------------------------------------------------------------------------
+    |
+    */
+    'health_check' => [
+        // Cache TTL in seconds. Set 0 to disable cache.
+        'cache_ttl' => env('ADMIN_HEALTH_CHECK_CACHE_TTL', 0),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Enable default breadcrumb
     |--------------------------------------------------------------------------
     |

@@ -5,6 +5,7 @@ namespace Dcat\Admin\Http\Controllers;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Http\Auth\Permission;
+use Dcat\Admin\Http\Controllers\Concerns\HasRequestCache;
 use Dcat\Admin\Http\Repositories\Role;
 use Dcat\Admin\Show;
 use Dcat\Admin\Support\Helper;
@@ -13,15 +14,7 @@ use Illuminate\Support\Collection;
 
 class RoleController extends AdminController
 {
-    /**
-     * @var int|null
-     */
-    protected static $requestHash;
-
-    /**
-     * @var array<string, mixed>
-     */
-    protected static $requestCache = [];
+    use HasRequestCache;
 
     public function title()
     {
@@ -156,32 +149,9 @@ class RoleController extends AdminController
         return parent::destroy($id);
     }
 
-    protected function refreshRequestCacheIfNeeded(): void
-    {
-        $requestHash = spl_object_id(request());
-
-        if (static::$requestHash === $requestHash) {
-            return;
-        }
-
-        static::$requestHash = $requestHash;
-        static::$requestCache = [];
-    }
-
-    protected function remember(string $key, callable $resolver)
-    {
-        $this->refreshRequestCacheIfNeeded();
-
-        if (array_key_exists($key, static::$requestCache)) {
-            return static::$requestCache[$key];
-        }
-
-        return static::$requestCache[$key] = $resolver();
-    }
-
     protected function getPermissionNodes(): array
     {
-        return $this->remember('permission.nodes', function () {
+        return $this->rememberRequestCache('permission.nodes', function () {
             $permissionModel = config('admin.database.permissions_model');
             $nodes = (new $permissionModel)->allNodes();
 
@@ -191,7 +161,7 @@ class RoleController extends AdminController
 
     protected function getMenuNodes(): array
     {
-        return $this->remember('menu.nodes', function () {
+        return $this->rememberRequestCache('menu.nodes', function () {
             $menuModel = config('admin.database.menu_model');
             $nodes = (new $menuModel)->allNodes();
 

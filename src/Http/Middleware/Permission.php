@@ -6,6 +6,7 @@ use Dcat\Admin\Admin;
 use Dcat\Admin\Exception\RuntimeException;
 use Dcat\Admin\Http\Auth\Permission as Checker;
 use Dcat\Admin\Models\Administrator;
+use Dcat\Admin\Support\Concerns\ControlsLogEmission;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -14,6 +15,8 @@ use Illuminate\Support\Str;
 
 class Permission
 {
+    use ControlsLogEmission;
+
     /**
      * @var string
      */
@@ -139,15 +142,22 @@ class Permission
 
     protected function reportPermissionDenied(Request $request, $user): void
     {
+        $path = '/'.ltrim($request->path(), '/');
+
+        if (! $this->shouldEmitLog('permission_denied', $path)) {
+            return;
+        }
+
         $route = $request->route();
         $routeName = $route ? $route->getName() : null;
         $routeUri = $route ? $route->uri() : null;
 
         Log::warning('admin.permission.denied', [
+            'trace_id' => $this->resolveTraceId(),
             'user_id' => $user->id ?? null,
             'username' => $user->username ?? null,
             'request_method' => $request->method(),
-            'request_path' => '/'.ltrim($request->path(), '/'),
+            'request_path' => $path,
             'route_name' => $routeName,
             'route_uri' => $routeUri,
             'menu_bind_role_enabled' => (bool) config('admin.menu.role_bind_menu', true),

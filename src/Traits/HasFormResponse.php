@@ -4,6 +4,7 @@ namespace Dcat\Admin\Traits;
 
 use Dcat\Admin\Admin;
 use Dcat\Admin\Http\JsonResponse;
+use Dcat\Admin\Support\ErrorCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 
@@ -30,7 +31,7 @@ trait HasFormResponse
         return $this
             ->response()
             ->withValidation($validationMessages)
-            ->options(['error_code' => 'validation_failed'])
+            ->options(['error_code' => ErrorCode::VALIDATION_FAILED])
             ->send();
     }
 

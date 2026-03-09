@@ -4,6 +4,7 @@ namespace Dcat\Admin\Http\Controllers;
 
 use Dcat\Admin\Form;
 use Dcat\Admin\Http\Actions\Menu\Show;
+use Dcat\Admin\Http\Controllers\Concerns\HasRequestCache;
 use Dcat\Admin\Http\Repositories\Menu;
 use Dcat\Admin\Layout\Column;
 use Dcat\Admin\Layout\Content;
@@ -11,21 +12,15 @@ use Dcat\Admin\Layout\Row;
 use Dcat\Admin\Tree;
 use Dcat\Admin\Widgets\Box;
 use Dcat\Admin\Widgets\Form as WidgetForm;
+use Dcat\Admin\Support\Concerns\ControlsLogEmission;
 use Dcat\Admin\Support\ConfigHealthInspector;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 class MenuController extends AdminController
 {
-    /**
-     * @var int|null
-     */
-    protected static $requestHash;
-
-    /**
-     * @var array<string, mixed>
-     */
-    protected static $requestCache = [];
+    use HasRequestCache;
+    use ControlsLogEmission;
 
     public function title()
     {
@@ -184,32 +179,9 @@ class MenuController extends AdminController
         return 'For more icons please see <a href="http://fontawesome.io/icons/" target="_blank">http://fontawesome.io/icons/</a>';
     }
 
-    protected function refreshRequestCacheIfNeeded(): void
-    {
-        $requestHash = spl_object_id(request());
-
-        if (static::$requestHash === $requestHash) {
-            return;
-        }
-
-        static::$requestHash = $requestHash;
-        static::$requestCache = [];
-    }
-
-    protected function remember(string $key, callable $resolver)
-    {
-        $this->refreshRequestCacheIfNeeded();
-
-        if (array_key_exists($key, static::$requestCache)) {
-            return static::$requestCache[$key];
-        }
-
-        return static::$requestCache[$key] = $resolver();
-    }
-
     protected function getMenuSelectOptions(): array
     {
-        return $this->remember('menu.select_options', function () {
+        return $this->rememberRequestCache('menu.select_options', function () {
             $menuModel = config('admin.database.menu_model');
 
             return $menuModel::selectOptions();
@@ -218,7 +190,7 @@ class MenuController extends AdminController
 
     protected function getRoleOptions(): array
     {
-        return $this->remember('role.options', function () {
+        return $this->rememberRequestCache('role.options', function () {
             $roleModel = config('admin.database.roles_model');
 
             return $roleModel::all()->pluck('name', 'id')->toArray();
@@ -227,7 +199,7 @@ class MenuController extends AdminController
 
     protected function getPermissionNodes(): array
     {
-        return $this->remember('permission.nodes', function () {
+        return $this->rememberRequestCache('permission.nodes', function () {
             $permissionModel = config('admin.database.permissions_model');
             $nodes = (new $permissionModel)->allNodes();
 
@@ -237,6 +209,10 @@ class MenuController extends AdminController
 
     protected function reportConfigHealthIssues(string $event): void
     {
+        if (! $this->shouldEmitLog('config_health', '/'.ltrim((string) request()->path(), '/'))) {
+            return;
+        }
+
         $issues = app(ConfigHealthInspector::class)->inspectMenuConfig();
 
         if ($issues === []) {
@@ -245,6 +221,7 @@ class MenuController extends AdminController
 
         Log::warning('admin.config.health', [
             'event' => $event,
+            'trace_id' => $this->resolveTraceId(),
             'count' => count($issues),
             'issues' => $issues,
         ]);

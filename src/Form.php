@@ -13,6 +13,8 @@ use Dcat\Admin\Form\Field;
 use Dcat\Admin\Form\NestedForm;
 use Dcat\Admin\Form\ResolveField;
 use Dcat\Admin\Http\JsonResponse;
+use Dcat\Admin\Support\Concerns\ControlsLogEmission;
+use Dcat\Admin\Support\ErrorCode;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Traits\HasBuilderEvents;
 use Dcat\Admin\Traits\HasFormResponse;
@@ -109,6 +111,7 @@ class Form implements Renderable
         __call as macroCall;
     }
     use ResolveField;
+    use ControlsLogEmission;
 
     /**
      * Remove flag in `has many` form.
@@ -651,7 +654,7 @@ class Form implements Renderable
                 ]);
 
                 return $this->sendResponse(
-                    $this->makeFailureResponse('save_failed')
+                    $this->makeFailureResponse(ErrorCode::SAVE_FAILED)
                 );
             }
 
@@ -682,7 +685,7 @@ class Form implements Renderable
             ]);
 
             return $this->sendResponse(
-                $this->makeFailureResponse('save_failed', $e)
+                $this->makeFailureResponse(ErrorCode::SAVE_FAILED, $e)
             );
         }
     }
@@ -832,7 +835,7 @@ class Form implements Renderable
                 ]);
 
                 return $this->sendResponse(
-                    $this->makeFailureResponse('update_failed')
+                    $this->makeFailureResponse(ErrorCode::UPDATE_FAILED)
                 );
             }
 
@@ -864,16 +867,22 @@ class Form implements Renderable
             ]);
 
             return $this->sendResponse(
-                $this->makeFailureResponse('update_failed', $e)
+                $this->makeFailureResponse(ErrorCode::UPDATE_FAILED, $e)
             );
         }
     }
 
-    protected function makeFailureResponse(string $messageKey, ?\Throwable $e = null): JsonResponse
+    protected function makeFailureResponse(string $errorCode, ?\Throwable $e = null): JsonResponse
     {
+        $messageMap = [
+            ErrorCode::SAVE_FAILED => 'save_failed',
+            ErrorCode::UPDATE_FAILED => 'update_failed',
+        ];
+        $messageKey = $messageMap[$errorCode] ?? 'save_failed';
+
         $response = $this->response()
             ->error(trans("admin.{$messageKey}"))
-            ->options(['error_code' => $messageKey]);
+            ->options(['error_code' => $errorCode]);
 
         if ($e && $e->getMessage()) {
             $response->withException($e);
@@ -884,14 +893,21 @@ class Form implements Renderable
 
     protected function logOperationAudit(string $operation, array $context = []): void
     {
+        $path = $this->request ? '/'.ltrim($this->request->path(), '/') : null;
+
+        if (! $this->shouldEmitLog('audit', $path)) {
+            return;
+        }
+
         $user = Admin::user();
 
         Log::info('admin.operation.audit', array_merge([
             'operation' => $operation,
+            'trace_id' => $this->resolveTraceId(),
             'user_id' => $user ? $user->getKey() : null,
             'resource' => $this->resource(),
             'request_method' => $this->request ? $this->request->method() : null,
-            'request_path' => $this->request ? '/'.ltrim($this->request->path(), '/') : null,
+            'request_path' => $path,
         ], $context));
     }
 

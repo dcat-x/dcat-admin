@@ -4,8 +4,10 @@ namespace Dcat\Admin\Http\Controllers;
 
 use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
+use Dcat\Admin\Http\Controllers\Concerns\HasRequestCache;
 use Dcat\Admin\Http\Repositories\Permission;
 use Dcat\Admin\Layout\Content;
+use Dcat\Admin\Support\Concerns\ControlsLogEmission;
 use Dcat\Admin\Support\ConfigHealthInspector;
 use Dcat\Admin\Tree;
 use Illuminate\Support\Collection;
@@ -14,15 +16,8 @@ use Illuminate\Support\Str;
 
 class PermissionController extends AdminController
 {
-    /**
-     * @var int|null
-     */
-    protected static $requestHash;
-
-    /**
-     * @var array<string, mixed>
-     */
-    protected static $requestCache = [];
+    use HasRequestCache;
+    use ControlsLogEmission;
 
     protected function title()
     {
@@ -223,32 +218,9 @@ class PermissionController extends AdminController
         return array_combine($permissionModel::$httpMethods, $permissionModel::$httpMethods);
     }
 
-    protected function refreshRequestCacheIfNeeded(): void
-    {
-        $requestHash = spl_object_id(request());
-
-        if (static::$requestHash === $requestHash) {
-            return;
-        }
-
-        static::$requestHash = $requestHash;
-        static::$requestCache = [];
-    }
-
-    protected function remember(string $key, callable $resolver)
-    {
-        $this->refreshRequestCacheIfNeeded();
-
-        if (array_key_exists($key, static::$requestCache)) {
-            return static::$requestCache[$key];
-        }
-
-        return static::$requestCache[$key] = $resolver();
-    }
-
     protected function getPermissionSelectOptions(): array
     {
-        return $this->remember('permission.select_options', function () {
+        return $this->rememberRequestCache('permission.select_options', function () {
             $permissionModel = config('admin.database.permissions_model');
 
             return $permissionModel::selectOptions();
@@ -257,7 +229,7 @@ class PermissionController extends AdminController
 
     protected function getMenuNodes(): array
     {
-        return $this->remember('menu.nodes', function () {
+        return $this->rememberRequestCache('menu.nodes', function () {
             $menuModel = config('admin.database.menu_model');
             $nodes = (new $menuModel)->allNodes();
 
@@ -267,6 +239,10 @@ class PermissionController extends AdminController
 
     protected function reportConfigHealthIssues(string $event): void
     {
+        if (! $this->shouldEmitLog('config_health', '/'.ltrim((string) request()->path(), '/'))) {
+            return;
+        }
+
         $issues = app(ConfigHealthInspector::class)->inspectPermissionConfig();
 
         if ($issues === []) {
@@ -275,6 +251,7 @@ class PermissionController extends AdminController
 
         Log::warning('admin.config.health', [
             'event' => $event,
+            'trace_id' => $this->resolveTraceId(),
             'count' => count($issues),
             'issues' => $issues,
         ]);

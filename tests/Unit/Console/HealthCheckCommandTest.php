@@ -24,7 +24,13 @@ class HealthCheckCommandTest extends TestCase
     {
         $ref = new \ReflectionProperty(HealthCheckCommand::class, 'signature');
 
-        $this->assertSame('admin:health-check {--json : Output issues as JSON}', $ref->getDefaultValue());
+        $signature = $ref->getDefaultValue();
+        $this->assertStringContainsString('admin:health-check', $signature);
+        $this->assertStringContainsString('{--json : Output issues as JSON}', $signature);
+        $this->assertStringContainsString('{--scope=all : Check scope: all|menu|permission}', $signature);
+        $this->assertStringContainsString('{--fail-on=warning : Exit non-zero on: never|warning|error}', $signature);
+        $this->assertStringContainsString('{--refresh : Bypass health-check cache}', $signature);
+        $this->assertStringContainsString('{--quiet : Do not print issue details}', $signature);
     }
 
     public function test_description_default_value(): void
@@ -32,5 +38,18 @@ class HealthCheckCommandTest extends TestCase
         $ref = new \ReflectionProperty(HealthCheckCommand::class, 'description');
 
         $this->assertSame('Check admin menu/permission configuration health', $ref->getDefaultValue());
+    }
+
+    public function test_resolve_exit_code(): void
+    {
+        $command = new HealthCheckCommand;
+        $method = new \ReflectionMethod(HealthCheckCommand::class, 'resolveExitCode');
+        $method->setAccessible(true);
+
+        $this->assertSame(0, $method->invoke($command, [], 'warning'));
+        $this->assertSame(1, $method->invoke($command, [['severity' => 'warning']], 'warning'));
+        $this->assertSame(0, $method->invoke($command, [['severity' => 'warning']], 'error'));
+        $this->assertSame(1, $method->invoke($command, [['severity' => 'error']], 'error'));
+        $this->assertSame(0, $method->invoke($command, [['severity' => 'error']], 'never'));
     }
 }

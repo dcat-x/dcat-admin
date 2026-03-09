@@ -3,6 +3,7 @@
 namespace Dcat\Admin\Support;
 
 use Dcat\Admin\Admin;
+use Dcat\Admin\Support\Concerns\ControlsLogEmission;
 use Dcat\Admin\Models\DataRule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -11,6 +12,8 @@ use Illuminate\Support\Facades\Log;
 
 class DataPermission
 {
+    use ControlsLogEmission;
+
     /**
      * 可用条件列表.
      */
@@ -455,8 +458,14 @@ class DataPermission
 
         static::$ruleAnomalyReported[$cacheKey] = true;
 
+        $path = App::bound('request') ? '/'.ltrim((string) request()->path(), '/') : null;
+        if (! $this->shouldEmitLog('data_permission', $path)) {
+            return;
+        }
+
         Log::warning('admin.data_permission.rule_anomaly', array_merge([
             'type' => $type,
+            'trace_id' => $this->resolveTraceId(),
             'rule_id' => $rule->id,
             'menu_id' => $rule->menu_id,
             'field' => $rule->field,
