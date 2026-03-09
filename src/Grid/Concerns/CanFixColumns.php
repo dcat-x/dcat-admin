@@ -21,8 +21,6 @@ trait CanFixColumns
     {
         $this->fixColumns = new FixColumns($this, $head, $tail);
 
-        $this->resetActions();
-
         return $this->fixColumns;
     }
 

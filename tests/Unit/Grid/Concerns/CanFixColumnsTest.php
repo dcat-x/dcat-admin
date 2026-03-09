@@ -91,13 +91,13 @@ class CanFixColumnsTest extends TestCase
         $this->assertSame(-1, $fixColumns->tail);
     }
 
-    public function test_fix_columns_calls_reset_actions(): void
+    public function test_fix_columns_does_not_call_reset_actions(): void
     {
         $helper = $this->makeHelper();
 
         $helper->fixColumns(1, 1);
 
-        $this->assertTrue($helper->resetActionsCalled);
+        $this->assertFalse($helper->resetActionsCalled);
     }
 
     // -------------------------------------------------------------------------
