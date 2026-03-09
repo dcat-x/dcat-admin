@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.24] - 2026-03-09
+
+### Added
+
+- 添加操作审计日志、配置健康检查与控制器查询缓存
+
+### Changed
+
+- 提取日志控制 trait、ErrorCode 常量与健康检查增强
+- Helper 工具方法全面优化与 Context/Admin 精简
+- 中间件去重优化、数据权限查找缓存与 Helper 方法精简
+- 权限中间件URI索引、菜单激活迭代优化与构建清理
+- 多模块优化与前端构建改进
+
 ## [1.1.23] - 2026-03-09
 
 ### Fixed
@@ -389,7 +403,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.23...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.24...HEAD
+[1.1.24]: https://github.com/dcat-x/dcat-admin/compare/v1.1.23...v1.1.24
 [1.1.23]: https://github.com/dcat-x/dcat-admin/compare/v1.1.22...v1.1.23
 [1.1.22]: https://github.com/dcat-x/dcat-admin/compare/v1.1.21...v1.1.22
 [1.1.21]: https://github.com/dcat-x/dcat-admin/compare/v1.1.20...v1.1.21
