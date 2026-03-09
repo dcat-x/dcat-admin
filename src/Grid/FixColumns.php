@@ -236,6 +236,12 @@ class FixColumns
         var index = $(this).index();
         $container.find('.table-wrap tbody tr:nth-child(' + (index + 1) + ')').removeClass('active');
     });
+
+    $fixedRight.on('show.bs.dropdown', '.grid-dropdown-actions', function () {
+        $fixedRight.css('overflow', 'visible');
+    }).on('hide.bs.dropdown', '.grid-dropdown-actions', function () {
+        $fixedRight.css('overflow', 'hidden');
+    });
 })();
 JS;
 
@@ -289,7 +295,6 @@ JS;
 
 .table-fixed-right {
 	right:0;
-    overflow: visible !important;
 }
 
 .table-fixed-left {
