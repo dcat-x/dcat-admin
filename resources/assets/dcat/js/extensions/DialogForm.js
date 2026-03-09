@@ -98,6 +98,8 @@ export default class DialogForm {
 
         if (self._dialogs[counter]) { // 阻止同个类型的弹窗弹出多个
             self._dialogs[counter].show();
+            var shade = w.$('#layui-layer-shade' + self._idx[counter]);
+            if (shade.length) shade.show();
 
             try {
                 self._dialog.restore(self._idx[counter]);
@@ -167,6 +169,8 @@ export default class DialogForm {
                         self._dialogs[counter] = self._idx[counter] = null;
                     } else {
                         self._dialogs[counter].hide();
+                        var shade = w.$('#layui-layer-shade' + self._idx[counter]);
+                        if (shade.length) shade.hide();
                         return false;
                     }
                 }

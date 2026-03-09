@@ -138,7 +138,7 @@ class Tree extends Field
         $this->value = &$value;
 
         if ($this->nodes instanceof \Closure) {
-            $this->nodes = Helper::array($this->nodes->call($this->values(), $value, $this));
+            $this->nodes = Helper::array(($this->nodes)($value, $this));
         }
 
         if (! $this->nodes) {
