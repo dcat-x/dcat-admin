@@ -245,28 +245,37 @@ class Helper
     public static function matchRequestPath($path, ?string $current = null)
     {
         $request = request();
+        $path = (string) $path;
         $current = $current ?: $request->decodedPath();
 
-        if (Str::contains($path, ':')) {
-            [$methods, $path] = explode(':', $path);
+        if (strpos($path, ':') !== false) {
+            [$methods, $path] = explode(':', $path, 2);
+            $requestMethod = strtoupper($request->method());
+            $allowMethods = array_map('strtoupper', explode(',', $methods));
 
-            $methods = array_map('strtoupper', explode(',', $methods));
-
-            if (! in_array($request->method(), $methods)) {
+            if (! in_array($requestMethod, $allowMethods, true)) {
                 return false;
             }
         }
 
         // 判断路由名称
-        if ($request->routeIs($path) || $request->routeIs(admin_route_name($path))) {
+        if ($request->routeIs($path)) {
             return true;
         }
 
-        if (! Str::contains($path, '*')) {
+        $adminRoute = admin_route_name($path);
+        if ($adminRoute !== $path && $request->routeIs($adminRoute)) {
+            return true;
+        }
+
+        if (strpos($path, '*') === false) {
             return $path === $current;
         }
 
-        $path = str_replace(['*', '/'], ['([0-9a-z-_,])*', "\/"], $path);
+        $path = strtr($path, [
+            '*' => '([0-9a-z-_,])*',
+            '/' => '\/',
+        ]);
 
         return preg_match("/$path/i", $current);
     }
@@ -413,6 +422,7 @@ class Helper
             foreach ($value as $v) {
                 if (Str::contains($item, $v)) {
                     unset($array[$index]);
+                    break;
                 }
             }
         }
@@ -626,15 +636,17 @@ class Helper
      */
     public static function inArray($value, array $array)
     {
-        $array = array_map(function ($v) {
-            if (is_scalar($v) || $v === null) {
-                $v = (string) $v;
+        $target = (string) $value;
+
+        foreach ($array as $item) {
+            if (is_scalar($item) || $item === null) {
+                if ((string) $item === $target) {
+                    return true;
+                }
             }
+        }
 
-            return $v;
-        }, $array);
-
-        return in_array((string) $value, $array, true);
+        return false;
     }
 
     /**
@@ -714,7 +726,7 @@ class Helper
     public static function prepareHasOneRelation(Collection $fields, array &$input)
     {
         $relations = [];
-        $fields->each(function ($field) use (&$relations) {
+        foreach ($fields as $field) {
             $column = $field->column();
 
             if (is_array($column)) {
@@ -725,24 +737,28 @@ class Helper
                     }
                 }
 
-                return;
+                continue;
             }
 
             if (Str::contains($column, '.')) {
                 $first = explode('.', $column)[0];
                 $relations[$first] = null;
             }
-        });
+        }
 
-        foreach ($relations as $first => $v) {
-            if (isset($input[$first])) {
-                foreach ($input[$first] as $key => $value) {
-                    if (is_array($value)) {
-                        $input["$first.$key"] = $value;
-                    }
+        foreach ($relations as $first => $_) {
+            if (! isset($input[$first]) || ! is_array($input[$first])) {
+                continue;
+            }
+
+            foreach ($input[$first] as $key => $value) {
+                if (is_array($value)) {
+                    $input["$first.$key"] = $value;
                 }
+            }
 
-                $input = array_merge($input, Arr::dot([$first => $input[$first]]));
+            foreach (Arr::dot([$first => $input[$first]]) as $key => $value) {
+                $input[$key] = $value;
             }
         }
     }

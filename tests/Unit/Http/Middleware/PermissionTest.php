@@ -248,6 +248,21 @@ class PermissionTest extends TestCase
         $this->assertFalse($middleware->shouldPassThrough($request));
     }
 
+    public function test_should_pass_through_with_duplicate_and_empty_except_items(): void
+    {
+        $middleware = new Permission;
+        $this->app['config']->set('admin.route.prefix', 'admin');
+        $this->app['config']->set('admin.permission.except', ['', null, 'auth/login', 'auth/login']);
+        $request = Request::create('/admin/auth/login', 'GET');
+        $this->app->instance('request', $request);
+        $route = new \Illuminate\Routing\Route('GET', 'admin/auth/login', function () {
+            return 'ok';
+        });
+        $request->setRouteResolver(fn () => $route);
+
+        $this->assertTrue($middleware->shouldPassThrough($request));
+    }
+
     public function test_check_route_permission_returns_false_without_permission_middleware(): void
     {
         $middleware = new Permission;
@@ -257,6 +272,15 @@ class PermissionTest extends TestCase
         });
         $route->middleware(['web']);
         $request->setRouteResolver(fn () => $route);
+
+        $this->assertFalse($middleware->checkRoutePermission($request));
+    }
+
+    public function test_check_route_permission_returns_false_when_route_is_missing(): void
+    {
+        $middleware = new Permission;
+        $request = Request::create('/admin/private/path', 'GET');
+        $request->setRouteResolver(static fn () => null);
 
         $this->assertFalse($middleware->checkRoutePermission($request));
     }

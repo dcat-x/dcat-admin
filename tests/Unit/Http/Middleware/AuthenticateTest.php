@@ -101,6 +101,18 @@ class AuthenticateTest extends TestCase
         $this->assertFalse($result);
     }
 
+    public function test_should_pass_through_with_duplicate_and_empty_except_items(): void
+    {
+        $this->app['config']->set('admin.auth.except', ['', null, 'auth/login', 'auth/login']);
+
+        $request = Request::create('/admin/auth/login', 'GET');
+        $this->app->instance('request', $request);
+
+        $result = Authenticate::shouldPassThrough($request);
+
+        $this->assertTrue($result);
+    }
+
     public function test_should_pass_through_is_static_method(): void
     {
         $reflection = new \ReflectionMethod(Authenticate::class, 'shouldPassThrough');

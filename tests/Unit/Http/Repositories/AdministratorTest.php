@@ -30,6 +30,14 @@ class AdministratorTest extends TestCase
         return $reflection->getValue($object);
     }
 
+    protected function callProtectedMethod(object $object, string $method, array $arguments = [])
+    {
+        $reflection = new \ReflectionMethod($object, $method);
+        $reflection->setAccessible(true);
+
+        return $reflection->invokeArgs($object, $arguments);
+    }
+
     public function test_is_instance_of_eloquent_repository(): void
     {
         $repository = new Administrator;
@@ -65,5 +73,37 @@ class AdministratorTest extends TestCase
         $this->assertSame('relations', $parameters[0]->getName());
         $this->assertTrue($parameters[0]->isDefaultValueAvailable());
         $this->assertSame([], $parameters[0]->getDefaultValue());
+    }
+
+    public function test_collect_role_ids_returns_unique_ids_from_mixed_items(): void
+    {
+        $repository = new Administrator;
+        $items = collect([
+            ['roles' => collect([(object) ['id' => 1], (object) ['id' => 2]])],
+            ['roles' => collect([(object) ['id' => 2], (object) ['id' => 3]])],
+            ['roles' => collect([['id' => 3], ['id' => 4]])],
+            ['roles' => collect([(object) ['name' => 'no-id']])],
+        ]);
+
+        $ids = $this->callProtectedMethod($repository, 'collectRoleIds', [$items, 'id']);
+        sort($ids);
+
+        $this->assertSame([1, 2, 3, 4], $ids);
+    }
+
+    public function test_collect_permissions_for_roles_returns_unique_permission_ids(): void
+    {
+        $repository = new Administrator;
+        $roles = collect([(object) ['id' => 10], ['id' => 11], (object) ['id' => 12]]);
+        $permissions = collect([
+            10 => [1, 2],
+            11 => [2, 3],
+            12 => [],
+        ]);
+
+        $result = $this->callProtectedMethod($repository, 'collectPermissionsForRoles', [$roles, 'id', $permissions]);
+        sort($result);
+
+        $this->assertSame([1, 2, 3], $result);
     }
 }

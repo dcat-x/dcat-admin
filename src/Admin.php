@@ -476,23 +476,27 @@ class Admin
 
         if ($mix) {
             $finalGroup = [];
+            $inserted = false;
 
             foreach ($group as $i => $mid) {
                 $next = $i + 1;
 
                 $finalGroup[] = $mid;
 
-                if (! isset($group[$next]) || $group[$next] !== 'admin.permission') {
+                if ($inserted || ! isset($group[$next]) || $group[$next] !== 'admin.permission') {
                     continue;
                 }
 
-                $finalGroup = array_merge($finalGroup, $mix);
-
-                $mix = [];
+                foreach ($mix as $m) {
+                    $finalGroup[] = $m;
+                }
+                $inserted = true;
             }
 
-            if ($mix) {
-                $finalGroup = array_merge($finalGroup, $mix);
+            if (! $inserted) {
+                foreach ($mix as $m) {
+                    $finalGroup[] = $m;
+                }
             }
 
             $group = $finalGroup;

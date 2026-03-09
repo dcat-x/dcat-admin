@@ -11,6 +11,22 @@ use Illuminate\Support\Facades\App;
 class DataPermission
 {
     /**
+     * 可用条件列表.
+     */
+    protected const VALID_CONDITIONS = [
+        DataRule::CONDITION_EQUAL,
+        DataRule::CONDITION_NOT_EQUAL,
+        DataRule::CONDITION_GREATER,
+        DataRule::CONDITION_GREATER_EQUAL,
+        DataRule::CONDITION_LESS,
+        DataRule::CONDITION_LESS_EQUAL,
+        DataRule::CONDITION_LIKE,
+        DataRule::CONDITION_IN,
+        DataRule::CONDITION_NOT_IN,
+        DataRule::CONDITION_BETWEEN,
+    ];
+
+    /**
      * 当前用户
      */
     protected ?object $user;
@@ -51,6 +67,34 @@ class DataPermission
      * 用户角色ID缓存（实例级）
      */
     protected ?array $roleIdsCache = null;
+
+    /**
+     * 隐藏列缓存（实例级）.
+     *
+     * @var array<int, array<int, string>>
+     */
+    protected array $hiddenColumnsCache = [];
+
+    /**
+     * 隐藏表单字段缓存（实例级）.
+     *
+     * @var array<int, array<int, string>>
+     */
+    protected array $hiddenFormFieldsCache = [];
+
+    /**
+     * 隐藏列快速查找缓存（实例级）.
+     *
+     * @var array<int, array<string, bool>>
+     */
+    protected array $hiddenColumnsLookup = [];
+
+    /**
+     * 隐藏表单字段快速查找缓存（实例级）.
+     *
+     * @var array<int, array<string, bool>>
+     */
+    protected array $hiddenFormFieldsLookup = [];
 
     public function __construct($user = null)
     {
@@ -150,20 +194,7 @@ class DataPermission
             return;
         }
 
-        $validConditions = [
-            DataRule::CONDITION_EQUAL,
-            DataRule::CONDITION_NOT_EQUAL,
-            DataRule::CONDITION_GREATER,
-            DataRule::CONDITION_GREATER_EQUAL,
-            DataRule::CONDITION_LESS,
-            DataRule::CONDITION_LESS_EQUAL,
-            DataRule::CONDITION_LIKE,
-            DataRule::CONDITION_IN,
-            DataRule::CONDITION_NOT_IN,
-            DataRule::CONDITION_BETWEEN,
-        ];
-
-        if (! in_array($condition, $validConditions, true)) {
+        if (! in_array($condition, self::VALID_CONDITIONS, true)) {
             return;
         }
 
@@ -313,9 +344,13 @@ class DataPermission
      */
     public function getHiddenColumns(int $menuId): array
     {
+        if (array_key_exists($menuId, $this->hiddenColumnsCache)) {
+            return $this->hiddenColumnsCache[$menuId];
+        }
+
         $rules = $this->getColumnRules($menuId);
 
-        return $rules->pluck('field')->toArray();
+        return $this->hiddenColumnsCache[$menuId] = $rules->pluck('field')->toArray();
     }
 
     /**
@@ -323,9 +358,13 @@ class DataPermission
      */
     public function getHiddenFormFields(int $menuId): array
     {
+        if (array_key_exists($menuId, $this->hiddenFormFieldsCache)) {
+            return $this->hiddenFormFieldsCache[$menuId];
+        }
+
         $rules = $this->getFormRules($menuId);
 
-        return $rules->pluck('field')->toArray();
+        return $this->hiddenFormFieldsCache[$menuId] = $rules->pluck('field')->toArray();
     }
 
     /**
@@ -333,7 +372,11 @@ class DataPermission
      */
     public function canAccessColumn(int $menuId, string $field): bool
     {
-        return ! in_array($field, $this->getHiddenColumns($menuId), true);
+        if (! array_key_exists($menuId, $this->hiddenColumnsLookup)) {
+            $this->hiddenColumnsLookup[$menuId] = array_fill_keys($this->getHiddenColumns($menuId), true);
+        }
+
+        return ! isset($this->hiddenColumnsLookup[$menuId][$field]);
     }
 
     /**
@@ -341,7 +384,11 @@ class DataPermission
      */
     public function canAccessFormField(int $menuId, string $field): bool
     {
-        return ! in_array($field, $this->getHiddenFormFields($menuId), true);
+        if (! array_key_exists($menuId, $this->hiddenFormFieldsLookup)) {
+            $this->hiddenFormFieldsLookup[$menuId] = array_fill_keys($this->getHiddenFormFields($menuId), true);
+        }
+
+        return ! isset($this->hiddenFormFieldsLookup[$menuId][$field]);
     }
 
     /**

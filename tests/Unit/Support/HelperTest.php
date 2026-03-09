@@ -145,6 +145,45 @@ class HelperTest extends TestCase
         $this->assertFalse(Helper::urlHasQuery($url, ['other', 'another']));
     }
 
+    public function test_match_request_path_matches_exact_current_path(): void
+    {
+        $request = \Illuminate\Http\Request::create('/admin/users', 'GET');
+        $this->app->instance('request', $request);
+
+        $this->assertTrue(Helper::matchRequestPath('admin/users', 'admin/users'));
+    }
+
+    public function test_match_request_path_respects_method_prefix(): void
+    {
+        $request = \Illuminate\Http\Request::create('/admin/users', 'GET');
+        $this->app->instance('request', $request);
+
+        $this->assertFalse(Helper::matchRequestPath('POST:admin/users', 'admin/users'));
+        $this->assertTrue(Helper::matchRequestPath('GET,POST:admin/users', 'admin/users'));
+    }
+
+    public function test_match_request_path_supports_wildcard(): void
+    {
+        $request = \Illuminate\Http\Request::create('/admin/users/12/edit', 'GET');
+        $this->app->instance('request', $request);
+
+        $this->assertTrue((bool) Helper::matchRequestPath('admin/users/*/edit', 'admin/users/12/edit'));
+    }
+
+    public function test_match_request_path_matches_admin_route_name(): void
+    {
+        $this->app['config']->set('admin.route.prefix', 'admin');
+        $request = \Illuminate\Http\Request::create('/admin/auth/login', 'GET');
+        $route = new \Illuminate\Routing\Route('GET', 'admin/auth/login', function () {
+            return 'ok';
+        });
+        $route->name(admin_route_name('auth/login'));
+        $request->setRouteResolver(static fn () => $route);
+        $this->app->instance('request', $request);
+
+        $this->assertTrue(Helper::matchRequestPath('auth/login'));
+    }
+
     public function test_slug(): void
     {
         $this->assertSame('user-name', Helper::slug('UserName'));
@@ -187,6 +226,57 @@ class HelperTest extends TestCase
         $this->assertCount(1, $result);
         $this->assertSame('Root', $result[0]['name']);
         $this->assertIsArray($result[0]['items'] ?? null);
+    }
+
+    public function test_prepare_has_one_relation_flattens_relation_data(): void
+    {
+        $fields = collect([
+            new class
+            {
+                public function column()
+                {
+                    return 'profile.name';
+                }
+            },
+            new class
+            {
+                public function column()
+                {
+                    return ['meta.settings', 'title'];
+                }
+            },
+        ]);
+
+        $input = [
+            'profile' => ['name' => 'Tom', 'address' => ['city' => 'Shanghai']],
+            'meta' => ['settings' => ['theme' => 'blue']],
+        ];
+
+        Helper::prepareHasOneRelation($fields, $input);
+
+        $this->assertSame('Tom', $input['profile.name'] ?? null);
+        $this->assertSame('Shanghai', $input['profile.address.city'] ?? null);
+        $this->assertSame('blue', $input['meta.settings.theme'] ?? null);
+        $this->assertSame(['city' => 'Shanghai'], $input['profile.address'] ?? null);
+    }
+
+    public function test_prepare_has_one_relation_ignores_missing_relation_input(): void
+    {
+        $fields = collect([
+            new class
+            {
+                public function column()
+                {
+                    return 'department.name';
+                }
+            },
+        ]);
+
+        $input = ['name' => 'Tester'];
+
+        Helper::prepareHasOneRelation($fields, $input);
+
+        $this->assertSame(['name' => 'Tester'], $input);
     }
 
     public function test_delete_by_value(): void
@@ -281,6 +371,12 @@ class HelperTest extends TestCase
         $this->assertTrue(Helper::inArray('1', [1, 2, 3]));
         $this->assertTrue(Helper::inArray(1, ['1', '2', '3']));
         $this->assertFalse(Helper::inArray(4, [1, 2, 3]));
+    }
+
+    public function test_in_array_handles_null_and_non_scalar_items(): void
+    {
+        $this->assertTrue(Helper::inArray('', [null]));
+        $this->assertFalse(Helper::inArray('Array', [[1, 2, 3]]));
     }
 
     public function test_str_limit(): void

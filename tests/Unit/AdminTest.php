@@ -112,6 +112,38 @@ class AdminTest extends TestCase
         $this->assertIsBool($result);
     }
 
+    public function test_mix_middleware_group_inserts_before_admin_permission(): void
+    {
+        $router = $this->app->make('router');
+        $original = $router->getMiddlewareGroups()['admin'] ?? null;
+
+        $router->middlewareGroup('admin', ['a', 'admin.permission', 'b']);
+        Admin::mixMiddlewareGroup(['x', 'y']);
+
+        $groups = $router->getMiddlewareGroups();
+        $this->assertSame(['a', 'x', 'y', 'admin.permission', 'b'], $groups['admin']);
+
+        if ($original !== null) {
+            $router->middlewareGroup('admin', $original);
+        }
+    }
+
+    public function test_mix_middleware_group_appends_when_permission_not_exists(): void
+    {
+        $router = $this->app->make('router');
+        $original = $router->getMiddlewareGroups()['admin'] ?? null;
+
+        $router->middlewareGroup('admin', ['a', 'b']);
+        Admin::mixMiddlewareGroup(['x', 'y']);
+
+        $groups = $router->getMiddlewareGroups();
+        $this->assertSame(['a', 'b', 'x', 'y'], $groups['admin']);
+
+        if ($original !== null) {
+            $router->middlewareGroup('admin', $original);
+        }
+    }
+
     public static function sectionKeyProvider(): array
     {
         return [

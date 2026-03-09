@@ -330,9 +330,20 @@ class Permission
      */
     public function checkRoutePermission(Request $request)
     {
-        if (! $middleware = collect($request->route()->middleware())->first(function ($middleware) {
-            return Str::startsWith($middleware, $this->middlewarePrefix);
-        })) {
+        $route = $request->route();
+        if (! $route) {
+            return false;
+        }
+
+        $middleware = null;
+        foreach ($route->middleware() as $item) {
+            if (Str::startsWith($item, $this->middlewarePrefix)) {
+                $middleware = $item;
+                break;
+            }
+        }
+
+        if (! $middleware) {
             return false;
         }
 
@@ -374,19 +385,36 @@ class Permission
             (array) config('admin.permission.except', []),
             Admin::context()->getArray('permission.except')
         );
+        $handled = [];
 
         foreach ($excepts as $except) {
-            if ($request->routeIs($except) || $request->routeIs(admin_route_name($except))) {
+            if ($except === null || $except === '') {
+                continue;
+            }
+
+            $except = (string) $except;
+
+            if (isset($handled[$except])) {
+                continue;
+            }
+            $handled[$except] = true;
+
+            if ($request->routeIs($except)) {
                 return true;
             }
 
-            $except = admin_base_path($except);
-
-            if ($except !== '/') {
-                $except = trim($except, '/');
+            $adminRoute = admin_route_name($except);
+            if ($adminRoute !== $except && $request->routeIs($adminRoute)) {
+                return true;
             }
 
-            if (Helper::matchRequestPath($except)) {
+            $pathExcept = admin_base_path($except);
+
+            if ($pathExcept !== '/') {
+                $pathExcept = trim($pathExcept, '/');
+            }
+
+            if (Helper::matchRequestPath($pathExcept)) {
                 return true;
             }
         }
