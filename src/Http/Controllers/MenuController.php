@@ -11,9 +11,22 @@ use Dcat\Admin\Layout\Row;
 use Dcat\Admin\Tree;
 use Dcat\Admin\Widgets\Box;
 use Dcat\Admin\Widgets\Form as WidgetForm;
+use Dcat\Admin\Support\ConfigHealthInspector;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class MenuController extends AdminController
 {
+    /**
+     * @var int|null
+     */
+    protected static $requestHash;
+
+    /**
+     * @var array<string, mixed>
+     */
+    protected static $requestCache = [];
+
     public function title()
     {
         return trans('admin.menu');
@@ -32,22 +45,20 @@ class MenuController extends AdminController
                     $form->action(admin_url('auth/menu'));
 
                     $menuModel = config('admin.database.menu_model');
-                    $permissionModel = config('admin.database.permissions_model');
-                    $roleModel = config('admin.database.roles_model');
 
-                    $form->select('parent_id', trans('admin.parent_id'))->options($menuModel::selectOptions());
+                    $form->select('parent_id', trans('admin.parent_id'))->options($this->getMenuSelectOptions());
                     $form->text('title', trans('admin.title'))->required();
                     $form->icon('icon', trans('admin.icon'))->help($this->iconHelp());
                     $form->text('uri', trans('admin.uri'));
 
                     if ($menuModel::withRole()) {
-                        $form->multipleSelect('roles', trans('admin.roles'))->options($roleModel::all()->pluck('name', 'id'));
+                        $form->multipleSelect('roles', trans('admin.roles'))->options($this->getRoleOptions());
                     }
                     if ($menuModel::withPermission()) {
                         $form->tree('permissions', trans('admin.permission'))
                             ->expand(false)
                             ->treeState(false)
-                            ->nodes((new $permissionModel)->allNodes());
+                            ->nodes($this->getPermissionNodes());
                     }
 
                     $form->width(9, 2);
@@ -115,7 +126,7 @@ class MenuController extends AdminController
             $form->display('id', 'ID');
 
             $form->select('parent_id', trans('admin.parent_id'))->options(function () use ($menuModel) {
-                return $menuModel::selectOptions();
+                return $this->getMenuSelectOptions();
             })->saving(function ($v) {
                 return (int) $v;
             });
@@ -127,9 +138,7 @@ class MenuController extends AdminController
             if ($menuModel::withRole()) {
                 $form->multipleSelect('roles', trans('admin.roles'))
                     ->options(function () {
-                        $roleModel = config('admin.database.roles_model');
-
-                        return $roleModel::all()->pluck('name', 'id');
+                        return $this->getRoleOptions();
                     })
                     ->customFormat(function ($v) {
                         return array_column($v, 'id');
@@ -139,9 +148,7 @@ class MenuController extends AdminController
                 $form->tree('permissions', trans('admin.permission'))
                     ->treeState(false)
                     ->nodes(function () {
-                        $permissionModel = config('admin.database.permissions_model');
-
-                        return (new $permissionModel)->allNodes();
+                        return $this->getPermissionNodes();
                     })
                     ->customFormat(function ($v) {
                         if (! $v) {
@@ -155,6 +162,8 @@ class MenuController extends AdminController
             $form->display('created_at', trans('admin.created_at'));
             $form->display('updated_at', trans('admin.updated_at'));
         })->saved(function (Form $form, $result) {
+            $this->reportConfigHealthIssues('menu.saved');
+
             $response = $form->response()->location('auth/menu');
 
             if ($result) {
@@ -173,5 +182,71 @@ class MenuController extends AdminController
     protected function iconHelp()
     {
         return 'For more icons please see <a href="http://fontawesome.io/icons/" target="_blank">http://fontawesome.io/icons/</a>';
+    }
+
+    protected function refreshRequestCacheIfNeeded(): void
+    {
+        $requestHash = spl_object_id(request());
+
+        if (static::$requestHash === $requestHash) {
+            return;
+        }
+
+        static::$requestHash = $requestHash;
+        static::$requestCache = [];
+    }
+
+    protected function remember(string $key, callable $resolver)
+    {
+        $this->refreshRequestCacheIfNeeded();
+
+        if (array_key_exists($key, static::$requestCache)) {
+            return static::$requestCache[$key];
+        }
+
+        return static::$requestCache[$key] = $resolver();
+    }
+
+    protected function getMenuSelectOptions(): array
+    {
+        return $this->remember('menu.select_options', function () {
+            $menuModel = config('admin.database.menu_model');
+
+            return $menuModel::selectOptions();
+        });
+    }
+
+    protected function getRoleOptions(): array
+    {
+        return $this->remember('role.options', function () {
+            $roleModel = config('admin.database.roles_model');
+
+            return $roleModel::all()->pluck('name', 'id')->toArray();
+        });
+    }
+
+    protected function getPermissionNodes(): array
+    {
+        return $this->remember('permission.nodes', function () {
+            $permissionModel = config('admin.database.permissions_model');
+            $nodes = (new $permissionModel)->allNodes();
+
+            return $nodes instanceof Collection ? $nodes->toArray() : (array) $nodes;
+        });
+    }
+
+    protected function reportConfigHealthIssues(string $event): void
+    {
+        $issues = app(ConfigHealthInspector::class)->inspectMenuConfig();
+
+        if ($issues === []) {
+            return;
+        }
+
+        Log::warning('admin.config.health', [
+            'event' => $event,
+            'count' => count($issues),
+            'issues' => $issues,
+        ]);
     }
 }

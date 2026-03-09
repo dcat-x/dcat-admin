@@ -40,6 +40,7 @@ class AdminServiceProvider extends ServiceProvider
         Console\FormCommand::class,
         Console\ActionCommand::class,
         Console\MenuCacheCommand::class,
+        Console\HealthCheckCommand::class,
         Console\MinifyCommand::class,
         Console\AppCommand::class,
         Console\ExtensionMakeCommand::class,

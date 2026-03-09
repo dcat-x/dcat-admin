@@ -30,6 +30,7 @@ trait HasFormResponse
         return $this
             ->response()
             ->withValidation($validationMessages)
+            ->options(['error_code' => 'validation_failed'])
             ->send();
     }
 
@@ -73,6 +74,10 @@ trait HasFormResponse
 
         if (method_exists($this, 'sanitize')) {
             $query = $this->sanitize($query);
+        }
+
+        if (is_array($query)) {
+            ksort($query);
         }
 
         return url($request->path().'?'.http_build_query($query));

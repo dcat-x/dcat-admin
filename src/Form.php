@@ -24,6 +24,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Fluent;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Validation\Validator;
@@ -572,6 +573,10 @@ class Form implements Renderable
 
             $status = $result ? true : false;
             $message = $result ? trans('admin.delete_succeeded') : trans('admin.delete_failed');
+            $this->logOperationAudit('delete', [
+                'resource_id' => $id,
+                'status' => $status ? 'success' : 'failed',
+            ]);
         } catch (\Throwable $exception) {
             $response = $this->handleException($exception);
 
@@ -581,6 +586,12 @@ class Form implements Renderable
 
             $status = false;
             $message = $exception->getMessage() ?: trans('admin.delete_failed');
+            $this->logOperationAudit('delete', [
+                'resource_id' => $id,
+                'status' => 'exception',
+                'exception' => get_class($exception),
+                'exception_message' => $exception->getMessage(),
+            ]);
         }
 
         return $this->sendResponse(
@@ -634,13 +645,22 @@ class Form implements Renderable
             }
 
             if (! $id) {
+                $this->logOperationAudit('store', [
+                    'resource_id' => null,
+                    'status' => 'failed',
+                ]);
+
                 return $this->sendResponse(
-                    $this->response()
-                        ->error(trans('admin.save_failed'))
+                    $this->makeFailureResponse('save_failed')
                 );
             }
 
             $url = $this->getRedirectUrl($id, $redirectTo);
+
+            $this->logOperationAudit('store', [
+                'resource_id' => $id,
+                'status' => 'success',
+            ]);
 
             return $this->sendResponse(
                 $this->response()
@@ -654,10 +674,15 @@ class Form implements Renderable
                 return $response;
             }
 
+            $this->logOperationAudit('store', [
+                'resource_id' => null,
+                'status' => 'exception',
+                'exception' => get_class($e),
+                'exception_message' => $e->getMessage(),
+            ]);
+
             return $this->sendResponse(
-                $this->response()
-                    ->error(trans('admin.save_failed'))
-                    ->withExceptionIf($e->getMessage(), $e)
+                $this->makeFailureResponse('save_failed', $e)
             );
         }
     }
@@ -801,13 +826,22 @@ class Form implements Renderable
             }
 
             if (! $updated) {
+                $this->logOperationAudit('update', [
+                    'resource_id' => $id,
+                    'status' => 'failed',
+                ]);
+
                 return $this->sendResponse(
-                    $this->response()
-                        ->error(trans('admin.update_failed'))
+                    $this->makeFailureResponse('update_failed')
                 );
             }
 
             $url = $this->getRedirectUrl($id, $redirectTo);
+
+            $this->logOperationAudit('update', [
+                'resource_id' => $id,
+                'status' => 'success',
+            ]);
 
             return $this->sendResponse(
                 $this->response()
@@ -822,12 +856,43 @@ class Form implements Renderable
                 return $response;
             }
 
+            $this->logOperationAudit('update', [
+                'resource_id' => $id,
+                'status' => 'exception',
+                'exception' => get_class($e),
+                'exception_message' => $e->getMessage(),
+            ]);
+
             return $this->sendResponse(
-                $this->response()
-                    ->error(trans('admin.update_failed'))
-                    ->withExceptionIf($e->getMessage(), $e)
+                $this->makeFailureResponse('update_failed', $e)
             );
         }
+    }
+
+    protected function makeFailureResponse(string $messageKey, ?\Throwable $e = null): JsonResponse
+    {
+        $response = $this->response()
+            ->error(trans("admin.{$messageKey}"))
+            ->options(['error_code' => $messageKey]);
+
+        if ($e && $e->getMessage()) {
+            $response->withException($e);
+        }
+
+        return $response;
+    }
+
+    protected function logOperationAudit(string $operation, array $context = []): void
+    {
+        $user = Admin::user();
+
+        Log::info('admin.operation.audit', array_merge([
+            'operation' => $operation,
+            'user_id' => $user ? $user->getKey() : null,
+            'resource' => $this->resource(),
+            'request_method' => $this->request ? $this->request->method() : null,
+            'request_path' => $this->request ? '/'.ltrim($this->request->path(), '/') : null,
+        ], $context));
     }
 
     /**

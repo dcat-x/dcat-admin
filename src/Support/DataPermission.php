@@ -7,6 +7,7 @@ use Dcat\Admin\Models\DataRule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 
 class DataPermission
 {
@@ -95,6 +96,13 @@ class DataPermission
      * @var array<int, array<string, bool>>
      */
     protected array $hiddenFormFieldsLookup = [];
+
+    /**
+     * 规则异常日志去重缓存（请求级）
+     *
+     * @var array<string, bool>
+     */
+    protected static array $ruleAnomalyReported = [];
 
     public function __construct($user = null)
     {
@@ -191,10 +199,12 @@ class DataPermission
 
         // 验证字段名仅包含合法的列名字符
         if (! preg_match('/^[a-zA-Z_][a-zA-Z0-9_.]*$/', $field)) {
+            $this->reportRuleAnomaly('invalid_field', $rule, ['field' => $field]);
             return;
         }
 
         if (! in_array($condition, self::VALID_CONDITIONS, true)) {
+            $this->reportRuleAnomaly('invalid_condition', $rule, ['condition' => $condition]);
             return;
         }
 
@@ -241,6 +251,8 @@ class DataPermission
                 $values = is_array($value) ? $value : explode(',', $value);
                 if (count($values) >= 2) {
                     $query->whereBetween($field, [$values[0], $values[1]]);
+                } else {
+                    $this->reportRuleAnomaly('invalid_between_value', $rule, ['value' => $value]);
                 }
                 break;
         }
@@ -397,6 +409,7 @@ class DataPermission
     public static function clearCache(): void
     {
         static::$rulesCache = [];
+        static::$ruleAnomalyReported = [];
     }
 
     /**
@@ -427,8 +440,29 @@ class DataPermission
         $requestHash = spl_object_id(App::make('request'));
         if (static::$cacheRequestHash !== $requestHash) {
             static::$rulesCache = [];
+            static::$ruleAnomalyReported = [];
             static::$cacheRequestHash = $requestHash;
         }
+    }
+
+    protected function reportRuleAnomaly(string $type, DataRule $rule, array $extra = []): void
+    {
+        $cacheKey = $type.'_'.$rule->id;
+
+        if (isset(static::$ruleAnomalyReported[$cacheKey])) {
+            return;
+        }
+
+        static::$ruleAnomalyReported[$cacheKey] = true;
+
+        Log::warning('admin.data_permission.rule_anomaly', array_merge([
+            'type' => $type,
+            'rule_id' => $rule->id,
+            'menu_id' => $rule->menu_id,
+            'field' => $rule->field,
+            'condition' => $rule->condition,
+            'user_id' => $this->user->id ?? null,
+        ], $extra));
     }
 
     protected function resolveRoleIds(): array

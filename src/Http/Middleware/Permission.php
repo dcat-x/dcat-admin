@@ -9,6 +9,7 @@ use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class Permission
@@ -59,6 +60,13 @@ class Permission
     protected static $cacheRequestHash;
 
     /**
+     * 最近一次菜单匹配上下文（请求内实例级）
+     *
+     * @var array<string, mixed>
+     */
+    protected array $lastMenuMatchContext = [];
+
+    /**
      * Handle an incoming request.
      *
      * @param  array  $args
@@ -92,6 +100,8 @@ class Permission
             return $next($request);
         }
 
+        $this->reportPermissionDenied($request, $user);
+
         Checker::error();
     }
 
@@ -103,6 +113,13 @@ class Permission
         [$path, $pathPattern] = $this->normalizeMenuPath($request);
 
         $menu = $this->findMatchedMenu($path, $pathPattern);
+
+        $this->lastMenuMatchContext = [
+            'path' => $path,
+            'path_pattern' => $pathPattern,
+            'menu_id' => $menu ? $menu->id : null,
+            'menu_uri' => $menu ? $menu->uri : null,
+        ];
 
         // 如果没有对应的菜单，允许访问（可能是 API 接口或异步请求）
         if (! $menu) {
@@ -118,6 +135,24 @@ class Permission
 
         // 检查用户角色是否在菜单绑定的角色中
         return $user->inRoles($menuRoles);
+    }
+
+    protected function reportPermissionDenied(Request $request, $user): void
+    {
+        $route = $request->route();
+        $routeName = $route ? $route->getName() : null;
+        $routeUri = $route ? $route->uri() : null;
+
+        Log::warning('admin.permission.denied', [
+            'user_id' => $user->id ?? null,
+            'username' => $user->username ?? null,
+            'request_method' => $request->method(),
+            'request_path' => '/'.ltrim($request->path(), '/'),
+            'route_name' => $routeName,
+            'route_uri' => $routeUri,
+            'menu_bind_role_enabled' => (bool) config('admin.menu.role_bind_menu', true),
+            'menu_match' => $this->lastMenuMatchContext,
+        ]);
     }
 
     /**

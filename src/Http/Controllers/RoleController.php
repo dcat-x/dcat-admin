@@ -9,9 +9,20 @@ use Dcat\Admin\Http\Repositories\Role;
 use Dcat\Admin\Show;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Widgets\Tree;
+use Illuminate\Support\Collection;
 
 class RoleController extends AdminController
 {
+    /**
+     * @var int|null
+     */
+    protected static $requestHash;
+
+    /**
+     * @var array<string, mixed>
+     */
+    protected static $requestCache = [];
+
     public function title()
     {
         return trans('admin.roles');
@@ -51,9 +62,7 @@ class RoleController extends AdminController
             $show->field('permissions')->unescape()->as(function ($permission) {
                 $permissionModel = config('admin.database.permissions_model');
                 $permissionModel = new $permissionModel;
-                $nodes = $permissionModel->allNodes();
-
-                $tree = Tree::make($nodes);
+                $tree = Tree::make($this->getPermissionNodes());
 
                 $keyName = $permissionModel->getKeyName();
                 $tree->check(
@@ -98,10 +107,7 @@ class RoleController extends AdminController
 
             $form->tree('permissions')
                 ->nodes(function () {
-                    $permissionModel = config('admin.database.permissions_model');
-                    $permissionModel = new $permissionModel;
-
-                    return $permissionModel->allNodes();
+                    return $this->getPermissionNodes();
                 })
                 ->customFormat(function ($v) {
                     if (! $v) {
@@ -116,9 +122,7 @@ class RoleController extends AdminController
                     ->treeState(false)
                     ->setTitleColumn('title')
                     ->nodes(function () {
-                        $model = config('admin.database.menu_model');
-
-                        return (new $model)->allNodes();
+                        return $this->getMenuNodes();
                     })
                     ->customFormat(function ($v) {
                         if (! $v) {
@@ -150,5 +154,48 @@ class RoleController extends AdminController
         }
 
         return parent::destroy($id);
+    }
+
+    protected function refreshRequestCacheIfNeeded(): void
+    {
+        $requestHash = spl_object_id(request());
+
+        if (static::$requestHash === $requestHash) {
+            return;
+        }
+
+        static::$requestHash = $requestHash;
+        static::$requestCache = [];
+    }
+
+    protected function remember(string $key, callable $resolver)
+    {
+        $this->refreshRequestCacheIfNeeded();
+
+        if (array_key_exists($key, static::$requestCache)) {
+            return static::$requestCache[$key];
+        }
+
+        return static::$requestCache[$key] = $resolver();
+    }
+
+    protected function getPermissionNodes(): array
+    {
+        return $this->remember('permission.nodes', function () {
+            $permissionModel = config('admin.database.permissions_model');
+            $nodes = (new $permissionModel)->allNodes();
+
+            return $nodes instanceof Collection ? $nodes->toArray() : (array) $nodes;
+        });
+    }
+
+    protected function getMenuNodes(): array
+    {
+        return $this->remember('menu.nodes', function () {
+            $menuModel = config('admin.database.menu_model');
+            $nodes = (new $menuModel)->allNodes();
+
+            return $nodes instanceof Collection ? $nodes->toArray() : (array) $nodes;
+        });
     }
 }

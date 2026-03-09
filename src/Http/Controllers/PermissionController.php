@@ -6,11 +6,24 @@ use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
 use Dcat\Admin\Http\Repositories\Permission;
 use Dcat\Admin\Layout\Content;
+use Dcat\Admin\Support\ConfigHealthInspector;
 use Dcat\Admin\Tree;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class PermissionController extends AdminController
 {
+    /**
+     * @var int|null
+     */
+    protected static $requestHash;
+
+    /**
+     * @var array<string, mixed>
+     */
+    protected static $requestCache = [];
+
     protected function title()
     {
         return trans('admin.permissions');
@@ -97,7 +110,7 @@ class PermissionController extends AdminController
             $form->display('id', 'ID');
 
             $form->select('parent_id', trans('admin.parent_id'))
-                ->options($permissionModel::selectOptions())
+                ->options($this->getPermissionSelectOptions())
                 ->saving(function ($v) {
                     return (int) $v;
                 });
@@ -139,9 +152,7 @@ class PermissionController extends AdminController
                     ->treeState(false)
                     ->setTitleColumn('title')
                     ->nodes(function () {
-                        $model = config('admin.database.menu_model');
-
-                        return (new $model)->allNodes();
+                        return $this->getMenuNodes();
                     })
                     ->customFormat(function ($v) {
                         if (! $v) {
@@ -160,6 +171,8 @@ class PermissionController extends AdminController
         })->saved(function () {
             $model = config('admin.database.menu_model');
             (new $model)->flushCache();
+
+            $this->reportConfigHealthIssues('permission.saved');
         });
     }
 
@@ -195,7 +208,7 @@ class PermissionController extends AdminController
             return $path;
         });
 
-        return $container->merge($routes)->filter()->all();
+        return $container->merge($routes)->filter()->unique()->values()->all();
     }
 
     /**
@@ -208,5 +221,62 @@ class PermissionController extends AdminController
         $permissionModel = config('admin.database.permissions_model');
 
         return array_combine($permissionModel::$httpMethods, $permissionModel::$httpMethods);
+    }
+
+    protected function refreshRequestCacheIfNeeded(): void
+    {
+        $requestHash = spl_object_id(request());
+
+        if (static::$requestHash === $requestHash) {
+            return;
+        }
+
+        static::$requestHash = $requestHash;
+        static::$requestCache = [];
+    }
+
+    protected function remember(string $key, callable $resolver)
+    {
+        $this->refreshRequestCacheIfNeeded();
+
+        if (array_key_exists($key, static::$requestCache)) {
+            return static::$requestCache[$key];
+        }
+
+        return static::$requestCache[$key] = $resolver();
+    }
+
+    protected function getPermissionSelectOptions(): array
+    {
+        return $this->remember('permission.select_options', function () {
+            $permissionModel = config('admin.database.permissions_model');
+
+            return $permissionModel::selectOptions();
+        });
+    }
+
+    protected function getMenuNodes(): array
+    {
+        return $this->remember('menu.nodes', function () {
+            $menuModel = config('admin.database.menu_model');
+            $nodes = (new $menuModel)->allNodes();
+
+            return $nodes instanceof Collection ? $nodes->toArray() : (array) $nodes;
+        });
+    }
+
+    protected function reportConfigHealthIssues(string $event): void
+    {
+        $issues = app(ConfigHealthInspector::class)->inspectPermissionConfig();
+
+        if ($issues === []) {
+            return;
+        }
+
+        Log::warning('admin.config.health', [
+            'event' => $event,
+            'count' => count($issues),
+            'issues' => $issues,
+        ]);
     }
 }
