@@ -165,66 +165,78 @@ class FixColumns
     protected function addScript()
     {
         $script = <<<'JS'
-
 (function () {
-    var $tableMain = $('.table-main'), minHeight = 600;
+    var $container = $('.tables-container');
+    var $tableMain = $container.find('.table-main');
+    var $tableFixed = $container.find('.table-fixed');
+    var $fixedLeft = $container.find('.table-fixed-left');
+    var $fixedRight = $container.find('.table-fixed-right');
+    var minHeight = 600;
 
-    var theadHeight = $('.table-main thead tr').outerHeight();
-    $('.table-fixed thead tr').outerHeight(theadHeight);
+    function syncRowHeights() {
+        var theadHeight = $tableMain.find('thead tr').outerHeight();
+        $tableFixed.find('thead tr').outerHeight(theadHeight);
 
-    var tfootHeight = $('.table-main tfoot tr').outerHeight();
-    $('.table-fixed tfoot tr').outerHeight(tfootHeight);
+        var tfootHeight = $tableMain.find('tfoot tr').outerHeight();
+        $tableFixed.find('tfoot tr').outerHeight(tfootHeight);
 
-    $('.table-main tbody tr').each(function(i, obj) {
-        var height = $(obj).outerHeight();
-
-        $('.table-fixed-left tbody tr').eq(i).outerHeight(height);
-        $('.table-fixed-right tbody tr').eq(i).outerHeight(height);
-    });
-
-    if ($tableMain.width() >= $tableMain.prop('scrollWidth') || $(window).width() < 600) {
-        $('.table-fixed').hide();
-    } else {
-        var height = ($(window).height() - 220);
-        height = height < minHeight ? minHeight : height;
-
-        $tableMain.each(function (k, v) {
-            var tableHight = $(v).find('.custom-data-table.table').eq(0).height();
-            var maxHeight = $(v).data('height') || (height >= tableHight ? tableHight : height);
-
-            $(v).css({'max-height': maxHeight + 'px'});
-
-            if (maxHeight < tableHight) {
-                $(v).parents('.tables-container').find('.table-fixed-right').css({right: '12px'})
-            }
-        });
-        $('.table-fixed-right,.table-fixed-left').each(function (k, v) {
-            $(v).css({'max-height': (($(v).data('height') || height) - 15) + 'px'});
-        });
-
-        $tableMain.scroll(function () {
-            var self = $(this);
-
-            self.parents('.tables-container').find('.table-fixed-right,.table-fixed-left').scrollTop(self.scrollTop());
+        $tableMain.find('tbody tr').each(function (i) {
+            var h = $(this).outerHeight();
+            $fixedLeft.find('tbody tr').eq(i).outerHeight(h);
+            $fixedRight.find('tbody tr').eq(i).outerHeight(h);
         });
     }
 
-    $('.table-wrap tbody tr').on('mouseover', function () {
-        var index = $(this).index();
-        $('.table-main tbody tr').eq(index).addClass('active');
-        $('.table-fixed-left tbody tr').eq(index).addClass('active');
-        $('.table-fixed-right tbody tr').eq(index).addClass('active');
-    });
+    function updateLayout() {
+        var noOverflow = $tableMain.width() >= $tableMain.prop('scrollWidth');
 
-    $('.table-wrap tbody tr').on('mouseout', function () {
-        var index = $(this).index();
+        if (noOverflow || $(window).width() < 600) {
+            $tableFixed.hide();
+            $tableMain.off('scroll.fixColumns');
+            return;
+        }
 
-        $('.table-main tbody tr').eq(index).removeClass('active');
-        $('.table-fixed-left tbody tr').eq(index).removeClass('active');
-        $('.table-fixed-right tbody tr').eq(index).removeClass('active');
+        syncRowHeights();
+
+        var height = Math.max($(window).height() - 220, minHeight);
+
+        $tableMain.each(function () {
+            var $this = $(this);
+            var tableHeight = $this.find('.custom-data-table.table').eq(0).height();
+            var maxHeight = $this.data('height') || Math.min(height, tableHeight);
+
+            $this.css('max-height', maxHeight + 'px');
+
+            if (maxHeight < tableHeight) {
+                $this.parents('.tables-container').find('.table-fixed-right').css({right: '12px'});
+            }
+        });
+
+        $fixedLeft.add($fixedRight).each(function () {
+            $(this).css('max-height', (($(this).data('height') || height) - 15) + 'px');
+        });
+
+        $tableMain.off('scroll.fixColumns').on('scroll.fixColumns', function () {
+            var scrollTop = $(this).scrollTop();
+            $(this).parents('.tables-container').find('.table-fixed-right,.table-fixed-left')
+                .scrollTop(scrollTop);
+        });
+
+        $tableFixed.show();
+    }
+
+    updateLayout();
+
+    $(window).on('resize', debounce(updateLayout, 150));
+
+    $container.on('mouseenter', '.table-wrap tbody tr', function () {
+        var index = $(this).index();
+        $container.find('.table-wrap tbody tr:nth-child(' + (index + 1) + ')').addClass('active');
+    }).on('mouseleave', '.table-wrap tbody tr', function () {
+        var index = $(this).index();
+        $container.find('.table-wrap tbody tr:nth-child(' + (index + 1) + ')').removeClass('active');
     });
 })();
-
 JS;
 
         Admin::script($script, true);
