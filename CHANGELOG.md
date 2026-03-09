@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.26] - 2026-03-09
+
+### Fixed
+
+- 修复 DialogForm 弹窗关闭后遮罩层残留及 Tree 字段闭包调用错误
+
 ## [1.1.25] - 2026-03-09
 
 ### Fixed
@@ -409,7 +415,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.25...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.26...HEAD
+[1.1.26]: https://github.com/dcat-x/dcat-admin/compare/v1.1.25...v1.1.26
 [1.1.25]: https://github.com/dcat-x/dcat-admin/compare/v1.1.24...v1.1.25
 [1.1.24]: https://github.com/dcat-x/dcat-admin/compare/v1.1.23...v1.1.24
 [1.1.23]: https://github.com/dcat-x/dcat-admin/compare/v1.1.22...v1.1.23
