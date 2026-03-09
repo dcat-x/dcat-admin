@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.23] - 2026-03-09
+
+### Fixed
+
+- 固定列支持折叠操作菜单并修复下拉菜单溢出
+
 ## [1.1.22] - 2026-03-09
 
 ### Changed
@@ -383,7 +389,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.22...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.23...HEAD
+[1.1.23]: https://github.com/dcat-x/dcat-admin/compare/v1.1.22...v1.1.23
 [1.1.22]: https://github.com/dcat-x/dcat-admin/compare/v1.1.21...v1.1.22
 [1.1.21]: https://github.com/dcat-x/dcat-admin/compare/v1.1.20...v1.1.21
 [1.1.20]: https://github.com/dcat-x/dcat-admin/compare/v1.1.19...v1.1.20
