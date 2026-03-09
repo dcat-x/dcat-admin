@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.22] - 2026-03-09
+
+### Changed
+
+- 将剩余 call_user_func 对象方法调用替换为直接调用
+- 将 call_user_func 闭包调用替换为具名保护方法
+- 大范围 PHPStan 静态分析修复（文档注释与类型安全）
+- 细化权限前缀匹配缓存粒度并优化角色/权限查询缓存
+- 优化权限中间件前缀匹配策略并补全角色继承支持
+- 提升 PHPStan 至 level 1 并修复静态分析问题
+- 优化权限链路缓存并补充回归测试
+
+### Fixed
+
+- 优化 FixColumns 固定列 JS 实现
+
 ### Changed
 
 - 优化权限与数据权限查询性能，新增菜单 URI 与数据规则相关复合索引迁移
@@ -367,7 +383,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.21...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.22...HEAD
+[1.1.22]: https://github.com/dcat-x/dcat-admin/compare/v1.1.21...v1.1.22
 [1.1.21]: https://github.com/dcat-x/dcat-admin/compare/v1.1.20...v1.1.21
 [1.1.20]: https://github.com/dcat-x/dcat-admin/compare/v1.1.19...v1.1.20
 [1.1.19]: https://github.com/dcat-x/dcat-admin/compare/v1.1.18...v1.1.19
