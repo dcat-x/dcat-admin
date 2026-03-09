@@ -129,6 +129,8 @@
 - [权限系统升级指南](advanced/permission-upgrade.md)
 - [菜单](advanced/menu.md)
 - [性能与缓存](advanced/performance.md)
+- [操作审计与日志控制](advanced/audit-log.md)
+- [配置健康检查](advanced/health-check.md)
 - [帮助函数](advanced/function.md)
 - [新增辅助函数](advanced/new-helpers.md)
 - [开发工具](advanced/helpers.md)

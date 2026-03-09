@@ -246,6 +246,32 @@ npm run dev:all      # 开发模式,编译所有主题
 npm run prod:all     # 生产模式,编译所有主题
 ```
 
+### 仅编译主题 CSS（跳过 JS）
+
+使用 `BUILD_THEME_ONLY` 模式可以只编译主题 CSS 而跳过 JS 和插件编译，大幅缩短构建时间：
+
+```bash
+# 仅编译 gray 主题 CSS
+npm run prod:theme:gray
+
+# 仅编译 indigo 主题 CSS
+npm run prod:theme:indigo
+
+# 所有主题均有对应命令：prod:theme:{主题名}
+```
+
+所有可用的 `prod:theme:*` 命令对应前文的主题列表（如 `prod:theme:slate`、`prod:theme:red` 等）。
+
+> 适用场景：只修改了主题色或 SCSS 样式，不需要重新编译 JS 时使用，编译速度比完整构建快数倍。
+
+### 自定义主色调
+
+通过 `CUSTOM_THEME_PRIMARY` 环境变量可以临时覆盖主题的主色调：
+
+```bash
+cross-env THEME=gray CUSTOM_THEME_PRIMARY=#8b5cf6 npm run production
+```
+
 ### 监听文件变化
 
 ```bash

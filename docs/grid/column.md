@@ -61,6 +61,10 @@ $grid->column('long_text')->width('15%');
 $grid->fixColumns(2, -2);
 ```
 
+固定列支持下拉操作菜单（`DropdownActions`），下拉菜单会自动向左展开以避免被容器截断。
+
+> JS 实现要点：固定列使用行高同步、命名空间事件绑定、事件委托（`mouseenter`/`mouseleave`）和 `resize` 防抖，确保左右固定列与主表滚动和行高始终保持一致。
+
 ### 获取行序号 (index)
 
 序号从 `0` 开始计算

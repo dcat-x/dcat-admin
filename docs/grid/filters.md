@@ -553,6 +553,7 @@ $filter->in('phone')
 | `batchDescription($desc)` | 批量弹窗描述文字 | `输入内容，支持换行、逗号、分号分隔，可直接粘贴` |
 | `batchIcon($icon)` | 弹窗描述区图标 | `feather icon-list` |
 | `batchButtonText($text)` | 批量按钮文字 | `批量` |
+| `batchPlaceholder($text)` | 批量弹窗 textarea 占位文本 | 无 |
 | `batchMax($max)` | 最大允许条数 | `100` |
 | `validationPattern($pattern, $msg)` | JS 正则验证 | 无 |
 | `itemLabel($label)` | 项目标签（用于提示文案） | `条记录` |
