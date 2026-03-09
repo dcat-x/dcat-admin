@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.25] - 2026-03-09
+
+### Fixed
+
+- 修复固定列右侧行溢出问题，改用 dropdown 事件动态切换 overflow
+
 ## [1.1.24] - 2026-03-09
 
 ### Added
@@ -403,7 +409,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.24...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.25...HEAD
+[1.1.25]: https://github.com/dcat-x/dcat-admin/compare/v1.1.24...v1.1.25
 [1.1.24]: https://github.com/dcat-x/dcat-admin/compare/v1.1.23...v1.1.24
 [1.1.23]: https://github.com/dcat-x/dcat-admin/compare/v1.1.22...v1.1.23
 [1.1.22]: https://github.com/dcat-x/dcat-admin/compare/v1.1.21...v1.1.22
