@@ -24,7 +24,11 @@ class Context extends Fluent
         $data = is_array($key) ? $key : [$key => $value];
 
         foreach ($data as $key => $value) {
-            Arr::set($this->attributes, $key, $value);
+            if (is_string($key) && strpos($key, '.') === false) {
+                $this->attributes[$key] = $value;
+            } else {
+                Arr::set($this->attributes, $key, $value);
+            }
         }
 
         return $this;
@@ -66,6 +70,10 @@ class Context extends Fluent
 
     public function merge($key, array $value)
     {
+        if ($value === []) {
+            return $this;
+        }
+
         $results = $this->getArray($key);
 
         return $this->set($key, array_merge($results, $value));

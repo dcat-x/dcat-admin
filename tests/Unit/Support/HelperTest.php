@@ -60,6 +60,13 @@ class HelperTest extends TestCase
         $this->assertSame(['a', 'b'], array_values($result));
     }
 
+    public function test_array_filter_preserves_keys(): void
+    {
+        $input = [2 => 'a', 3 => '', 5 => 'b'];
+        $result = Helper::array($input, true);
+        $this->assertSame([2 => 'a', 5 => 'b'], $result);
+    }
+
     public function test_array_without_filter(): void
     {
         $input = ['a', '', null, 'b'];
@@ -110,6 +117,13 @@ class HelperTest extends TestCase
         $this->assertSame('http://example.com/path', $result);
     }
 
+    public function test_url_with_query_keeps_fragment(): void
+    {
+        $url = 'http://example.com/path?existing=value#anchor';
+        $result = Helper::urlWithQuery($url, ['foo' => 'bar']);
+        $this->assertSame('http://example.com/path?existing=value&foo=bar#anchor', $result);
+    }
+
     public function test_url_without_query(): void
     {
         $url = 'http://example.com/path?foo=bar&baz=qux';
@@ -131,6 +145,13 @@ class HelperTest extends TestCase
         $this->assertSame('http://example.com/path', $result);
     }
 
+    public function test_url_without_query_accepts_arrayable_keys(): void
+    {
+        $url = 'http://example.com/path?foo=bar&baz=qux';
+        $result = Helper::urlWithoutQuery($url, collect(['foo']));
+        $this->assertSame('http://example.com/path?baz=qux', $result);
+    }
+
     public function test_url_has_query(): void
     {
         $url = 'http://example.com/path?foo=bar';
@@ -143,6 +164,16 @@ class HelperTest extends TestCase
         $url = 'http://example.com/path?foo=bar&baz=qux';
         $this->assertTrue(Helper::urlHasQuery($url, ['foo', 'other']));
         $this->assertFalse(Helper::urlHasQuery($url, ['other', 'another']));
+    }
+
+    public function test_url_has_query_returns_false_when_query_string_empty(): void
+    {
+        $this->assertFalse(Helper::urlHasQuery('http://example.com/path?', 'foo'));
+    }
+
+    public function test_url_has_query_returns_false_when_keys_empty(): void
+    {
+        $this->assertFalse(Helper::urlHasQuery('http://example.com/path?foo=bar', []));
     }
 
     public function test_match_request_path_matches_exact_current_path(): void
@@ -194,6 +225,16 @@ class HelperTest extends TestCase
     public function test_slug_with_custom_symbol(): void
     {
         $this->assertSame('user_name', Helper::slug('UserName', '_'));
+    }
+
+    public function test_slug_with_acronym_style_name(): void
+    {
+        $this->assertSame('u-r-l-value', Helper::slug('URLValue'));
+    }
+
+    public function test_slug_returns_original_when_already_simple_lowercase(): void
+    {
+        $this->assertSame('simple-name', Helper::slug('simple-name'));
     }
 
     public function test_build_nested_array(): void
@@ -293,11 +334,39 @@ class HelperTest extends TestCase
         $this->assertSame(['a', 'c'], array_values($array));
     }
 
+    public function test_delete_by_value_respects_strict_mode(): void
+    {
+        $array = [1, '1', 2];
+        Helper::deleteByValue($array, '1', true);
+        $this->assertSame([1, 2], array_values($array));
+    }
+
+    public function test_delete_by_value_keeps_loose_mode_behavior_for_non_scalar_values(): void
+    {
+        $array = [[1], [2], ['2']];
+        Helper::deleteByValue($array, [[2]], false);
+        $this->assertSame([[1]], array_values($array));
+    }
+
     public function test_delete_contains(): void
     {
         $array = ['foo', 'foobar', 'baz', 'qux'];
         Helper::deleteContains($array, 'bar');
         $this->assertSame(['foo', 'baz', 'qux'], array_values($array));
+    }
+
+    public function test_delete_contains_with_multiple_needles(): void
+    {
+        $array = ['foo', 'foobar', 'baz', 'qux'];
+        Helper::deleteContains($array, ['bar', 'qu']);
+        $this->assertSame(['foo', 'baz'], array_values($array));
+    }
+
+    public function test_delete_contains_ignores_empty_needles(): void
+    {
+        $array = ['foo', 'bar'];
+        Helper::deleteContains($array, ['', null]);
+        $this->assertSame(['foo', 'bar'], array_values($array));
     }
 
     public function test_color_to_rbg(): void
@@ -360,9 +429,11 @@ class HelperTest extends TestCase
         $this->assertTrue(Helper::equal('1', 1));
         $this->assertTrue(Helper::equal(1, 1));
         $this->assertTrue(Helper::equal('test', 'test'));
+        $this->assertFalse(Helper::equal(null, null));
         $this->assertFalse(Helper::equal(null, 1));
         $this->assertFalse(Helper::equal(1, null));
         $this->assertFalse(Helper::equal(1, 2));
+        $this->assertTrue(Helper::equal(['a' => 1], ['a' => 1]));
     }
 
     public function test_in_array(): void
@@ -404,6 +475,17 @@ class HelperTest extends TestCase
         $this->assertSame(['user[name]', 'user[email]'], $result);
     }
 
+    public function test_format_element_name_array_preserves_keys(): void
+    {
+        $result = Helper::formatElementName(['first' => 'user.name', 'second' => 'user.email']);
+        $this->assertSame(['first' => 'user[name]', 'second' => 'user[email]'], $result);
+    }
+
+    public function test_format_element_name_with_trailing_dot(): void
+    {
+        $this->assertSame('user[]', Helper::formatElementName('user.'));
+    }
+
     public function test_build_html_attributes(): void
     {
         $attributes = ['class' => 'btn', 'id' => 'submit'];
@@ -417,6 +499,21 @@ class HelperTest extends TestCase
         $attributes = ['class' => ['btn', 'btn-primary']];
         $result = Helper::buildHtmlAttributes($attributes);
         $this->assertStringContainsString('class="btn btn-primary"', $result);
+    }
+
+    public function test_build_html_attributes_skips_null_values(): void
+    {
+        $attributes = ['class' => 'btn', 'id' => null];
+        $result = Helper::buildHtmlAttributes($attributes);
+        $this->assertStringContainsString('class="btn"', $result);
+        $this->assertStringNotContainsString('id="', $result);
+    }
+
+    public function test_build_html_attributes_numeric_key_uses_value_as_attribute_name(): void
+    {
+        $attributes = ['class' => 'btn', 'disabled'];
+        $result = Helper::buildHtmlAttributes($attributes);
+        $this->assertStringContainsString('disabled="disabled"', $result);
     }
 
     public function test_html_entity_encode(): void
@@ -434,11 +531,26 @@ class HelperTest extends TestCase
         $this->assertStringNotContainsString('<script>', $result['desc']);
     }
 
+    public function test_html_entity_encode_empty_array(): void
+    {
+        $this->assertSame([], Helper::htmlEntityEncode([]));
+    }
+
     public function test_basename(): void
     {
         $this->assertSame('file.txt', Helper::basename('/path/to/file.txt'));
         $this->assertSame('file.txt', Helper::basename('path/to/file.txt'));
         $this->assertSame('file.txt', Helper::basename('file.txt'));
+    }
+
+    public function test_basename_with_trailing_slash(): void
+    {
+        $this->assertSame('', Helper::basename('/path/to/'));
+    }
+
+    public function test_basename_with_empty_value(): void
+    {
+        $this->assertSame('', Helper::basename(''));
     }
 
     public function test_key_exists(): void
@@ -457,6 +569,20 @@ class HelperTest extends TestCase
 
         Helper::arraySet($array, 'user.email', 'john@example.com');
         $this->assertSame('john@example.com', $array['user']['email']);
+    }
+
+    public function test_array_set_with_deep_path(): void
+    {
+        $array = [];
+        Helper::arraySet($array, 'a.b.c', 1);
+        $this->assertSame(1, $array['a']['b']['c']);
+    }
+
+    public function test_array_set_with_null_key_replaces_array(): void
+    {
+        $array = ['a' => 1];
+        Helper::arraySet($array, null, ['b' => 2]);
+        $this->assertSame(['b' => 2], $array);
     }
 
     public function test_camel_array(): void

@@ -29,6 +29,14 @@ class ContextTest extends TestCase
         $this->assertSame(2, $this->context->get('b'));
     }
 
+    public function test_set_numeric_key_uses_array_path_setter(): void
+    {
+        $this->context->set([0 => 'zero', 1 => 'one']);
+
+        $this->assertSame('zero', $this->context->get('0'));
+        $this->assertSame('one', $this->context->get('1'));
+    }
+
     public function test_set_dot_notation_key(): void
     {
         $this->context->set('user.name', 'John');
@@ -115,6 +123,15 @@ class ContextTest extends TestCase
     {
         $this->context->merge('new_items', ['x', 'y']);
         $this->assertSame(['x', 'y'], $this->context->getArray('new_items'));
+    }
+
+    public function test_merge_with_empty_array_keeps_original_data(): void
+    {
+        $this->context->set('items', ['a', 'b']);
+        $result = $this->context->merge('items', []);
+
+        $this->assertSame($this->context, $result);
+        $this->assertSame(['a', 'b'], $this->context->getArray('items'));
     }
 
     public function test_forget_removes_single_key(): void

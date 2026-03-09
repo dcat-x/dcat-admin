@@ -62,9 +62,18 @@ class Helper
             }
         }
 
-        return $filter ? array_filter($value, function ($v) {
-            return $v !== '' && $v !== null;
-        }) : $value;
+        if (! $filter) {
+            return $value;
+        }
+
+        $result = [];
+        foreach ($value as $key => $item) {
+            if ($item !== '' && $item !== null) {
+                $result[$key] = $item;
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -113,7 +122,8 @@ class Helper
         $actionName = $router->current()->getActionName();
 
         if (! isset(static::$controllerNames[$actionName])) {
-            $controller = class_basename(explode('@', $actionName)[0]);
+            $controllerClass = strstr($actionName, '@', true) ?: $actionName;
+            $controller = class_basename($controllerClass);
 
             static::$controllerNames[$actionName] = str_replace('Controller', '', $controller);
         }
@@ -127,9 +137,9 @@ class Helper
      */
     public static function buildHtmlAttributes($attributes)
     {
-        $html = '';
+        $elements = [];
 
-        foreach ((array) $attributes as $key => &$value) {
+        foreach ((array) $attributes as $key => $value) {
             if (is_array($value)) {
                 $value = implode(' ', $value);
             }
@@ -138,16 +148,14 @@ class Helper
                 $key = $value;
             }
 
-            $element = '';
-
-            if ($value !== null) {
-                $element = $key.'="'.htmlentities($value, ENT_QUOTES, 'UTF-8').'" ';
+            if ($value === null) {
+                continue;
             }
 
-            $html .= $element;
+            $elements[] = $key.'="'.htmlentities($value, ENT_QUOTES, 'UTF-8').'"';
         }
 
-        return $html;
+        return $elements ? implode(' ', $elements).' ' : '';
     }
 
     /**
@@ -159,13 +167,22 @@ class Helper
             return $url;
         }
 
-        $array = explode('?', $url);
+        $fragment = '';
+        $hashPos = strpos($url, '#');
+        if ($hashPos !== false) {
+            $fragment = substr($url, $hashPos);
+            $url = substr($url, 0, $hashPos);
+        }
 
-        $url = $array[0];
+        if (strpos($url, '?') === false) {
+            return $url.'?'.http_build_query($query).$fragment;
+        }
 
-        parse_str($array[1] ?? '', $originalQuery);
+        [$baseUrl, $queryString] = explode('?', $url, 2);
+        parse_str($queryString, $originalQuery);
+        $finalQuery = $originalQuery ? array_merge($originalQuery, $query) : $query;
 
-        return $url.'?'.http_build_query(array_merge($originalQuery, $query));
+        return $baseUrl.'?'.http_build_query($finalQuery).$fragment;
     }
 
     /**
@@ -175,7 +192,9 @@ class Helper
      */
     public static function urlWithoutQuery($url, $keys)
     {
-        if (! Str::contains($url, '?') || ! $keys) {
+        $url = (string) $url;
+
+        if (strpos($url, '?') === false || ! $keys) {
             return $url;
         }
 
@@ -184,14 +203,14 @@ class Helper
         }
 
         $keys = (array) $keys;
+        if ($keys === []) {
+            return $url;
+        }
 
-        $urlInfo = parse_url($url);
-
-        parse_str($urlInfo['query'], $query);
+        [$baseUrl, $queryString] = explode('?', $url, 2);
+        parse_str($queryString, $query);
 
         Arr::forget($query, $keys);
-
-        $baseUrl = explode('?', $url)[0];
 
         return $query
             ? $baseUrl.'?'.http_build_query($query)
@@ -213,15 +232,24 @@ class Helper
      */
     public static function urlHasQuery(string $url, $keys)
     {
-        $value = explode('?', $url);
-
-        if (empty($value[1])) {
+        $keys = (array) $keys;
+        if ($keys === []) {
             return false;
         }
 
-        parse_str($value[1], $query);
+        $position = strpos($url, '?');
+        if ($position === false) {
+            return false;
+        }
 
-        foreach ((array) $keys as $key) {
+        $queryString = substr($url, $position + 1);
+        if ($queryString === '') {
+            return false;
+        }
+
+        parse_str($queryString, $query);
+
+        foreach ($keys as $key) {
             if (Arr::has($query, $key)) {
                 return true;
             }
@@ -251,9 +279,9 @@ class Helper
         if (strpos($path, ':') !== false) {
             [$methods, $path] = explode(':', $path, 2);
             $requestMethod = strtoupper($request->method());
-            $allowMethods = array_map('strtoupper', explode(',', $methods));
+            $allowMethods = array_flip(array_map('strtoupper', explode(',', $methods)));
 
-            if (! in_array($requestMethod, $allowMethods, true)) {
+            if (! isset($allowMethods[$requestMethod])) {
                 return false;
             }
         }
@@ -277,7 +305,7 @@ class Helper
             '/' => '\/',
         ]);
 
-        return preg_match("/$path/i", $current);
+        return (bool) preg_match("/$path/i", $current);
     }
 
     /**
@@ -338,9 +366,12 @@ class Helper
      */
     public static function slug(string $name, string $symbol = '-')
     {
-        $text = preg_replace_callback('/([A-Z])/', function ($text) use ($symbol) {
-            return $symbol.strtolower($text[1]);
-        }, $name);
+        if (strpos($name, '_') === false && ! preg_match('/[A-Z]/', $name)) {
+            return $name;
+        }
+
+        $text = preg_replace('/([A-Z])/', $symbol.'$1', $name);
+        $text = strtolower($text);
 
         return str_replace('_', $symbol, ltrim($text, $symbol));
     }
@@ -401,10 +432,57 @@ class Helper
      */
     public static function deleteByValue(&$array, $value, bool $strict = false)
     {
-        $value = (array) $value;
+        $values = (array) $value;
+
+        if ($values === []) {
+            return;
+        }
+
+        $lookup = [];
+        $fallback = [];
+
+        if ($strict) {
+            foreach ($values as $candidate) {
+                if (is_scalar($candidate) || $candidate === null) {
+                    $lookup[gettype($candidate).':'.(string) $candidate] = true;
+                } else {
+                    $fallback[] = $candidate;
+                }
+            }
+
+            foreach ($array as $index => $item) {
+                if (is_scalar($item) || $item === null) {
+                    if (isset($lookup[gettype($item).':'.(string) $item])) {
+                        unset($array[$index]);
+                    }
+                    continue;
+                }
+
+                if ($fallback && in_array($item, $fallback, true)) {
+                    unset($array[$index]);
+                }
+            }
+
+            return;
+        }
+
+        foreach ($values as $candidate) {
+            if (is_scalar($candidate) || $candidate === null) {
+                $lookup[(string) $candidate] = true;
+            } else {
+                $fallback[] = $candidate;
+            }
+        }
 
         foreach ($array as $index => $item) {
-            if (in_array($item, $value, $strict)) {
+            if (is_scalar($item) || $item === null) {
+                if (isset($lookup[(string) $item])) {
+                    unset($array[$index]);
+                }
+                continue;
+            }
+
+            if ($fallback && in_array($item, $fallback, false)) {
                 unset($array[$index]);
             }
         }
@@ -416,14 +494,29 @@ class Helper
      */
     public static function deleteContains(&$array, $value)
     {
-        $value = (array) $value;
+        $needles = array_values(array_filter((array) $value, static function ($needle) {
+            return $needle !== null && $needle !== '';
+        }));
+
+        if ($needles === []) {
+            return;
+        }
+
+        if (count($needles) === 1) {
+            $needle = $needles[0];
+
+            foreach ($array as $index => $item) {
+                if (Str::contains($item, $needle)) {
+                    unset($array[$index]);
+                }
+            }
+
+            return;
+        }
 
         foreach ($array as $index => $item) {
-            foreach ($value as $v) {
-                if (Str::contains($item, $v)) {
-                    unset($array[$index]);
-                    break;
-                }
+            if (Str::contains($item, $needles)) {
+                unset($array[$index]);
             }
         }
     }
@@ -488,22 +581,15 @@ class Helper
      */
     public static function colorToRBG(string $color, int $amt = 0)
     {
-        $format = function ($value) {
-            if ($value > 255) {
-                return 255;
-            }
-            if ($value < 0) {
-                return 0;
-            }
-
-            return $value;
-        };
-
         $num = hexdec($color);
 
-        $red = $format(($num >> 16) + $amt);
-        $blue = $format((($num >> 8) & 0x00FF) + $amt);
-        $green = $format(($num & 0x0000FF) + $amt);
+        $red = ($num >> 16) + $amt;
+        $blue = (($num >> 8) & 0x00FF) + $amt;
+        $green = ($num & 0x0000FF) + $amt;
+
+        $red = max(0, min(255, $red));
+        $blue = max(0, min(255, $blue));
+        $green = max(0, min(255, $green));
 
         return [$red, $blue, $green];
     }
@@ -585,7 +671,9 @@ class Helper
      */
     public static function getPreviousUrl()
     {
-        return (string) (session()->get('admin.prev.url') ? url(session()->get('admin.prev.url')) : url()->previous());
+        $previousUrl = session()->get('admin.prev.url');
+
+        return (string) ($previousUrl ? url($previousUrl) : url()->previous());
     }
 
     /**
@@ -619,6 +707,10 @@ class Helper
     {
         if ($value1 === null || $value2 === null) {
             return false;
+        }
+
+        if ($value1 === $value2) {
+            return true;
         }
 
         if (! is_scalar($value1) || ! is_scalar($value2)) {
@@ -732,7 +824,7 @@ class Helper
             if (is_array($column)) {
                 foreach ($column as $v) {
                     if (Str::contains($v, '.')) {
-                        $first = explode('.', $v)[0];
+                        $first = strstr($v, '.', true) ?: $v;
                         $relations[$first] = null;
                     }
                 }
@@ -741,7 +833,7 @@ class Helper
             }
 
             if (Str::contains($column, '.')) {
-                $first = explode('.', $column)[0];
+                $first = strstr($column, '.', true) ?: $column;
                 $relations[$first] = null;
             }
         }
@@ -818,6 +910,10 @@ class Helper
             return $item;
         }
         if (is_array($item)) {
+            if ($item === []) {
+                return $item;
+            }
+
             array_walk_recursive($item, function (&$value) {
                 $value = htmlentities($value ?? '');
             });
@@ -841,25 +937,16 @@ class Helper
         }
 
         if (is_array($name)) {
-            foreach ($name as &$v) {
-                $v = static::formatElementName($v);
-            }
+            return array_map([static::class, 'formatElementName'], $name);
+        }
 
+        if (strpos($name, '.') === false) {
             return $name;
         }
 
-        $name = explode('.', $name);
+        [$first, $rest] = explode('.', $name, 2);
 
-        if (count($name) == 1) {
-            return $name[0];
-        }
-
-        $html = array_shift($name);
-        foreach ($name as $piece) {
-            $html .= "[$piece]";
-        }
-
-        return $html;
+        return $first.'['.str_replace('.', '][', $rest).']';
     }
 
     /**
@@ -879,10 +966,10 @@ class Helper
         }
 
         $keys = explode('.', $key);
-        $default = null;
+        $lastIndex = count($keys) - 1;
 
-        while (count($keys) > 1) {
-            $key = array_shift($keys);
+        for ($index = 0; $index < $lastIndex; ++$index) {
+            $key = $keys[$index];
 
             if (! isset($array[$key]) || (! is_array($array[$key]) && ! $array[$key] instanceof \ArrayAccess)) {
                 $array[$key] = [];
@@ -891,17 +978,21 @@ class Helper
             if (is_array($array)) {
                 $array = &$array[$key];
             } else {
+                $remaining = implode('.', array_slice($keys, $index + 1));
+
                 if (is_object($array[$key])) {
-                    $array[$key] = static::arraySet($array[$key], implode('.', $keys), $value);
+                    $array[$key] = static::arraySet($array[$key], $remaining, $value);
                 } else {
                     $mid = $array[$key];
 
-                    $array[$key] = static::arraySet($mid, implode('.', $keys), $value);
+                    $array[$key] = static::arraySet($mid, $remaining, $value);
                 }
+
+                return $array;
             }
         }
 
-        $array[array_shift($keys)] = $value;
+        $array[$keys[$lastIndex]] = $value;
 
         return $array;
     }
@@ -936,7 +1027,11 @@ class Helper
             return $name;
         }
 
-        return last(explode('/', $name));
+        $position = strrpos($name, '/');
+
+        return $position === false
+            ? $name
+            : substr($name, $position + 1);
     }
 
     /**

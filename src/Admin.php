@@ -512,13 +512,13 @@ class Admin
      */
     public static function jsVariables(?array $variables = null)
     {
-        $jsVariables = static::context()->jsVariables ?: [];
+        $context = static::context();
+        $jsVariables = $context->jsVariables ?: [];
 
         if ($variables !== null) {
-            static::context()->jsVariables = array_merge(
-                $jsVariables,
-                $variables
-            );
+            $context->jsVariables = $jsVariables
+                ? ($variables ? array_merge($jsVariables, $variables) : $jsVariables)
+                : $variables;
 
             return;
         }
@@ -529,7 +529,9 @@ class Admin
 
         $jsVariables['pjax_container_selector'] = $pjaxId ? ('#'.$pjaxId) : '';
         $jsVariables['token'] = csrf_token();
-        $jsVariables['lang'] = ($lang = __('admin.client')) ? array_merge($lang, $jsVariables['lang'] ?? []) : [];
+        $lang = __('admin.client');
+        $customLang = $jsVariables['lang'] ?? [];
+        $jsVariables['lang'] = $lang ? ($customLang ? array_merge($lang, $customLang) : $lang) : [];
         $jsVariables['colors'] = static::color()->all();
         $jsVariables['dark_mode'] = static::isDarkMode();
         $jsVariables['sidebar_dark'] = config('admin.layout.sidebar_dark') || ($sidebarStyle === 'dark');

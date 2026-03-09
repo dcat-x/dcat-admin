@@ -144,6 +144,30 @@ class AdminTest extends TestCase
         }
     }
 
+    public function test_js_variables_setter_merges_with_existing_values(): void
+    {
+        Admin::context()->flush();
+        Admin::context()->jsVariables = ['foo' => 1, 'lang' => ['only' => 'custom']];
+
+        Admin::jsVariables(['foo' => 2, 'bar' => 3]);
+
+        $stored = Admin::context()->jsVariables;
+        $this->assertSame(2, $stored['foo']);
+        $this->assertSame(3, $stored['bar']);
+        $this->assertSame(['only' => 'custom'], $stored['lang']);
+    }
+
+    public function test_js_variables_output_contains_custom_variable(): void
+    {
+        Admin::context()->flush();
+        Admin::jsVariables(['custom_flag' => true]);
+
+        $output = Admin::jsVariables();
+
+        $this->assertIsString($output);
+        $this->assertStringContainsString('"custom_flag":true', $output);
+    }
+
     public static function sectionKeyProvider(): array
     {
         return [
