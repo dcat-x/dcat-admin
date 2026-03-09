@@ -9,18 +9,18 @@ use Dcat\Admin\Http\Repositories\Menu;
 use Dcat\Admin\Layout\Column;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Layout\Row;
+use Dcat\Admin\Support\Concerns\ControlsLogEmission;
+use Dcat\Admin\Support\ConfigHealthInspector;
 use Dcat\Admin\Tree;
 use Dcat\Admin\Widgets\Box;
 use Dcat\Admin\Widgets\Form as WidgetForm;
-use Dcat\Admin\Support\Concerns\ControlsLogEmission;
-use Dcat\Admin\Support\ConfigHealthInspector;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 class MenuController extends AdminController
 {
-    use HasRequestCache;
     use ControlsLogEmission;
+    use HasRequestCache;
 
     public function title()
     {
@@ -120,7 +120,7 @@ class MenuController extends AdminController
 
             $form->display('id', 'ID');
 
-            $form->select('parent_id', trans('admin.parent_id'))->options(function () use ($menuModel) {
+            $form->select('parent_id', trans('admin.parent_id'))->options(function () {
                 return $this->getMenuSelectOptions();
             })->saving(function ($v) {
                 return (int) $v;

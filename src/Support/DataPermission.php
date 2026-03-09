@@ -3,8 +3,8 @@
 namespace Dcat\Admin\Support;
 
 use Dcat\Admin\Admin;
-use Dcat\Admin\Support\Concerns\ControlsLogEmission;
 use Dcat\Admin\Models\DataRule;
+use Dcat\Admin\Support\Concerns\ControlsLogEmission;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
@@ -203,11 +203,13 @@ class DataPermission
         // 验证字段名仅包含合法的列名字符
         if (! preg_match('/^[a-zA-Z_][a-zA-Z0-9_.]*$/', $field)) {
             $this->reportRuleAnomaly('invalid_field', $rule, ['field' => $field]);
+
             return;
         }
 
         if (! in_array($condition, self::VALID_CONDITIONS, true)) {
             $this->reportRuleAnomaly('invalid_condition', $rule, ['condition' => $condition]);
+
             return;
         }
 

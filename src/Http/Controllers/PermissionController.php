@@ -16,8 +16,8 @@ use Illuminate\Support\Str;
 
 class PermissionController extends AdminController
 {
-    use HasRequestCache;
     use ControlsLogEmission;
+    use HasRequestCache;
 
     protected function title()
     {

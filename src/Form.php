@@ -25,8 +25,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Fluent;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Fluent;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Validation\Validator;
@@ -105,13 +105,13 @@ class Form implements Renderable
     use Concerns\HasFiles;
     use Concerns\HasRows;
     use Concerns\HasTabs;
+    use ControlsLogEmission;
     use HasBuilderEvents;
     use HasFormResponse;
     use Macroable {
         __call as macroCall;
     }
     use ResolveField;
-    use ControlsLogEmission;
 
     /**
      * Remove flag in `has many` form.

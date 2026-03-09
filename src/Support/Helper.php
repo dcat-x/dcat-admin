@@ -455,6 +455,7 @@ class Helper
                     if (isset($lookup[gettype($item).':'.(string) $item])) {
                         unset($array[$index]);
                     }
+
                     continue;
                 }
 
@@ -479,6 +480,7 @@ class Helper
                 if (isset($lookup[(string) $item])) {
                     unset($array[$index]);
                 }
+
                 continue;
             }
 
@@ -968,7 +970,7 @@ class Helper
         $keys = explode('.', $key);
         $lastIndex = count($keys) - 1;
 
-        for ($index = 0; $index < $lastIndex; ++$index) {
+        for ($index = 0; $index < $lastIndex; $index++) {
             $key = $keys[$index];
 
             if (! isset($array[$key]) || (! is_array($array[$key]) && ! $array[$key] instanceof \ArrayAccess)) {
