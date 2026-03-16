@@ -114,10 +114,10 @@ class ScaffoldController extends Controller
         $message = '';
 
         $creates = (array) $request->get('create');
-        $table = Helper::slug($request->get('table_name'), '_');
-        $controller = $request->get('controller_name');
-        $model = $request->get('model_name');
-        $repository = $request->get('repository_name');
+        $table = Helper::slug((string) $request->get('table_name'), '_');
+        $controller = (string) $request->get('controller_name');
+        $model = (string) $request->get('model_name');
+        $repository = (string) $request->get('repository_name');
 
         try {
             // 1. Create model.
@@ -150,7 +150,7 @@ class ScaffoldController extends Controller
             }
 
             if (in_array('lang', $creates)) {
-                $paths['lang'] = (new LangCreator($request->get('fields')))
+                $paths['lang'] = (new LangCreator((array) $request->get('fields')))
                     ->create($controller, $request->get('translate_title'));
             }
 

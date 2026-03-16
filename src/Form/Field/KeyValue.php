@@ -114,7 +114,7 @@ class KeyValue extends Field
         $value = $this->value();
 
         $this->addVariables([
-            'count' => $value ? count($value) : 0,
+            'count' => is_countable($value) ? count($value) : 0,
             'keyLabel' => $this->getKeyLabel(),
             'valueLabel' => $this->getValueLabel(),
         ]);

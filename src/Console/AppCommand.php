@@ -41,7 +41,8 @@ class AppCommand extends InstallCommand
         /* @var Filesystem $files */
         $files = $this->laravel['files'];
 
-        $app = Helper::slug($namespace = $this->argument('name'));
+        $namespace = (string) $this->argument('name');
+        $app = Helper::slug($namespace);
 
         $files->put(
             $config = config_path($app.'.php'),
@@ -62,6 +63,6 @@ class AppCommand extends InstallCommand
      */
     protected function setDirectory()
     {
-        $this->directory = app_path($this->argument('name'));
+        $this->directory = app_path((string) $this->argument('name'));
     }
 }

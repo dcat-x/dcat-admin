@@ -155,7 +155,7 @@ class ListField extends Field
     {
         $value = $this->value();
 
-        $this->addVariables(['count' => $value ? count($value) : 0]);
+        $this->addVariables(['count' => is_countable($value) ? count($value) : 0]);
 
         return parent::render();
     }

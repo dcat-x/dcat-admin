@@ -266,7 +266,7 @@ abstract class ServiceProvider extends LaravelServiceProvider
             if (is_file($logo) && $file = fopen($logo, 'rb', false)) {
                 $content = fread($file, filesize($logo));
                 fclose($file);
-                $base64 = chunk_split(base64_encode($content));
+                $base64 = chunk_split(base64_encode((string) $content));
 
                 return 'data:image/png;base64,'.$base64;
             }
@@ -596,6 +596,6 @@ abstract class ServiceProvider extends LaravelServiceProvider
      */
     protected function unserializeConfig($config)
     {
-        return json_decode($config, true);
+        return json_decode((string) $config, true);
     }
 }

@@ -566,13 +566,12 @@ if (! function_exists('format_byte')) {
     /**
      * 文件单位换算.
      *
-     * @param  int  $dec
      * @return string
      */
-    function format_byte($input, $dec = 0)
+    function format_byte($input, int $dec = 0)
     {
         $prefix_arr = ['B', 'KB', 'MB', 'GB', 'TB'];
-        $value = round($input, $dec);
+        $value = round((float) $input, $dec);
         $i = 0;
         while ($value > 1024) {
             $value /= 1024;

@@ -96,9 +96,9 @@ trait HasQuickSearch
             return;
         }
 
-        $query = request($this->quickSearch->getQueryName());
+        $query = (string) request($this->quickSearch->getQueryName());
 
-        if ($query === '' || $query === null) {
+        if ($query === '') {
             return;
         }
 
@@ -258,7 +258,7 @@ trait HasQuickSearch
      */
     protected function addWhereDatetimeBinding($query, ?string $column, ?bool $or, ?string $function, ?string $value)
     {
-        $method = ($or ? 'orWhere' : 'where').ucfirst($function);
+        $method = ($or ? 'orWhere' : 'where').ucfirst((string) $function);
 
         Helper::withQueryCondition($query, $column, $method, [$value]);
     }

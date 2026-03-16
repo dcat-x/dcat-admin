@@ -137,6 +137,8 @@ trait ImageField
             return;
         }
 
+        $file = (string) $file;
+
         foreach ($this->thumbnails as $name => $_) {
             // We need to get extension type ( .jpeg , .png ...)
             $ext = pathinfo($file, PATHINFO_EXTENSION);

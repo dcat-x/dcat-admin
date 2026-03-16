@@ -126,7 +126,7 @@ class ExtensionController extends Controller
 
     public function createExtension($package, $namespace, $type)
     {
-        $namespace = trim($namespace, '\\');
+        $namespace = trim((string) $namespace, '\\');
 
         $output = new StringOutput;
 

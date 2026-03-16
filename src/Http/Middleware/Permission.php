@@ -185,7 +185,7 @@ class Permission
         $path = ltrim($path, '/');
 
         // 移除路径中的 ID 部分 (如 users/1/edit -> users/*/edit)
-        $pathPattern = preg_replace('/\/\d+/', '/*', $path);
+        $pathPattern = (string) preg_replace('/\/\d+/', '/*', $path);
 
         return [$path, $pathPattern];
     }

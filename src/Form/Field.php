@@ -679,7 +679,7 @@ class Field implements Renderable
     {
         if ($this instanceof Field\MultipleSelect) {
             $value = Arr::get($input, $column);
-            Arr::set($input, $column, array_filter($value));
+            Arr::set($input, $column, array_filter((array) $value));
         }
 
         return $input;

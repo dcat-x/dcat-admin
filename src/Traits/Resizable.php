@@ -23,7 +23,7 @@ trait Resizable
         }
 
         // We take image from posts field
-        $image = $this->attributes[$attribute];
+        $image = (string) $this->attributes[$attribute];
 
         $thumbnail = $this->getThumbnailPath($image, $type);
 

@@ -378,7 +378,7 @@ class Helper
             return $name;
         }
 
-        $text = preg_replace('/([A-Z])/', $symbol.'$1', $name);
+        $text = (string) preg_replace('/([A-Z])/', $symbol.'$1', $name);
         $text = strtolower($text);
 
         return str_replace('_', $symbol, ltrim($text, $symbol));
