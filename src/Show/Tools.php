@@ -21,7 +21,7 @@ class Tools implements Renderable
     protected $panel;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $resource;
 

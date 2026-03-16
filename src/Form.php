@@ -207,17 +207,17 @@ class Form implements Renderable
     public static $fieldAlias = [];
 
     /**
-     * @var Repository
+     * @var Repository|null
      */
     protected $repository;
 
     /**
-     * @var Closure
+     * @var Closure|null
      */
     protected $callback;
 
     /**
-     * @var Request
+     * @var Request|null
      */
     protected $request;
 
@@ -277,7 +277,7 @@ class Form implements Renderable
     protected $isSoftDeletes = false;
 
     /**
-     * @var MessageBag
+     * @var MessageBag|null
      */
     protected $validationMessages;
 
@@ -775,7 +775,7 @@ class Form implements Renderable
     /**
      * Handle orderable update.
      *
-     * @return Response
+     * @return Response|null
      */
     protected function handleOrderable(array $input = [])
     {

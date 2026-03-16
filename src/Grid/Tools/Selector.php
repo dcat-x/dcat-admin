@@ -28,7 +28,7 @@ class Selector
     protected $selectors = [];
 
     /**
-     * @var array
+     * @var array|null
      */
     protected $selected;
 
@@ -68,9 +68,8 @@ class Selector
     }
 
     /**
-     * @param  string  $label
-     * @param  array  $options
-     * @param  null  $query
+     * @param  string|array  $label
+     * @param  array|\Closure  $options
      * @param  string  $type
      * @return $this
      */

@@ -141,12 +141,12 @@ class Field implements Renderable
     /**
      * Parent form.
      *
-     * @var Form|WidgetForm
+     * @var Form|WidgetForm|null
      */
     protected $form;
 
     /**
-     * @var WidgetForm
+     * @var WidgetForm|null
      */
     protected $parent;
 
@@ -198,7 +198,7 @@ class Field implements Renderable
     /**
      * column data format.
      *
-     * @var \Closure
+     * @var \Closure|null
      */
     protected $customFormat = null;
 
@@ -455,7 +455,7 @@ class Field implements Renderable
     /**
      * Set the field options.
      *
-     * @param  array  $options
+     * @param  array|\Closure  $options
      * @return $this
      */
     public function options($options = [])
@@ -470,7 +470,7 @@ class Field implements Renderable
     }
 
     /**
-     * @param  array  $options
+     * @param  array|\Closure  $options
      * @return $this
      */
     public function replaceOptions($options)
@@ -496,7 +496,7 @@ class Field implements Renderable
     /**
      * Set the field option checked.
      *
-     * @param  array  $checked
+     * @param  array|\Illuminate\Contracts\Support\Arrayable  $checked
      * @return $this
      */
     public function checked($checked = [])

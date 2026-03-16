@@ -92,7 +92,7 @@ class Grid
     /**
      * Grid builder.
      *
-     * @var \Closure
+     * @var \Closure|null
      */
     protected $builder;
 
@@ -133,7 +133,7 @@ class Grid
     protected $footer = [];
 
     /**
-     * @var Closure
+     * @var Closure|null
      */
     protected $wrapper;
 
@@ -148,7 +148,7 @@ class Grid
     protected $tableId = 'grid-table';
 
     /**
-     * @var Grid\Tools\RowSelector
+     * @var Grid\Tools\RowSelector|null
      */
     protected $rowSelector;
 

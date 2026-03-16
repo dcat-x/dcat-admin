@@ -18,7 +18,7 @@ class Row implements Renderable
     /**
      * Row constructor.
      *
-     * @param  string  $content
+     * @param  string|Column  $content
      */
     public function __construct($content = '')
     {

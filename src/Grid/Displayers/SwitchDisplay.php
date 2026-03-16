@@ -15,7 +15,7 @@ class SwitchDisplay extends AbstractDisplayer
         $this->color = Admin::color()->get($color);
     }
 
-    public function display(string $color = '', $refresh = false)
+    public function display($color = '', $refresh = false)
     {
         if ($color instanceof \Closure) {
             $color->call($this->row, $this);

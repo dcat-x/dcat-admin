@@ -27,12 +27,12 @@ abstract class AbstractExporter implements ExporterInterface
     protected $parent;
 
     /**
-     * @var \Closure
+     * @var \Closure|null
      */
     protected $builder;
 
     /**
-     * @var array
+     * @var array|false
      */
     protected $titles = [];
 
@@ -66,7 +66,7 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * Set the headings of excel sheet.
      *
-     * @param  array|false  $titles
+     * @param  array|string|false|null  $titles
      * @return $this|array
      */
     public function titles($titles = null)
@@ -252,10 +252,11 @@ abstract class AbstractExporter implements ExporterInterface
     }
 
     /**
-     * @return array
+     * @return array|Collection|null
      */
     protected function callBuilder(Collection &$data)
     {
+        /** @var Collection|null $data */
         if ($data && $this->builder) {
             return ($this->builder)($data);
         }

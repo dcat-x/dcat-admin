@@ -27,7 +27,7 @@ class ComplexHeader extends Widget
     protected $label;
 
     /**
-     * @var Collection
+     * @var Collection|null
      */
     protected $columnNames;
 
@@ -47,7 +47,7 @@ class ComplexHeader extends Widget
     }
 
     /**
-     * @return Collection
+     * @return Collection|null
      */
     public function getColumnNames()
     {

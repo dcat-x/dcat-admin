@@ -218,7 +218,7 @@ class Zip extends ZipArchive
      * Removes a file or folder from the zip collection.
      * Does not support wildcards.
      *
-     * @param  string  $source
+     * @param  string|array  $source
      * @return self
      */
     public function remove($source)

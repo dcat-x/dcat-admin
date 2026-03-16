@@ -9,7 +9,7 @@ use Dcat\Admin\Grid\Tools\QuickCreate;
 trait HasQuickCreate
 {
     /**
-     * @var QuickCreate
+     * @var QuickCreate|null
      */
     protected $quickCreate;
 

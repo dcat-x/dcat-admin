@@ -115,7 +115,7 @@ class Builder implements FieldsCollection
     protected $elementId;
 
     /**
-     * @var \Closure
+     * @var \Closure|null
      */
     protected $wrapper;
 

@@ -20,7 +20,7 @@ class Select extends Presenter
     /**
      * Options of select.
      *
-     * @var array|\Closure
+     * @var array|string|\Closure
      */
     protected $options = [];
 

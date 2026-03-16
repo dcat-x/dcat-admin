@@ -233,7 +233,7 @@ HTML;
             $this->disableDelete();
         }
 
-        if (! $tools || ! $tools->count()) {
+        if (! $tools->count()) {
             return '';
         }
 

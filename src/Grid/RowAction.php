@@ -9,7 +9,7 @@ use Illuminate\Support\Fluent;
 abstract class RowAction extends GridAction
 {
     /**
-     * @var Fluent
+     * @var Fluent|null
      */
     protected $row;
 

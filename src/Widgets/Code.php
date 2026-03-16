@@ -12,7 +12,7 @@ class Code extends Markdown
     protected $lang = 'php';
 
     /**
-     * @param  string  $content
+     * @param  string|array|object  $content
      */
     public function __construct($content = '', int $start = 1, int $end = 1000)
     {

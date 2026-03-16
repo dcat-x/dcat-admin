@@ -12,7 +12,7 @@ use Illuminate\Support\Collection;
 trait CanFixColumns
 {
     /**
-     * @var FixColumns
+     * @var FixColumns|null
      */
     protected $fixColumns;
 

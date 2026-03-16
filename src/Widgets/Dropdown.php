@@ -33,7 +33,7 @@ class Dropdown extends Widget
     protected $buttonId;
 
     /**
-     * @var \Closure
+     * @var \Closure|null
      */
     protected $builder;
 

@@ -22,12 +22,12 @@ use Illuminate\Support\Str;
 trait HasQuickSearch
 {
     /**
-     * @var array|string|\Closure
+     * @var array|string|\Closure|null
      */
     protected $search;
 
     /**
-     * @var Tools\QuickSearch
+     * @var Tools\QuickSearch|null
      */
     protected $quickSearch;
 

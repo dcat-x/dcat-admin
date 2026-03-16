@@ -281,7 +281,7 @@ class VersionManager
                 'name' => $name,
                 'version' => $version,
             ]);
-        } elseif ($version && $currentVersion) {
+        } elseif ($version && $currentVersion) { // @phpstan-ignore booleanAnd.rightAlwaysTrue
             Extension::query()->where('name', $name)->update([
                 'version' => $version,
                 'updated_at' => new Carbon,

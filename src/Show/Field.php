@@ -430,7 +430,7 @@ HTML;
     }
 
     /**
-     * @param  string  $val
+     * @param  string|\Closure  $val
      * @return $this
      */
     public function prepend($val)
@@ -455,7 +455,7 @@ HTML;
     }
 
     /**
-     * @param  string  $val
+     * @param  string|\Closure  $val
      * @return $this
      */
     public function append($val)

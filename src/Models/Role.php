@@ -132,7 +132,7 @@ class Role extends Model
             ->get(['permission_id', 'role_id'])
             ->groupBy('role_id')
             ->map(function ($v) {
-                $v = $v instanceof Arrayable ? $v->toArray() : $v;
+                $v = $v instanceof Arrayable ? $v->toArray() : $v; // @phpstan-ignore-line
 
                 return array_column($v, 'permission_id');
             });

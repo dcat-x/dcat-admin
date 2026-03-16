@@ -151,8 +151,8 @@ class Permission
         }
 
         $route = $request->route();
-        $routeName = $route ? $route->getName() : null;
-        $routeUri = $route ? $route->uri() : null;
+        $routeName = $route ? $route->getName() : null; // @phpstan-ignore-line
+        $routeUri = $route ? $route->uri() : null; // @phpstan-ignore-line
 
         Log::warning('admin.permission.denied', [
             'trace_id' => $this->resolveTraceId(),
@@ -378,6 +378,7 @@ class Permission
     public function checkRoutePermission(Request $request)
     {
         $route = $request->route();
+        // @phpstan-ignore booleanNot.alwaysFalse
         if (! $route) {
             return false;
         }

@@ -139,7 +139,7 @@ class Tree implements Renderable
     protected $actionCallbacks = [];
 
     /**
-     * @var Closure
+     * @var Closure|null
      */
     protected $wrapper;
 

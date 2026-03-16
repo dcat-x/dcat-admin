@@ -99,7 +99,6 @@ class MigrationCreator extends BaseMigrationCreator
             }
 
             $hasDefault = isset($field['default'])
-                && ! is_null($field['default'])
                 && $field['default'] !== '';
             if ($hasDefault) {
                 $column .= "->default('{$field['default']}')";

@@ -10,7 +10,7 @@ use Dcat\Admin\Show;
 abstract class AbstractTool extends Action
 {
     /**
-     * @var Show
+     * @var Show|null
      */
     protected $parent;
 

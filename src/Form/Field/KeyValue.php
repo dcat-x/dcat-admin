@@ -84,7 +84,10 @@ class KeyValue extends Field
 
         $input = $this->prepareValidatorInput($input);
 
-        return validator($input, $rules, $this->getValidationMessages(), $attributes);
+        /** @var \Illuminate\Validation\Validator $result */
+        $result = validator()->make($input, $rules, $this->getValidationMessages(), $attributes);
+
+        return $result;
     }
 
     protected function prepareValidatorInput(array $input)

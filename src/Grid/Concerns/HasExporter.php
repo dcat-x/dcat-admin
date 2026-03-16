@@ -12,7 +12,7 @@ use Dcat\Admin\Grid\Tools;
 trait HasExporter
 {
     /**
-     * @var Exporter
+     * @var Exporter|null
      */
     protected $exporter;
 
@@ -29,7 +29,7 @@ trait HasExporter
     /**
      * Set exporter driver for Grid to export.
      *
-     * @param  string|Grid\Exporters\AbstractExporter|array  $exporterDriver
+     * @param  string|Grid\Exporters\AbstractExporter|array|false|null  $exporterDriver
      * @return Exporter
      */
     public function export($exporterDriver = null)
@@ -103,7 +103,10 @@ trait HasExporter
      */
     protected function resolveExportDriver($scope)
     {
-        return $this->exporter()->driver()->withScope($scope);
+        /** @var AbstractExporter $driver */
+        $driver = $this->exporter()->driver();
+
+        return $driver->withScope($scope);
     }
 
     /**

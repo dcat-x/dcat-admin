@@ -63,6 +63,7 @@ class Bootstrap
     {
         if (
             $request->method() === 'GET'
+            // @phpstan-ignore-next-line
             && $request->route()
             && ! Helper::isAjaxRequest()
             && ! $this->prefetch($request)

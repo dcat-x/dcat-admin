@@ -20,7 +20,7 @@ use Illuminate\Support\Collection;
 trait HasFields
 {
     /**
-     * @var Collection|Field[]
+     * @var Collection|Field[]|null
      */
     private $fields;
 
@@ -48,7 +48,7 @@ trait HasFields
     {
         return $this->fields()->first(function (Field $field) use ($name) {
             if (is_array($field->column())) {
-                $result = in_array($name, $field->column(), true) || $field->column() === $name ? $field : null;
+                $result = in_array($name, $field->column(), true) ? $field : null;
 
                 if ($result) {
                     return $result;

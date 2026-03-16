@@ -54,12 +54,12 @@ abstract class AbstractFilter
     protected $label;
 
     /**
-     * @var array|string
+     * @var array|string|null
      */
     protected $value;
 
     /**
-     * @var array|string
+     * @var array|string|null
      */
     protected $defaultValue;
 
@@ -71,7 +71,7 @@ abstract class AbstractFilter
     /**
      * Presenter object.
      *
-     * @var Presenter
+     * @var Presenter|null
      */
     protected $presenter;
 
@@ -535,7 +535,7 @@ abstract class AbstractFilter
     /**
      * Get value of current filter.
      *
-     * @return array|string
+     * @return array|string|null
      */
     public function getValue()
     {

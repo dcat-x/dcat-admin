@@ -32,7 +32,7 @@ class HasMany extends Field
     protected $parentRelationName;
 
     /**
-     * @var string|int
+     * @var string|int|null
      */
     protected $parentKey;
 
@@ -214,7 +214,7 @@ class HasMany extends Field
     {
         if (
             $field instanceof MultipleSelect
-            || $field instanceof Checkbox
+            || $field instanceof Checkbox // @phpstan-ignore-line
             || $field instanceof Tags
         ) {
             foreach (array_keys(Arr::get($input, $this->column)) as $key) {
@@ -250,7 +250,7 @@ class HasMany extends Field
      *
      * @param  array  $input
      * @param  string  $label
-     * @param  string  $column
+     * @param  string|array  $column
      * @return array
      */
     protected function formatValidationAttribute($input, $label, $column)

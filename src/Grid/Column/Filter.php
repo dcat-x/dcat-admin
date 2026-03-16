@@ -114,7 +114,7 @@ abstract class Filter implements Renderable
      * Get filter value of this column.
      *
      * @param  string  $default
-     * @return array|\Illuminate\Http\Request|string
+     * @return array|\Illuminate\Http\Request|string|null
      */
     public function value($default = '')
     {

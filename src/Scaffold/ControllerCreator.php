@@ -29,7 +29,7 @@ class ControllerCreator
      * ControllerCreator constructor.
      *
      * @param  string  $name
-     * @param  null  $files
+     * @param  \Illuminate\Filesystem\Filesystem|null  $files
      */
     public function __construct($name, $files = null)
     {

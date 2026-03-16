@@ -23,7 +23,7 @@ class Importer
     protected $grid;
 
     /**
-     * @var Grid\Importers\AbstractImporter
+     * @var Grid\Importers\AbstractImporter|ImporterInterface|null
      */
     protected $driver;
 
@@ -38,8 +38,8 @@ class Importer
     }
 
     /**
-     * @param  string|Grid\Importers\AbstractImporter|null  $driver
-     * @return Grid\Importers\AbstractImporter
+     * @param  string|Grid\Importers\AbstractImporter|ImporterInterface|null  $driver
+     * @return Grid\Importers\AbstractImporter|ImporterInterface
      */
     public function resolve($driver = null)
     {
@@ -59,7 +59,7 @@ class Importer
     }
 
     /**
-     * @return Importers\AbstractImporter
+     * @return Importers\AbstractImporter|ImporterInterface
      */
     public function driver()
     {

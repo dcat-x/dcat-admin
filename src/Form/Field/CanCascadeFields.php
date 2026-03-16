@@ -10,7 +10,7 @@ use Dcat\Admin\Form;
 use Illuminate\Support\Arr;
 
 /**
- * @property Form $form
+ * @property Form|null $form
  */
 trait CanCascadeFields
 {
@@ -44,6 +44,7 @@ trait CanCascadeFields
 
     protected function getDefaultOperator()
     {
+        // @phpstan-ignore-next-line
         if ($this instanceof MultipleSelect || $this instanceof Checkbox) {
             return 'in';
         }

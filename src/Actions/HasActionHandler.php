@@ -14,7 +14,7 @@ trait HasActionHandler
     }
 
     /**
-     * @var Response
+     * @var Response|null
      */
     protected $response;
 

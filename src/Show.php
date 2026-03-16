@@ -39,7 +39,7 @@ class Show implements Renderable
     protected $view = 'admin::show.container';
 
     /**
-     * @var Repository
+     * @var Repository|null
      */
     protected $repository;
 
@@ -54,7 +54,7 @@ class Show implements Renderable
     protected $keyName = 'id';
 
     /**
-     * @var Fluent
+     * @var Fluent|\Illuminate\Database\Eloquent\Model|null
      */
     protected $model;
 
@@ -206,7 +206,7 @@ class Show implements Renderable
     }
 
     /**
-     * @param  Fluent|\Illuminate\Database\Eloquent\Model|null  $model
+     * @param  Fluent|\Illuminate\Database\Eloquent\Model|array|null  $model
      * @return Fluent|$this|\Illuminate\Database\Eloquent\Model
      */
     public function model($model = null)

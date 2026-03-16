@@ -92,7 +92,7 @@ abstract class Presenter
     /**
      * Get filter value.
      *
-     * @return array|string
+     * @return array|string|null
      */
     public function value()
     {

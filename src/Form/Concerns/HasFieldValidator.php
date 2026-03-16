@@ -12,7 +12,7 @@ use Illuminate\Support\MessageBag;
 use Illuminate\Support\Str;
 
 /**
- * @property Form $form
+ * @property Form|null $form
  */
 trait HasFieldValidator
 {
@@ -38,7 +38,7 @@ trait HasFieldValidator
     protected $rules = [];
 
     /**
-     * @var \Closure
+     * @var \Closure|null
      */
     protected $validator;
 
@@ -88,7 +88,7 @@ trait HasFieldValidator
     /**
      * Get or set rules.
      *
-     * @param  null  $rules
+     * @param  array|\Closure|string|null  $rules
      * @param  array  $messages
      * @return $this
      */

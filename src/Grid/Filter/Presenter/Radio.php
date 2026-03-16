@@ -28,7 +28,7 @@ class Radio extends Presenter
     /**
      * Radio constructor.
      *
-     * @param  array  $options
+     * @param  array|Arrayable  $options
      */
     public function __construct($options = [])
     {

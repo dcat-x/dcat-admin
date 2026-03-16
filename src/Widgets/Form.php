@@ -130,7 +130,7 @@ class Form implements Renderable
     protected $ajax = true;
 
     /**
-     * @var Fluent|\Illuminate\Contracts\Support\Arrayable
+     * @var Fluent|\Illuminate\Contracts\Support\Arrayable|null
      */
     protected $data;
 
@@ -394,7 +394,7 @@ class Form implements Renderable
     {
         foreach ($this->fields as $field) {
             if (is_array($field->column())) {
-                $result = in_array($name, $field->column(), true) || $field->column() === $name ? $field : null;
+                $result = in_array($name, $field->column(), true) ? $field : null;
 
                 if ($result) {
                     return $result;

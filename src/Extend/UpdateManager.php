@@ -115,7 +115,7 @@ class UpdateManager
         $this->versionManager->output = $this->output;
 
         if ($this->versionManager->update($extension, $stopOnVersion) !== false) {
-            foreach ($this->versionManager->notes as $note) {
+            foreach ($this->versionManager->notes as $note) { // @phpstan-ignore-line
                 $this->note($note);
             }
         }

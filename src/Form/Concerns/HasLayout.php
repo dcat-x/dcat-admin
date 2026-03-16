@@ -10,7 +10,7 @@ use Dcat\Admin\Form\Layout;
 trait HasLayout
 {
     /**
-     * @var Layout
+     * @var Layout|null
      */
     protected $layout;
 

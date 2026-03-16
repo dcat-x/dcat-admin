@@ -167,7 +167,7 @@ class Embeds extends Field implements FieldsCollection
      *
      * @param  array  $input
      * @param  string  $label
-     * @param  string  $column
+     * @param  string|array  $column
      * @return array
      */
     protected function formatValidationAttribute($input, $label, $column)

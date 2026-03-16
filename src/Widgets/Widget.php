@@ -88,7 +88,7 @@ abstract class Widget implements Renderable
     /**
      * 批量设置选项.
      *
-     * @param  array  $options
+     * @param  array|\Illuminate\Contracts\Support\Arrayable  $options
      * @return $this
      */
     public function options($options = [])

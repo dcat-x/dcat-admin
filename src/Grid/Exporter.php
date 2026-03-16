@@ -43,7 +43,7 @@ class Exporter
     protected $grid;
 
     /**
-     * @var Grid\Exporters\AbstractExporter
+     * @var Grid\Exporters\AbstractExporter|ExporterInterface|null
      */
     protected $driver;
 
@@ -140,8 +140,8 @@ class Exporter
     /**
      * Resolve export driver.
      *
-     * @param  string  $driver
-     * @return Grid\Exporters\AbstractExporter
+     * @param  string|Grid\Exporters\AbstractExporter|ExporterInterface|null  $driver
+     * @return Grid\Exporters\AbstractExporter|ExporterInterface
      */
     public function resolve($driver = null)
     {
@@ -161,7 +161,7 @@ class Exporter
     }
 
     /**
-     * @return Exporters\AbstractExporter
+     * @return Exporters\AbstractExporter|ExporterInterface
      */
     public function driver()
     {

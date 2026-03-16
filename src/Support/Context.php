@@ -12,7 +12,7 @@ use Illuminate\Support\Fluent;
  *
  * @property string $favicon
  * @property string $metaTitle
- * @property string $pjaxContainerId
+ * @property string|false $pjaxContainerId
  * @property array|null $html
  * @property array|null $ignoreQueries
  * @property array|null $jsVariables
@@ -21,6 +21,11 @@ use Illuminate\Support\Fluent;
  */
 class Context extends Fluent
 {
+    /**
+     * @param  string|array  $key
+     * @param  mixed  $value
+     * @return $this
+     */
     public function set($key, $value = null)
     {
         $data = is_array($key) ? $key : [$key => $value];

@@ -179,6 +179,7 @@ class Content implements Renderable
                 $notArray = true;
             }
         }
+        // @phpstan-ignore booleanNot.alwaysFalse
         if (! $breadcrumb) {
             throw new RuntimeException('Breadcrumb format error!');
         }

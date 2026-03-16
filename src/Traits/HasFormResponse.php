@@ -63,6 +63,7 @@ trait HasFormResponse
         }
 
         /* @var Request $request */
+        // @phpstan-ignore empty.notAllowed
         $request = $request ?: (empty($this->request) ? request() : $this->request);
 
         if ($current = $request->get(static::CURRENT_URL_NAME)) {

@@ -33,12 +33,12 @@ class EloquentRepository extends Repository implements TreeRepository
     protected $eloquentClass;
 
     /**
-     * @var EloquentModel
+     * @var EloquentModel|null
      */
     protected $model;
 
     /**
-     * @var Builder
+     * @var Builder|null
      */
     protected $queryBuilder;
 

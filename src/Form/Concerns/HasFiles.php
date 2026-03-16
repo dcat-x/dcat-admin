@@ -120,7 +120,7 @@ trait HasFiles
     /**
      * 删除文件.
      *
-     * @param  array  $input
+     * @param  string|array|null  $input
      */
     protected function deleteFile(UploadFieldInterface $field, $input = null)
     {

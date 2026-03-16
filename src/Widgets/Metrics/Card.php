@@ -114,12 +114,12 @@ class Card extends Widget
     protected $chartOptions = [];
 
     /**
-     * @var Chart
+     * @var Chart|null
      */
     protected $chart;
 
     /**
-     * @var \Closure
+     * @var \Closure|null
      */
     protected $chartCallback;
 

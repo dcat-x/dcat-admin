@@ -73,7 +73,7 @@ class JavaScript
      */
     public static function format($value)
     {
-        if (is_array($value) || is_object($value)) {
+        if (is_array($value) || is_object($value)) { // @phpstan-ignore booleanOr.alwaysTrue
             $value = json_encode(Helper::array($value, false));
         }
 

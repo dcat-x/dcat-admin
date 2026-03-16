@@ -45,7 +45,7 @@ class Box extends Widget
     /**
      * Set box content.
      *
-     * @param  string  $content
+     * @param  string|\Dcat\Admin\Grid\LazyRenderable  $content
      * @return $this
      */
     public function content($content)

@@ -61,7 +61,7 @@ class Model
     protected $data;
 
     /**
-     * @var callable
+     * @var callable|null
      */
     protected $builder;
 
@@ -384,7 +384,7 @@ class Model
     }
 
     /**
-     * @param  Collection|callable|array|AbstractPaginator  $data
+     * @param  Collection|callable|array|Arrayable|AbstractPaginator  $data
      * @return $this
      */
     public function setData($data)
@@ -406,6 +406,7 @@ class Model
 
         if ($data instanceof Collection) {
             $this->data = $data;
+            /** @phpstan-ignore-next-line */
         } else {
             $this->data = collect();
         }
@@ -440,7 +441,7 @@ class Model
             return $this->paginator->getCollection();
         }
 
-        if ($this->builder && is_callable($this->builder)) {
+        if ($this->builder) {
             $results = $this->invokeDataBuilder($this->builder);
         } else {
             $results = $this->repository->get($this);

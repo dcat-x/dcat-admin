@@ -9,7 +9,7 @@ use Dcat\Admin\Grid\Tools;
 trait HasPaginator
 {
     /**
-     * @var Tools\Paginator
+     * @var Tools\Paginator|null
      */
     protected $paginator;
 

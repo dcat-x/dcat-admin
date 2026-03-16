@@ -207,7 +207,7 @@ class Filter implements Renderable
     protected $disableCollapse = false;
 
     /**
-     * @var array
+     * @var array|null
      */
     protected $inputs;
 

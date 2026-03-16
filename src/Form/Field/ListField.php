@@ -16,14 +16,14 @@ class ListField extends Field
     /**
      * Max list size.
      *
-     * @var int
+     * @var int|null
      */
     protected $max;
 
     /**
      * Minimum list size.
      *
-     * @var int
+     * @var int|null
      */
     protected $min = 0;
 
@@ -109,7 +109,10 @@ class ListField extends Field
 
         $input = $this->prepareValidatorInput($input);
 
-        return validator($input, $rules, $this->getValidationMessages(), $attributes);
+        /** @var \Illuminate\Validation\Validator $result */
+        $result = validator()->make($input, $rules, $this->getValidationMessages(), $attributes);
+
+        return $result;
     }
 
     public function formatValidatorMessages($messageBag)

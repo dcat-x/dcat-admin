@@ -10,7 +10,7 @@ use Dcat\Admin\Form;
 abstract class AbstractTool extends Action
 {
     /**
-     * @var Form
+     * @var Form|null
      */
     protected $parent;
 

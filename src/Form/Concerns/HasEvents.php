@@ -274,7 +274,7 @@ trait HasEvents
      * 触发文件删除事件.
      *
      * @param  UploadFieldInterface|\Dcat\Admin\Form\Field  $field
-     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\RedirectResponse|void
+     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\RedirectResponse|false|null
      */
     protected function callFileDeleting($field)
     {
@@ -294,7 +294,7 @@ trait HasEvents
 
     /**
      * @param  string  $name
-     * @return RedirectResponse|\Illuminate\Http\Response|void
+     * @return RedirectResponse|\Illuminate\Http\Response|false|null
      */
     protected function fire($name, array $payload = [])
     {

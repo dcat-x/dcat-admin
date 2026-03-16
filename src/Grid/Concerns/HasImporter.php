@@ -11,7 +11,7 @@ use Dcat\Admin\Grid\Tools;
 trait HasImporter
 {
     /**
-     * @var Importer
+     * @var Importer|null
      */
     protected $importer;
 

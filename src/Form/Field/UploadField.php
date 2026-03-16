@@ -22,7 +22,7 @@ trait UploadField
     /**
      * Upload directory.
      *
-     * @var string
+     * @var string|\Closure
      */
     protected $directory = '';
 
@@ -57,7 +57,7 @@ trait UploadField
     /**
      * Controls the storage permission. Could be 'private' or 'public'.
      *
-     * @var string
+     * @var string|null
      */
     protected $storagePermission;
 

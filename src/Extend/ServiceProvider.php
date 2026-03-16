@@ -19,7 +19,7 @@ abstract class ServiceProvider extends LaravelServiceProvider
     const TYPE_THEME = 'theme';
 
     /**
-     * @var ComposerProperty
+     * @var ComposerProperty|null
      */
     public $composerProperty;
 
@@ -296,8 +296,8 @@ abstract class ServiceProvider extends LaravelServiceProvider
     /**
      * 获取或保存配置.
      *
-     * @param  string  $key
-     * @param  null  $default
+     * @param  string|array|null  $key
+     * @param  mixed  $default
      * @return mixed
      */
     public function config($key = null, $default = null)
@@ -509,7 +509,7 @@ abstract class ServiceProvider extends LaravelServiceProvider
     {
         $extension = static::instance();
 
-        if ($extension && $extension instanceof ServiceProvider) {
+        if ($extension) {
             return $extension->config($key, $value);
         }
     }
@@ -530,7 +530,7 @@ abstract class ServiceProvider extends LaravelServiceProvider
     /**
      * 获取自身实例.
      *
-     * @return static
+     * @return static|null
      */
     public static function instance()
     {

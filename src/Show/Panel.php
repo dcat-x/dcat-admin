@@ -35,7 +35,7 @@ class Panel implements Renderable
     protected $parent;
 
     /**
-     * @var \Closure
+     * @var \Closure|null
      */
     protected $wrapper;
 

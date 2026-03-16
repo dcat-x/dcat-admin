@@ -14,7 +14,7 @@ use Dcat\Admin\Support\Helper;
 trait HasSelector
 {
     /**
-     * @var Selector
+     * @var Selector|null
      */
     protected $_selector;
 

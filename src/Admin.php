@@ -244,7 +244,7 @@ class Admin
         }
 
         if (! $repository instanceof Repository) {
-            $class = is_object($repository) ? get_class($repository) : $repository;
+            $class = is_object($repository) ? get_class($repository) : $repository; // @phpstan-ignore-line
 
             throw new InvalidArgumentException("The class [{$class}] must be a type of [".Repository::class.'].');
         }
@@ -447,7 +447,7 @@ class Admin
     /**
      * 响应并中断后续逻辑.
      *
-     * @param  Response|string|array  $response
+     * @param  Response|\Dcat\Admin\Http\JsonResponse|string|array  $response
      *
      * @throws HttpResponseException
      */

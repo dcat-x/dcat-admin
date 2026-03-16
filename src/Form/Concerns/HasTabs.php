@@ -10,7 +10,7 @@ use Dcat\Admin\Form\Tab;
 trait HasTabs
 {
     /**
-     * @var Tab
+     * @var Tab|null
      */
     protected $tab = null;
 

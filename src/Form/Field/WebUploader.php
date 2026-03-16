@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
 /**
- * @property Form $form
+ * @property Form|null $form
  */
 trait WebUploader
 {
@@ -260,7 +260,6 @@ trait WebUploader
 
         if (
             method_exists($this->form, 'builder')
-            && $this->form->builder()
             && $this->form->builder()->isEditing()
         ) {
             $this->options['formData']['_method'] = 'PUT';

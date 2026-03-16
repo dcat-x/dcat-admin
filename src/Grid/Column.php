@@ -677,7 +677,7 @@ class Column
     /**
      * Call Builtin displayer.
      *
-     * @param  string  $abstract
+     * @param  string|Closure  $abstract
      * @param  array  $arguments
      * @return $this
      */

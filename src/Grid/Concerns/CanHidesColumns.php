@@ -20,7 +20,7 @@ trait CanHidesColumns
     public $hiddenColumns = [];
 
     /**
-     * @var ColumnSelectorStore
+     * @var ColumnSelectorStore|null
      */
     private $columnSelectorStorage;
 

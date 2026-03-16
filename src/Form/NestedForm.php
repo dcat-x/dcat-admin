@@ -54,7 +54,7 @@ class NestedForm extends WidgetForm
     protected $original = [];
 
     /**
-     * @var Form|WidgetForm
+     * @var Form|WidgetForm|null
      */
     protected $form;
 
@@ -276,8 +276,6 @@ class NestedForm extends WidgetForm
 
             return $value;
         }
-
-        return false;
     }
 
     /**

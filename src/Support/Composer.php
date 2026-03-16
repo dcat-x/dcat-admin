@@ -14,7 +14,7 @@ class Composer
     protected static $files = [];
 
     /**
-     * @var ClassLoader
+     * @var ClassLoader|null
      */
     protected static $loader;
 

@@ -17,7 +17,7 @@ use Illuminate\Contracts\Support\Renderable;
 trait HasHeader
 {
     /**
-     * @var Filter
+     * @var Filter|null
      */
     public $filter;
 
@@ -78,7 +78,7 @@ trait HasHeader
      *          Grid\Column\Filter\Equal::make(__('admin.created_at'))->date()
      *      );
      *
-     * @param  Grid\Column\Filter|string  $filter
+     * @param  Grid\Column\Filter|string|\Closure|null  $filter
      * @return $this
      */
     public function filter($filter = null)

@@ -31,7 +31,7 @@ class DateRangeQuick extends Presenter
     /**
      * DateRangeQuick constructor.
      *
-     * @param  array  $ranges
+     * @param  array|Arrayable  $ranges
      */
     public function __construct($ranges = [])
     {
@@ -49,7 +49,7 @@ class DateRangeQuick extends Presenter
     /**
      * Set date picker options.
      *
-     * @param  array  $options
+     * @param  array|Arrayable  $options
      * @return $this
      */
     public function options($options = [])

@@ -31,7 +31,7 @@ trait ModelTree
     protected static $branchOrder = [];
 
     /**
-     * @var \Closure[]
+     * @var array<int, \Closure|null>
      */
     protected $queryCallbacks = [];
 

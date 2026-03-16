@@ -36,7 +36,7 @@ class ModelCreator
      *
      * @param  string  $tableName
      * @param  string  $name
-     * @param  null  $files
+     * @param  \Illuminate\Filesystem\Filesystem|null  $files
      */
     public function __construct($tableName, $name, $files = null)
     {
