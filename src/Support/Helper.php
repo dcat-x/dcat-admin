@@ -925,7 +925,7 @@ class Helper
             }
 
             array_walk_recursive($item, function (&$value) {
-                $value = htmlentities($value ?? '');
+                $value = htmlentities((string) ($value ?? ''));
             });
         } else {
             $item = htmlentities((string) $item);
@@ -1028,7 +1028,7 @@ class Helper
     /**
      * 获取文件名称.
      *
-     * @param  string  $name
+     * @param  string|int|null  $name
      * @return array|mixed
      */
     public static function basename($name)
@@ -1037,6 +1037,7 @@ class Helper
             return $name;
         }
 
+        $name = (string) $name;
         $position = strrpos($name, '/');
 
         return $position === false

@@ -16,6 +16,7 @@ class Downloadable extends AbstractDisplayer
         $storage = $server ? null : Storage::disk($disk ?: config('admin.upload.disk'));
 
         return collect(Helper::array($this->value))->filter()->map(function ($value) use ($server, $storage) {
+            $value = (string) $value;
             if (empty($value)) {
                 return '';
             }

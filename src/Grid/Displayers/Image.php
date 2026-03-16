@@ -21,6 +21,7 @@ class Image extends AbstractDisplayer
         $storage = $server ? null : Storage::disk(config('admin.upload.disk'));
 
         return collect((array) $this->value)->filter()->map(function ($path) use ($server, $width, $height, $storage) {
+            $path = (string) $path;
             if (filter_var($path, FILTER_VALIDATE_URL) || mb_strpos($path, 'data:image') === 0) {
                 $src = $path;
             } elseif ($server) {

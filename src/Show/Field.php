@@ -235,6 +235,7 @@ class Field implements Renderable
             }
 
             return collect($path)->transform(function ($path) use ($server, $width, $height, $storage) {
+                $path = (string) $path;
                 if (filter_var($path, FILTER_VALIDATE_URL)) {
                     $src = $path;
                 } elseif ($server) {
@@ -268,6 +269,7 @@ class Field implements Renderable
             $storage = $server ? null : Storage::disk(config('admin.upload.disk'));
 
             $list = collect($path)->transform(function ($path) use ($server, $field, $storage) {
+                $path = (string) $path;
                 $name = Helper::basename($path);
 
                 $field->wrap(false);
@@ -424,10 +426,10 @@ HTML;
             $content = is_string($value) ? json_decode($value, true) : $value;
             if (is_array($content)) {
                 array_walk($content, function (&$v, $k) {
-                    $v = htmlspecialchars($v);
+                    $v = htmlspecialchars((string) $v);
                 });
             } else {
-                $content = htmlspecialchars($content);
+                $content = htmlspecialchars((string) $content);
             }
             $field->wrap(false);
 
@@ -499,7 +501,7 @@ HTML;
                 return $v;
             }
 
-            return $v ? explode($d, $v) : [];
+            return $v ? explode($d, (string) $v) : [];
         });
     }
 

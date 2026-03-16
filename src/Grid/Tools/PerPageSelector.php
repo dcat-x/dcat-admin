@@ -83,7 +83,7 @@ class PerPageSelector implements Renderable
 
         $dropdown = Dropdown::make($options)
             ->up()
-            ->button($this->perPage)
+            ->button((string) $this->perPage)
             ->render();
 
         return <<<EOT

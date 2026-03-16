@@ -181,7 +181,7 @@ trait HasDisplayers
         return $this->display(function ($value) use ($size) {
             $src = sprintf(
                 'https://www.gravatar.com/avatar/%s?s=%d',
-                md5(strtolower($value)),
+                md5(strtolower((string) $value)),
                 $size
             );
 
