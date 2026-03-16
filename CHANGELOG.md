@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.27] - 2026-03-16
+
+### Added
+
+- 启用 declare_strict_types 并修复兼容性问题
+- 添加四项可选功能增强（表单自动保存、数据导入、全局搜索、Grid 视图模式切换）
+
+### Other
+
+- 📝 docs: 更新 CLAUDE.md 和 rules/php.md 保持与实际配置同步
+- ⬆️ chore: 提升 PHPStan 静态分析级别至 level 5
+
 ## [1.1.26] - 2026-03-09
 
 ### Fixed
@@ -415,7 +427,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.26...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.27...HEAD
+[1.1.27]: https://github.com/dcat-x/dcat-admin/compare/v1.1.26...v1.1.27
 [1.1.26]: https://github.com/dcat-x/dcat-admin/compare/v1.1.25...v1.1.26
 [1.1.25]: https://github.com/dcat-x/dcat-admin/compare/v1.1.24...v1.1.25
 [1.1.24]: https://github.com/dcat-x/dcat-admin/compare/v1.1.23...v1.1.24
