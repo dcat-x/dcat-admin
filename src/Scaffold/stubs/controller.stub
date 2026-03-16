@@ -1,20 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DummyNamespace;
 
 use DummyModelNamespace;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
-use Dcat\Admin\Show;
 use Dcat\Admin\Http\Controllers\AdminController;
+use Dcat\Admin\Show;
 
 class DummyClass extends AdminController
 {
-    /**
-     * Make a grid builder.
-     *
-     * @return Grid
-     */
     protected function grid()
     {
         return Grid::make(new DummyModel(), function (Grid $grid) {
@@ -22,13 +19,6 @@ class DummyClass extends AdminController
         });
     }
 
-    /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     *
-     * @return Show
-     */
     protected function detail($id)
     {
         return Show::make($id, new DummyModel(), function (Show $show) {
@@ -36,11 +26,6 @@ class DummyClass extends AdminController
         });
     }
 
-    /**
-     * Make a form builder.
-     *
-     * @return Form
-     */
     protected function form()
     {
         return Form::make(new DummyModel(), function (Form $form) {

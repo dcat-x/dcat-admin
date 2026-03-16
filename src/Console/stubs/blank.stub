@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DummyNamespace;
 
-use App\Http\Controllers\Controller;
-use Dcat\Admin\Controllers\HasResourceActions;
+use Dcat\Admin\Http\Controllers\AdminController;
 
-class DummyClass extends Controller
+class DummyClass extends AdminController
 {
-    use HasResourceActions;
 }

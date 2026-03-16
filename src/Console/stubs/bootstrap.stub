@@ -1,30 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Layout\Navbar;
 use Dcat\Admin\Show;
 use Dcat\Admin\Widgets\RefreshButton;
-
-/**
- * Dcat-admin - admin builder based on Laravel.
- *
- * @author jqh <https://github.com/jqhph>
- *
- * Bootstrapper for Admin.
- *
- * Here you can remove builtin form field:
- *
- * extend custom field:
- * Dcat\Admin\Form::extend('php', PHPEditor::class);
- * Dcat\Admin\Grid\Column::extend('php', PHPEditor::class);
- * Dcat\Admin\Grid\Filter::extend('php', PHPEditor::class);
- *
- * Or require js and css assets:
- * Admin::css('/packages/prettydocs/css/styles.css');
- * Admin::js('/packages/prettydocs/js/main.js');
- */
 
 /*
 |--------------------------------------------------------------------------
@@ -40,11 +23,7 @@ use Dcat\Admin\Widgets\RefreshButton;
 |--------------------------------------------------------------------------
 */
 Admin::navbar(static function (Navbar $navbar) {
-    // Add refresh button to navbar
     $navbar->right((new RefreshButton)->render());
-
-    // Add custom links
-    // $navbar->left('<a href="https://example.com" target="_blank">Website</a>');
 });
 
 /*
@@ -53,25 +32,19 @@ Admin::navbar(static function (Navbar $navbar) {
 |--------------------------------------------------------------------------
 */
 Grid::resolving(static function (Grid $grid) {
-    // Default sort by created_at descending
     $grid->model()->latest('created_at');
 
-    // Disable unnecessary features
     $grid->disableColumnSelector();
     $grid->disableRowSelector();
     $grid->disableViewButton();
     $grid->disableRefreshButton();
 
-    // Filter configuration
     $grid->filter(function (Grid\Filter $filter) {
         $filter->panel();
         $filter->withoutInputBorder();
     });
 
-    // Expand filter by default
     $grid->expandFilter();
-
-    // Tools style
     $grid->toolsWithOutline(false);
 });
 
@@ -81,12 +54,10 @@ Grid::resolving(static function (Grid $grid) {
 |--------------------------------------------------------------------------
 */
 Form::resolving(static function (Form $form) {
-    // Disable unnecessary checkboxes
     $form->disableEditingCheck();
     $form->disableCreatingCheck();
     $form->disableViewCheck();
 
-    // Disable unnecessary buttons
     $form->disableViewButton();
     $form->disableDeleteButton();
 });

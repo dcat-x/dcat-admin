@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DummyNamespace;
 
 DummyImportDateTimeFormatterTrait
@@ -8,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DummyClass extends Model
 {
-	DummyUseDateTimeFormatterTrait
+    DummyUseDateTimeFormatterTrait
     DummyUseSoftDeletesTrait
 
     DummyModelTable
@@ -16,8 +18,5 @@ class DummyClass extends Model
     DummyTimestamp
     DummyFillable
 
-    protected $guarded = []; // 批量赋值的黑名单
-    // protected $fillable = []; // 可以作为批量赋值的白名单
-    // protected $appends = []; // 追加属性
-    // protected $hidden = []; // 数组中的属性会被隐藏
+    protected $guarded = [];
 }

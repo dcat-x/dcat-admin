@@ -1,18 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\DummyNamespace;
 
 use Dcat\Admin\Models;
 use Illuminate\Database\Seeder;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class DummyClass extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         // base tables
@@ -32,25 +29,25 @@ class DummyClass extends Seeder
         );
 
         ClassSetting::truncate();
-		ClassSetting::insert(
-			ArraySetting
-		);
+        ClassSetting::insert(
+            ArraySetting
+        );
 
-		ClassExtension::truncate();
-		ClassExtension::insert(
-			ArrayExtension
-		);
+        ClassExtension::truncate();
+        ClassExtension::insert(
+            ArrayExtension
+        );
 
-		ClassExtensionHistory::truncate();
-		ClassExtensionHistory::insert(
-			ArrayExtHistory
-		);
+        ClassExtensionHistory::truncate();
+        ClassExtensionHistory::insert(
+            ArrayExtHistory
+        );
 
         // pivot tables
         DB::table('TablePermissionMenu')->truncate();
-		DB::table('TablePermissionMenu')->insert(
-			ArrayPivotPermissionMenu
-		);
+        DB::table('TablePermissionMenu')->insert(
+            ArrayPivotPermissionMenu
+        );
 
         DB::table('TableRoleMenu')->truncate();
         DB::table('TableRoleMenu')->insert(
