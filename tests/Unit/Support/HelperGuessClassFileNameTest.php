@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Support;
 
+use Dcat\Admin\Models\DataRule;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Tests\TestCase;
 
@@ -20,7 +21,7 @@ class HelperGuessClassFileNameTest extends TestCase
     public function test_guess_class_file_name_with_object(): void
     {
         // 使用一个有实际文件路径的类
-        $result = Helper::guessClassFileName(new \Dcat\Admin\Models\DataRule);
+        $result = Helper::guessClassFileName(new DataRule);
 
         $this->assertIsString($result);
         $this->assertStringContainsString('DataRule.php', $result);

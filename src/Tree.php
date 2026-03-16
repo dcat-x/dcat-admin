@@ -18,6 +18,7 @@ use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 
@@ -50,7 +51,7 @@ class Tree implements Renderable
     protected $repository;
 
     /**
-     * @var \Closure
+     * @var Closure
      */
     protected $queryCallback;
 
@@ -67,12 +68,12 @@ class Tree implements Renderable
     protected $branchView = 'admin::tree.branch';
 
     /**
-     * @var \Closure
+     * @var Closure
      */
     protected $callback;
 
     /**
-     * @var \Closure|null
+     * @var Closure|null
      */
     protected $branchCallback = null;
 
@@ -134,7 +135,7 @@ class Tree implements Renderable
     protected $actionsClass;
 
     /**
-     * @var \Closure[]
+     * @var Closure[]
      */
     protected $actionCallbacks = [];
 
@@ -148,7 +149,7 @@ class Tree implements Renderable
      *
      * @param  Model|TreeRepository|string|null  $repository
      */
-    public function __construct($repository = null, ?\Closure $callback = null)
+    public function __construct($repository = null, ?Closure $callback = null)
     {
         $this->repository = $this->makeRepository($repository);
         $this->path = $this->path ?: request()->getPathInfo();
@@ -158,7 +159,7 @@ class Tree implements Renderable
 
         $this->setUpTools();
 
-        if ($callback instanceof \Closure) {
+        if ($callback instanceof Closure) {
             $callback($this);
         }
 
@@ -217,7 +218,7 @@ class Tree implements Renderable
      *
      * @return $this
      */
-    public function branch(\Closure $branchCallback)
+    public function branch(Closure $branchCallback)
     {
         $this->branchCallback = $branchCallback;
 
@@ -229,7 +230,7 @@ class Tree implements Renderable
      *
      * @return $this
      */
-    public function query(\Closure $callback)
+    public function query(Closure $callback)
     {
         $this->queryCallback = $callback;
 
@@ -373,7 +374,7 @@ class Tree implements Renderable
     /**
      * @return $this;
      */
-    public function wrap(\Closure $closure)
+    public function wrap(Closure $closure)
     {
         $this->wrapper = $closure;
 
@@ -432,7 +433,7 @@ class Tree implements Renderable
     }
 
     /**
-     * @return \Closure
+     * @return Closure
      */
     public function resolveAction()
     {
@@ -472,12 +473,12 @@ class Tree implements Renderable
     /**
      * 设置行操作回调.
      *
-     * @param  \Closure|array  $callback
+     * @param  Closure|array  $callback
      * @return $this
      */
     public function actions($callback)
     {
-        if ($callback instanceof \Closure) {
+        if ($callback instanceof Closure) {
             $this->actionCallbacks[] = $callback;
         } else {
             $this->actionCallbacks[] = function (Actions $actions) use ($callback) {
@@ -566,7 +567,7 @@ class Tree implements Renderable
             return $this->tools;
         }
 
-        if ($callback instanceof \Closure) {
+        if ($callback instanceof Closure) {
             $callback($this->tools);
 
             return $this;
@@ -626,7 +627,7 @@ class Tree implements Renderable
     /**
      * Render a tree.
      *
-     * @return \Illuminate\Http\JsonResponse|string
+     * @return JsonResponse|string
      */
     public function render()
     {

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Services;
 
+use AlibabaCloud\SDK\Sts\V20150401\Models\AssumeRoleRequest;
+use AlibabaCloud\SDK\Sts\V20150401\Sts;
+use Darabonba\OpenApi\Models\Config;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
@@ -36,7 +39,7 @@ class AliyunStsService
     public function getStsToken(?string $uploadDir = null): array
     {
         // 检查依赖是否安装
-        if (! class_exists(\AlibabaCloud\SDK\Sts\V20150401\Sts::class)) {
+        if (! class_exists(Sts::class)) {
             throw new Exception('请先安装阿里云 STS SDK: composer require alibabacloud/sts-20150401');
         }
 
@@ -57,16 +60,16 @@ class AliyunStsService
             }
 
             // 创建 STS 客户端配置
-            $clientConfig = new \Darabonba\OpenApi\Models\Config([
+            $clientConfig = new Config([
                 'accessKeyId' => $accessKeyId,
                 'accessKeySecret' => $accessKeySecret,
                 'regionId' => $regionId,
             ]);
 
-            $client = new \AlibabaCloud\SDK\Sts\V20150401\Sts($clientConfig);
+            $client = new Sts($clientConfig);
 
             // 构建请求
-            $request = new \AlibabaCloud\SDK\Sts\V20150401\Models\AssumeRoleRequest([
+            $request = new AssumeRoleRequest([
                 'roleArn' => $roleArn,
                 'roleSessionName' => 'oss-upload-'.time(),
                 'durationSeconds' => $duration,

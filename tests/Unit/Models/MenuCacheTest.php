@@ -6,6 +6,7 @@ namespace Dcat\Admin\Tests\Unit\Models;
 
 use Dcat\Admin\Models\MenuCache;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Contracts\Cache\Repository;
 
 class MenuCacheTest extends TestCase
 {
@@ -61,6 +62,6 @@ class MenuCacheTest extends TestCase
         $user = $this->createMenuCacheUser();
         $store = $user->getStore();
 
-        $this->assertInstanceOf(\Illuminate\Contracts\Cache\Repository::class, $store);
+        $this->assertInstanceOf(Repository::class, $store);
     }
 }

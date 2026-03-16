@@ -8,6 +8,7 @@ use Dcat\Admin\Form\Field;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Support\Arr;
 use Illuminate\Support\MessageBag;
+use Illuminate\Validation\Validator;
 
 class ListField extends Field
 {
@@ -109,7 +110,7 @@ class ListField extends Field
 
         $input = $this->prepareValidatorInput($input);
 
-        /** @var \Illuminate\Validation\Validator $result */
+        /** @var Validator $result */
         $result = validator()->make($input, $rules, $this->getValidationMessages(), $attributes);
 
         return $result;

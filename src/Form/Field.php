@@ -12,17 +12,20 @@ use Dcat\Admin\Traits\HasVariables;
 use Dcat\Admin\Widgets\Form as WidgetForm;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Fluent;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
+use Illuminate\View\View;
 
 /**
  * Class Field.
  */
 class Field implements Renderable
 {
-    use Form\Concerns\HasFieldValidator;
+    use Concerns\HasFieldValidator;
     use HasBuilderEvents;
     use HasVariables;
     use Macroable;
@@ -428,7 +431,7 @@ class Field implements Renderable
     }
 
     /**
-     * @return Fluent|\Illuminate\Database\Eloquent\Model
+     * @return Fluent|Model
      */
     public function values()
     {
@@ -496,7 +499,7 @@ class Field implements Renderable
     /**
      * Set the field option checked.
      *
-     * @param  array|\Illuminate\Contracts\Support\Arrayable  $checked
+     * @param  array|Arrayable  $checked
      * @return $this
      */
     public function checked($checked = [])
@@ -1294,7 +1297,7 @@ class Field implements Renderable
     /**
      * Render this filed.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     * @return Factory|View|string
      */
     public function render()
     {

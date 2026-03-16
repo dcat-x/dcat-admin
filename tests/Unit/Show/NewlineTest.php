@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Show;
 
+use Dcat\Admin\Show\Divider;
+use Dcat\Admin\Show\Field;
 use Dcat\Admin\Show\Newline;
 use Dcat\Admin\Tests\TestCase;
 
@@ -13,7 +15,7 @@ class NewlineTest extends TestCase
     {
         $newline = new Newline;
 
-        $this->assertInstanceOf(\Dcat\Admin\Show\Field::class, $newline);
+        $this->assertInstanceOf(Field::class, $newline);
     }
 
     public function test_render_returns_empty_div(): void
@@ -54,7 +56,7 @@ class NewlineTest extends TestCase
     public function test_render_is_different_from_divider(): void
     {
         $newline = new Newline;
-        $divider = new \Dcat\Admin\Show\Divider;
+        $divider = new Divider;
 
         $this->assertNotSame($newline->render(), $divider->render());
     }

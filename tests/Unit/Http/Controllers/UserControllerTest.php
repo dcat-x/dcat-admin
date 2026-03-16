@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Http\Controllers;
 
+use Dcat\Admin\Form;
+use Dcat\Admin\Grid;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Http\Controllers\UserController;
 use Dcat\Admin\Models\Administrator as AdministratorModel;
+use Dcat\Admin\Models\Menu;
+use Dcat\Admin\Models\Permission;
+use Dcat\Admin\Models\Role;
 use Dcat\Admin\Tests\TestCase;
 
 class UserControllerTest extends TestCase
@@ -17,9 +22,9 @@ class UserControllerTest extends TestCase
 
         $this->app['config']->set('admin.database.users_model', AdministratorModel::class);
         $this->app['config']->set('admin.database.users_table', 'admin_users');
-        $this->app['config']->set('admin.database.roles_model', \Dcat\Admin\Models\Role::class);
-        $this->app['config']->set('admin.database.permissions_model', \Dcat\Admin\Models\Permission::class);
-        $this->app['config']->set('admin.database.menu_model', \Dcat\Admin\Models\Menu::class);
+        $this->app['config']->set('admin.database.roles_model', Role::class);
+        $this->app['config']->set('admin.database.permissions_model', Permission::class);
+        $this->app['config']->set('admin.database.menu_model', Menu::class);
         $this->app['config']->set('admin.database.connection', 'testing');
         $this->app['config']->set('admin.permission.enable', true);
         $this->app['config']->set('admin.department.enable', false);
@@ -46,19 +51,19 @@ class UserControllerTest extends TestCase
     {
         $controller = new class extends UserController
         {
-            public function exposeGrid(): \Dcat\Admin\Grid
+            public function exposeGrid(): Grid
             {
                 return $this->grid();
             }
         };
 
-        $this->assertInstanceOf(\Dcat\Admin\Grid::class, $controller->exposeGrid());
+        $this->assertInstanceOf(Grid::class, $controller->exposeGrid());
     }
 
     public function test_form_returns_form_instance(): void
     {
         $controller = new UserController;
-        $this->assertInstanceOf(\Dcat\Admin\Form::class, $controller->form());
+        $this->assertInstanceOf(Form::class, $controller->form());
     }
 
     public function test_destroy_delegates_to_form_destroy_for_non_default_user_id(): void
@@ -106,18 +111,18 @@ class UserControllerTest extends TestCase
     {
         $controller = new class extends UserController
         {
-            public function exposeGrid(): \Dcat\Admin\Grid
+            public function exposeGrid(): Grid
             {
                 return $this->grid();
             }
 
-            public function exposeForm(): \Dcat\Admin\Form
+            public function exposeForm(): Form
             {
                 return $this->form();
             }
         };
 
-        $this->assertInstanceOf(\Dcat\Admin\Grid::class, $controller->exposeGrid());
-        $this->assertInstanceOf(\Dcat\Admin\Form::class, $controller->exposeForm());
+        $this->assertInstanceOf(Grid::class, $controller->exposeGrid());
+        $this->assertInstanceOf(Form::class, $controller->exposeForm());
     }
 }

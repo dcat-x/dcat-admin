@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Console;
 
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
+
 class FormCommand extends GeneratorCommand
 {
     /**
@@ -25,7 +27,7 @@ class FormCommand extends GeneratorCommand
     /**
      * @return bool|null
      *
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws FileNotFoundException
      */
     public function handle()
     {

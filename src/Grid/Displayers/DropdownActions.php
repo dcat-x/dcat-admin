@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Dcat\Admin\Grid\Displayers;
 
 use Dcat\Admin\Support\Helper;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\View\View;
 
 class DropdownActions extends Actions
 {
@@ -62,7 +64,7 @@ class DropdownActions extends Actions
 
     /**
      * @param  \Closure[]  $callbacks
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function display(array $callbacks = [])
     {

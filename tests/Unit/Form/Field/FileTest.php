@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Form\Field;
 
+use Dcat\Admin\Contracts\UploadField;
 use Dcat\Admin\Form\Field\File;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Mockery;
 
 class FileTest extends TestCase
@@ -20,7 +22,7 @@ class FileTest extends TestCase
     {
         $field = new File($column, [$label]);
 
-        $storage = Mockery::mock(\Illuminate\Contracts\Filesystem\Filesystem::class);
+        $storage = Mockery::mock(Filesystem::class);
         $storage->shouldReceive('exists')->andReturn(false)->byDefault();
         $storage->shouldReceive('delete')->andReturn(true)->byDefault();
         $storage->shouldReceive('url')->andReturn('')->byDefault();
@@ -495,6 +497,6 @@ class FileTest extends TestCase
     {
         $field = $this->createFileField();
 
-        $this->assertInstanceOf(\Dcat\Admin\Contracts\UploadField::class, $field);
+        $this->assertInstanceOf(UploadField::class, $field);
     }
 }

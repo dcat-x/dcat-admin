@@ -10,8 +10,11 @@ use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Traits\HasBuilderEvents;
 use Dcat\Admin\Traits\HasVariables;
 use Dcat\Admin\Widgets\Dump;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -308,7 +311,7 @@ HTML;
         });
     }
 
-    protected function resolveStorageUrl(\Illuminate\Contracts\Filesystem\Filesystem $storage, string $path): string
+    protected function resolveStorageUrl(Filesystem $storage, string $path): string
     {
         /** @var FilesystemAdapter $adapter */
         $adapter = $storage;
@@ -541,7 +544,7 @@ HTML;
     }
 
     /**
-     * @param  Fluent|\Illuminate\Database\Eloquent\Model  $model
+     * @param  Fluent|Model  $model
      * @return void
      */
     public function fill($model)
@@ -728,7 +731,7 @@ HTML;
     /**
      * Render this field.
      *
-     * @return string|\Illuminate\Contracts\View\View
+     * @return string|View
      */
     public function render()
     {

@@ -6,6 +6,7 @@ namespace Dcat\Admin\Tests\Unit\Http\Controllers;
 
 use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Routing\Controller;
 
 class AdminControllerTest extends TestCase
 {
@@ -105,7 +106,7 @@ class AdminControllerTest extends TestCase
     {
         $controller = new class extends AdminController {};
 
-        $this->assertInstanceOf(\Illuminate\Routing\Controller::class, $controller);
+        $this->assertInstanceOf(Controller::class, $controller);
     }
 
     public function test_update_delegates_to_form_update(): void

@@ -5,9 +5,16 @@ declare(strict_types=1);
 namespace Dcat\Admin\Tests\Unit\Http\Controllers;
 
 use Dcat\Admin\Admin;
+use Dcat\Admin\Form;
 use Dcat\Admin\Http\Controllers\AuthController;
 use Dcat\Admin\Layout\Content;
+use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Contracts\Auth\StatefulGuard;
+use Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Contracts\Session\Session;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
@@ -67,7 +74,7 @@ class AuthControllerTest extends TestCase
         ]);
         $this->app['config']->set('auth.providers.admin', [
             'driver' => 'eloquent',
-            'model' => \Dcat\Admin\Models\Administrator::class,
+            'model' => Administrator::class,
         ]);
     }
 
@@ -76,21 +83,21 @@ class AuthControllerTest extends TestCase
         $controller = $this->makeController();
 
         // 模拟请求中没有新密码
-        $request = \Illuminate\Http\Request::create('/auth/setting', 'PUT', [
+        $request = Request::create('/auth/setting', 'PUT', [
             'old_password' => '',
             'password' => '',
         ]);
         $this->app->instance('request', $request);
 
         // 使用 mock 用户
-        $user = Mockery::mock(\Dcat\Admin\Models\Administrator::class)->makePartial();
+        $user = Mockery::mock(Administrator::class)->makePartial();
         $user->shouldReceive('getKey')->andReturn(1);
         $user->shouldReceive('getAuthPassword')->andReturn(password_hash('old_pass', PASSWORD_BCRYPT));
 
-        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard = Mockery::mock(StatefulGuard::class);
         $guard->shouldReceive('user')->andReturn($user);
 
-        \Illuminate\Support\Facades\Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
+        Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
 
         $result = $controller->exposeValidateCredentialsWhenUpdatingPassword();
 
@@ -106,20 +113,20 @@ class AuthControllerTest extends TestCase
         $currentPasswordHash = password_hash($currentPasswordPlain, PASSWORD_BCRYPT);
 
         // 新密码与当前密码相同 → password_verify 返回 true → 方法返回 true
-        $request = \Illuminate\Http\Request::create('/auth/setting', 'PUT', [
+        $request = Request::create('/auth/setting', 'PUT', [
             'old_password' => '',
             'password' => $currentPasswordPlain,
         ]);
         $this->app->instance('request', $request);
 
-        $user = Mockery::mock(\Dcat\Admin\Models\Administrator::class)->makePartial();
+        $user = Mockery::mock(Administrator::class)->makePartial();
         $user->shouldReceive('getKey')->andReturn(1);
         $user->shouldReceive('getAuthPassword')->andReturn($currentPasswordHash);
 
-        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard = Mockery::mock(StatefulGuard::class);
         $guard->shouldReceive('user')->andReturn($user);
 
-        \Illuminate\Support\Facades\Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
+        Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
 
         $result = $controller->exposeValidateCredentialsWhenUpdatingPassword();
 
@@ -134,20 +141,20 @@ class AuthControllerTest extends TestCase
         $currentPasswordHash = password_hash('current_password', PASSWORD_BCRYPT);
 
         // 新密码不同于当前密码，且未提供旧密码
-        $request = \Illuminate\Http\Request::create('/auth/setting', 'PUT', [
+        $request = Request::create('/auth/setting', 'PUT', [
             'old_password' => '',
             'password' => 'new_different_password',
         ]);
         $this->app->instance('request', $request);
 
-        $user = Mockery::mock(\Dcat\Admin\Models\Administrator::class)->makePartial();
+        $user = Mockery::mock(Administrator::class)->makePartial();
         $user->shouldReceive('getKey')->andReturn(1);
         $user->shouldReceive('getAuthPassword')->andReturn($currentPasswordHash);
 
-        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard = Mockery::mock(StatefulGuard::class);
         $guard->shouldReceive('user')->andReturn($user);
 
-        \Illuminate\Support\Facades\Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
+        Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
 
         $result = $controller->exposeValidateCredentialsWhenUpdatingPassword();
 
@@ -162,27 +169,27 @@ class AuthControllerTest extends TestCase
         $currentPasswordHash = password_hash('current_password', PASSWORD_BCRYPT);
 
         // 新密码不同，提供了旧密码
-        $request = \Illuminate\Http\Request::create('/auth/setting', 'PUT', [
+        $request = Request::create('/auth/setting', 'PUT', [
             'old_password' => 'current_password',
             'password' => 'new_different_password',
         ]);
         $this->app->instance('request', $request);
 
-        $user = Mockery::mock(\Dcat\Admin\Models\Administrator::class)->makePartial();
+        $user = Mockery::mock(Administrator::class)->makePartial();
         $user->shouldReceive('getKey')->andReturn(1);
         $user->shouldReceive('getAuthPassword')->andReturn($currentPasswordHash);
 
-        $provider = Mockery::mock(\Illuminate\Contracts\Auth\UserProvider::class);
+        $provider = Mockery::mock(UserProvider::class);
         $provider->shouldReceive('validateCredentials')
             ->with($user, ['password' => 'current_password'])
             ->once()
             ->andReturn(true);
 
-        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard = Mockery::mock(StatefulGuard::class);
         $guard->shouldReceive('user')->andReturn($user);
         $guard->shouldReceive('getProvider')->andReturn($provider);
 
-        \Illuminate\Support\Facades\Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
+        Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
 
         $result = $controller->exposeValidateCredentialsWhenUpdatingPassword();
 
@@ -192,14 +199,14 @@ class AuthControllerTest extends TestCase
 
     public function test_get_setting_returns_content_with_form_edit_body(): void
     {
-        $user = Mockery::mock(\Dcat\Admin\Models\Administrator::class)->makePartial();
+        $user = Mockery::mock(Administrator::class)->makePartial();
         $user->shouldReceive('getKey')->andReturn(1);
 
-        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard = Mockery::mock(StatefulGuard::class);
         $guard->shouldReceive('user')->andReturn($user);
         Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
 
-        $form = Mockery::mock(\Dcat\Admin\Form::class);
+        $form = Mockery::mock(Form::class);
         $form->shouldReceive('tools')->andReturnSelf();
         $form->shouldReceive('edit')->with(1)->andReturn('form-body');
 
@@ -224,14 +231,14 @@ class AuthControllerTest extends TestCase
 
     public function test_put_setting_returns_form_update_response_when_validation_passes(): void
     {
-        $user = Mockery::mock(\Dcat\Admin\Models\Administrator::class)->makePartial();
+        $user = Mockery::mock(Administrator::class)->makePartial();
         $user->shouldReceive('getKey')->andReturn(8);
 
-        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard = Mockery::mock(StatefulGuard::class);
         $guard->shouldReceive('user')->andReturn($user);
         Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
 
-        $form = Mockery::mock(\Dcat\Admin\Form::class);
+        $form = Mockery::mock(Form::class);
         $form->shouldReceive('update')->once()->with(8)->andReturn('updated-response');
         $form->shouldReceive('responseValidationMessages')->never();
 
@@ -255,14 +262,14 @@ class AuthControllerTest extends TestCase
 
     public function test_put_setting_adds_validation_message_when_old_password_invalid(): void
     {
-        $user = Mockery::mock(\Dcat\Admin\Models\Administrator::class)->makePartial();
+        $user = Mockery::mock(Administrator::class)->makePartial();
         $user->shouldReceive('getKey')->andReturn(9);
 
-        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard = Mockery::mock(StatefulGuard::class);
         $guard->shouldReceive('user')->andReturn($user);
         Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
 
-        $form = Mockery::mock(\Dcat\Admin\Form::class);
+        $form = Mockery::mock(Form::class);
         $form->shouldReceive('responseValidationMessages')->once()->with('old_password', trans('admin.old_password_error'));
         $form->shouldReceive('update')->once()->with(9)->andReturn('updated-with-validation-message');
 
@@ -328,7 +335,7 @@ class AuthControllerTest extends TestCase
 
     public function test_get_login_returns_content_when_not_authenticated(): void
     {
-        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard = Mockery::mock(StatefulGuard::class);
         $guard->shouldReceive('check')->once()->andReturn(false);
 
         Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
@@ -345,7 +352,7 @@ class AuthControllerTest extends TestCase
 
     public function test_get_login_redirects_when_already_authenticated(): void
     {
-        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard = Mockery::mock(StatefulGuard::class);
         $guard->shouldReceive('check')->once()->andReturn(true);
 
         Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
@@ -355,18 +362,18 @@ class AuthControllerTest extends TestCase
         $controller = new AuthController;
         $result = $controller->getLogin($content);
 
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $result);
+        $this->assertInstanceOf(RedirectResponse::class, $result);
         $this->assertSame(admin_url('/'), $result->getTargetUrl());
     }
 
     public function test_get_logout_calls_guard_logout_and_invalidates_session(): void
     {
-        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard = Mockery::mock(StatefulGuard::class);
         $guard->shouldReceive('logout')->once();
 
         Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
 
-        $session = Mockery::mock(\Illuminate\Contracts\Session\Session::class);
+        $session = Mockery::mock(Session::class);
         $session->shouldReceive('invalidate')->once();
 
         $request = Request::create('/auth/logout', 'GET');
@@ -376,7 +383,7 @@ class AuthControllerTest extends TestCase
         $controller = new AuthController;
         $result = $controller->getLogout($request);
 
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $result);
+        $this->assertInstanceOf(RedirectResponse::class, $result);
         $this->assertSame(admin_url('auth/login'), $result->getTargetUrl());
     }
 
@@ -392,7 +399,7 @@ class AuthControllerTest extends TestCase
         $controller = new AuthController;
         $result = $controller->postLogin($request);
 
-        $this->assertInstanceOf(\Illuminate\Http\JsonResponse::class, $result);
+        $this->assertInstanceOf(JsonResponse::class, $result);
 
         $data = $result->getData(true);
         $this->assertNotEmpty($data);
@@ -400,7 +407,7 @@ class AuthControllerTest extends TestCase
 
     public function test_post_login_returns_error_when_authentication_fails(): void
     {
-        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard = Mockery::mock(StatefulGuard::class);
         $guard->shouldReceive('attempt')
             ->with(['username' => 'admin', 'password' => 'wrong'], false)
             ->once()
@@ -418,7 +425,7 @@ class AuthControllerTest extends TestCase
         $controller = new AuthController;
         $result = $controller->postLogin($request);
 
-        $this->assertInstanceOf(\Illuminate\Http\JsonResponse::class, $result);
+        $this->assertInstanceOf(JsonResponse::class, $result);
 
         $data = $result->getData(true);
         $this->assertNotEmpty($data);
@@ -435,12 +442,12 @@ class AuthControllerTest extends TestCase
 
     public function test_setting_form_returns_form_instance(): void
     {
-        $this->app['config']->set('admin.database.users_model', \Dcat\Admin\Models\Administrator::class);
+        $this->app['config']->set('admin.database.users_model', Administrator::class);
 
-        $user = Mockery::mock(\Dcat\Admin\Models\Administrator::class)->makePartial();
+        $user = Mockery::mock(Administrator::class)->makePartial();
         $user->shouldReceive('getKey')->andReturn(1);
 
-        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard = Mockery::mock(StatefulGuard::class);
         $guard->shouldReceive('user')->andReturn($user);
 
         Auth::shouldReceive('guard')->with('admin')->andReturn($guard);
@@ -448,12 +455,12 @@ class AuthControllerTest extends TestCase
         $controller = $this->makeController();
         $result = $controller->exposeSettingForm();
 
-        $this->assertInstanceOf(\Dcat\Admin\Form::class, $result);
+        $this->assertInstanceOf(Form::class, $result);
     }
 
     public function test_send_login_response_regenerates_session(): void
     {
-        $session = Mockery::mock(\Illuminate\Contracts\Session\Session::class);
+        $session = Mockery::mock(Session::class);
         $session->shouldReceive('regenerate')->once();
         $session->shouldReceive('previousUrl')->andReturn(null);
 
@@ -461,7 +468,7 @@ class AuthControllerTest extends TestCase
         $request->setLaravelSession($session);
         $this->app->instance('request', $request);
 
-        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard = Mockery::mock(StatefulGuard::class);
         $guard->shouldReceive('user')->andReturn(null);
 
         Auth::shouldReceive('guard')->with('admin')->andReturn($guard);

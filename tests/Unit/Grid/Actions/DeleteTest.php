@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Grid\Actions;
 
+use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Actions\Delete;
 use Dcat\Admin\Grid\RowAction;
 use Dcat\Admin\Tests\TestCase;
@@ -48,7 +49,7 @@ class DeleteTest extends TestCase
     {
         $action = new Delete;
 
-        $grid = Mockery::mock(\Dcat\Admin\Grid::class);
+        $grid = Mockery::mock(Grid::class);
         $grid->shouldReceive('resource')->andReturn('/admin/users');
         $grid->shouldReceive('getKeyName')->andReturn('id');
 
@@ -61,7 +62,7 @@ class DeleteTest extends TestCase
     {
         $action = new Delete;
 
-        $grid = Mockery::mock(\Dcat\Admin\Grid::class);
+        $grid = Mockery::mock(Grid::class);
         $model = Mockery::mock();
         $model->shouldReceive('withoutTreeQuery')->once()->andReturn('/admin/users?page=1');
 

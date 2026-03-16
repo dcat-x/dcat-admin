@@ -6,6 +6,7 @@ namespace Dcat\Admin\Tests\Unit\Grid\Tools;
 
 use Dcat\Admin\Grid\Tools\RefreshButton;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Contracts\Support\Renderable;
 
 class RefreshButtonTest extends TestCase
 {
@@ -105,6 +106,6 @@ class RefreshButtonTest extends TestCase
     {
         $button = new RefreshButton;
 
-        $this->assertInstanceOf(\Illuminate\Contracts\Support\Renderable::class, $button);
+        $this->assertInstanceOf(Renderable::class, $button);
     }
 }

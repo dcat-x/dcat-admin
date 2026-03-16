@@ -16,6 +16,7 @@ use Dcat\Admin\Traits\HasBuilderEvents;
 use Dcat\Admin\Traits\HasVariables;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\Macroable;
 
@@ -52,28 +53,28 @@ class Grid
     /**
      * The grid data model instance.
      *
-     * @var \Dcat\Admin\Grid\Model
+     * @var Model
      */
     protected $model;
 
     /**
      * Collection of grid columns.
      *
-     * @var \Illuminate\Support\Collection|array
+     * @var Collection|array
      */
     protected $columns;
 
     /**
      * Collection of all grid columns.
      *
-     * @var \Illuminate\Support\Collection
+     * @var Collection
      */
     protected $allColumns;
 
     /**
      * Collection of all data rows.
      *
-     * @var \Illuminate\Support\Collection
+     * @var Collection
      */
     protected $rows;
 
@@ -92,7 +93,7 @@ class Grid
     /**
      * Grid builder.
      *
-     * @var \Closure|null
+     * @var Closure|null
      */
     protected $builder;
 
@@ -148,7 +149,7 @@ class Grid
     protected $tableId = 'grid-table';
 
     /**
-     * @var Grid\Tools\RowSelector|null
+     * @var Tools\RowSelector|null
      */
     protected $rowSelector;
 
@@ -180,7 +181,7 @@ class Grid
     ];
 
     /**
-     * @var \Illuminate\Http\Request
+     * @var Request
      */
     protected $request;
 
@@ -201,7 +202,7 @@ class Grid
      *
      * @param  Repository|\Illuminate\Database\Eloquent\Model|Builder|null  $repository
      */
-    public function __construct($repository = null, ?\Closure $builder = null, $request = null)
+    public function __construct($repository = null, ?Closure $builder = null, $request = null)
     {
         $this->model = new Model(request(), $repository);
         $this->columns = new Collection;
@@ -543,7 +544,7 @@ class Grid
      *
      * @return Collection|$this
      */
-    public function rows(?\Closure $callback = null)
+    public function rows(?Closure $callback = null)
     {
         if ($callback) {
             $this->rowsCallbacks[] = $callback;
@@ -588,11 +589,11 @@ class Grid
     }
 
     /**
-     * @return Grid\Tools\RowSelector
+     * @return Tools\RowSelector
      */
     public function rowSelector()
     {
-        return $this->rowSelector ?: ($this->rowSelector = new Grid\Tools\RowSelector($this));
+        return $this->rowSelector ?: ($this->rowSelector = new Tools\RowSelector($this));
     }
 
     /**
@@ -610,7 +611,7 @@ class Grid
         $keyName = $this->getKeyName();
 
         $this->prependColumn(
-            Grid\Column::SELECT_COLUMN_NAME
+            Column::SELECT_COLUMN_NAME
         )->setLabel($rowSelector->renderHeader())->display(function () use ($rowSelector, $keyName) {
             return $rowSelector->renderColumn($this, $this->{$keyName});
         });
@@ -867,7 +868,7 @@ HTML;
     /**
      * @return $this;
      */
-    public function wrap(\Closure $closure)
+    public function wrap(Closure $closure)
     {
         $this->wrapper = $closure;
 

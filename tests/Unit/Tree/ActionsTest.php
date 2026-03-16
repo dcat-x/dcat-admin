@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace Dcat\Admin\Tests\Unit\Tree;
 
 use Dcat\Admin\Tests\TestCase;
+use Dcat\Admin\Tree;
 use Dcat\Admin\Tree\Actions;
+use Dcat\Admin\Tree\Actions\Delete;
+use Dcat\Admin\Tree\Actions\Edit;
+use Dcat\Admin\Tree\Actions\QuickEdit;
 use ReflectionProperty;
 
 class ActionsTest extends TestCase
@@ -165,7 +169,7 @@ class ActionsTest extends TestCase
     {
         $actions = new Actions;
 
-        $tree = \Mockery::mock(\Dcat\Admin\Tree::class);
+        $tree = \Mockery::mock(Tree::class);
         $actions->setParent($tree);
 
         $this->assertSame($tree, $actions->parent());
@@ -176,9 +180,9 @@ class ActionsTest extends TestCase
         $actions = new Actions;
         $defaultActions = $this->getProtectedProperty($actions, 'defaultActions');
 
-        $this->assertSame(\Dcat\Admin\Tree\Actions\Edit::class, $defaultActions['edit'] ?? null);
-        $this->assertSame(\Dcat\Admin\Tree\Actions\QuickEdit::class, $defaultActions['quickEdit'] ?? null);
-        $this->assertSame(\Dcat\Admin\Tree\Actions\Delete::class, $defaultActions['delete'] ?? null);
+        $this->assertSame(Edit::class, $defaultActions['edit'] ?? null);
+        $this->assertSame(QuickEdit::class, $defaultActions['quickEdit'] ?? null);
+        $this->assertSame(Delete::class, $defaultActions['delete'] ?? null);
     }
 
     protected function tearDown(): void

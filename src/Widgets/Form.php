@@ -20,6 +20,7 @@ use Dcat\Admin\Traits\HasFormResponse;
 use Dcat\Admin\Traits\HasHtmlAttributes;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -130,7 +131,7 @@ class Form implements Renderable
     protected $ajax = true;
 
     /**
-     * @var Fluent|\Illuminate\Contracts\Support\Arrayable|null
+     * @var Fluent|Arrayable|null
      */
     protected $data;
 
@@ -328,7 +329,7 @@ class Form implements Renderable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Model|Fluent|\Illuminate\Contracts\Support\Arrayable
+     * @return Model|Fluent|Arrayable
      */
     public function data()
     {
@@ -345,7 +346,7 @@ class Form implements Renderable
      */
     public function fill($data)
     {
-        if ($data instanceof \Closure) {
+        if ($data instanceof Closure) {
             $data = $data($this);
         }
 
@@ -359,7 +360,7 @@ class Form implements Renderable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Model|Fluent|\Illuminate\Contracts\Support\Arrayable
+     * @return Model|Fluent|Arrayable
      */
     public function model()
     {
@@ -424,7 +425,7 @@ class Form implements Renderable
     {
         $failedValidators = [];
 
-        /** @var \Dcat\Admin\Form\Field $field */
+        /** @var Field $field */
         foreach ($this->fields() as $field) {
             if (! $validator = $field->getValidator($request->all())) {
                 continue;
@@ -443,7 +444,7 @@ class Form implements Renderable
     /**
      * Merge validation messages from input validators.
      *
-     * @param  \Illuminate\Validation\Validator[]  $validators
+     * @param  Validator[]  $validators
      * @return MessageBag
      */
     protected function mergeValidationMessages($validators)

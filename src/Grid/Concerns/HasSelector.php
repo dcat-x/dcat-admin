@@ -7,6 +7,7 @@ namespace Dcat\Admin\Grid\Concerns;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Tools\Selector;
 use Dcat\Admin\Support\Helper;
+use Illuminate\Contracts\View\View;
 
 /**
  * @mixin Grid
@@ -85,7 +86,7 @@ trait HasSelector
     /**
      * Render grid selector.
      *
-     * @return \Illuminate\Contracts\View\View|string
+     * @return View|string
      */
     public function renderSelector()
     {

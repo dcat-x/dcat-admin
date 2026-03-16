@@ -6,6 +6,7 @@ namespace Dcat\Admin\Extend;
 
 use Dcat\Admin\Admin;
 use Dcat\Admin\Contracts\LazyRenderable;
+use Dcat\Admin\Http\JsonResponse;
 use Dcat\Admin\Traits\LazyWidget;
 use Dcat\Admin\Widgets\Form;
 
@@ -37,7 +38,7 @@ abstract class Setting extends Form implements LazyRenderable
     /**
      * 处理请求.
      *
-     * @return \Dcat\Admin\Http\JsonResponse
+     * @return JsonResponse
      */
     public function handle(array $input)
     {

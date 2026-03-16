@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Http\Controllers;
 
+use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -29,7 +31,7 @@ class TinymceController
     }
 
     /**
-     * @return \Illuminate\Contracts\Filesystem\Filesystem
+     * @return Filesystem
      */
     protected function disk()
     {
@@ -38,16 +40,16 @@ class TinymceController
         return Storage::disk($disk);
     }
 
-    protected function putFileAs(\Illuminate\Contracts\Filesystem\Filesystem $disk, string $dir, UploadedFile $file, string $name): void
+    protected function putFileAs(Filesystem $disk, string $dir, UploadedFile $file, string $name): void
     {
         /** @var \Illuminate\Http\UploadedFile $uploadedFile */
         $uploadedFile = $file;
         $disk->putFileAs($dir, $uploadedFile, $name);
     }
 
-    protected function diskUrl(\Illuminate\Contracts\Filesystem\Filesystem $disk, string $path): string
+    protected function diskUrl(Filesystem $disk, string $path): string
     {
-        /** @var \Illuminate\Filesystem\FilesystemAdapter $adapter */
+        /** @var FilesystemAdapter $adapter */
         $adapter = $disk;
 
         return (string) $adapter->url($path);

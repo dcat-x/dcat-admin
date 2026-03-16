@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Form\Field;
 
+use Dcat\Admin\Exception\RuntimeException;
 use Dcat\Admin\Form\Field\Select;
+use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
 
@@ -317,7 +319,7 @@ class SelectTest extends TestCase
     {
         $field = $this->createSelect();
 
-        $this->expectException(\Dcat\Admin\Exception\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
         $field->model('App\\Models\\NonExistentClass');
     }
@@ -326,7 +328,7 @@ class SelectTest extends TestCase
     {
         $field = $this->createSelect();
 
-        $this->expectException(\Dcat\Admin\Exception\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
         $field->model(\stdClass::class);
     }
@@ -335,7 +337,7 @@ class SelectTest extends TestCase
     {
         $field = $this->createSelect();
 
-        $result = $field->model(\Dcat\Admin\Models\Administrator::class);
+        $result = $field->model(Administrator::class);
 
         $this->assertSame($field, $result);
         $this->assertInstanceOf(\Closure::class, $this->getProtectedProperty($field, 'options'));

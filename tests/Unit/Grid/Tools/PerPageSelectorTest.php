@@ -8,6 +8,7 @@ use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Model;
 use Dcat\Admin\Grid\Tools\PerPageSelector;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Contracts\Support\Renderable;
 use Mockery;
 
 class PerPageSelectorTest extends TestCase
@@ -123,6 +124,6 @@ class PerPageSelectorTest extends TestCase
         $grid = $this->createMockGrid();
         $selector = new PerPageSelector($grid);
 
-        $this->assertInstanceOf(\Illuminate\Contracts\Support\Renderable::class, $selector);
+        $this->assertInstanceOf(Renderable::class, $selector);
     }
 }

@@ -115,7 +115,7 @@ class Builder implements FieldsCollection
     protected $elementId;
 
     /**
-     * @var \Closure|null
+     * @var Closure|null
      */
     protected $wrapper;
 
@@ -146,7 +146,7 @@ class Builder implements FieldsCollection
     }
 
     /**
-     * @param  \Closure  $closure
+     * @param  Closure  $closure
      * @return Layout
      */
     public function layout($closure = null)
@@ -615,13 +615,13 @@ class Builder implements FieldsCollection
         $reject = function ($field) use (&$reservedColumns) {
             if ($field instanceof Field) {
                 return in_array($field->column(), $reservedColumns, true)
-                    && $field instanceof Form\Field\Display;
+                    && $field instanceof Field\Display;
             }
 
             if ($field instanceof Row) {
                 $fields = $field->fields()->reject(function ($item) use (&$reservedColumns) {
                     return in_array($item['element']->column(), $reservedColumns, true)
-                        && $item['element'] instanceof Form\Field\Display;
+                        && $item['element'] instanceof Field\Display;
                 });
 
                 $field->setFields($fields);

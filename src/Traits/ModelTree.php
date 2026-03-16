@@ -10,6 +10,7 @@ use Dcat\Admin\Tree;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
 use Spatie\EloquentSortable\SortableTrait;
 
@@ -115,7 +116,7 @@ trait ModelTree
     /**
      * Get all elements.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function allNodes()
     {

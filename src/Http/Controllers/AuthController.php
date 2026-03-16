@@ -9,11 +9,15 @@ use Dcat\Admin\Form;
 use Dcat\Admin\Http\Repositories\Administrator;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Traits\HasFormResponse;
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Auth\StatefulGuard;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
@@ -32,7 +36,7 @@ class AuthController extends Controller
     /**
      * Show the login page.
      *
-     * @return Content|\Illuminate\Http\RedirectResponse
+     * @return Content|RedirectResponse
      */
     public function getLogin(Content $content)
     {
@@ -63,7 +67,7 @@ class AuthController extends Controller
             return $this->validationErrorsResponse($validator);
         }
 
-        /** @var \Illuminate\Contracts\Auth\StatefulGuard $guard */
+        /** @var StatefulGuard $guard */
         $guard = $this->guard();
         if ($guard->attempt($credentials, $remember)) {
             return $this->sendLoginResponse($request);
@@ -77,11 +81,11 @@ class AuthController extends Controller
     /**
      * User logout.
      *
-     * @return \Illuminate\Http\RedirectResponse|string
+     * @return RedirectResponse|string
      */
     public function getLogout(Request $request)
     {
-        /** @var \Illuminate\Contracts\Auth\StatefulGuard $guard */
+        /** @var StatefulGuard $guard */
         $guard = $this->guard();
         $guard->logout();
 
@@ -117,7 +121,7 @@ class AuthController extends Controller
     /**
      * Update user setting.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function putSetting()
     {
@@ -234,7 +238,7 @@ class AuthController extends Controller
     /**
      * Send the response after the user was authenticated.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     protected function sendLoginResponse(Request $request)
     {
@@ -262,7 +266,7 @@ class AuthController extends Controller
     /**
      * Get the guard to be used during authentication.
      *
-     * @return \Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard
+     * @return Guard|StatefulGuard
      */
     protected function guard()
     {

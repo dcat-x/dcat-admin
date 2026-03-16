@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Form\Field;
 
+use Illuminate\Contracts\View\Factory;
+use Illuminate\View\View;
+
 class Color extends Text
 {
     protected $view = 'admin::form.color';
@@ -41,7 +44,7 @@ class Color extends Text
     /**
      * Render this filed.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     * @return Factory|View|string
      */
     public function render()
     {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Form\Field;
 
+use Dcat\Admin\Form\Field;
 use Dcat\Admin\Form\Field\Hidden;
 use Dcat\Admin\Tests\TestCase;
 
@@ -48,7 +49,7 @@ class HiddenTest extends TestCase
     {
         $field = $this->createHidden();
 
-        $this->assertInstanceOf(\Dcat\Admin\Form\Field::class, $field);
+        $this->assertInstanceOf(Field::class, $field);
     }
 
     // -------------------------------------------------------

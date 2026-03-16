@@ -7,6 +7,7 @@ namespace Dcat\Admin\Form\Field;
 use Dcat\Admin\Form\Field;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Support\Arr;
+use Illuminate\Validation\Validator;
 
 class KeyValue extends Field
 {
@@ -84,7 +85,7 @@ class KeyValue extends Field
 
         $input = $this->prepareValidatorInput($input);
 
-        /** @var \Illuminate\Validation\Validator $result */
+        /** @var Validator $result */
         $result = validator()->make($input, $rules, $this->getValidationMessages(), $attributes);
 
         return $result;

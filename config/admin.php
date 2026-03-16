@@ -1,6 +1,23 @@
 <?php
 
 declare(strict_types=1);
+use App\Admin\Controllers\AuthController;
+use Dcat\Admin\Exception\Handler;
+use Dcat\Admin\Grid\Actions\Delete;
+use Dcat\Admin\Grid\Actions\Edit;
+use Dcat\Admin\Grid\Actions\QuickEdit;
+use Dcat\Admin\Grid\Actions\Show;
+use Dcat\Admin\Grid\ColumnSelector\SessionStore;
+use Dcat\Admin\Grid\Displayers\DropdownActions;
+use Dcat\Admin\Grid\Tools\BatchActions;
+use Dcat\Admin\Grid\Tools\BatchDelete;
+use Dcat\Admin\Grid\Tools\Paginator;
+use Dcat\Admin\Models\Administrator;
+use Dcat\Admin\Models\DataRule;
+use Dcat\Admin\Models\Department;
+use Dcat\Admin\Models\Menu;
+use Dcat\Admin\Models\Permission;
+use Dcat\Admin\Models\Role;
 
 return [
 
@@ -132,7 +149,7 @@ return [
     'auth' => [
         'enable' => true,
 
-        'controller' => App\Admin\Controllers\AuthController::class,
+        'controller' => AuthController::class,
 
         'guard' => 'admin',
 
@@ -146,7 +163,7 @@ return [
         'providers' => [
             'admin' => [
                 'driver' => 'eloquent',
-                'model' => Dcat\Admin\Models\Administrator::class,
+                'model' => Administrator::class,
             ],
         ],
 
@@ -171,25 +188,25 @@ return [
     'grid' => [
 
         // The global Grid action display class.
-        'grid_action_class' => Dcat\Admin\Grid\Displayers\DropdownActions::class,
+        'grid_action_class' => DropdownActions::class,
 
         // The global Grid batch action display class.
-        'batch_action_class' => Dcat\Admin\Grid\Tools\BatchActions::class,
+        'batch_action_class' => BatchActions::class,
 
         // The global Grid pagination display class.
-        'paginator_class' => Dcat\Admin\Grid\Tools\Paginator::class,
+        'paginator_class' => Paginator::class,
 
         'actions' => [
-            'view' => Dcat\Admin\Grid\Actions\Show::class,
-            'edit' => Dcat\Admin\Grid\Actions\Edit::class,
-            'quick_edit' => Dcat\Admin\Grid\Actions\QuickEdit::class,
-            'delete' => Dcat\Admin\Grid\Actions\Delete::class,
-            'batch_delete' => Dcat\Admin\Grid\Tools\BatchDelete::class,
+            'view' => Show::class,
+            'edit' => Edit::class,
+            'quick_edit' => QuickEdit::class,
+            'delete' => Delete::class,
+            'batch_delete' => BatchDelete::class,
         ],
 
         // The global Grid column selector setting.
         'column_selector' => [
-            'store' => Dcat\Admin\Grid\ColumnSelector\SessionStore::class,
+            'store' => SessionStore::class,
             'store_params' => [
                 'driver' => 'file',
             ],
@@ -378,19 +395,19 @@ return [
 
         // User tables and model.
         'users_table' => 'admin_users',
-        'users_model' => Dcat\Admin\Models\Administrator::class,
+        'users_model' => Administrator::class,
 
         // Role table and model.
         'roles_table' => 'admin_roles',
-        'roles_model' => Dcat\Admin\Models\Role::class,
+        'roles_model' => Role::class,
 
         // Permission table and model.
         'permissions_table' => 'admin_permissions',
-        'permissions_model' => Dcat\Admin\Models\Permission::class,
+        'permissions_model' => Permission::class,
 
         // Menu table and model.
         'menu_table' => 'admin_menu',
-        'menu_model' => Dcat\Admin\Models\Menu::class,
+        'menu_model' => Menu::class,
 
         // Pivot table for table above.
         'role_users_table' => 'admin_role_users',
@@ -403,13 +420,13 @@ return [
 
         // Department tables
         'departments_table' => 'admin_departments',
-        'departments_model' => Dcat\Admin\Models\Department::class,
+        'departments_model' => Department::class,
         'department_users_table' => 'admin_department_users',
         'department_roles_table' => 'admin_department_roles',
 
         // Data permission tables
         'data_rules_table' => 'admin_data_rules',
-        'data_rules_model' => Dcat\Admin\Models\DataRule::class,
+        'data_rules_model' => DataRule::class,
         'role_data_rules_table' => 'admin_role_data_rules',
     ],
 
@@ -448,7 +465,7 @@ return [
     |--------------------------------------------------------------------------
     |
     */
-    'exception_handler' => Dcat\Admin\Exception\Handler::class,
+    'exception_handler' => Handler::class,
 
     /*
     |--------------------------------------------------------------------------

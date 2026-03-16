@@ -6,7 +6,9 @@ namespace Dcat\Admin\Grid\Tools;
 
 use Dcat\Admin\Admin;
 use Dcat\Admin\Grid;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class Paginator implements Renderable
@@ -17,7 +19,7 @@ class Paginator implements Renderable
     protected $grid;
 
     /**
-     * @var \Illuminate\Pagination\AbstractPaginator|\Illuminate\Pagination\LengthAwarePaginator|null
+     * @var AbstractPaginator|LengthAwarePaginator|null
      */
     public $paginator = null;
 
@@ -48,7 +50,7 @@ class Paginator implements Renderable
     /**
      * Get Pagination links.
      *
-     * @return \Illuminate\Contracts\Support\Htmlable|string
+     * @return Htmlable|string
      */
     protected function paginationLinks()
     {

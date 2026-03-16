@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dcat\Admin\Tree;
 
 use Dcat\Admin\Actions\Action;
+use Illuminate\Database\Eloquent\Model;
 
 class RowAction extends Action
 {
@@ -14,7 +15,7 @@ class RowAction extends Action
     protected $actions;
 
     /**
-     * @var \Illuminate\Database\Eloquent\Model
+     * @var Model
      */
     protected $row;
 
@@ -35,7 +36,7 @@ class RowAction extends Action
     /**
      * 获取行数据.
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     public function getRow()
     {

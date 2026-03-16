@@ -6,6 +6,7 @@ namespace Dcat\Admin\Tests\Unit\Http\Middleware;
 
 use Dcat\Admin\Http\Middleware\Application;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Http\Request;
 use Mockery;
 
 class ApplicationTest extends TestCase
@@ -81,7 +82,7 @@ class ApplicationTest extends TestCase
     public function test_handle_passes_through_when_app_is_null(): void
     {
         $middleware = new Application;
-        $request = \Illuminate\Http\Request::create('/admin/test');
+        $request = Request::create('/admin/test');
 
         $called = false;
         $response = $middleware->handle($request, function ($req) use (&$called) {

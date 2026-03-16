@@ -6,6 +6,7 @@ namespace Dcat\Admin\Form;
 
 use Dcat\Admin\Exception\RuntimeException;
 use Dcat\Admin\Form;
+use Dcat\Admin\Layout\Row;
 use Dcat\Admin\Widgets\Form as WidgetForm;
 
 /**
@@ -32,7 +33,7 @@ class BlockForm extends WidgetForm
     protected $title;
 
     /**
-     * @var \Dcat\Admin\Layout\Row
+     * @var Row
      */
     public $layoutRow;
 

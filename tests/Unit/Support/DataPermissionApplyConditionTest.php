@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Support;
 
+use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Models\DataRule;
 use Dcat\Admin\Support\DataPermission;
 use Dcat\Admin\Tests\TestCase;
@@ -23,7 +24,7 @@ class DataPermissionApplyConditionTest extends TestCase
         ]);
         $this->app['config']->set('auth.providers.admin', [
             'driver' => 'eloquent',
-            'model' => \Dcat\Admin\Models\Administrator::class,
+            'model' => Administrator::class,
         ]);
     }
 

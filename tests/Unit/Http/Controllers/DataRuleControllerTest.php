@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Http\Controllers;
 
+use Dcat\Admin\Form;
+use Dcat\Admin\Grid;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Http\Controllers\DataRuleController;
+use Dcat\Admin\Models\Menu;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
 
@@ -21,7 +24,7 @@ class DataRuleControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->app['config']->set('admin.database.menu_model', \Dcat\Admin\Models\Menu::class);
+        $this->app['config']->set('admin.database.menu_model', Menu::class);
     }
 
     public function test_controller_extends_admin_controller(): void
@@ -50,19 +53,19 @@ class DataRuleControllerTest extends TestCase
     {
         $controller = new class extends DataRuleController
         {
-            public function exposeGrid(): \Dcat\Admin\Grid
+            public function exposeGrid(): Grid
             {
                 return $this->grid();
             }
         };
 
-        $this->assertInstanceOf(\Dcat\Admin\Grid::class, $controller->exposeGrid());
+        $this->assertInstanceOf(Grid::class, $controller->exposeGrid());
     }
 
     public function test_form_returns_form_instance(): void
     {
         $controller = new DataRuleController;
-        $this->assertInstanceOf(\Dcat\Admin\Form::class, $controller->form());
+        $this->assertInstanceOf(Form::class, $controller->form());
     }
 
     public function test_get_variables_html_returns_html_table(): void

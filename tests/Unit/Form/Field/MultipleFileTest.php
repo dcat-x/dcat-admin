@@ -7,6 +7,7 @@ namespace Dcat\Admin\Tests\Unit\Form\Field;
 use Dcat\Admin\Form\Field\File;
 use Dcat\Admin\Form\Field\MultipleFile;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Mockery;
 
 class MultipleFileTest extends TestCase
@@ -21,7 +22,7 @@ class MultipleFileTest extends TestCase
     {
         $field = new MultipleFile($column, [$label]);
 
-        $storage = Mockery::mock(\Illuminate\Contracts\Filesystem\Filesystem::class);
+        $storage = Mockery::mock(Filesystem::class);
         $storage->shouldReceive('exists')->andReturn(false)->byDefault();
         $storage->shouldReceive('delete')->andReturn(true)->byDefault();
         $storage->shouldReceive('url')->andReturn('')->byDefault();

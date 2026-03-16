@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dcat\Admin\Tests\Unit\Show;
 
 use Dcat\Admin\Show\Divider;
+use Dcat\Admin\Show\Field;
 use Dcat\Admin\Tests\TestCase;
 
 class DividerTest extends TestCase
@@ -13,7 +14,7 @@ class DividerTest extends TestCase
     {
         $divider = new Divider;
 
-        $this->assertInstanceOf(\Dcat\Admin\Show\Field::class, $divider);
+        $this->assertInstanceOf(Field::class, $divider);
     }
 
     public function test_render_returns_hr_markup(): void

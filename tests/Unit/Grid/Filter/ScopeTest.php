@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Grid\Filter;
 
+use Dcat\Admin\Grid\Filter;
 use Dcat\Admin\Grid\Filter\Scope;
 use Dcat\Admin\Tests\TestCase;
 
@@ -11,7 +12,7 @@ class ScopeTest extends TestCase
 {
     protected function makeScope(string $key, string $label = ''): Scope
     {
-        $parentFilter = $this->createMock(\Dcat\Admin\Grid\Filter::class);
+        $parentFilter = $this->createMock(Filter::class);
 
         return new Scope($parentFilter, $key, $label);
     }

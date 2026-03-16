@@ -8,8 +8,11 @@ use Dcat\Admin\Admin;
 use Dcat\Admin\Form\Field\File;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Support\WebUploader;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 trait HasUploadedFile
 {
@@ -26,7 +29,7 @@ trait HasUploadedFile
     /**
      * 获取上传文件.
      *
-     * @return \Symfony\Component\HttpFoundation\File\UploadedFile|void
+     * @return UploadedFile|void
      */
     public function file()
     {
@@ -36,7 +39,7 @@ trait HasUploadedFile
     /**
      * 获取文件管理仓库.
      *
-     * @return \Illuminate\Contracts\Filesystem\Filesystem
+     * @return Filesystem
      */
     public function disk(?string $disk = null)
     {
@@ -56,7 +59,7 @@ trait HasUploadedFile
     /**
      * 删除文件.
      *
-     * @param  \Illuminate\Contracts\Filesystem\Filesystem|FilesystemAdapter  $disk
+     * @param  Filesystem|FilesystemAdapter  $disk
      * @param  string|null  $path
      * @return bool
      */
@@ -68,9 +71,9 @@ trait HasUploadedFile
     /**
      * 删除文件并响应返回值.
      *
-     * @param  \Illuminate\Contracts\Filesystem\Filesystem|FilesystemAdapter  $disk
+     * @param  Filesystem|FilesystemAdapter  $disk
      * @param  string|null  $path
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function deleteFileAndResponse($disk = null, $path = null)
     {
@@ -142,7 +145,7 @@ trait HasUploadedFile
      * 文件删除失败.
      *
      * @param  string  $message
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function responseDeleteFailed($message = '')
     {

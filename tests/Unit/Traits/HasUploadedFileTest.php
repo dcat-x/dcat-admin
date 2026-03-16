@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Traits;
 
+use Dcat\Admin\Form\Field\File;
 use Dcat\Admin\Tests\TestCase;
 use Dcat\Admin\Traits\HasUploadedFile;
+use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Http\Request;
 use Mockery;
 
 class HasUploadedFileTestHelper
@@ -58,8 +61,8 @@ class HasUploadedFileTest extends TestCase
         $this->app['config']->set('admin.upload.disk', 'local');
         $helper = new HasUploadedFileTestHelper;
 
-        $this->assertInstanceOf(\Illuminate\Filesystem\FilesystemAdapter::class, $helper->disk());
-        $this->assertInstanceOf(\Illuminate\Filesystem\FilesystemAdapter::class, $helper->disk('local'));
+        $this->assertInstanceOf(FilesystemAdapter::class, $helper->disk());
+        $this->assertInstanceOf(FilesystemAdapter::class, $helper->disk('local'));
     }
 
     public function test_is_delete_request_detects_request_flag(): void
@@ -68,8 +71,8 @@ class HasUploadedFileTest extends TestCase
 
         $this->assertFalse($helper->isDeleteRequest());
 
-        $request = \Illuminate\Http\Request::create('/upload/delete', 'POST', [
-            \Dcat\Admin\Form\Field\File::FILE_DELETE_FLAG => 1,
+        $request = Request::create('/upload/delete', 'POST', [
+            File::FILE_DELETE_FLAG => 1,
         ]);
         $this->app->instance('request', $request);
 

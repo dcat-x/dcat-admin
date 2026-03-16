@@ -121,7 +121,7 @@ class Radio extends Widget
      *         ...
      *     ]
      *
-     * @param  array|\Illuminate\Contracts\Support\Arrayable  $opts
+     * @param  array|Arrayable  $opts
      * @return $this
      */
     public function options($opts = [])

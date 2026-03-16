@@ -9,9 +9,12 @@ use Dcat\Admin\Form\EmbeddedForm;
 use Dcat\Admin\Form\Field;
 use Dcat\Admin\Form\ResolveField;
 use Dcat\Admin\Support\Helper;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class Embeds extends Field implements FieldsCollection
 {
@@ -267,7 +270,7 @@ class Embeds extends Field implements FieldsCollection
     /**
      * Render the form.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     * @return Factory|View|string
      */
     public function render()
     {
@@ -292,7 +295,7 @@ class Embeds extends Field implements FieldsCollection
     /**
      * 获取所有字段.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function fields()
     {

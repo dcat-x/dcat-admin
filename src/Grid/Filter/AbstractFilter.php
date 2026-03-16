@@ -17,8 +17,10 @@ use Dcat\Admin\Grid\Filter\Presenter\Text;
 use Dcat\Admin\Grid\LazyRenderable;
 use Dcat\Admin\Traits\HasVariables;
 use Dcat\Laravel\Database\WhereHasInServiceProvider;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\View\View;
 
 /**
  * Class AbstractFilter.
@@ -316,7 +318,7 @@ abstract class AbstractFilter
     }
 
     /**
-     * @param  array|\Illuminate\Contracts\Support\Arrayable|\Closure  $options
+     * @param  array|Arrayable|\Closure  $options
      * @return MultipleSelect
      */
     public function multipleSelect($options = [])
@@ -652,7 +654,7 @@ abstract class AbstractFilter
     /**
      * Render this filter.
      *
-     * @return \Illuminate\View\View|string
+     * @return View|string
      */
     public function __toString()
     {

@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Models;
 
+use Dcat\Admin\Models\Menu;
 use Dcat\Admin\Models\Permission;
 use Dcat\Admin\Models\Role;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class PermissionTest extends TestCase
 {
@@ -18,7 +21,7 @@ class PermissionTest extends TestCase
         $this->app['config']->set('admin.database.permissions_table', 'admin_permissions');
         $this->app['config']->set('admin.database.roles_model', Role::class);
         $this->app['config']->set('admin.database.role_permissions_table', 'admin_role_permissions');
-        $this->app['config']->set('admin.database.menu_model', \Dcat\Admin\Models\Menu::class);
+        $this->app['config']->set('admin.database.menu_model', Menu::class);
     }
 
     public function test_permission_creation(): void
@@ -110,7 +113,7 @@ class PermissionTest extends TestCase
 
         $relation = $permission->menu();
 
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class, $relation);
+        $this->assertInstanceOf(BelongsTo::class, $relation);
     }
 
     public function test_find_by_key_signature_accepts_string_key(): void
@@ -157,7 +160,7 @@ class PermissionTest extends TestCase
 
         $relation = $permission->roles();
 
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsToMany::class, $relation);
+        $this->assertInstanceOf(BelongsToMany::class, $relation);
     }
 
     public function test_button_permission_creation(): void

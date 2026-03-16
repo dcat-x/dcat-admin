@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Traits;
 
+use Dcat\Admin\Layout\Asset;
+
 trait HasAssets
 {
     /**
-     * @return \Dcat\Admin\Layout\Asset
+     * @return Asset
      */
     public static function asset()
     {

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Form\Field;
 
+use Dcat\Admin\Form\Field\ArrayField;
+use Dcat\Admin\Form\Field\HasMany;
 use Dcat\Admin\Form\Field\Table;
 use Dcat\Admin\Tests\TestCase;
 
@@ -42,7 +44,7 @@ class TableTest extends TestCase
             // empty builder
         }]);
 
-        $this->assertInstanceOf(\Dcat\Admin\Form\Field\ArrayField::class, $field);
+        $this->assertInstanceOf(ArrayField::class, $field);
     }
 
     public function test_extends_has_many(): void
@@ -51,7 +53,7 @@ class TableTest extends TestCase
             // empty builder
         }]);
 
-        $this->assertInstanceOf(\Dcat\Admin\Form\Field\HasMany::class, $field);
+        $this->assertInstanceOf(HasMany::class, $field);
     }
 
     // -------------------------------------------------------

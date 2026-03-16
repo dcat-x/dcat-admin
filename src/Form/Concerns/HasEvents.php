@@ -7,6 +7,7 @@ namespace Dcat\Admin\Form\Concerns;
 use Closure;
 use Dcat\Admin\Contracts\UploadField as UploadFieldInterface;
 use Dcat\Admin\Form\Events;
+use Dcat\Admin\Form\Field;
 use Dcat\Admin\Http\JsonResponse;
 use Illuminate\Support\Facades\Event;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -150,7 +151,7 @@ trait HasEvents
     }
 
     /**
-     * @return \Closure
+     * @return Closure
      */
     protected function makeListener(Closure $callback)
     {
@@ -248,7 +249,7 @@ trait HasEvents
     /**
      * 触发文件上传事件.
      *
-     * @param  UploadFieldInterface|\Dcat\Admin\Form\Field  $field
+     * @param  UploadFieldInterface|Field  $field
      * @param  UploadedFile  $file
      * @return mixed|null
      */
@@ -260,10 +261,10 @@ trait HasEvents
     /**
      * 触发文件上传完成事件.
      *
-     * @param  UploadFieldInterface|\Dcat\Admin\Form\Field  $field
+     * @param  UploadFieldInterface|Field  $field
      * @param  UploadedFile  $file
      * @param  Response  $response
-     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\RedirectResponse|void
+     * @return \Illuminate\Http\Response|RedirectResponse|void
      */
     protected function callUploaded($field, $file, $response)
     {
@@ -273,8 +274,8 @@ trait HasEvents
     /**
      * 触发文件删除事件.
      *
-     * @param  UploadFieldInterface|\Dcat\Admin\Form\Field  $field
-     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\RedirectResponse|false|null
+     * @param  UploadFieldInterface|Field  $field
+     * @return \Illuminate\Http\Response|RedirectResponse|false|null
      */
     protected function callFileDeleting($field)
     {
@@ -284,8 +285,8 @@ trait HasEvents
     /**
      * 触发文件删除完成事件.
      *
-     * @param  UploadFieldInterface|\Dcat\Admin\Form\Field  $field
-     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\RedirectResponse|void
+     * @param  UploadFieldInterface|Field  $field
+     * @return \Illuminate\Http\Response|RedirectResponse|void
      */
     protected function callFileDeleted($field)
     {

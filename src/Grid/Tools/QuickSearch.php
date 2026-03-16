@@ -6,6 +6,7 @@ namespace Dcat\Admin\Grid\Tools;
 
 use Dcat\Admin\Admin;
 use Dcat\Admin\Support\Helper;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Traits\Macroable;
 
 class QuickSearch extends AbstractTool
@@ -98,7 +99,7 @@ class QuickSearch extends AbstractTool
     }
 
     /**
-     * @return string|\Illuminate\Contracts\View\View
+     * @return string|View
      */
     public function render()
     {

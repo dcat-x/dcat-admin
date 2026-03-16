@@ -9,6 +9,7 @@ use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Symfony\Component\HttpFoundation\Response;
 
 class Permission
@@ -93,7 +94,7 @@ class Permission
     /**
      * Send error response page.
      *
-     * @throws \Illuminate\Http\Exceptions\HttpResponseException
+     * @throws HttpResponseException
      */
     public static function error()
     {

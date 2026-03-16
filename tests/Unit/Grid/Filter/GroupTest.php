@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Grid\Filter;
 
+use Dcat\Admin\Grid;
+use Dcat\Admin\Grid\Filter;
 use Dcat\Admin\Grid\Filter\Group;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Support\Collection;
@@ -14,11 +16,11 @@ class GroupTest extends TestCase
     {
         $filter = new Group($column, $builder, $label);
 
-        $grid = $this->createMock(\Dcat\Admin\Grid::class);
+        $grid = $this->createMock(Grid::class);
         $grid->method('makeName')->willReturnCallback(fn ($name) => $name);
         $grid->method('getNamePrefix')->willReturn('');
 
-        $parentFilter = $this->createMock(\Dcat\Admin\Grid\Filter::class);
+        $parentFilter = $this->createMock(Filter::class);
         $parentFilter->method('grid')->willReturn($grid);
 
         $filter->setParent($parentFilter);

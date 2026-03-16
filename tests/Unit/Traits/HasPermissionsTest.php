@@ -8,6 +8,7 @@ use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Models\Permission;
 use Dcat\Admin\Tests\TestCase;
 use Dcat\Admin\Traits\HasPermissions;
+use Illuminate\Support\Collection;
 
 class FakePermissionUserForHasPermissionsTest
 {
@@ -25,7 +26,7 @@ class FakePermissionUserForHasPermissionsTest
         return false;
     }
 
-    public function allPermissions(): \Illuminate\Support\Collection
+    public function allPermissions(): Collection
     {
         return collect($this->permissionItems)->keyBy('id');
     }
@@ -44,7 +45,7 @@ class FakeInheritedRoleUserForHasPermissionsTest
         $this->roles = collect();
     }
 
-    public function allRoles(): \Illuminate\Support\Collection
+    public function allRoles(): Collection
     {
         $this->allRolesCalls++;
 
@@ -71,7 +72,7 @@ class FakePermissionKeyCacheUserForHasPermissionsTest
         return false;
     }
 
-    public function allPermissions(): \Illuminate\Support\Collection
+    public function allPermissions(): Collection
     {
         $this->allPermissionsCalls++;
 

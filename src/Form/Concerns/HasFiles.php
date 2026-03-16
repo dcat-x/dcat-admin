@@ -10,6 +10,7 @@ use Dcat\Admin\Form\Builder;
 use Dcat\Admin\Form\Field;
 use Dcat\Admin\Form\NestedForm;
 use Dcat\Admin\Support\WebUploader;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
@@ -85,7 +86,7 @@ trait HasFiles
     /**
      * 新增页面删除文件.
      *
-     * @return \Illuminate\Http\JsonResponse|null
+     * @return JsonResponse|null
      */
     protected function deleteFileWhenCreating(array $input)
     {

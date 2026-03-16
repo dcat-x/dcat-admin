@@ -11,6 +11,8 @@ use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Laravel\Database\SoftDeletes as DcatSoftDeletes;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Database\Eloquent\Relations;
@@ -154,7 +156,7 @@ class EloquentRepository extends Repository implements TreeRepository
     /**
      * 查询Grid表格数据.
      *
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|Collection|array
+     * @return LengthAwarePaginator|Collection|array
      */
     public function get(Grid\Model $model)
     {
@@ -374,7 +376,7 @@ class EloquentRepository extends Repository implements TreeRepository
     /**
      * 查询编辑页面数据.
      *
-     * @return array|\Illuminate\Contracts\Support\Arrayable
+     * @return array|Arrayable
      */
     public function edit(Form $form)
     {
@@ -394,7 +396,7 @@ class EloquentRepository extends Repository implements TreeRepository
     /**
      * 查询详情页面数据.
      *
-     * @return array|\Illuminate\Contracts\Support\Arrayable
+     * @return array|Arrayable
      */
     public function detail(Show $show)
     {
@@ -446,7 +448,7 @@ class EloquentRepository extends Repository implements TreeRepository
     /**
      * 查询更新前的行数据.
      *
-     * @return array|\Illuminate\Contracts\Support\Arrayable
+     * @return array|Arrayable
      */
     public function updating(Form $form)
     {
@@ -785,7 +787,7 @@ class EloquentRepository extends Repository implements TreeRepository
 
             $relation = $model->{$relationColumn}();
 
-            if ($relation instanceof Relations\Relation) {
+            if ($relation instanceof Relation) {
                 $relations[$column] = $value;
 
                 $map[$column] = $relationColumn;
@@ -812,9 +814,9 @@ class EloquentRepository extends Repository implements TreeRepository
 
             $relation = $model->$relationName();
 
-            $oneToOneRelation = $relation instanceof Relations\HasOne
+            $oneToOneRelation = $relation instanceof HasOne
                 || $relation instanceof Relations\MorphOne
-                || $relation instanceof Relations\BelongsTo;
+                || $relation instanceof BelongsTo;
 
             $prepared = $oneToOneRelation ? $form->prepareUpdate([$name => $values]) : [$name => $values];
 
@@ -829,7 +831,7 @@ class EloquentRepository extends Repository implements TreeRepository
                         $relation->sync($prepared[$name]);
                     }
                     break;
-                case $relation instanceof Relations\HasOne:
+                case $relation instanceof HasOne:
 
                     $related = $model->$relationName;
 
@@ -847,7 +849,7 @@ class EloquentRepository extends Repository implements TreeRepository
 
                     $related->save();
                     break;
-                case $relation instanceof Relations\BelongsTo:
+                case $relation instanceof BelongsTo:
                 case $relation instanceof Relations\MorphTo:
 
                     $parent = $model->$relationName;
@@ -886,7 +888,7 @@ class EloquentRepository extends Repository implements TreeRepository
                 case $relation instanceof Relations\MorphMany:
 
                     foreach ($prepared[$name] as $related) {
-                        /** @var Relations\Relation $relation */
+                        /** @var Relation $relation */
                         $relation = $model->$relationName();
 
                         $keyName = $relation->getRelated()->getKeyName();

@@ -61,8 +61,8 @@ use Illuminate\Support\Traits\Macroable;
  */
 class Column
 {
-    use Grid\Column\HasDisplayers;
-    use Grid\Column\HasHeader;
+    use Column\HasDisplayers;
+    use Column\HasHeader;
     use HasBuilderEvents;
     use Macroable {
         __call as __macroCall;
@@ -174,7 +174,7 @@ class Column
     protected $attributes = [];
 
     /**
-     * @var array<int, array{0: \Closure|mixed, 1: array}>
+     * @var array<int, array{0: Closure|mixed, 1: array}>
      */
     protected $displayCallbacks = [];
 
@@ -189,7 +189,7 @@ class Column
     protected static $model;
 
     /**
-     * @var Grid\Column\Condition[]
+     * @var Column\Condition[]
      */
     protected $conditions = [];
 
@@ -300,13 +300,13 @@ class Column
      *
      * @return Column\Condition
      */
-    public function if(?\Closure $condition = null)
+    public function if(?Closure $condition = null)
     {
         $condition = $condition ?: function ($column) {
             return $column->getValue();
         };
 
-        return $this->conditions[] = new Grid\Column\Condition($condition, $this);
+        return $this->conditions[] = new Column\Condition($condition, $this);
     }
 
     /**
@@ -451,7 +451,7 @@ class Column
     /**
      * Add a display callback.
      *
-     * @param  \Closure|string  $callback
+     * @param  Closure|string  $callback
      * @param  array  $params
      * @return $this
      */
@@ -499,7 +499,7 @@ class Column
         foreach ($this->displayCallbacks as $callback) {
             [$callback, $params] = $callback;
 
-            if (! $callback instanceof \Closure) {
+            if (! $callback instanceof Closure) {
                 $value = $callback;
 
                 continue;
@@ -536,7 +536,7 @@ class Column
     /**
      * Fill all data to every column.
      *
-     * @param  \Illuminate\Support\Collection  $data
+     * @param  Collection  $data
      */
     public function fill($data)
     {

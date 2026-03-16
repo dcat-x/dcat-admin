@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Grid\Filter\Presenter;
 
+use Dcat\Admin\Grid\Filter;
 use Dcat\Admin\Grid\Filter\AbstractFilter;
 use Dcat\Admin\Grid\Filter\Presenter\Text;
 use Dcat\Admin\Tests\TestCase;
@@ -19,7 +20,7 @@ class TextTest extends TestCase
 
     protected function attachFilter(Text $text): void
     {
-        $parentFilter = $this->createMock(\Dcat\Admin\Grid\Filter::class);
+        $parentFilter = $this->createMock(Filter::class);
         $parentFilter->method('filterID')->willReturn('filter_id');
 
         $filter = $this->createMock(AbstractFilter::class);

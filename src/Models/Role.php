@@ -8,6 +8,7 @@ use Dcat\Admin\Traits\HasDateTimeFormatter;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Collection;
 
 class Role extends Model
 {
@@ -114,7 +115,7 @@ class Role extends Model
     /**
      * Get id of the permission by id.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public static function getPermissionId(array $roleIds)
     {

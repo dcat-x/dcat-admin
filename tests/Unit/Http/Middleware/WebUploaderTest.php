@@ -6,6 +6,7 @@ namespace Dcat\Admin\Tests\Unit\Http\Middleware;
 
 use Dcat\Admin\Http\Middleware\WebUploader;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Http\Request;
 use Mockery;
 
 class WebUploaderTest extends TestCase
@@ -24,7 +25,7 @@ class WebUploaderTest extends TestCase
     public function test_handle_passes_through_when_not_uploading(): void
     {
         $middleware = new WebUploader;
-        $request = \Illuminate\Http\Request::create('/admin/upload');
+        $request = Request::create('/admin/upload');
         $uploader = Mockery::mock(\Dcat\Admin\Support\WebUploader::class);
         $uploader->shouldReceive('isUploading')->once()->andReturn(false);
 

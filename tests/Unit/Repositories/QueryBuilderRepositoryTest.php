@@ -6,8 +6,10 @@ namespace Dcat\Admin\Tests\Unit\Repositories;
 
 use Dcat\Admin\Contracts\TreeRepository;
 use Dcat\Admin\Exception\RuntimeException;
+use Dcat\Admin\Form;
 use Dcat\Admin\Repositories\QueryBuilderRepository;
 use Dcat\Admin\Repositories\Repository;
+use Dcat\Admin\Show;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
 
@@ -200,7 +202,7 @@ class QueryBuilderRepositoryTest extends TestCase
     {
         $repo = new TestQueryBuilderRepository;
 
-        $form = Mockery::mock(\Dcat\Admin\Form::class);
+        $form = Mockery::mock(Form::class);
         $form->shouldReceive('updates')->andReturn([
             'name' => 'Test Name',
             'slug' => 'test-slug',
@@ -222,7 +224,7 @@ class QueryBuilderRepositoryTest extends TestCase
 
         $repo = new TestQueryBuilderRepository;
 
-        $form = Mockery::mock(\Dcat\Admin\Form::class);
+        $form = Mockery::mock(Form::class);
         $form->shouldReceive('getKey')->andReturn(1);
 
         $result = $repo->edit($form);
@@ -242,7 +244,7 @@ class QueryBuilderRepositoryTest extends TestCase
 
         $repo = new TestQueryBuilderRepository;
 
-        $form = Mockery::mock(\Dcat\Admin\Form::class);
+        $form = Mockery::mock(Form::class);
         $form->shouldReceive('getKey')->andReturn(1);
         $form->shouldReceive('updates')->andReturn([
             'name' => 'Updated',
@@ -270,7 +272,7 @@ class QueryBuilderRepositoryTest extends TestCase
 
         $repo = new TestQueryBuilderRepository;
 
-        $form = Mockery::mock(\Dcat\Admin\Form::class);
+        $form = Mockery::mock(Form::class);
         $form->shouldReceive('getKey')->andReturn('1,2');
 
         $result = $repo->deleting($form);
@@ -290,7 +292,7 @@ class QueryBuilderRepositoryTest extends TestCase
 
         $repo = new TestQueryBuilderRepository;
 
-        $form = Mockery::mock(\Dcat\Admin\Form::class);
+        $form = Mockery::mock(Form::class);
         $form->shouldReceive('getKey')->andReturn('1');
         $form->shouldReceive('deleteFiles')->with(Mockery::any());
 
@@ -315,7 +317,7 @@ class QueryBuilderRepositoryTest extends TestCase
         $repo = new TestQueryBuilderRepository;
 
         // Cannot directly mock Show due to __call signature issue, use anonymous class
-        $show = new class(1, new TestQueryBuilderRepository) extends \Dcat\Admin\Show
+        $show = new class(1, new TestQueryBuilderRepository) extends Show
         {
             protected $testKey;
 
@@ -345,7 +347,7 @@ class QueryBuilderRepositoryTest extends TestCase
 
         $repo = new TestQueryBuilderRepository;
 
-        $form = Mockery::mock(\Dcat\Admin\Form::class);
+        $form = Mockery::mock(Form::class);
         $form->shouldReceive('getKey')->andReturn(1);
 
         $result = $repo->updating($form);

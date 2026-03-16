@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dcat\Admin\Tests\Unit\Form;
 
 use Dcat\Admin\Form;
+use Dcat\Admin\Form\Field;
 use Dcat\Admin\Form\Layout;
 use Dcat\Admin\Layout\Column;
 use Dcat\Admin\Tests\TestCase;
@@ -102,7 +103,7 @@ class LayoutTest extends TestCase
     public function test_add_field_stores_field(): void
     {
         $layout = $this->createLayout();
-        $field = Mockery::mock(\Dcat\Admin\Form\Field::class);
+        $field = Mockery::mock(Field::class);
 
         $layout->addField($field);
 

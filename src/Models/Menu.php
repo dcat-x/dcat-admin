@@ -8,6 +8,7 @@ use Dcat\Admin\Traits\HasDateTimeFormatter;
 use Dcat\Admin\Traits\ModelTree;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Collection;
 use Spatie\EloquentSortable\Sortable;
 
 /**
@@ -94,7 +95,7 @@ class Menu extends Model implements Sortable
     /**
      * Get all elements.
      *
-     * @return static[]|\Illuminate\Support\Collection
+     * @return static[]|Collection
      */
     public function allNodes(bool $force = false)
     {
@@ -110,7 +111,7 @@ class Menu extends Model implements Sortable
     /**
      * Fetch all elements.
      *
-     * @return static[]|\Illuminate\Support\Collection
+     * @return static[]|Collection
      */
     public function fetchAll()
     {

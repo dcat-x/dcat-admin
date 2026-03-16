@@ -6,9 +6,14 @@ namespace Dcat\Admin\Tests\Unit\Http\Middleware;
 
 use Dcat\Admin\Admin;
 use Dcat\Admin\Http\Middleware\Permission;
+use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Auth;
 use Mockery;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class FakeMenuPermissionQueryForMiddlewareTest
 {
@@ -101,7 +106,7 @@ class PermissionTest extends TestCase
         ]);
         $this->app['config']->set('auth.providers.admin', [
             'driver' => 'eloquent',
-            'model' => \Dcat\Admin\Models\Administrator::class,
+            'model' => Administrator::class,
         ]);
 
         FakeMenuPermissionQueryForMiddlewareTest::reset();
@@ -149,24 +154,24 @@ class PermissionTest extends TestCase
         $this->app['config']->set('admin.menu.role_bind_menu', false);
 
         // 创建一个非管理员用户，没有任何权限
-        $user = Mockery::mock(\Dcat\Admin\Models\Administrator::class)->makePartial();
+        $user = Mockery::mock(Administrator::class)->makePartial();
         $user->shouldReceive('isAdministrator')->andReturn(false);
         $user->shouldReceive('allPermissions')->andReturn(collect());
 
         // 注入用户到 Admin
-        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard = Mockery::mock(StatefulGuard::class);
         $guard->shouldReceive('user')->andReturn($user);
         $guard->shouldReceive('check')->andReturn(true);
         $guard->shouldReceive('id')->andReturn(1);
 
-        \Illuminate\Support\Facades\Auth::shouldReceive('guard')
+        Auth::shouldReceive('guard')
             ->with('admin')
             ->andReturn($guard);
 
         $middleware = new Permission;
 
         $request = Request::create('/admin/test', 'GET');
-        $route = new \Illuminate\Routing\Route('GET', 'admin/test', function () {
+        $route = new Route('GET', 'admin/test', function () {
             return 'test';
         });
         $request->setRouteResolver(function () use ($route) {
@@ -188,7 +193,7 @@ class PermissionTest extends TestCase
 
                 return 'next';
             });
-        } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
+        } catch (HttpException $e) {
             $exceptionCaught = true;
             $this->assertSame(403, $e->getStatusCode());
         }
@@ -202,22 +207,22 @@ class PermissionTest extends TestCase
     {
         $this->app['config']->set('admin.permission.enable', true);
 
-        $user = Mockery::mock(\Dcat\Admin\Models\Administrator::class)->makePartial();
+        $user = Mockery::mock(Administrator::class)->makePartial();
         $user->shouldReceive('isAdministrator')->andReturn(true);
 
-        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard = Mockery::mock(StatefulGuard::class);
         $guard->shouldReceive('user')->andReturn($user);
         $guard->shouldReceive('check')->andReturn(true);
         $guard->shouldReceive('id')->andReturn(1);
 
-        \Illuminate\Support\Facades\Auth::shouldReceive('guard')
+        Auth::shouldReceive('guard')
             ->with('admin')
             ->andReturn($guard);
 
         $middleware = new Permission;
 
         $request = Request::create('/admin/test', 'GET');
-        $route = new \Illuminate\Routing\Route('GET', 'admin/test', function () {
+        $route = new Route('GET', 'admin/test', function () {
             return 'test';
         });
         $request->setRouteResolver(function () use ($route) {
@@ -240,7 +245,7 @@ class PermissionTest extends TestCase
         $middleware = new Permission;
         $this->app['config']->set('admin.permission.except', []);
         $request = Request::create('/admin/private/path', 'GET');
-        $route = new \Illuminate\Routing\Route('GET', 'admin/private/path', function () {
+        $route = new Route('GET', 'admin/private/path', function () {
             return 'ok';
         });
         $route->middleware(['web']);
@@ -257,7 +262,7 @@ class PermissionTest extends TestCase
         $this->app['config']->set('admin.permission.except', ['', null, 'auth/login', 'auth/login']);
         $request = Request::create('/admin/auth/login', 'GET');
         $this->app->instance('request', $request);
-        $route = new \Illuminate\Routing\Route('GET', 'admin/auth/login', function () {
+        $route = new Route('GET', 'admin/auth/login', function () {
             return 'ok';
         });
         $request->setRouteResolver(fn () => $route);
@@ -269,7 +274,7 @@ class PermissionTest extends TestCase
     {
         $middleware = new Permission;
         $request = Request::create('/admin/private/path', 'GET');
-        $route = new \Illuminate\Routing\Route('GET', 'admin/private/path', function () {
+        $route = new Route('GET', 'admin/private/path', function () {
             return 'ok';
         });
         $route->middleware(['web']);
@@ -396,23 +401,23 @@ class PermissionTest extends TestCase
         FakeMenuPermissionQueryForMiddlewareTest::$exactResult = null;
         FakeMenuPermissionQueryForMiddlewareTest::$fallbackResult = null;
 
-        $user = Mockery::mock(\Dcat\Admin\Models\Administrator::class)->makePartial();
+        $user = Mockery::mock(Administrator::class)->makePartial();
         $user->shouldReceive('isAdministrator')->andReturn(false);
         $user->shouldReceive('allPermissions')->andReturn(collect());
         $user->shouldReceive('inRoles')->never();
 
-        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard = Mockery::mock(StatefulGuard::class);
         $guard->shouldReceive('user')->andReturn($user);
         $guard->shouldReceive('check')->andReturn(true);
         $guard->shouldReceive('id')->andReturn(1);
 
-        \Illuminate\Support\Facades\Auth::shouldReceive('guard')
+        Auth::shouldReceive('guard')
             ->with('admin')
             ->andReturn($guard);
 
         $middleware = new Permission;
         $request = Request::create('/admin/no-menu-path', 'GET');
-        $route = new \Illuminate\Routing\Route('GET', 'admin/no-menu-path', function () {
+        $route = new Route('GET', 'admin/no-menu-path', function () {
             return 'test';
         });
         $request->setRouteResolver(fn () => $route);
@@ -439,17 +444,17 @@ class PermissionTest extends TestCase
             (object) ['id' => 9, 'uri' => 'deny-path', 'roles' => collect()],
         ];
 
-        $user = Mockery::mock(\Dcat\Admin\Models\Administrator::class)->makePartial();
+        $user = Mockery::mock(Administrator::class)->makePartial();
         $user->shouldReceive('isAdministrator')->andReturn(false);
         $user->shouldReceive('allPermissions')->andReturn(collect());
         $user->shouldReceive('inRoles')->never();
 
-        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard = Mockery::mock(StatefulGuard::class);
         $guard->shouldReceive('user')->andReturn($user);
         $guard->shouldReceive('check')->andReturn(true);
         $guard->shouldReceive('id')->andReturn(1);
 
-        \Illuminate\Support\Facades\Auth::shouldReceive('guard')
+        Auth::shouldReceive('guard')
             ->with('admin')
             ->andReturn($guard);
 
@@ -459,7 +464,7 @@ class PermissionTest extends TestCase
 
         $middleware = new Permission;
         $request = Request::create('/admin/deny-path', 'GET');
-        $route = new \Illuminate\Routing\Route('GET', 'admin/deny-path', function () {
+        $route = new Route('GET', 'admin/deny-path', function () {
             return 'test';
         });
         $request->setRouteResolver(fn () => $route);
@@ -474,7 +479,7 @@ class PermissionTest extends TestCase
                 return 'next';
             });
             $this->fail('Expected HttpException 403');
-        } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
+        } catch (HttpException $e) {
             $this->assertSame(403, $e->getStatusCode());
         }
 
@@ -491,23 +496,23 @@ class PermissionTest extends TestCase
             (object) ['id' => 10, 'uri' => 'allow-path', 'roles' => collect([(object) ['slug' => 'editor']])],
         ];
 
-        $user = Mockery::mock(\Dcat\Admin\Models\Administrator::class)->makePartial();
+        $user = Mockery::mock(Administrator::class)->makePartial();
         $user->shouldReceive('isAdministrator')->andReturn(false);
         $user->shouldReceive('allPermissions')->andReturn(collect());
         $user->shouldReceive('inRoles')->with(['editor'])->andReturn(true);
 
-        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard = Mockery::mock(StatefulGuard::class);
         $guard->shouldReceive('user')->andReturn($user);
         $guard->shouldReceive('check')->andReturn(true);
         $guard->shouldReceive('id')->andReturn(1);
 
-        \Illuminate\Support\Facades\Auth::shouldReceive('guard')
+        Auth::shouldReceive('guard')
             ->with('admin')
             ->andReturn($guard);
 
         $middleware = new Permission;
         $request = Request::create('/admin/allow-path', 'GET');
-        $route = new \Illuminate\Routing\Route('GET', 'admin/allow-path', function () {
+        $route = new Route('GET', 'admin/allow-path', function () {
             return 'test';
         });
         $request->setRouteResolver(fn () => $route);

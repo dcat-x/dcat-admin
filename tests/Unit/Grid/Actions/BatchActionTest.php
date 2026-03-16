@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dcat\Admin\Tests\Unit\Grid\Actions;
 
 use Dcat\Admin\Grid\BatchAction;
+use Dcat\Admin\Grid\Tools\ActionDivider;
 use Dcat\Admin\Grid\Tools\BatchActions;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
@@ -127,7 +128,7 @@ class BatchActionTest extends TestCase
 
         // The divider adds an ActionDivider instance
         $lastItem = $actions->last();
-        $this->assertInstanceOf(\Dcat\Admin\Grid\Tools\ActionDivider::class, $lastItem);
+        $this->assertInstanceOf(ActionDivider::class, $lastItem);
     }
 
     public function test_divider_returns_this(): void

@@ -12,6 +12,7 @@ use Dcat\Admin\Form\Builder;
 use Dcat\Admin\Form\Concerns;
 use Dcat\Admin\Form\Condition;
 use Dcat\Admin\Form\Field;
+use Dcat\Admin\Form\Layout;
 use Dcat\Admin\Form\NestedForm;
 use Dcat\Admin\Form\ResolveField;
 use Dcat\Admin\Http\JsonResponse;
@@ -24,7 +25,9 @@ use Dcat\Admin\Widgets\DialogForm;
 use Illuminate\Contracts\Support\MessageProvider;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -234,7 +237,7 @@ class Form implements Renderable
     protected $model;
 
     /**
-     * @var \Illuminate\Validation\Validator
+     * @var Validator
      */
     protected $validator;
 
@@ -410,8 +413,8 @@ class Form implements Renderable
     }
 
     /**
-     * @param  Fluent|array|\Illuminate\Database\Eloquent\Model  $model
-     * @return Fluent|\Illuminate\Database\Eloquent\Model|void
+     * @param  Fluent|array|Model  $model
+     * @return Fluent|Model|void
      */
     public function model($model = null)
     {
@@ -471,7 +474,7 @@ class Form implements Renderable
     /**
      * @return $this;
      */
-    public function wrap(\Closure $closure)
+    public function wrap(Closure $closure)
     {
         $this->builder->wrap($closure);
 
@@ -495,7 +498,7 @@ class Form implements Renderable
     }
 
     /**
-     * @return \Dcat\Admin\Form\Layout
+     * @return Layout
      */
     public function layout()
     {
@@ -620,7 +623,7 @@ class Form implements Renderable
      * Store a new record.
      *
      * @param  string|string  $redirectTo
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\Http\JsonResponse|Response
+     * @return RedirectResponse|Redirector|\Illuminate\Http\JsonResponse|Response
      */
     public function store(?array $data = null, $redirectTo = null)
     {
@@ -696,7 +699,7 @@ class Form implements Renderable
     /**
      * Before store.
      *
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|Response|void
+     * @return \Illuminate\Http\JsonResponse|RedirectResponse|Response|void
      */
     protected function beforeStore(array $data)
     {
@@ -800,7 +803,7 @@ class Form implements Renderable
      * Handle update.
      *
      * @param  string|null  $redirectTo
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|Response
+     * @return \Illuminate\Http\JsonResponse|RedirectResponse|Response
      */
     public function update(
         $id,
@@ -1234,7 +1237,7 @@ class Form implements Renderable
      *
      *     $form->if(true)->removeField('name');
      *
-     * @param  bool|\Closure  $condition
+     * @param  bool|Closure  $condition
      * @return Condition
      */
     public function if($condition)
@@ -1720,7 +1723,7 @@ class Form implements Renderable
     /**
      * @return $this
      */
-    public function block(int $width, \Closure $callback)
+    public function block(int $width, Closure $callback)
     {
         $this
             ->builder
@@ -1734,7 +1737,7 @@ class Form implements Renderable
      * @param  int|float  $width
      * @return $this
      */
-    public function column($width, \Closure $callback)
+    public function column($width, Closure $callback)
     {
         $this->builder->layout()->onlyColumn($width, function () use ($callback) {
             $callback($this);
@@ -1756,7 +1759,7 @@ class Form implements Renderable
     /**
      * @return bool|void
      */
-    public function inDialog(?\Closure $callback = null)
+    public function inDialog(?Closure $callback = null)
     {
         if (! $callback) {
             return DialogForm::is();

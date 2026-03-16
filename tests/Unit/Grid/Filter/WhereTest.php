@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Grid\Filter;
 
+use Dcat\Admin\Grid;
+use Dcat\Admin\Grid\Filter;
 use Dcat\Admin\Grid\Filter\Where;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Database\Query\Builder;
 
 class WhereTest extends TestCase
 {
@@ -13,10 +16,10 @@ class WhereTest extends TestCase
     {
         $filter = new Where($column, $query, $label);
 
-        $grid = $this->createMock(\Dcat\Admin\Grid::class);
+        $grid = $this->createMock(Grid::class);
         $grid->method('makeName')->willReturnCallback(fn ($name) => $name);
 
-        $parentFilter = $this->createMock(\Dcat\Admin\Grid\Filter::class);
+        $parentFilter = $this->createMock(Filter::class);
         $parentFilter->method('grid')->willReturn($grid);
 
         $filter->setParent($parentFilter);
@@ -92,7 +95,7 @@ class WhereTest extends TestCase
         $this->assertConditionHasWhere($condition);
         $closure = $condition['where'][0];
 
-        $mockQuery = $this->createMock(\Illuminate\Database\Query\Builder::class);
+        $mockQuery = $this->createMock(Builder::class);
         $closure($mockQuery);
 
         $this->assertSame('bound_test', $capturedInput);

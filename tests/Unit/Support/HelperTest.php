@@ -6,6 +6,8 @@ namespace Dcat\Admin\Tests\Unit\Support;
 
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
 
 class HelperTest extends TestCase
@@ -180,7 +182,7 @@ class HelperTest extends TestCase
 
     public function test_match_request_path_matches_exact_current_path(): void
     {
-        $request = \Illuminate\Http\Request::create('/admin/users', 'GET');
+        $request = Request::create('/admin/users', 'GET');
         $this->app->instance('request', $request);
 
         $this->assertTrue(Helper::matchRequestPath('admin/users', 'admin/users'));
@@ -188,7 +190,7 @@ class HelperTest extends TestCase
 
     public function test_match_request_path_respects_method_prefix(): void
     {
-        $request = \Illuminate\Http\Request::create('/admin/users', 'GET');
+        $request = Request::create('/admin/users', 'GET');
         $this->app->instance('request', $request);
 
         $this->assertFalse(Helper::matchRequestPath('POST:admin/users', 'admin/users'));
@@ -197,7 +199,7 @@ class HelperTest extends TestCase
 
     public function test_match_request_path_supports_wildcard(): void
     {
-        $request = \Illuminate\Http\Request::create('/admin/users/12/edit', 'GET');
+        $request = Request::create('/admin/users/12/edit', 'GET');
         $this->app->instance('request', $request);
 
         $this->assertTrue((bool) Helper::matchRequestPath('admin/users/*/edit', 'admin/users/12/edit'));
@@ -206,8 +208,8 @@ class HelperTest extends TestCase
     public function test_match_request_path_matches_admin_route_name(): void
     {
         $this->app['config']->set('admin.route.prefix', 'admin');
-        $request = \Illuminate\Http\Request::create('/admin/auth/login', 'GET');
-        $route = new \Illuminate\Routing\Route('GET', 'admin/auth/login', function () {
+        $request = Request::create('/admin/auth/login', 'GET');
+        $route = new Route('GET', 'admin/auth/login', function () {
             return 'ok';
         });
         $route->name(admin_route_name('auth/login'));

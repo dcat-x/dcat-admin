@@ -6,6 +6,7 @@ namespace Dcat\Admin\Tests\Unit\Traits;
 
 use Dcat\Admin\Tests\TestCase;
 use Dcat\Admin\Traits\HasAuthorization;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class HasAuthorizationTest extends TestCase
 {
@@ -64,7 +65,7 @@ class HasAuthorizationTest extends TestCase
             use HasAuthorization;
         };
 
-        $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+        $this->expectException(HttpException::class);
 
         $obj->failedAuthorization();
     }
@@ -79,7 +80,7 @@ class HasAuthorizationTest extends TestCase
         try {
             $obj->failedAuthorization();
             $this->fail('Expected HttpException was not thrown.');
-        } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
+        } catch (HttpException $e) {
             $this->assertSame(403, $e->getStatusCode());
         }
     }

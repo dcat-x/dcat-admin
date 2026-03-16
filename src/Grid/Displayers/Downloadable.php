@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dcat\Admin\Grid\Displayers;
 
 use Dcat\Admin\Support\Helper;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Storage;
 
@@ -37,7 +38,7 @@ HTML;
         })->implode('<br>');
     }
 
-    protected function resolveStorageUrl(\Illuminate\Contracts\Filesystem\Filesystem $storage, string $path): string
+    protected function resolveStorageUrl(Filesystem $storage, string $path): string
     {
         /** @var FilesystemAdapter $adapter */
         $adapter = $storage;

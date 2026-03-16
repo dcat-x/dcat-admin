@@ -6,6 +6,7 @@ namespace Dcat\Admin\Tests\Unit\Form\Field;
 
 use Dcat\Admin\Form\Field\WebUploader;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Http\Request;
 use Mockery;
 
 class FakeWebUploaderField
@@ -200,7 +201,7 @@ class WebUploaderTest extends TestCase
 
     public function test_get_create_url_removes_trailing_create_segment(): void
     {
-        $request = \Illuminate\Http\Request::create('/admin/users/create', 'GET');
+        $request = Request::create('/admin/users/create', 'GET');
         $this->app->instance('request', $request);
 
         $field = $this->makeField();

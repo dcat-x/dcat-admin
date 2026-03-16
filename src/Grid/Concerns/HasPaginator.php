@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Grid\Concerns;
 
-use Dcat\Admin\Grid\Tools;
+use Dcat\Admin\Grid\Tools\Paginator;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\View\View;
 
 trait HasPaginator
 {
     /**
-     * @var Tools\Paginator|null
+     * @var Paginator|null
      */
     protected $paginator;
 
@@ -72,12 +74,12 @@ trait HasPaginator
     /**
      * Get the grid paginator.
      *
-     * @return \Dcat\Admin\Grid\Tools\Paginator
+     * @return Paginator
      */
     public function paginator()
     {
         if (! $this->paginator) {
-            $paginatorClass = $this->options['paginator_class'] ?: (config('admin.grid.paginator_class') ?: Tools\Paginator::class);
+            $paginatorClass = $this->options['paginator_class'] ?: (config('admin.grid.paginator_class') ?: Paginator::class);
 
             $this->paginator = new $paginatorClass($this);
         }
@@ -146,7 +148,7 @@ trait HasPaginator
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\View\View|string
+     * @return Factory|\Illuminate\Contracts\View\View|View|string
      */
     public function renderPagination()
     {

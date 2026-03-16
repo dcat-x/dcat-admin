@@ -9,6 +9,7 @@ use Dcat\Admin\Exception\Handler;
 use Dcat\Admin\Extend\Manager;
 use Dcat\Admin\Extend\UpdateManager;
 use Dcat\Admin\Extend\VersionManager;
+use Dcat\Admin\Http\Controllers\GlobalSearchController;
 use Dcat\Admin\Layout\Asset;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Layout\Menu;
@@ -305,7 +306,7 @@ PHP;
         ];
 
         app('router')->group($attributes, function ($router) {
-            $router->get('_global-search', [\Dcat\Admin\Http\Controllers\GlobalSearchController::class, 'search'])
+            $router->get('_global-search', [GlobalSearchController::class, 'search'])
                 ->name('dcat.global-search');
         });
     }

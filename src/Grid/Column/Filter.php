@@ -9,6 +9,7 @@ use Dcat\Admin\Grid\Events\Fetching;
 use Dcat\Admin\Grid\Model;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\Request;
 
 abstract class Filter implements Renderable
 {
@@ -114,7 +115,7 @@ abstract class Filter implements Renderable
      * Get filter value of this column.
      *
      * @param  string|array  $default
-     * @return array|\Illuminate\Http\Request|string|null
+     * @return array|Request|string|null
      */
     public function value($default = '')
     {

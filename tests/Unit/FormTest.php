@@ -5,7 +5,20 @@ declare(strict_types=1);
 namespace Dcat\Admin\Tests\Unit;
 
 use Dcat\Admin\Form;
+use Dcat\Admin\Form\Builder;
+use Dcat\Admin\Form\Concerns\HandleCascadeFields;
+use Dcat\Admin\Form\Concerns\HasDataPermission;
+use Dcat\Admin\Form\Concerns\HasEvents;
+use Dcat\Admin\Form\Concerns\HasFiles;
+use Dcat\Admin\Form\Concerns\HasRows;
+use Dcat\Admin\Form\Concerns\HasTabs;
+use Dcat\Admin\Form\ResolveField;
 use Dcat\Admin\Tests\TestCase;
+use Dcat\Admin\Traits\HasBuilderEvents;
+use Dcat\Admin\Traits\HasFormResponse;
+use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Support\Fluent;
+use Illuminate\Support\Traits\Macroable;
 use Mockery;
 use ReflectionClass;
 use ReflectionProperty;
@@ -21,77 +34,77 @@ class FormTest extends TestCase
     public function test_implements_renderable(): void
     {
         $ref = new ReflectionClass(Form::class);
-        $this->assertTrue($ref->implementsInterface(\Illuminate\Contracts\Support\Renderable::class));
+        $this->assertTrue($ref->implementsInterface(Renderable::class));
     }
 
     public function test_uses_macroable_trait(): void
     {
         $ref = new ReflectionClass(Form::class);
         $traits = $this->getAllTraits($ref);
-        $this->assertContains(\Illuminate\Support\Traits\Macroable::class, $traits);
+        $this->assertContains(Macroable::class, $traits);
     }
 
     public function test_uses_handle_cascade_fields_trait(): void
     {
         $ref = new ReflectionClass(Form::class);
         $traits = $this->getAllTraits($ref);
-        $this->assertContains(\Dcat\Admin\Form\Concerns\HandleCascadeFields::class, $traits);
+        $this->assertContains(HandleCascadeFields::class, $traits);
     }
 
     public function test_uses_has_data_permission_trait(): void
     {
         $ref = new ReflectionClass(Form::class);
         $traits = $this->getAllTraits($ref);
-        $this->assertContains(\Dcat\Admin\Form\Concerns\HasDataPermission::class, $traits);
+        $this->assertContains(HasDataPermission::class, $traits);
     }
 
     public function test_uses_has_events_trait(): void
     {
         $ref = new ReflectionClass(Form::class);
         $traits = $this->getAllTraits($ref);
-        $this->assertContains(\Dcat\Admin\Form\Concerns\HasEvents::class, $traits);
+        $this->assertContains(HasEvents::class, $traits);
     }
 
     public function test_uses_has_files_trait(): void
     {
         $ref = new ReflectionClass(Form::class);
         $traits = $this->getAllTraits($ref);
-        $this->assertContains(\Dcat\Admin\Form\Concerns\HasFiles::class, $traits);
+        $this->assertContains(HasFiles::class, $traits);
     }
 
     public function test_uses_has_rows_trait(): void
     {
         $ref = new ReflectionClass(Form::class);
         $traits = $this->getAllTraits($ref);
-        $this->assertContains(\Dcat\Admin\Form\Concerns\HasRows::class, $traits);
+        $this->assertContains(HasRows::class, $traits);
     }
 
     public function test_uses_has_tabs_trait(): void
     {
         $ref = new ReflectionClass(Form::class);
         $traits = $this->getAllTraits($ref);
-        $this->assertContains(\Dcat\Admin\Form\Concerns\HasTabs::class, $traits);
+        $this->assertContains(HasTabs::class, $traits);
     }
 
     public function test_uses_has_builder_events_trait(): void
     {
         $ref = new ReflectionClass(Form::class);
         $traits = $this->getAllTraits($ref);
-        $this->assertContains(\Dcat\Admin\Traits\HasBuilderEvents::class, $traits);
+        $this->assertContains(HasBuilderEvents::class, $traits);
     }
 
     public function test_uses_has_form_response_trait(): void
     {
         $ref = new ReflectionClass(Form::class);
         $traits = $this->getAllTraits($ref);
-        $this->assertContains(\Dcat\Admin\Traits\HasFormResponse::class, $traits);
+        $this->assertContains(HasFormResponse::class, $traits);
     }
 
     public function test_uses_resolve_field_trait(): void
     {
         $ref = new ReflectionClass(Form::class);
         $traits = $this->getAllTraits($ref);
-        $this->assertContains(\Dcat\Admin\Form\ResolveField::class, $traits);
+        $this->assertContains(ResolveField::class, $traits);
     }
 
     public function test_has_remove_flag_name_constant(): void
@@ -122,8 +135,8 @@ class FormTest extends TestCase
     {
         $form = new Form;
 
-        $this->assertInstanceOf(\Dcat\Admin\Form\Builder::class, $form->builder());
-        $this->assertInstanceOf(\Illuminate\Support\Fluent::class, $form->model());
+        $this->assertInstanceOf(Builder::class, $form->builder());
+        $this->assertInstanceOf(Fluent::class, $form->model());
     }
 
     public function test_disable_methods_are_chainable_and_affect_footer_rendering(): void

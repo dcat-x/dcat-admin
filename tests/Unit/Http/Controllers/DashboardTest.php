@@ -6,6 +6,8 @@ namespace Dcat\Admin\Tests\Unit\Http\Controllers;
 
 use Dcat\Admin\Http\Controllers\Dashboard;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Contracts\Support\Renderable;
+use Illuminate\View\View;
 
 class DashboardTest extends TestCase
 {
@@ -18,7 +20,7 @@ class DashboardTest extends TestCase
     {
         $result = Dashboard::title();
 
-        $this->assertInstanceOf(\Illuminate\View\View::class, $result);
+        $this->assertInstanceOf(View::class, $result);
     }
 
     public function test_title_method_uses_correct_view_name(): void
@@ -33,6 +35,6 @@ class DashboardTest extends TestCase
         $result = Dashboard::title();
 
         $this->assertInstanceOf(\Illuminate\Contracts\View\View::class, $result);
-        $this->assertInstanceOf(\Illuminate\Contracts\Support\Renderable::class, $result);
+        $this->assertInstanceOf(Renderable::class, $result);
     }
 }

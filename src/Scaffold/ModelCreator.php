@@ -6,6 +6,8 @@ namespace Dcat\Admin\Scaffold;
 
 use Dcat\Admin\Exception\AdminException;
 use Dcat\Admin\Support\Helper;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class ModelCreator
@@ -27,7 +29,7 @@ class ModelCreator
     /**
      * The filesystem instance.
      *
-     * @var \Illuminate\Filesystem\Filesystem
+     * @var Filesystem
      */
     protected $files;
 
@@ -36,7 +38,7 @@ class ModelCreator
      *
      * @param  string  $tableName
      * @param  string  $name
-     * @param  \Illuminate\Filesystem\Filesystem|null  $files
+     * @param  Filesystem|null  $files
      */
     public function __construct($tableName, $name, $files = null)
     {
@@ -358,7 +360,7 @@ class ModelCreator
         }
 
         // 确保所有字段都有注释条目（即使为空）
-        $allColumns = \Illuminate\Support\Facades\Schema::getColumnListing($tableName);
+        $allColumns = Schema::getColumnListing($tableName);
         foreach ($allColumns as $column) {
             if (! array_key_exists($column, $comments)) {
                 $comments[$column] = '';

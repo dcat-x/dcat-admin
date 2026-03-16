@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Traits;
 
+use Dcat\Admin\Models\DataRule;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
@@ -180,7 +181,7 @@ trait HasPermissions
             return collect();
         }
 
-        $dataRuleModel = config('admin.database.data_rules_model', \Dcat\Admin\Models\DataRule::class);
+        $dataRuleModel = config('admin.database.data_rules_model', DataRule::class);
         $pivotTable = config('admin.database.role_data_rules_table', 'admin_role_data_rules');
 
         return $dataRuleModel::query()

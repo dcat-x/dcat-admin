@@ -8,7 +8,7 @@ use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Exporters\ExporterInterface;
 
 /**
- * @mixin Grid\Exporters\AbstractExporter
+ * @mixin Exporters\AbstractExporter
  *
  * @method mixed export()
  */
@@ -43,7 +43,7 @@ class Exporter
     protected $grid;
 
     /**
-     * @var Grid\Exporters\AbstractExporter|ExporterInterface|null
+     * @var Exporters\AbstractExporter|ExporterInterface|null
      */
     protected $driver;
 
@@ -140,8 +140,8 @@ class Exporter
     /**
      * Resolve export driver.
      *
-     * @param  string|Grid\Exporters\AbstractExporter|ExporterInterface|null  $driver
-     * @return Grid\Exporters\AbstractExporter|ExporterInterface
+     * @param  string|Exporters\AbstractExporter|ExporterInterface|null  $driver
+     * @return Exporters\AbstractExporter|ExporterInterface
      */
     public function resolve($driver = null)
     {
@@ -149,7 +149,7 @@ class Exporter
             return $this->driver;
         }
 
-        if ($driver && $driver instanceof Grid\Exporters\AbstractExporter) {
+        if ($driver && $driver instanceof Exporters\AbstractExporter) {
             $this->driver = $driver->setGrid($this->grid);
         } elseif ($driver && $driver instanceof ExporterInterface) {
             $this->driver = $driver;
@@ -172,7 +172,7 @@ class Exporter
      * Get export driver.
      *
      * @param  string  $driver
-     * @return Grid\Exporters\AbstractExporter
+     * @return Exporters\AbstractExporter
      */
     protected function newDriver($driver): ExporterInterface
     {
@@ -192,11 +192,11 @@ class Exporter
     /**
      * Get default exporter.
      *
-     * @return Grid\Exporters\ExcelExporter
+     * @return Exporters\ExcelExporter
      */
     public function makeDefaultDriver()
     {
-        return Grid\Exporters\ExcelExporter::make()->setGrid($this->grid);
+        return Exporters\ExcelExporter::make()->setGrid($this->grid);
     }
 
     /**

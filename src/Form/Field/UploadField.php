@@ -6,10 +6,12 @@ namespace Dcat\Admin\Form\Field;
 
 use Dcat\Admin\Exception\UploadException;
 use Dcat\Admin\Traits\HasUploadedFile;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\MessageBag;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -36,7 +38,7 @@ trait UploadField
     /**
      * Storage instance.
      *
-     * @var \Illuminate\Contracts\Filesystem\Filesystem|false|null
+     * @var Filesystem|false|null
      */
     protected $storage;
 
@@ -328,7 +330,7 @@ trait UploadField
     }
 
     /**
-     * @return bool|\Illuminate\Support\MessageBag|string|null
+     * @return bool|MessageBag|string|null
      */
     protected function getValidationErrors(UploadedFile $file)
     {
@@ -420,7 +422,7 @@ trait UploadField
     /**
      * Get storage instance.
      *
-     * @return \Illuminate\Contracts\Filesystem\Filesystem|false|null
+     * @return Filesystem|false|null
      */
     public function getStorage()
     {

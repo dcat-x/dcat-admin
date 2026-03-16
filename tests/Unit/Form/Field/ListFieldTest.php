@@ -6,6 +6,7 @@ namespace Dcat\Admin\Tests\Unit\Form\Field;
 
 use Dcat\Admin\Form\Field\ListField;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Support\MessageBag;
 
 class ListFieldTest extends TestCase
 {
@@ -149,14 +150,14 @@ class ListFieldTest extends TestCase
     {
         $field = $this->createListField('items');
 
-        $originalBag = new \Illuminate\Support\MessageBag([
+        $originalBag = new MessageBag([
             'items.values.0' => ['Item 0 is invalid'],
             'items.values.1' => ['Item 1 is invalid'],
         ]);
 
         $result = $field->formatValidatorMessages($originalBag);
 
-        $this->assertInstanceOf(\Illuminate\Support\MessageBag::class, $result);
+        $this->assertInstanceOf(MessageBag::class, $result);
         $this->assertTrue($result->has('items'));
     }
 }

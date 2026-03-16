@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Grid\Actions;
 
+use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Actions\QuickEdit;
 use Dcat\Admin\Grid\RowAction;
 use Dcat\Admin\Tests\TestCase;
@@ -54,7 +55,7 @@ class QuickEditTest extends TestCase
     {
         $action = new QuickEdit;
 
-        $grid = Mockery::mock(\Dcat\Admin\Grid::class);
+        $grid = Mockery::mock(Grid::class);
         $grid->shouldReceive('option')->with('dialog_form_area')->andReturn([900, 600]);
         $grid->shouldReceive('getEditUrl')->with(8)->andReturn('/admin/users/8/edit');
         $grid->shouldReceive('getKeyName')->andReturn('id');

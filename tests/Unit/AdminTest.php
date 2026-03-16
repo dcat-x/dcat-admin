@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Dcat\Admin\Tests\Unit;
 
 use Dcat\Admin\Admin;
+use Dcat\Admin\Http\JsonResponse;
+use Dcat\Admin\Support\Context;
 use Dcat\Admin\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -77,7 +79,7 @@ class AdminTest extends TestCase
     {
         $context = Admin::context();
         $this->assertNotNull($context);
-        $this->assertInstanceOf(\Dcat\Admin\Support\Context::class, $context);
+        $this->assertInstanceOf(Context::class, $context);
     }
 
     public function test_should_prevent(): void
@@ -105,7 +107,7 @@ class AdminTest extends TestCase
     public function test_json(): void
     {
         $response = Admin::json(['status' => true, 'message' => 'success']);
-        $this->assertInstanceOf(\Dcat\Admin\Http\JsonResponse::class, $response);
+        $this->assertInstanceOf(JsonResponse::class, $response);
     }
 
     public function test_is_dark_mode(): void

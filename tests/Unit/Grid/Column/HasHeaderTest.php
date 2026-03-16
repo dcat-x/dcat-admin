@@ -6,7 +6,11 @@ namespace Dcat\Admin\Tests\Unit\Grid\Column;
 
 use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Column;
+use Dcat\Admin\Grid\Column\Filter;
 use Dcat\Admin\Grid\Column\HasHeader;
+use Dcat\Admin\Grid\Column\Help;
+use Dcat\Admin\Grid\Column\Sorter;
+use Dcat\Admin\Grid\Model;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
 
@@ -70,7 +74,7 @@ class HasHeaderTest extends TestCase
         $this->assertSame($column, $result);
 
         $headers = $this->getProtectedProperty($column, 'headers');
-        $this->assertInstanceOf(\Dcat\Admin\Grid\Column\Sorter::class, $headers[0]);
+        $this->assertInstanceOf(Sorter::class, $headers[0]);
     }
 
     public function test_filter_by_value_sets_hidden_filter_and_returns_self(): void
@@ -80,7 +84,7 @@ class HasHeaderTest extends TestCase
         $result = $column->filterByValue('profile.name');
 
         $this->assertSame($column, $result);
-        $this->assertInstanceOf(\Dcat\Admin\Grid\Column\Filter::class, $column->filter);
+        $this->assertInstanceOf(Filter::class, $column->filter);
         $this->assertFalse($column->filter->shouldDisplay());
     }
 
@@ -93,7 +97,7 @@ class HasHeaderTest extends TestCase
         $this->assertSame($column, $result);
 
         $headers = $this->getProtectedProperty($column, 'headers');
-        $this->assertInstanceOf(\Dcat\Admin\Grid\Column\Help::class, $headers[0]);
+        $this->assertInstanceOf(Help::class, $headers[0]);
     }
 
     public function test_bind_filter_query_invokes_filter_binding(): void
@@ -101,11 +105,11 @@ class HasHeaderTest extends TestCase
         $column = $this->makeColumn();
         $column->filterByValue();
 
-        $model = Mockery::mock(\Dcat\Admin\Grid\Model::class);
+        $model = Mockery::mock(Model::class);
 
         $column->bindFilterQuery($model);
 
-        $this->assertInstanceOf(\Dcat\Admin\Grid\Column\Filter::class, $column->filter);
+        $this->assertInstanceOf(Filter::class, $column->filter);
     }
 
     public function test_render_header_wraps_rendered_headers(): void

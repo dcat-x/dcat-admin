@@ -6,7 +6,9 @@ namespace Dcat\Admin\Tests\Unit\Form\Field;
 
 use Dcat\Admin\Form\Field\File;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Mockery;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * 测试 UploadField trait 的关键方法。
@@ -19,7 +21,7 @@ class UploadFieldTest extends TestCase
         $field = new File($column, [$label]);
 
         // 配置一个 mock storage 以避免真实的文件系统操作
-        $storage = Mockery::mock(\Illuminate\Contracts\Filesystem\Filesystem::class);
+        $storage = Mockery::mock(Filesystem::class);
         $storage->shouldReceive('exists')->andReturn(false);
         $storage->shouldReceive('delete')->andReturn(true);
         $storage->shouldReceive('url')->andReturn('');
@@ -56,7 +58,7 @@ class UploadFieldTest extends TestCase
         $this->setOriginal($field, 'original_file.jpg');
 
         // mock storage 检查 deleteFile 是否被调用
-        $storage = Mockery::mock(\Illuminate\Contracts\Filesystem\Filesystem::class);
+        $storage = Mockery::mock(Filesystem::class);
         $storage->shouldReceive('exists')->with('original_file.jpg')->once()->andReturn(true);
         $storage->shouldReceive('delete')->with('original_file.jpg')->once()->andReturn(true);
 
@@ -76,7 +78,7 @@ class UploadFieldTest extends TestCase
         $field = $this->createFileField();
         $this->setOriginal($field, 'original_file.jpg');
 
-        $storage = Mockery::mock(\Illuminate\Contracts\Filesystem\Filesystem::class);
+        $storage = Mockery::mock(Filesystem::class);
         $storage->shouldReceive('exists')->with('original_file.jpg')->once()->andReturn(true);
         $storage->shouldReceive('delete')->with('original_file.jpg')->once()->andReturn(true);
 
@@ -96,7 +98,7 @@ class UploadFieldTest extends TestCase
         $field = $this->createFileField();
         $this->setOriginal($field, 'file.jpg');
 
-        $storage = Mockery::mock(\Illuminate\Contracts\Filesystem\Filesystem::class);
+        $storage = Mockery::mock(Filesystem::class);
         // 相同文件时不应删除
         $storage->shouldNotReceive('delete');
 
@@ -115,7 +117,7 @@ class UploadFieldTest extends TestCase
         $field = $this->createFileField();
         $this->setOriginal($field, ['file1.jpg', 'file2.jpg', 'file3.jpg']);
 
-        $storage = Mockery::mock(\Illuminate\Contracts\Filesystem\Filesystem::class);
+        $storage = Mockery::mock(Filesystem::class);
         // 只有 file2.jpg 应该被删除
         $storage->shouldReceive('exists')->with('file2.jpg')->once()->andReturn(true);
         $storage->shouldReceive('delete')->with('file2.jpg')->once()->andReturn(true);
@@ -140,7 +142,7 @@ class UploadFieldTest extends TestCase
 
         $tmpFile = tempnam(sys_get_temp_dir(), 'test');
         file_put_contents($tmpFile, 'test content');
-        $file = new \Symfony\Component\HttpFoundation\File\UploadedFile(
+        $file = new UploadedFile(
             $tmpFile,
             'test.txt',
             'text/plain',
@@ -163,7 +165,7 @@ class UploadFieldTest extends TestCase
         $field = $this->createFileField();
 
         $tmpFile = tempnam(sys_get_temp_dir(), 'test');
-        $file = new \Symfony\Component\HttpFoundation\File\UploadedFile(
+        $file = new UploadedFile(
             $tmpFile,
             'test.txt',
             'text/plain',

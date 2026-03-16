@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Http\Repositories;
 
+use Dcat\Admin\Form;
 use Dcat\Admin\Http\Repositories\Extension;
 use Dcat\Admin\Repositories\Repository;
+use Dcat\Admin\Show;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
 
@@ -27,8 +29,8 @@ class ExtensionTest extends TestCase
     public function test_edit_detail_updating_and_deleting_return_empty_array(): void
     {
         $repository = new Extension;
-        $form = Mockery::mock(\Dcat\Admin\Form::class);
-        $show = new \Dcat\Admin\Show([]);
+        $form = Mockery::mock(Form::class);
+        $show = new Show([]);
 
         $this->assertSame([], $repository->edit($form));
         $this->assertSame([], $repository->updating($form));
@@ -45,7 +47,7 @@ class ExtensionTest extends TestCase
     public function test_update_and_move_order_methods_return_true(): void
     {
         $repository = new Extension;
-        $form = Mockery::mock(\Dcat\Admin\Form::class);
+        $form = Mockery::mock(Form::class);
 
         $this->assertTrue($repository->update($form));
         $this->assertTrue($repository->moveOrderUp());

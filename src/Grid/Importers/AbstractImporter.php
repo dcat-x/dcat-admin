@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Dcat\Admin\Grid\Importers;
 
 use Dcat\Admin\Grid;
+use Dcat\EasyExcel\Excel;
 use Illuminate\Http\UploadedFile;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 abstract class AbstractImporter implements ImporterInterface
 {
     /**
-     * @var \Dcat\Admin\Grid
+     * @var Grid
      */
     protected $grid;
 
@@ -114,7 +115,7 @@ abstract class AbstractImporter implements ImporterInterface
         $titles = $this->titles();
         $filename = admin_trans_label().'-template.xlsx';
 
-        return \Dcat\EasyExcel\Excel::export($titles ? [array_values($titles)] : [])
+        return Excel::export($titles ? [array_values($titles)] : [])
             ->headings(false)
             ->download($filename);
     }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Grid;
 
+use Dcat\Admin\Grid;
+use Dcat\Admin\Grid\Filter;
 use Dcat\Admin\Grid\Filter\DateRange;
 use Dcat\Admin\Grid\Filter\Presenter\DateRangeQuick;
 use Dcat\Admin\Grid\Filter\Presenter\Toggle as TogglePresenter;
@@ -17,10 +19,10 @@ class FilterTest extends TestCase
 {
     protected function attachParentFilter(object $filter): void
     {
-        $grid = $this->createMock(\Dcat\Admin\Grid::class);
+        $grid = $this->createMock(Grid::class);
         $grid->method('makeName')->willReturnCallback(fn ($name) => $name);
 
-        $parentFilter = $this->createMock(\Dcat\Admin\Grid\Filter::class);
+        $parentFilter = $this->createMock(Filter::class);
         $parentFilter->method('grid')->willReturn($grid);
 
         $filter->setParent($parentFilter);

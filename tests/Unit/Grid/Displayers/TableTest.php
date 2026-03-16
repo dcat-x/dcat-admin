@@ -6,6 +6,7 @@ namespace Dcat\Admin\Tests\Unit\Grid\Displayers;
 
 use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Column;
+use Dcat\Admin\Grid\Displayers\AbstractDisplayer;
 use Dcat\Admin\Grid\Displayers\Table;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
@@ -263,6 +264,6 @@ class TableTest extends TestCase
     {
         $displayer = $this->makeDisplayer([]);
 
-        $this->assertInstanceOf(\Dcat\Admin\Grid\Displayers\AbstractDisplayer::class, $displayer);
+        $this->assertInstanceOf(AbstractDisplayer::class, $displayer);
     }
 }

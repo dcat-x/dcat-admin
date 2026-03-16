@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Feature;
 
+use Dcat\Admin\Console\InstallCommand;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Console\OutputStyle;
 use Illuminate\Filesystem\Filesystem;
@@ -61,7 +62,7 @@ class InstallTest extends TestCase
     public function test_init_admin_directory_creates_structure(): void
     {
         // 直接调用 InstallCommand 的目录初始化（跳过数据库部分）
-        $command = new \Dcat\Admin\Console\InstallCommand;
+        $command = new InstallCommand;
         $command->setLaravel($this->app);
         $command->setOutput(new OutputStyle(new ArrayInput([]), new NullOutput));
 
@@ -91,7 +92,7 @@ class InstallTest extends TestCase
 
     public function test_generated_controllers_have_correct_namespace(): void
     {
-        $command = new \Dcat\Admin\Console\InstallCommand;
+        $command = new InstallCommand;
         $command->setLaravel($this->app);
         $command->setOutput(new OutputStyle(new ArrayInput([]), new NullOutput));
 
@@ -111,7 +112,7 @@ class InstallTest extends TestCase
         // 先创建目录
         $this->files->makeDirectory($this->testAdminDir, 0755, true);
 
-        $command = new \Dcat\Admin\Console\InstallCommand;
+        $command = new InstallCommand;
         $command->setLaravel($this->app);
         $command->setOutput(new OutputStyle(new ArrayInput([]), new NullOutput));
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Grid\Filter\Presenter;
 
+use Dcat\Admin\Grid\Filter\AbstractFilter;
 use Dcat\Admin\Grid\Filter\Presenter\BatchInput;
 use Dcat\Admin\Grid\Filter\Presenter\Presenter;
 use Dcat\Admin\Tests\TestCase;
@@ -243,7 +244,7 @@ class BatchInputTest extends TestCase
         $ref->setAccessible(true);
 
         // Without a parent filter, value() will fail, but model is null so it returns early
-        $filter = $this->createMock(\Dcat\Admin\Grid\Filter\AbstractFilter::class);
+        $filter = $this->createMock(AbstractFilter::class);
         $filter->method('getValue')->willReturn(null);
         $filter->method('getDefault')->willReturn(null);
         $batch->setParent($filter);
@@ -255,7 +256,7 @@ class BatchInputTest extends TestCase
     {
         $batch = $this->makeBatchInput();
 
-        $filter = $this->createMock(\Dcat\Admin\Grid\Filter\AbstractFilter::class);
+        $filter = $this->createMock(AbstractFilter::class);
         $filter->method('getValue')->willReturn('');
         $filter->method('getDefault')->willReturn(null);
         $batch->setParent($filter);
@@ -270,7 +271,7 @@ class BatchInputTest extends TestCase
     {
         $batch = $this->makeBatchInput();
 
-        $filter = $this->createMock(\Dcat\Admin\Grid\Filter\AbstractFilter::class);
+        $filter = $this->createMock(AbstractFilter::class);
         $filter->method('getValue')->willReturn('1,2,3');
         $filter->method('getDefault')->willReturn(null);
         $batch->setParent($filter);

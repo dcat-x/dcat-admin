@@ -8,6 +8,7 @@ use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Tools;
 use Dcat\Admin\Grid\Tools\CreateButton;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Contracts\Support\Renderable;
 use Mockery;
 
 class CreateButtonTest extends TestCase
@@ -186,6 +187,6 @@ class CreateButtonTest extends TestCase
         $grid = $this->createMockGrid();
         $button = new CreateButton($grid);
 
-        $this->assertInstanceOf(\Illuminate\Contracts\Support\Renderable::class, $button);
+        $this->assertInstanceOf(Renderable::class, $button);
     }
 }

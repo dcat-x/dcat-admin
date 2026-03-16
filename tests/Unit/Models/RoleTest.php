@@ -6,6 +6,8 @@ namespace Dcat\Admin\Tests\Unit\Models;
 
 use Dcat\Admin\Models\Role;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Collection;
 use Mockery;
 
 class RoleTest extends TestCase
@@ -65,7 +67,7 @@ class RoleTest extends TestCase
         $returnType = $method->getReturnType();
 
         $this->assertNotNull($returnType);
-        $this->assertSame(\Illuminate\Database\Eloquent\Relations\BelongsToMany::class, $returnType->getName());
+        $this->assertSame(BelongsToMany::class, $returnType->getName());
     }
 
     public function test_permissions_relationship_returns_belongs_to_many(): void
@@ -74,7 +76,7 @@ class RoleTest extends TestCase
         $returnType = $method->getReturnType();
 
         $this->assertNotNull($returnType);
-        $this->assertSame(\Illuminate\Database\Eloquent\Relations\BelongsToMany::class, $returnType->getName());
+        $this->assertSame(BelongsToMany::class, $returnType->getName());
     }
 
     public function test_menus_relationship_returns_belongs_to_many(): void
@@ -83,12 +85,12 @@ class RoleTest extends TestCase
         $returnType = $method->getReturnType();
 
         $this->assertNotNull($returnType);
-        $this->assertSame(\Illuminate\Database\Eloquent\Relations\BelongsToMany::class, $returnType->getName());
+        $this->assertSame(BelongsToMany::class, $returnType->getName());
     }
 
     public function test_can_returns_true_when_permission_exists(): void
     {
-        $relation = Mockery::mock(\Illuminate\Database\Eloquent\Relations\BelongsToMany::class);
+        $relation = Mockery::mock(BelongsToMany::class);
         $relation->shouldReceive('where')
             ->with('slug', 'posts.edit')
             ->once()
@@ -107,7 +109,7 @@ class RoleTest extends TestCase
 
     public function test_cannot_returns_true_when_permission_does_not_exist(): void
     {
-        $relation = Mockery::mock(\Illuminate\Database\Eloquent\Relations\BelongsToMany::class);
+        $relation = Mockery::mock(BelongsToMany::class);
         $relation->shouldReceive('where')
             ->with('slug', 'posts.delete')
             ->once()
@@ -128,7 +130,7 @@ class RoleTest extends TestCase
     {
         $result = Role::getPermissionId([]);
 
-        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $result);
+        $this->assertInstanceOf(Collection::class, $result);
         $this->assertTrue($result->isEmpty());
     }
 
@@ -165,7 +167,7 @@ class RoleTest extends TestCase
         $relation = $role->departments();
 
         $this->assertInstanceOf(
-            \Illuminate\Database\Eloquent\Relations\BelongsToMany::class,
+            BelongsToMany::class,
             $relation
         );
     }
@@ -181,7 +183,7 @@ class RoleTest extends TestCase
         $relation = $role->dataRules();
 
         $this->assertInstanceOf(
-            \Illuminate\Database\Eloquent\Relations\BelongsToMany::class,
+            BelongsToMany::class,
             $relation
         );
     }

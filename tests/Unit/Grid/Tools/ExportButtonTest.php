@@ -11,6 +11,7 @@ use Dcat\Admin\Grid\Tools;
 use Dcat\Admin\Grid\Tools\ExportButton;
 use Dcat\Admin\Layout\Asset;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Contracts\Support\Renderable;
 use Mockery;
 
 class ExportButtonTest extends TestCase
@@ -95,7 +96,7 @@ class ExportButtonTest extends TestCase
         $grid = $this->createMockGrid();
         $button = new ExportButton($grid);
 
-        $this->assertInstanceOf(\Illuminate\Contracts\Support\Renderable::class, $button);
+        $this->assertInstanceOf(Renderable::class, $button);
     }
 
     // -------------------------------------------------------------------------

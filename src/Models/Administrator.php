@@ -9,6 +9,7 @@ use Dcat\Admin\Traits\HasPermissions;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -93,7 +94,7 @@ class Administrator extends Model implements AuthenticatableContract, Authorizab
         return $this->storageUrl($storage, $path);
     }
 
-    protected function storageUrl(\Illuminate\Contracts\Filesystem\Filesystem $storage, string $path): string
+    protected function storageUrl(Filesystem $storage, string $path): string
     {
         /** @var FilesystemAdapter $adapter */
         $adapter = $storage;

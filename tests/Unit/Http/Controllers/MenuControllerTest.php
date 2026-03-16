@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Http\Controllers;
 
+use Dcat\Admin\Form;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Http\Controllers\MenuController;
+use Dcat\Admin\Layout\Content;
+use Dcat\Admin\Models\Menu;
 use Dcat\Admin\Tests\TestCase;
+use Dcat\Admin\Tree;
 use Mockery;
 
 class MenuControllerTest extends TestCase
@@ -21,7 +25,7 @@ class MenuControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->app['config']->set('admin.database.menu_model', \Dcat\Admin\Models\Menu::class);
+        $this->app['config']->set('admin.database.menu_model', Menu::class);
     }
 
     public function test_controller_extends_admin_controller(): void
@@ -63,12 +67,12 @@ class MenuControllerTest extends TestCase
     {
         $controller = new MenuController;
 
-        $this->assertInstanceOf(\Dcat\Admin\Form::class, $controller->form());
+        $this->assertInstanceOf(Form::class, $controller->form());
     }
 
     public function test_index_builds_content_with_row_callback_body(): void
     {
-        $content = Mockery::mock(\Dcat\Admin\Layout\Content::class);
+        $content = Mockery::mock(Content::class);
         $content->shouldReceive('title')->once()->andReturnSelf();
         $content->shouldReceive('description')->once()->andReturnSelf();
         $content->shouldReceive('body')->once()->with(Mockery::type(\Closure::class))->andReturnSelf();
@@ -83,12 +87,12 @@ class MenuControllerTest extends TestCase
     {
         $controller = new class extends MenuController
         {
-            public function exposeTreeView(): \Dcat\Admin\Tree
+            public function exposeTreeView(): Tree
             {
                 return $this->treeView();
             }
         };
 
-        $this->assertInstanceOf(\Dcat\Admin\Tree::class, $controller->exposeTreeView());
+        $this->assertInstanceOf(Tree::class, $controller->exposeTreeView());
     }
 }

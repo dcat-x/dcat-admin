@@ -6,6 +6,9 @@ namespace Dcat\Admin\Tests\Unit;
 
 use Dcat\Admin\Show;
 use Dcat\Admin\Tests\TestCase;
+use Dcat\Admin\Traits\HasBuilderEvents;
+use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Support\Traits\Macroable;
 use Mockery;
 use ReflectionClass;
 use ReflectionProperty;
@@ -21,21 +24,21 @@ class ShowTest extends TestCase
     public function test_implements_renderable(): void
     {
         $ref = new ReflectionClass(Show::class);
-        $this->assertTrue($ref->implementsInterface(\Illuminate\Contracts\Support\Renderable::class));
+        $this->assertTrue($ref->implementsInterface(Renderable::class));
     }
 
     public function test_uses_macroable_trait(): void
     {
         $ref = new ReflectionClass(Show::class);
         $traits = $this->getAllTraits($ref);
-        $this->assertContains(\Illuminate\Support\Traits\Macroable::class, $traits);
+        $this->assertContains(Macroable::class, $traits);
     }
 
     public function test_uses_has_builder_events_trait(): void
     {
         $ref = new ReflectionClass(Show::class);
         $traits = $this->getAllTraits($ref);
-        $this->assertContains(\Dcat\Admin\Traits\HasBuilderEvents::class, $traits);
+        $this->assertContains(HasBuilderEvents::class, $traits);
     }
 
     public function test_view_default_value(): void

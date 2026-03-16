@@ -8,7 +8,7 @@ use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Importers\ImporterInterface;
 
 /**
- * @mixin Grid\Importers\AbstractImporter
+ * @mixin Importers\AbstractImporter
  */
 class Importer
 {
@@ -23,7 +23,7 @@ class Importer
     protected $grid;
 
     /**
-     * @var Grid\Importers\AbstractImporter|ImporterInterface|null
+     * @var Importers\AbstractImporter|ImporterInterface|null
      */
     protected $driver;
 
@@ -38,8 +38,8 @@ class Importer
     }
 
     /**
-     * @param  string|Grid\Importers\AbstractImporter|ImporterInterface|null  $driver
-     * @return Grid\Importers\AbstractImporter|ImporterInterface
+     * @param  string|Importers\AbstractImporter|ImporterInterface|null  $driver
+     * @return Importers\AbstractImporter|ImporterInterface
      */
     public function resolve($driver = null)
     {
@@ -47,7 +47,7 @@ class Importer
             return $this->driver;
         }
 
-        if ($driver && $driver instanceof Grid\Importers\AbstractImporter) {
+        if ($driver && $driver instanceof Importers\AbstractImporter) {
             $this->driver = $driver->setGrid($this->grid);
         } elseif ($driver && $driver instanceof ImporterInterface) {
             $this->driver = $driver;
@@ -86,11 +86,11 @@ class Importer
     }
 
     /**
-     * @return Grid\Importers\ExcelImporter
+     * @return Importers\ExcelImporter
      */
     public function makeDefaultDriver()
     {
-        return Grid\Importers\ExcelImporter::make()->setGrid($this->grid);
+        return Importers\ExcelImporter::make()->setGrid($this->grid);
     }
 
     /**

@@ -7,8 +7,10 @@ namespace Dcat\Admin\Traits;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Http\JsonResponse;
 use Dcat\Admin\Support\ErrorCode;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
+use Illuminate\Validation\Validator;
 
 trait HasFormResponse
 {
@@ -25,8 +27,8 @@ trait HasFormResponse
     /**
      * 返回字段验证错误信息.
      *
-     * @param  array|MessageBag|\Illuminate\Validation\Validator  $validationMessages
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     * @param  array|MessageBag|Validator  $validationMessages
+     * @return \Illuminate\Http\JsonResponse|RedirectResponse
      */
     public function validationErrorsResponse($validationMessages)
     {

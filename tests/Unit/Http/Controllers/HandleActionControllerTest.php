@@ -7,6 +7,7 @@ namespace Dcat\Admin\Tests\Unit\Http\Controllers;
 use Dcat\Admin\Actions\Action;
 use Dcat\Admin\Exception\AdminException;
 use Dcat\Admin\Http\Controllers\HandleActionController;
+use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Http\Request;
 
@@ -43,7 +44,7 @@ class HandleActionControllerTest extends TestCase
         ]);
         $this->app['config']->set('auth.providers.admin', [
             'driver' => 'eloquent',
-            'model' => \Dcat\Admin\Models\Administrator::class,
+            'model' => Administrator::class,
         ]);
 
         $this->controller = new HandleActionController;

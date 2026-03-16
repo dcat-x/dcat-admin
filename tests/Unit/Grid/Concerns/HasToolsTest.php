@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Grid\Concerns;
 
+use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Concerns\HasTools;
 use Dcat\Admin\Grid\Tools;
 use Dcat\Admin\Tests\TestCase;
@@ -248,7 +249,7 @@ class HasToolsTest extends TestCase
     }
 }
 
-class HasToolsTestHelper extends \Dcat\Admin\Grid
+class HasToolsTestHelper extends Grid
 {
     use HasTools;
 

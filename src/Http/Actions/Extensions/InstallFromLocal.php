@@ -13,7 +13,7 @@ class InstallFromLocal extends AbstractTool
     protected $style = 'btn btn-primary';
 
     /**
-     * @return string|\Dcat\Admin\Widgets\Modal
+     * @return string|Modal
      */
     public function html()
     {

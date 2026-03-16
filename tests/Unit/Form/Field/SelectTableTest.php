@@ -6,6 +6,7 @@ namespace Dcat\Admin\Tests\Unit\Form\Field;
 
 use Dcat\Admin\Form\Field;
 use Dcat\Admin\Form\Field\SelectTable;
+use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
 
@@ -62,7 +63,7 @@ class SelectTableTest extends TestCase
     public function test_model_sets_pluck_columns_and_options_callback(): void
     {
         $field = new SelectTable('user_id', 'User');
-        $result = $field->model(\Dcat\Admin\Models\Administrator::class, 'id', 'name');
+        $result = $field->model(Administrator::class, 'id', 'name');
 
         $this->assertSame($field, $result);
 

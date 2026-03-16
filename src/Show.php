@@ -54,7 +54,7 @@ class Show implements Renderable
     protected $keyName = 'id';
 
     /**
-     * @var Fluent|\Illuminate\Database\Eloquent\Model|null
+     * @var Fluent|Model|null
      */
     protected $model;
 
@@ -92,7 +92,7 @@ class Show implements Renderable
     protected $panel;
 
     /**
-     * @var \Illuminate\Support\Collection
+     * @var Collection
      */
     protected $rows;
 
@@ -102,7 +102,7 @@ class Show implements Renderable
      * @param  mixed  $id  $id
      * @param  Model|Builder|Repository|array|Arrayable  $model
      */
-    public function __construct($id = null, $model = null, ?\Closure $builder = null)
+    public function __construct($id = null, $model = null, ?Closure $builder = null)
     {
         // 当传入1-2个参数且第一个参数不是标量时，重新分配参数
         if (func_num_args() <= 2 && ! is_scalar($id)) {
@@ -206,8 +206,8 @@ class Show implements Renderable
     }
 
     /**
-     * @param  Fluent|\Illuminate\Database\Eloquent\Model|array|null  $model
-     * @return Fluent|$this|\Illuminate\Database\Eloquent\Model
+     * @param  Fluent|Model|array|null  $model
+     * @return Fluent|$this|Model
      */
     public function model($model = null)
     {
@@ -253,7 +253,7 @@ class Show implements Renderable
     /**
      * @return $this
      */
-    public function wrap(\Closure $wrapper)
+    public function wrap(Closure $wrapper)
     {
         $this->panel->wrap($wrapper);
 
@@ -288,7 +288,7 @@ class Show implements Renderable
     }
 
     /**
-     * @param  \Closure|array|AbstractTool|Renderable|Htmlable|string  $callback
+     * @param  Closure|array|AbstractTool|Renderable|Htmlable|string  $callback
      * @return $this|Tools
      */
     public function tools($callback = null)
@@ -297,7 +297,7 @@ class Show implements Renderable
             return $this->panel->tools();
         }
 
-        if ($callback instanceof \Closure) {
+        if ($callback instanceof Closure) {
             $callback->call($this->model, $this->panel->tools());
 
             return $this;
@@ -372,8 +372,8 @@ class Show implements Renderable
      * Add a relation to show.
      *
      * @param  string  $name
-     * @param  string|\Closure  $label
-     * @param  null|\Closure  $builder
+     * @param  string|Closure  $label
+     * @param  null|Closure  $builder
      * @return Relation
      */
     public function relation($name, $label, $builder = null)
@@ -410,7 +410,7 @@ class Show implements Renderable
      * Add a relation panel to show.
      *
      * @param  string  $name
-     * @param  \Closure  $builder
+     * @param  Closure  $builder
      * @param  string  $label
      * @return Relation
      */
@@ -629,9 +629,9 @@ class Show implements Renderable
      */
     protected function handleRelationField($method, $arguments)
     {
-        if (count($arguments) == 1 && $arguments[0] instanceof \Closure) {
+        if (count($arguments) == 1 && $arguments[0] instanceof Closure) {
             return $this->addRelation($method, $arguments[0]);
-        } elseif (count($arguments) == 2 && $arguments[1] instanceof \Closure) {
+        } elseif (count($arguments) == 2 && $arguments[1] instanceof Closure) {
             return $this->addRelation($method, $arguments[1], $arguments[0]);
         }
 
@@ -690,7 +690,7 @@ class Show implements Renderable
     }
 
     /**
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function rows()
     {

@@ -6,6 +6,7 @@ namespace Dcat\Admin\Scaffold;
 
 use Dcat\Admin\Exception\AdminException;
 use Dcat\Admin\Support\Helper;
+use Illuminate\Filesystem\Filesystem;
 
 class ControllerCreator
 {
@@ -21,7 +22,7 @@ class ControllerCreator
     /**
      * The filesystem instance.
      *
-     * @var \Illuminate\Filesystem\Filesystem
+     * @var Filesystem
      */
     protected $files;
 
@@ -29,7 +30,7 @@ class ControllerCreator
      * ControllerCreator constructor.
      *
      * @param  string  $name
-     * @param  \Illuminate\Filesystem\Filesystem|null  $files
+     * @param  Filesystem|null  $files
      */
     public function __construct($name, $files = null)
     {

@@ -9,6 +9,7 @@ use Dcat\Admin\Exception\RuntimeException;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -37,7 +38,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
     protected $updatedAtColumn = 'updated_at';
 
     /**
-     * @var \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder
+     * @var Builder|\Illuminate\Database\Query\Builder
      */
     protected $queryBuilder;
 
@@ -116,7 +117,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
     /**
      * 查询Grid表格数据.
      *
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|Collection|array
+     * @return LengthAwarePaginator|Collection|array
      */
     public function get(Grid\Model $model)
     {

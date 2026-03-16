@@ -17,7 +17,7 @@ use Illuminate\Support\Str;
 abstract class AbstractExporter implements ExporterInterface
 {
     /**
-     * @var \Dcat\Admin\Grid
+     * @var Grid
      */
     protected $grid;
 
@@ -185,7 +185,7 @@ abstract class AbstractExporter implements ExporterInterface
     /**
      * Get data with export query.
      *
-     * @return array|\Illuminate\Support\Collection|mixed
+     * @return array|Collection|mixed
      */
     public function buildData(?int $page = null, ?int $perPage = null)
     {

@@ -6,6 +6,7 @@ namespace Dcat\Admin\Form;
 
 use Dcat\Admin\Form;
 use Dcat\Admin\Layout\Column;
+use Dcat\Admin\Layout\Row;
 use Dcat\Admin\Widgets\Form as WidgetForm;
 
 class Layout
@@ -104,7 +105,7 @@ class Layout
         $this->column($width, function (Column $column) use ($callback) {
             $this->form->layoutColumn = $column;
 
-            $column->row(function (\Dcat\Admin\Layout\Row $row) use ($callback) {
+            $column->row(function (Row $row) use ($callback) {
                 $form = $this->form();
 
                 $form->layoutRow = $row;
@@ -131,7 +132,7 @@ class Layout
      */
     public function form(?\Closure $callback = null)
     {
-        $form = new Form\BlockForm($this->form);
+        $form = new BlockForm($this->form);
 
         $form->disableResetButton();
         $form->disableSubmitButton();

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dcat\Admin\Models;
 
 use Dcat\Admin\Admin;
+use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Support\Facades\Cache;
 
 trait MenuCache
@@ -56,7 +57,7 @@ trait MenuCache
     /**
      * Get cache store.
      *
-     * @return \Illuminate\Contracts\Cache\Repository
+     * @return Repository
      */
     public function getStore()
     {

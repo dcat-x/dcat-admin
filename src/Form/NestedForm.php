@@ -42,7 +42,7 @@ class NestedForm extends WidgetForm
     /**
      * Fields in form.
      *
-     * @var Collection&iterable<\Dcat\Admin\Form\Field>
+     * @var Collection&iterable<Field>
      */
     protected $fields;
 
@@ -232,7 +232,7 @@ class NestedForm extends WidgetForm
                 $value = $field->prepare($value);
             }
 
-            if (($field instanceof Form\Field\Hidden) || ! Helper::equal($field->original(), $value)) {
+            if (($field instanceof Field\Hidden) || ! Helper::equal($field->original(), $value)) {
                 if (is_array($columns)) {
                     foreach ($columns as $name => $column) {
                         Arr::set($prepared, $column, $value[$name]);
@@ -298,7 +298,7 @@ class NestedForm extends WidgetForm
             $this->form->builder()->pushField((clone $field)->display(false));
         }
 
-        if ($field instanceof Form\Field\HasMany) {
+        if ($field instanceof Field\HasMany) {
             // HasMany以及array嵌套table，需要保存上级字段名
             $field->setParentRelationName($this->relationName, $this->key);
         }

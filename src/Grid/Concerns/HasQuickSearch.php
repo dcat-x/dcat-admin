@@ -10,6 +10,7 @@ use Dcat\Admin\Grid\Events\ApplyQuickSearch;
 use Dcat\Admin\Grid\Model;
 use Dcat\Admin\Grid\Tools;
 use Dcat\Admin\Support\Helper;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
@@ -73,7 +74,7 @@ trait HasQuickSearch
     }
 
     /**
-     * @return \Illuminate\Contracts\View\View|string
+     * @return View|string
      */
     public function renderQuickSearch()
     {

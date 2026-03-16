@@ -8,6 +8,7 @@ use Dcat\Admin\Admin;
 use Dcat\Admin\Grid\Events\Fetched;
 use Dcat\Admin\Grid\Events\Fetching;
 use Dcat\Admin\Repositories\EloquentRepository;
+use Dcat\Admin\Repositories\Repository;
 use Dcat\Admin\Support\Helper;
 use Illuminate\Support\Collection;
 
@@ -166,7 +167,7 @@ HTML
             $sortable
             && $this->findQueryByMethod('orderBy')->isEmpty()
             && $this->findQueryByMethod('orderByDesc')->isEmpty()
-            && $this->repository instanceof \Dcat\Admin\Repositories\Repository
+            && $this->repository instanceof Repository
             && ($orderColumn = $this->repository->getOrderColumn())
         ) {
             $this->orderBy($orderColumn)
@@ -180,7 +181,7 @@ HTML
             return;
         }
 
-        if ($this->repository instanceof \Dcat\Admin\Repositories\Repository) {
+        if ($this->repository instanceof Repository) {
             $this->where($this->repository->getParentColumn(), $this->getParentIdFromRequest());
         }
     }
@@ -318,7 +319,7 @@ HTML
             return null;
         }
 
-        /** @var \Dcat\Admin\Repositories\Repository $repository */
+        /** @var Repository $repository */
         $repository = $this->repository;
 
         return (string) $repository->getParentColumn();

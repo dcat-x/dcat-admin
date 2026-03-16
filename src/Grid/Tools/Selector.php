@@ -6,6 +6,7 @@ namespace Dcat\Admin\Grid\Tools;
 
 use Dcat\Admin\Grid;
 use Dcat\Admin\Support\Helper;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -195,7 +196,7 @@ class Selector
     }
 
     /**
-     * @return string|\Illuminate\Contracts\View\View
+     * @return string|View
      */
     public function render()
     {

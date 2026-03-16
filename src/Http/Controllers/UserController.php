@@ -12,6 +12,7 @@ use Dcat\Admin\Models\Administrator as AdministratorModel;
 use Dcat\Admin\Show;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Widgets\Tree;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends AdminController
 {
@@ -227,12 +228,12 @@ class UserController extends AdminController
                     $pivotTable = config('admin.database.department_users_table', 'admin_department_users');
 
                     // 先将所有部门设为非主部门
-                    \Illuminate\Support\Facades\DB::table($pivotTable)
+                    DB::table($pivotTable)
                         ->where('user_id', $form->getKey())
                         ->update(['is_primary' => 0]);
 
                     // 设置主部门
-                    \Illuminate\Support\Facades\DB::table($pivotTable)
+                    DB::table($pivotTable)
                         ->where('user_id', $form->getKey())
                         ->where('department_id', $primaryDepartmentId)
                         ->update(['is_primary' => 1]);

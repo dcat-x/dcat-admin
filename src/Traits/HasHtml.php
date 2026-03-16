@@ -7,6 +7,7 @@ namespace Dcat\Admin\Traits;
 use Dcat\Admin\Support\Helper;
 use DOMDocument;
 use DOMElement;
+use Illuminate\Contracts\Support\Renderable;
 
 trait HasHtml
 {
@@ -41,7 +42,7 @@ trait HasHtml
     }
 
     /**
-     * @param  string|\Illuminate\Contracts\Support\Renderable  $content
+     * @param  string|Renderable  $content
      * @return array ['html' => $html, 'script' => $script]
      *
      * @throws \Throwable

@@ -11,6 +11,7 @@ use Dcat\Admin\Support\Helper;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 /**
  * Class HasMany.
@@ -384,11 +385,11 @@ class HasMany extends Field
         }
     }
 
-    protected function setNestedFormDefaultKey(Form\NestedForm $form)
+    protected function setNestedFormDefaultKey(NestedForm $form)
     {
         if ($this->parentRelationName) {
             // hasmany嵌套table时需要特殊处理
-            $form->setDefaultKey(Form\NestedForm::DEFAULT_KEY_PREFIX.$this->getNestedFormDefaultKeyName());
+            $form->setDefaultKey(NestedForm::DEFAULT_KEY_PREFIX.$this->getNestedFormDefaultKeyName());
         }
     }
 
@@ -400,7 +401,7 @@ class HasMany extends Field
      */
     public function buildNestedForm($key = null)
     {
-        $form = new Form\NestedForm($this->getNestedFormColumnName(), $key);
+        $form = new NestedForm($this->getNestedFormColumnName(), $key);
 
         $this->setNestedFormDefaultKey($form);
 
@@ -419,7 +420,7 @@ class HasMany extends Field
         return $form;
     }
 
-    protected function invokeNestedBuilder(Form\NestedForm $form): void
+    protected function invokeNestedBuilder(NestedForm $form): void
     {
         ($this->builder)($form);
     }
@@ -548,7 +549,7 @@ class HasMany extends Field
     /**
      * Render the `HasMany` field.
      *
-     * @return \Illuminate\View\View|string
+     * @return View|string
      *
      * @throws \Exception
      */

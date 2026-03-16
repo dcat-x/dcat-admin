@@ -6,6 +6,7 @@ namespace Dcat\Admin\Tests\Unit\Http\Controllers;
 
 use Dcat\Admin\Http\Controllers\ScaffoldController;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Database\Connection;
 use Illuminate\Support\Facades\DB;
 
 class ScaffoldControllerTest extends TestCase
@@ -62,7 +63,7 @@ class ScaffoldControllerTest extends TestCase
         $capturedSql = null;
         $capturedBindings = null;
 
-        $connection = \Mockery::mock(\Illuminate\Database\Connection::class);
+        $connection = \Mockery::mock(Connection::class);
         $connection->shouldReceive('select')
             ->once()
             ->withArgs(function ($sql, $bindings) use (&$capturedSql, &$capturedBindings) {
@@ -113,7 +114,7 @@ class ScaffoldControllerTest extends TestCase
         $capturedSql = null;
         $capturedBindings = null;
 
-        $connection = \Mockery::mock(\Illuminate\Database\Connection::class);
+        $connection = \Mockery::mock(Connection::class);
         $connection->shouldReceive('select')
             ->once()
             ->withArgs(function ($sql, $bindings) use (&$capturedSql, &$capturedBindings) {

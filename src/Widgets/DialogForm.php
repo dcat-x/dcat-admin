@@ -50,7 +50,7 @@ class DialogForm
     }
 
     /**
-     * @param  array|\Illuminate\Contracts\Support\Arrayable  $options
+     * @param  array|Arrayable  $options
      * @return $this
      */
     public function options($options = [])

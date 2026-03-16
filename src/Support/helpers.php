@@ -3,11 +3,24 @@
 declare(strict_types=1);
 
 use Dcat\Admin\Admin;
+use Dcat\Admin\Color;
+use Dcat\Admin\Extend\ServiceProvider;
 use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Support\Helper;
+use Dcat\Admin\Support\JavaScript;
+use Dcat\Admin\Support\Setting;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Contracts\Translation\Translator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\MessageBag;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -17,7 +30,7 @@ if (! function_exists('admin_setting')) {
      *
      * @param  string|array  $key
      * @param  mixed  $default
-     * @return \Dcat\Admin\Support\Setting|mixed
+     * @return Setting|mixed
      */
     function admin_setting($key = null, $default = null)
     {
@@ -40,7 +53,7 @@ if (! function_exists('admin_setting_array')) {
      * 获取配置参数并转化为数组格式.
      *
      * @param  mixed  $default
-     * @return \Dcat\Admin\Support\Setting|mixed
+     * @return Setting|mixed
      */
     function admin_setting_array(?string $key, $default = [])
     {
@@ -61,7 +74,7 @@ if (! function_exists('admin_extension_setting')) {
     {
         $extension = app($extension);
 
-        if ($extension instanceof Dcat\Admin\Extend\ServiceProvider) {
+        if ($extension instanceof ServiceProvider) {
             return $extension->config($key, $default);
         }
     }
@@ -149,7 +162,7 @@ if (! function_exists('admin_trans_field')) {
      * Translate the field name.
      *
      * @param  null  $locale
-     * @return array|\Illuminate\Contracts\Translation\Translator|null|string
+     * @return array|Translator|null|string
      */
     function admin_trans_field($field, $locale = null)
     {
@@ -163,7 +176,7 @@ if (! function_exists('admin_trans_label')) {
      *
      * @param  array  $replace
      * @param  null  $locale
-     * @return array|\Illuminate\Contracts\Translation\Translator|null|string
+     * @return array|Translator|null|string
      */
     function admin_trans_label($label = null, $replace = [], $locale = null)
     {
@@ -177,7 +190,7 @@ if (! function_exists('admin_trans_option')) {
      *
      * @param  array  $replace
      * @param  null  $locale
-     * @return array|\Illuminate\Contracts\Translation\Translator|null|string
+     * @return array|Translator|null|string
      */
     function admin_trans_option($optionValue, $field, $replace = [], $locale = null)
     {
@@ -194,7 +207,7 @@ if (! function_exists('admin_trans')) {
      * @param  string  $key
      * @param  array  $replace
      * @param  string  $locale
-     * @return \Illuminate\Contracts\Translation\Translator|string|array|null
+     * @return Translator|string|array|null
      */
     function admin_trans($key, $replace = [], $locale = null)
     {
@@ -419,7 +432,7 @@ if (! function_exists('admin_extension_path')) {
 
 if (! function_exists('admin_color')) {
     /**
-     * @return string|\Dcat\Admin\Color
+     * @return string|Color
      */
     function admin_color(?string $color = null)
     {
@@ -436,7 +449,7 @@ if (! function_exists('admin_view')) {
      * @param  string  $view
      * @return string
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     function admin_view($view, array $data = [])
     {
@@ -507,7 +520,7 @@ if (! function_exists('admin_javascript')) {
      */
     function admin_javascript(string $scripts)
     {
-        return Dcat\Admin\Support\JavaScript::make($scripts);
+        return JavaScript::make($scripts);
     }
 }
 
@@ -518,7 +531,7 @@ if (! function_exists('admin_javascript_json')) {
      */
     function admin_javascript_json($data)
     {
-        return Dcat\Admin\Support\JavaScript::format($data);
+        return JavaScript::format($data);
     }
 }
 
@@ -526,9 +539,9 @@ if (! function_exists('admin_exit')) {
     /**
      * 响应数据并中断后续逻辑.
      *
-     * @param  Response|string|array|\Illuminate\Contracts\Support\Renderable  $response
+     * @param  Response|string|array|Renderable  $response
      *
-     * @throws \Illuminate\Http\Exceptions\HttpResponseException
+     * @throws HttpResponseException
      */
     function admin_exit($response = '')
     {
@@ -541,7 +554,7 @@ if (! function_exists('admin_redirect')) {
      * 跳转.
      *
      * @param  string  $to
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
+     * @return Application|ResponseFactory|JsonResponse|RedirectResponse|Illuminate\Http\Response|Redirector
      */
     function admin_redirect($to, int $statusCode = 302, ?Request $request = null)
     {
@@ -615,7 +628,7 @@ if (! function_exists('ali_sign_url')) {
             return (string) $storage->temporaryUrl($path, now()->addMinutes($expireMinutes));
         }
 
-        throw new \RuntimeException('Configured storage driver does not support temporary URLs.');
+        throw new RuntimeException('Configured storage driver does not support temporary URLs.');
     }
 
     /**
@@ -633,11 +646,11 @@ if (! function_exists('ali_sign_url')) {
 
         try {
             $diskName = $disk ?? config('admin.upload.oss.private_disk', 'oss-private');
-            $storage = \Illuminate\Support\Facades\Storage::disk($diskName);
+            $storage = Storage::disk($diskName);
 
             return admin_storage_temporary_url($storage, $path, $expireMinutes);
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::warning('Failed to generate signed URL', [
+        } catch (Exception $e) {
+            Log::warning('Failed to generate signed URL', [
                 'path' => $path,
                 'error' => $e->getMessage(),
             ]);

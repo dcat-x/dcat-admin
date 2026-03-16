@@ -96,7 +96,7 @@ class Zip extends ZipArchive
     public static function make($destination, $source, $options = [])
     {
         $zip = new self;
-        $zip->open($destination, ZIPARCHIVE::CREATE | ZipArchive::OVERWRITE);
+        $zip->open($destination, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
         if (is_string($source)) {
             $zip->add($source, $options);

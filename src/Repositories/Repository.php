@@ -8,7 +8,10 @@ use Dcat\Admin\Contracts\Repository as RepositoryInterface;
 use Dcat\Admin\Contracts\TreeRepository;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
+use Dcat\Admin\Http\JsonResponse;
 use Dcat\Admin\Show;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\Macroable;
 use RuntimeException;
@@ -85,7 +88,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
     /**
      * 获取Grid表格数据.
      *
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|Collection|array
+     * @return LengthAwarePaginator|Collection|array
      */
     public function get(Grid\Model $model)
     {
@@ -95,7 +98,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
     /**
      * 获取编辑页面数据.
      *
-     * @return array|\Illuminate\Contracts\Support\Arrayable
+     * @return array|Arrayable
      */
     public function edit(Form $form)
     {
@@ -105,7 +108,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
     /**
      * 获取详情页面数据.
      *
-     * @return array|\Illuminate\Contracts\Support\Arrayable
+     * @return array|Arrayable
      */
     public function detail(Show $show)
     {
@@ -115,7 +118,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
     /**
      * 新增记录.
      *
-     * @return int|bool|\Dcat\Admin\Http\JsonResponse
+     * @return int|bool|JsonResponse
      */
     public function store(Form $form)
     {
@@ -125,7 +128,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
     /**
      * 查询更新前的行数据.
      *
-     * @return array|\Illuminate\Contracts\Support\Arrayable
+     * @return array|Arrayable
      */
     public function updating(Form $form)
     {
@@ -135,7 +138,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
     /**
      * 更新数据.
      *
-     * @return bool|\Dcat\Admin\Http\JsonResponse
+     * @return bool|JsonResponse
      */
     public function update(Form $form)
     {
@@ -145,7 +148,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
     /**
      * 删除数据.
      *
-     * @return bool|int|\Dcat\Admin\Http\JsonResponse
+     * @return bool|int|JsonResponse
      */
     public function delete(Form $form, array $deletingData)
     {

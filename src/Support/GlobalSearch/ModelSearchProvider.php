@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Support\GlobalSearch;
 
+use Illuminate\Database\Eloquent\Model;
+
 abstract class ModelSearchProvider implements SearchProviderInterface
 {
     /**
-     * @return class-string<\Illuminate\Database\Eloquent\Model>
+     * @return class-string<Model>
      */
     abstract protected function model(): string;
 
@@ -19,7 +21,7 @@ abstract class ModelSearchProvider implements SearchProviderInterface
     abstract protected function titleColumn(): string;
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Model|object  $model
+     * @param  Model|object  $model
      */
     abstract protected function url($model): string;
 

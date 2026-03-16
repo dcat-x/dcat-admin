@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dcat\Admin\Tests\Unit\Support\GlobalSearch;
 
 use Dcat\Admin\Support\GlobalSearch\ModelSearchProvider;
+use Dcat\Admin\Support\GlobalSearch\SearchProviderInterface;
 use Dcat\Admin\Tests\TestCase;
 
 class ModelSearchProviderTest extends TestCase
@@ -21,7 +22,7 @@ class ModelSearchProviderTest extends TestCase
         $ref = new \ReflectionClass(ModelSearchProvider::class);
 
         $this->assertTrue($ref->implementsInterface(
-            \Dcat\Admin\Support\GlobalSearch\SearchProviderInterface::class
+            SearchProviderInterface::class
         ));
     }
 

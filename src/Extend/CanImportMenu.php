@@ -6,9 +6,10 @@ namespace Dcat\Admin\Extend;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * @property \Symfony\Component\Console\Output\OutputInterface $output
+ * @property OutputInterface $output
  */
 trait CanImportMenu
 {

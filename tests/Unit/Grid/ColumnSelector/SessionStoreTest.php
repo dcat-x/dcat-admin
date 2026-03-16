@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dcat\Admin\Tests\Unit\Grid\ColumnSelector;
 
 use Dcat\Admin\Contracts\Grid\ColumnSelectorStore;
+use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\ColumnSelector\SessionStore;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
@@ -28,7 +29,7 @@ class SessionStoreTest extends TestCase
     {
         $store = new SessionStore;
 
-        $grid = Mockery::mock(\Dcat\Admin\Grid::class);
+        $grid = Mockery::mock(Grid::class);
         $store->setGrid($grid);
 
         $ref = new \ReflectionProperty($store, 'grid');

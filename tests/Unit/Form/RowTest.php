@@ -9,6 +9,7 @@ use Dcat\Admin\Form\Row;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Fluent;
 use Mockery;
 
 class RowTest extends TestCase
@@ -157,7 +158,7 @@ class RowTest extends TestCase
     public function test_model_delegates_to_form(): void
     {
         $form = Mockery::mock(Form::class);
-        $model = new \Illuminate\Support\Fluent(['name' => 'test']);
+        $model = new Fluent(['name' => 'test']);
         $form->shouldReceive('model')->once()->andReturn($model);
 
         $row = new Row(function () {}, $form);

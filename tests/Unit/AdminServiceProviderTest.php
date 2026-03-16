@@ -5,7 +5,12 @@ declare(strict_types=1);
 namespace Dcat\Admin\Tests\Unit;
 
 use Dcat\Admin\AdminServiceProvider;
+use Dcat\Admin\Console\AdminCommand;
+use Dcat\Admin\Console\CreateUserCommand;
+use Dcat\Admin\Console\InstallCommand;
+use Dcat\Admin\Console\PublishCommand;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Support\ServiceProvider;
 use Mockery;
 use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionClass;
@@ -30,7 +35,7 @@ class AdminServiceProviderTest extends TestCase
     public function test_extends_service_provider(): void
     {
         $ref = new ReflectionClass(AdminServiceProvider::class);
-        $this->assertTrue($ref->isSubclassOf(\Illuminate\Support\ServiceProvider::class));
+        $this->assertTrue($ref->isSubclassOf(ServiceProvider::class));
     }
 
     public function test_commands_property_is_protected_array(): void
@@ -193,10 +198,10 @@ class AdminServiceProviderTest extends TestCase
     public static function expectedCommandProvider(): array
     {
         return [
-            [\Dcat\Admin\Console\AdminCommand::class],
-            [\Dcat\Admin\Console\InstallCommand::class],
-            [\Dcat\Admin\Console\PublishCommand::class],
-            [\Dcat\Admin\Console\CreateUserCommand::class],
+            [AdminCommand::class],
+            [InstallCommand::class],
+            [PublishCommand::class],
+            [CreateUserCommand::class],
         ];
     }
 

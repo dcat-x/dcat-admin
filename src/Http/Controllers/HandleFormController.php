@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Dcat\Admin\Http\Controllers;
 
 use Dcat\Admin\Exception\AdminException;
+use Dcat\Admin\Form\Field;
 use Dcat\Admin\Form\Field\Embeds;
+use Dcat\Admin\Form\Field\File;
 use Dcat\Admin\Form\Field\HasMany;
 use Dcat\Admin\Http\JsonResponse;
 use Dcat\Admin\Traits\HasUploadedFile;
@@ -47,12 +49,12 @@ class HandleFormController
             return $this->responseErrorMessage('Field not found.');
         }
 
-        /** @var \Dcat\Admin\Form\Field\File $field */
+        /** @var File $field */
         return $field->upload($this->file());
     }
 
     /**
-     * @return \Dcat\Admin\Form\Field|null
+     * @return Field|null
      */
     protected function getField(Request $request, $form)
     {
@@ -90,7 +92,7 @@ class HandleFormController
             return $this->responseErrorMessage('Field not found.');
         }
 
-        /** @var \Dcat\Admin\Form\Field\File $field */
+        /** @var File $field */
         $field->deleteFile($request->key);
 
         return $this->responseDeleted();

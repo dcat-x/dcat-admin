@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Widgets;
 
+use Dcat\Admin\Grid\LazyRenderable;
 use Dcat\Admin\Grid\LazyRenderable as LazyGrid;
 use Illuminate\Contracts\Support\Renderable;
 
@@ -45,7 +46,7 @@ class Box extends Widget
     /**
      * Set box content.
      *
-     * @param  string|\Dcat\Admin\Grid\LazyRenderable  $content
+     * @param  string|LazyRenderable  $content
      * @return $this
      */
     public function content($content)

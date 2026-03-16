@@ -9,6 +9,7 @@ use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Http\Controllers\DepartmentController;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Models\Department as DepartmentModel;
+use Dcat\Admin\Models\Role;
 use Dcat\Admin\Tests\TestCase;
 use Dcat\Admin\Tree;
 use Mockery;
@@ -21,7 +22,7 @@ class DepartmentControllerTest extends TestCase
 
         $this->app['config']->set('admin.database.departments_model', DepartmentModel::class);
         $this->app['config']->set('admin.database.departments_table', 'admin_departments');
-        $this->app['config']->set('admin.database.roles_model', \Dcat\Admin\Models\Role::class);
+        $this->app['config']->set('admin.database.roles_model', Role::class);
         $this->app['config']->set('admin.database.connection', 'testing');
     }
 

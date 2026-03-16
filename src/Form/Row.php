@@ -6,8 +6,12 @@ namespace Dcat\Admin\Form;
 
 use Dcat\Admin\Form;
 use Dcat\Admin\Widgets\Form as WidgetForm;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Fluent;
 
 /**
  * Class Row.
@@ -165,7 +169,7 @@ class Row implements Renderable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Support\Fluent|\Illuminate\Contracts\Support\Arrayable|void|null
+     * @return Model|Fluent|Arrayable|void|null
      */
     public function model()
     {
@@ -200,7 +204,7 @@ class Row implements Renderable
     /**
      * Render the row.
      *
-     * @return string|\Illuminate\Contracts\View\View
+     * @return string|View
      */
     public function render()
     {

@@ -6,6 +6,7 @@ namespace Dcat\Admin\Tests\Unit\Support;
 
 use Dcat\Admin\Support\DatabaseUpdater;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Support\Facades\DB;
 use Mockery;
 
 class DatabaseUpdaterTest extends TestCase
@@ -97,7 +98,7 @@ PHP
             ->once()
             ->andReturnUsing(fn ($callback) => $callback());
 
-        \Illuminate\Support\Facades\DB::shouldReceive('connection')
+        DB::shouldReceive('connection')
             ->once()
             ->with($updater->connection())
             ->andReturn($connection);

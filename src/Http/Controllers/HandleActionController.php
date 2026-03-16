@@ -7,12 +7,13 @@ namespace Dcat\Admin\Http\Controllers;
 use Dcat\Admin\Actions\Action;
 use Dcat\Admin\Actions\Response;
 use Dcat\Admin\Exception\AdminException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class HandleActionController
 {
     /**
-     * @return $this|\Illuminate\Http\JsonResponse
+     * @return $this|JsonResponse
      */
     public function handle(Request $request)
     {

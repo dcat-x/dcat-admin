@@ -6,6 +6,7 @@ namespace Dcat\Admin\Tests\Unit\Grid\Displayers;
 
 use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Column;
+use Dcat\Admin\Grid\Displayers\Editable;
 use Dcat\Admin\Grid\Displayers\Radio;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
@@ -87,7 +88,7 @@ class RadioTest extends TestCase
     {
         $displayer = $this->makeDisplayer(1);
 
-        $this->assertInstanceOf(\Dcat\Admin\Grid\Displayers\Editable::class, $displayer);
+        $this->assertInstanceOf(Editable::class, $displayer);
     }
 
     public function test_constructor_stores_value(): void

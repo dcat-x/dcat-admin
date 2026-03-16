@@ -6,6 +6,7 @@ namespace Dcat\Admin\Grid\Concerns;
 
 use Closure;
 use Dcat\Admin\Grid;
+use Illuminate\Config\Repository;
 use Illuminate\Contracts\Support\Renderable;
 
 trait HasActions
@@ -30,7 +31,7 @@ trait HasActions
     /**
      * Get action display class.
      *
-     * @return \Illuminate\Config\Repository|mixed|string
+     * @return Repository|mixed|string
      */
     public function getActionClass()
     {

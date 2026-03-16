@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Dcat\Admin\Tests\Unit\Http\Middleware;
 
 use Dcat\Admin\Http\Middleware\Authenticate;
+use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Mockery;
 
 class AuthenticateTest extends TestCase
@@ -25,7 +28,7 @@ class AuthenticateTest extends TestCase
         ]);
         $this->app['config']->set('auth.providers.admin', [
             'driver' => 'eloquent',
-            'model' => \Dcat\Admin\Models\Administrator::class,
+            'model' => Administrator::class,
         ]);
     }
 
@@ -52,10 +55,10 @@ class AuthenticateTest extends TestCase
 
     public function test_handle_passes_through_when_user_authenticated(): void
     {
-        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard = Mockery::mock(StatefulGuard::class);
         $guard->shouldReceive('guest')->andReturn(false);
 
-        \Illuminate\Support\Facades\Auth::shouldReceive('guard')
+        Auth::shouldReceive('guard')
             ->with('admin')
             ->andReturn($guard);
 
@@ -72,10 +75,10 @@ class AuthenticateTest extends TestCase
 
     public function test_handle_redirects_guest_to_login(): void
     {
-        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard = Mockery::mock(StatefulGuard::class);
         $guard->shouldReceive('guest')->andReturn(true);
 
-        \Illuminate\Support\Facades\Auth::shouldReceive('guard')
+        Auth::shouldReceive('guard')
             ->with('admin')
             ->andReturn($guard);
 

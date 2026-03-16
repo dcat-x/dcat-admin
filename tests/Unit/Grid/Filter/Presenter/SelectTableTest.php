@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dcat\Admin\Tests\Unit\Grid\Filter\Presenter;
 
 use Dcat\Admin\Grid\Filter\Presenter\SelectTable;
+use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
 
@@ -85,7 +86,7 @@ class SelectTableTest extends TestCase
     {
         $presenter = $this->makePresenterWithoutConstructor();
 
-        $result = $presenter->model(\Dcat\Admin\Models\Administrator::class, 'id', 'name');
+        $result = $presenter->model(Administrator::class, 'id', 'name');
 
         $this->assertSame($presenter, $result);
         $this->assertSame('name', $this->getProtectedProperty($presenter, 'visibleColumn'));

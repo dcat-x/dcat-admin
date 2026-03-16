@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Support;
 
+use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Support\DataPermission;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Http\Request;
@@ -22,7 +23,7 @@ class DataPermissionCacheTest extends TestCase
         ]);
         $this->app['config']->set('auth.providers.admin', [
             'driver' => 'eloquent',
-            'model' => \Dcat\Admin\Models\Administrator::class,
+            'model' => Administrator::class,
         ]);
 
         DataPermission::clearCache();
@@ -37,7 +38,7 @@ class DataPermissionCacheTest extends TestCase
 
     protected function createMockUser(int $id = 1)
     {
-        $user = Mockery::mock(\Dcat\Admin\Models\Administrator::class)->makePartial();
+        $user = Mockery::mock(Administrator::class)->makePartial();
         $user->id = $id;
         $user->shouldReceive('allRoles')->andReturn(collect());
 

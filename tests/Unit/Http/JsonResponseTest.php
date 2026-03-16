@@ -7,6 +7,7 @@ namespace Dcat\Admin\Tests\Unit\Http;
 use Dcat\Admin\Exception\AdminException;
 use Dcat\Admin\Http\JsonResponse;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\MessageBag;
 use Mockery;
 
@@ -325,7 +326,7 @@ class JsonResponseTest extends TestCase
     {
         $response = new JsonResponse;
 
-        $this->assertInstanceOf(\Illuminate\Contracts\Support\Arrayable::class, $response);
+        $this->assertInstanceOf(Arrayable::class, $response);
     }
 
     public function test_redirect_sets_then_action_redirect(): void

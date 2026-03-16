@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dcat\Admin\Grid\Displayers;
 
 use Dcat\Admin\Admin;
+use Dcat\Admin\Repositories\Repository;
 
 class Tree extends AbstractDisplayer
 {
@@ -48,7 +49,7 @@ JS;
         $indents = str_repeat(' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ', $depth);
 
         $icon = '<i class="fa fa-angle-right"></i>';
-        /** @var \Dcat\Admin\Repositories\Repository $repository */
+        /** @var Repository $repository */
         $repository = $this->grid->model()->repository();
         $parentColumn = $repository->getParentColumn();
         $model = $this->resolveRepositoryModel($repository);

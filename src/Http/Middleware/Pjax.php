@@ -6,6 +6,7 @@ namespace Dcat\Admin\Http\Middleware;
 
 use Closure;
 use Dcat\Admin\Admin;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,7 +42,7 @@ class Pjax
     /**
      * Handle Response with exceptions.
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     protected function handleErrorResponse(Response $response)
     {

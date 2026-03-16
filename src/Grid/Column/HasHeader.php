@@ -78,7 +78,7 @@ trait HasHeader
      *          Grid\Column\Filter\Equal::make(__('admin.created_at'))->date()
      *      );
      *
-     * @param  Grid\Column\Filter|string|\Closure|null  $filter
+     * @param  Filter|string|\Closure|null  $filter
      * @return $this
      */
     public function filter($filter = null)
@@ -86,11 +86,11 @@ trait HasHeader
         $valueKey = is_string($filter) || $filter instanceof \Closure ? $filter : null;
 
         if (! $filter || $valueKey) {
-            $filter = Grid\Column\Filter\Equal::make()->valueFilter($valueKey);
+            $filter = Filter\Equal::make()->valueFilter($valueKey);
         }
 
-        if (! $filter instanceof Grid\Column\Filter) {
-            throw new RuntimeException('The "$filter" must be a type of '.Grid\Column\Filter::class.'.');
+        if (! $filter instanceof Filter) {
+            throw new RuntimeException('The "$filter" must be a type of '.Filter::class.'.');
         }
 
         return $this->addHeader($filter);
@@ -103,7 +103,7 @@ trait HasHeader
     public function filterByValue($valueKey = null)
     {
         return $this->filter(
-            Grid\Column\Filter\Equal::make()
+            Filter\Equal::make()
                 ->valueFilter($valueKey)
                 ->hide()
         );

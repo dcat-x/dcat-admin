@@ -6,7 +6,9 @@ namespace Dcat\Admin\Form\Field;
 
 use Dcat\Admin\Admin;
 use Dcat\Admin\Form\Field;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class Text extends Field
 {
@@ -25,7 +27,7 @@ class Text extends Field
     /**
      * Render this filed.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     * @return Factory|View|string
      */
     public function render()
     {

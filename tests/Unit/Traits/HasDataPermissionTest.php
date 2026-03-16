@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Traits;
 
+use Dcat\Admin\Models\Administrator;
+use Dcat\Admin\Models\Menu;
 use Dcat\Admin\Tests\TestCase;
 use Dcat\Admin\Traits\HasDataPermission;
 use Illuminate\Database\Eloquent\Model;
@@ -54,7 +56,7 @@ class HasDataPermissionTest extends TestCase
         ]);
         $this->app['config']->set('auth.providers.admin', [
             'driver' => 'eloquent',
-            'model' => \Dcat\Admin\Models\Administrator::class,
+            'model' => Administrator::class,
         ]);
         $this->app['config']->set('admin.data_permission.enable', false);
     }
@@ -64,7 +66,7 @@ class HasDataPermissionTest extends TestCase
         // 恢复默认状态
         DataPermissionTestModel::enableDataPermission();
         DataPermissionTestModel::setCurrentMenuId(null);
-        $this->app['config']->set('admin.database.menu_model', \Dcat\Admin\Models\Menu::class);
+        $this->app['config']->set('admin.database.menu_model', Menu::class);
         FakeMenuQueryForHasDataPermissionTest::$firstCalls = 0;
 
         parent::tearDown();

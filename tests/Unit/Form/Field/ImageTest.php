@@ -6,12 +6,14 @@ namespace Dcat\Admin\Tests\Unit\Form\Field;
 
 use Dcat\Admin\Form\Field\Image;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Contracts\Filesystem\Filesystem;
+use Intervention\Image\ImageManagerStatic;
 use Mockery;
 
 // 注册 Intervention\Image\ImageManagerStatic 存根类，
 // 使 ImageField::__call() 的 class_exists 检查通过。
-if (! class_exists(\Intervention\Image\ImageManagerStatic::class)) {
-    class_alias(ImageManagerStaticStub::class, \Intervention\Image\ImageManagerStatic::class);
+if (! class_exists(ImageManagerStatic::class)) {
+    class_alias(ImageManagerStaticStub::class, ImageManagerStatic::class);
 }
 
 /**
@@ -37,7 +39,7 @@ class ImageTest extends TestCase
     {
         $field = new Image($column, [$label]);
 
-        $storage = Mockery::mock(\Illuminate\Contracts\Filesystem\Filesystem::class);
+        $storage = Mockery::mock(Filesystem::class);
         $storage->shouldReceive('exists')->andReturn(false)->byDefault();
         $storage->shouldReceive('delete')->andReturn(true)->byDefault();
         $storage->shouldReceive('url')->andReturn('')->byDefault();
@@ -380,7 +382,7 @@ class ImageTest extends TestCase
 
         $this->setProtectedProperty($field, 'original', 'uploads/photo.jpg');
 
-        $storage = Mockery::mock(\Illuminate\Contracts\Filesystem\Filesystem::class);
+        $storage = Mockery::mock(Filesystem::class);
         $storage->shouldReceive('exists')
             ->with('uploads/photo-small.jpg')
             ->once()
@@ -413,7 +415,7 @@ class ImageTest extends TestCase
 
         $this->setProtectedProperty($field, 'original', 'uploads/photo.png');
 
-        $storage = Mockery::mock(\Illuminate\Contracts\Filesystem\Filesystem::class);
+        $storage = Mockery::mock(Filesystem::class);
         $storage->shouldReceive('exists')
             ->with('uploads/photo-small.png')
             ->once()
@@ -433,7 +435,7 @@ class ImageTest extends TestCase
 
         $field->thumbnail('thumb', 200, 200);
 
-        $storage = Mockery::mock(\Illuminate\Contracts\Filesystem\Filesystem::class);
+        $storage = Mockery::mock(Filesystem::class);
         $storage->shouldReceive('exists')
             ->with('images/banner-thumb.jpeg')
             ->once()
@@ -456,7 +458,7 @@ class ImageTest extends TestCase
 
         $field->thumbnail('sm', 100, 100);
 
-        $storage = Mockery::mock(\Illuminate\Contracts\Filesystem\Filesystem::class);
+        $storage = Mockery::mock(Filesystem::class);
         $storage->shouldReceive('exists')
             ->with('a-sm.jpg')
             ->once()
@@ -490,7 +492,7 @@ class ImageTest extends TestCase
         $this->setProtectedProperty($field, 'retainable', true);
         $this->setProtectedProperty($field, 'original', 'uploads/photo.jpg');
 
-        $storage = Mockery::mock(\Illuminate\Contracts\Filesystem\Filesystem::class);
+        $storage = Mockery::mock(Filesystem::class);
         $storage->shouldNotReceive('exists');
         $storage->shouldNotReceive('delete');
 
@@ -511,7 +513,7 @@ class ImageTest extends TestCase
         $this->setProtectedProperty($field, 'retainable', true);
         $this->setProtectedProperty($field, 'original', 'uploads/photo.jpg');
 
-        $storage = Mockery::mock(\Illuminate\Contracts\Filesystem\Filesystem::class);
+        $storage = Mockery::mock(Filesystem::class);
         $storage->shouldReceive('exists')
             ->with('uploads/photo-small.jpg')
             ->once()
@@ -537,7 +539,7 @@ class ImageTest extends TestCase
 
         $this->setProtectedProperty($field, 'original', null);
 
-        $storage = Mockery::mock(\Illuminate\Contracts\Filesystem\Filesystem::class);
+        $storage = Mockery::mock(Filesystem::class);
         $storage->shouldNotReceive('exists');
         $storage->shouldNotReceive('delete');
 

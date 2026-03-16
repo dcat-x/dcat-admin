@@ -6,7 +6,9 @@ namespace Dcat\Admin\Tests\Unit\Models;
 
 use Dcat\Admin\Models\Department;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Mockery;
+use Spatie\EloquentSortable\Sortable;
 
 class DepartmentTest extends TestCase
 {
@@ -122,7 +124,7 @@ class DepartmentTest extends TestCase
         $returnType = $method->getReturnType();
 
         $this->assertNotNull($returnType);
-        $this->assertSame(\Illuminate\Database\Eloquent\Relations\BelongsToMany::class, $returnType->getName());
+        $this->assertSame(BelongsToMany::class, $returnType->getName());
     }
 
     public function test_roles_relationship_declares_belongs_to_many_return_type(): void
@@ -131,7 +133,7 @@ class DepartmentTest extends TestCase
         $returnType = $method->getReturnType();
 
         $this->assertNotNull($returnType);
-        $this->assertSame(\Illuminate\Database\Eloquent\Relations\BelongsToMany::class, $returnType->getName());
+        $this->assertSame(BelongsToMany::class, $returnType->getName());
     }
 
     public function test_get_descendant_ids_declares_array_return_type(): void
@@ -177,6 +179,6 @@ class DepartmentTest extends TestCase
         $department = new Department;
 
         // 验证实现了 Sortable 接口
-        $this->assertInstanceOf(\Spatie\EloquentSortable\Sortable::class, $department);
+        $this->assertInstanceOf(Sortable::class, $department);
     }
 }

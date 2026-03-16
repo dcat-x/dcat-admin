@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Http\Controllers;
 
+use Dcat\Admin\Form;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Http\Controllers\PermissionController;
 use Dcat\Admin\Layout\Content;
+use Dcat\Admin\Models\Menu;
+use Dcat\Admin\Models\Permission;
 use Dcat\Admin\Tests\TestCase;
 use Dcat\Admin\Tree;
 use Mockery;
@@ -23,9 +26,9 @@ class PermissionControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->app['config']->set('admin.database.permissions_model', \Dcat\Admin\Models\Permission::class);
+        $this->app['config']->set('admin.database.permissions_model', Permission::class);
         $this->app['config']->set('admin.database.permissions_table', 'admin_permissions');
-        $this->app['config']->set('admin.database.menu_model', \Dcat\Admin\Models\Menu::class);
+        $this->app['config']->set('admin.database.menu_model', Menu::class);
         $this->app['config']->set('admin.database.connection', 'testing');
         $this->app['config']->set('admin.menu.permission_bind_menu', true);
     }
@@ -80,19 +83,19 @@ class PermissionControllerTest extends TestCase
     {
         $controller = new class extends PermissionController
         {
-            public function exposeTreeView(): \Dcat\Admin\Tree
+            public function exposeTreeView(): Tree
             {
                 return $this->treeView();
             }
         };
 
-        $this->assertInstanceOf(\Dcat\Admin\Tree::class, $controller->exposeTreeView());
+        $this->assertInstanceOf(Tree::class, $controller->exposeTreeView());
     }
 
     public function test_form_returns_form_instance(): void
     {
         $controller = new PermissionController;
-        $this->assertInstanceOf(\Dcat\Admin\Form::class, $controller->form());
+        $this->assertInstanceOf(Form::class, $controller->form());
     }
 
     public function test_get_routes_returns_array(): void

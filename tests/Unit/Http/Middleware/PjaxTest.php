@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace Dcat\Admin\Tests\Unit\Http\Middleware;
 
 use Dcat\Admin\Http\Middleware\Pjax;
+use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Contracts\Auth\StatefulGuard;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Mockery;
 
 class PjaxTest extends TestCase
@@ -23,7 +27,7 @@ class PjaxTest extends TestCase
         ]);
         $this->app['config']->set('auth.providers.admin', [
             'driver' => 'eloquent',
-            'model' => \Dcat\Admin\Models\Administrator::class,
+            'model' => Administrator::class,
         ]);
     }
 
@@ -52,7 +56,7 @@ class PjaxTest extends TestCase
         $request = Request::create('/admin/test', 'GET');
         $request->headers->set('X-PJAX', 'true');
 
-        $response = new \Illuminate\Http\RedirectResponse('/admin/other');
+        $response = new RedirectResponse('/admin/other');
         $result = $middleware->handle($request, function () use ($response) {
             return $response;
         });
@@ -78,13 +82,13 @@ class PjaxTest extends TestCase
     public function test_handle_sets_pjax_url_header_for_authenticated_pjax(): void
     {
         // Mock authenticated user
-        $guard = Mockery::mock(\Illuminate\Contracts\Auth\StatefulGuard::class);
+        $guard = Mockery::mock(StatefulGuard::class);
         $guard->shouldReceive('guest')->andReturn(false);
-        $guard->shouldReceive('user')->andReturn(Mockery::mock(\Dcat\Admin\Models\Administrator::class));
+        $guard->shouldReceive('user')->andReturn(Mockery::mock(Administrator::class));
         $guard->shouldReceive('check')->andReturn(true);
         $guard->shouldReceive('id')->andReturn(1);
 
-        \Illuminate\Support\Facades\Auth::shouldReceive('guard')
+        Auth::shouldReceive('guard')
             ->with('admin')
             ->andReturn($guard);
 
@@ -153,6 +157,6 @@ class PjaxTest extends TestCase
         $result = $method->invoke($middleware, $response);
 
         // Should return a redirect response
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $result);
+        $this->assertInstanceOf(RedirectResponse::class, $result);
     }
 }

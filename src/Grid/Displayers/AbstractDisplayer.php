@@ -7,6 +7,7 @@ namespace Dcat\Admin\Grid\Displayers;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Column;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Fluent;
 
 abstract class AbstractDisplayer
@@ -32,7 +33,7 @@ abstract class AbstractDisplayer
     protected $column;
 
     /**
-     * @var \Illuminate\Database\Eloquent\Model
+     * @var Model
      */
     public $row;
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dcat\Admin\Http\Controllers;
 
 use Dcat\Admin\Layout\Content;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 
 /**
@@ -148,7 +149,7 @@ class AdminController extends Controller
      * Update the specified resource in storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update($id)
     {
@@ -177,7 +178,7 @@ class AdminController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

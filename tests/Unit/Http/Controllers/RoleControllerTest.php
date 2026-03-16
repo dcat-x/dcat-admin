@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Http\Controllers;
 
+use Dcat\Admin\Form;
+use Dcat\Admin\Grid;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Http\Controllers\RoleController;
+use Dcat\Admin\Models\Menu;
+use Dcat\Admin\Models\Permission;
+use Dcat\Admin\Models\Role;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
 
@@ -21,10 +26,10 @@ class RoleControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->app['config']->set('admin.database.roles_model', \Dcat\Admin\Models\Role::class);
+        $this->app['config']->set('admin.database.roles_model', Role::class);
         $this->app['config']->set('admin.database.roles_table', 'admin_roles');
-        $this->app['config']->set('admin.database.permissions_model', \Dcat\Admin\Models\Permission::class);
-        $this->app['config']->set('admin.database.menu_model', \Dcat\Admin\Models\Menu::class);
+        $this->app['config']->set('admin.database.permissions_model', Permission::class);
+        $this->app['config']->set('admin.database.menu_model', Menu::class);
         $this->app['config']->set('admin.database.connection', 'testing');
         $this->app['config']->set('admin.menu.role_bind_menu', true);
     }
@@ -50,19 +55,19 @@ class RoleControllerTest extends TestCase
     {
         $controller = new class extends RoleController
         {
-            public function exposeGrid(): \Dcat\Admin\Grid
+            public function exposeGrid(): Grid
             {
                 return $this->grid();
             }
         };
 
-        $this->assertInstanceOf(\Dcat\Admin\Grid::class, $controller->exposeGrid());
+        $this->assertInstanceOf(Grid::class, $controller->exposeGrid());
     }
 
     public function test_form_returns_form_instance(): void
     {
         $controller = new RoleController;
-        $this->assertInstanceOf(\Dcat\Admin\Form::class, $controller->form());
+        $this->assertInstanceOf(Form::class, $controller->form());
     }
 
     public function test_destroy_delegates_to_form_destroy_for_non_admin_role_id(): void

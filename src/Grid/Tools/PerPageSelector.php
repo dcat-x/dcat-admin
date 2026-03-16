@@ -8,6 +8,7 @@ use Dcat\Admin\Admin;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Widgets\Dropdown;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Support\Collection;
 
 class PerPageSelector implements Renderable
 {
@@ -54,7 +55,7 @@ class PerPageSelector implements Renderable
     /**
      * Get options for selector.
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function getOptions()
     {

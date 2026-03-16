@@ -96,7 +96,7 @@ class Tree extends Widget
      *                       "text": "Dashboard",
      *                       // "state": {"selected": true}
      *                       }
-     * @param  array|\Illuminate\Contracts\Support\Arrayable  $data
+     * @param  array|Arrayable  $data
      * @return $this
      */
     public function nodes($data)

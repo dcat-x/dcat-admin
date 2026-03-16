@@ -6,6 +6,7 @@ namespace Dcat\Admin\Grid;
 
 use Dcat\Admin\Admin;
 use Dcat\Admin\Exception\RuntimeException;
+use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Events\ApplyFilter;
 use Dcat\Admin\Grid\Events\Fetched;
 use Dcat\Admin\Grid\Events\Fetching;
@@ -47,6 +48,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
+use Illuminate\View\View;
 
 /**
  * Class Filter.
@@ -241,7 +243,7 @@ class Filter implements Renderable
      */
     protected function initLayout()
     {
-        $this->layout = new Filter\Layout\Layout($this);
+        $this->layout = new Layout($this);
     }
 
     /**
@@ -326,7 +328,7 @@ class Filter implements Renderable
     /**
      * Get grid.
      *
-     * @return \Dcat\Admin\Grid
+     * @return Grid
      */
     public function grid()
     {
@@ -703,7 +705,7 @@ class Filter implements Renderable
     /**
      * Get the string contents of the filter view.
      *
-     * @return \Illuminate\View\View|string
+     * @return View|string
      */
     public function render()
     {

@@ -6,6 +6,7 @@ namespace Dcat\Admin\Tests\Unit\Layout;
 
 use Dcat\Admin\Layout\Menu;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\Facades\Auth;
 use Mockery;
 
@@ -29,7 +30,7 @@ class MenuTest extends TestCase
         $user = Mockery::mock();
         $user->shouldReceive('canSeeMenu')->andReturn($canSee);
 
-        $guard = Mockery::mock(\Illuminate\Contracts\Auth\Guard::class);
+        $guard = Mockery::mock(Guard::class);
         $guard->shouldReceive('user')->andReturn($user);
         $guard->shouldReceive('check')->andReturn(true);
         $guard->shouldReceive('id')->andReturn(1);
@@ -90,7 +91,7 @@ class MenuTest extends TestCase
         $user->shouldReceive('isAdministrator')->andReturn(true);
         $user->shouldReceive('canSeeMenu')->andReturn(true);
 
-        $guard = Mockery::mock(\Illuminate\Contracts\Auth\Guard::class);
+        $guard = Mockery::mock(Guard::class);
         $guard->shouldReceive('user')->andReturn($user);
         $guard->shouldReceive('check')->andReturn(true);
         $guard->shouldReceive('id')->andReturn(1);

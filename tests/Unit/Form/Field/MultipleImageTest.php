@@ -7,6 +7,7 @@ namespace Dcat\Admin\Tests\Unit\Form\Field;
 use Dcat\Admin\Form\Field\Image;
 use Dcat\Admin\Form\Field\MultipleImage;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Mockery;
 
 class MultipleImageTest extends TestCase
@@ -21,7 +22,7 @@ class MultipleImageTest extends TestCase
     {
         $field = new MultipleImage($column, [$label]);
 
-        $storage = Mockery::mock(\Illuminate\Contracts\Filesystem\Filesystem::class);
+        $storage = Mockery::mock(Filesystem::class);
         $storage->shouldReceive('exists')->andReturn(false)->byDefault();
         $storage->shouldReceive('delete')->andReturn(true)->byDefault();
         $storage->shouldReceive('url')->andReturn('')->byDefault();

@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Dcat\Admin;
 
 use Closure;
+use Composer\Autoload\ClassLoader;
 use Dcat\Admin\Contracts\ExceptionHandler;
 use Dcat\Admin\Contracts\Repository;
 use Dcat\Admin\Exception\InvalidArgumentException;
+use Dcat\Admin\Extend\Manager;
+use Dcat\Admin\Extend\ServiceProvider;
 use Dcat\Admin\Http\Controllers\AuthController;
 use Dcat\Admin\Http\JsonResponse;
 use Dcat\Admin\Layout\Menu;
@@ -15,10 +18,16 @@ use Dcat\Admin\Layout\Navbar;
 use Dcat\Admin\Layout\SectionManager;
 use Dcat\Admin\Repositories\EloquentRepository;
 use Dcat\Admin\Support\Composer;
+use Dcat\Admin\Support\Context;
 use Dcat\Admin\Support\Helper;
+use Dcat\Admin\Support\Setting;
+use Dcat\Admin\Support\Translator;
 use Dcat\Admin\Traits\HasAssets;
 use Dcat\Admin\Traits\HasHtml;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Auth\StatefulGuard;
+use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -148,7 +157,7 @@ class Admin
     }
 
     /**
-     * @return \Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard
+     * @return Guard|StatefulGuard
      */
     public static function guard()
     {
@@ -220,7 +229,7 @@ class Admin
     /**
      * 配置.
      *
-     * @return \Dcat\Admin\Support\Setting
+     * @return Setting
      */
     public static function setting()
     {
@@ -327,7 +336,7 @@ class Admin
     /**
      * 上下文管理.
      *
-     * @return \Dcat\Admin\Support\Context
+     * @return Context
      */
     public static function context()
     {
@@ -337,7 +346,7 @@ class Admin
     /**
      * 翻译器.
      *
-     * @return \Dcat\Admin\Support\Translator
+     * @return Translator
      */
     public static function translator()
     {
@@ -368,7 +377,7 @@ class Admin
     /**
      * 中断默认的渲染逻辑.
      *
-     * @param  string|\Illuminate\Contracts\Support\Renderable|\Closure  $value
+     * @param  string|Renderable|Closure  $value
      */
     public static function prevent($value)
     {
@@ -433,7 +442,7 @@ class Admin
     /**
      * 插件管理.
      *
-     * @return \Dcat\Admin\Extend\Manager|\Dcat\Admin\Extend\ServiceProvider|null
+     * @return Manager|ServiceProvider|null
      */
     public static function extension(?string $name = null)
     {
@@ -447,7 +456,7 @@ class Admin
     /**
      * 响应并中断后续逻辑.
      *
-     * @param  Response|\Dcat\Admin\Http\JsonResponse|string|array  $response
+     * @param  Response|JsonResponse|string|array  $response
      *
      * @throws HttpResponseException
      */
@@ -465,7 +474,7 @@ class Admin
     /**
      * 类自动加载器.
      *
-     * @return \Composer\Autoload\ClassLoader
+     * @return ClassLoader
      */
     public static function classLoader()
     {

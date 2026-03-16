@@ -24,7 +24,7 @@ use Illuminate\Support\Str;
  */
 class Model
 {
-    use Grid\Concerns\HasTree;
+    use Concerns\HasTree;
 
     /**
      * @var Request
@@ -44,7 +44,7 @@ class Model
     /**
      * Array of queries of the model.
      *
-     * @var \Illuminate\Support\Collection
+     * @var Collection
      */
     protected $queries;
 
