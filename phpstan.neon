@@ -1,19 +1,26 @@
 parameters:
-    level: 1
+    level: 2
     paths:
         - src
     excludePaths:
         - src/Console/stubs
     ignoreErrors:
+        # Laravel 惯用的 new static() 模式
         - '#Unsafe usage of new static#'
+
+        # Laravel Facade 和可选依赖（Intervention/Image, Flysystem, 阿里云 SDK 等）
         - '#on an unknown class#'
         - '#not found#'
-        - '#Result of .* is used#'
-        - '#Call to sprintf contains 0 placeholders#'
-        - '#return statement is missing#'
+        - '#has invalid type#'
+
+        # Eloquent Model 魔术属性和方法
         - '#Access to an undefined property#'
         - '#Access to undefined constant#'
-        - '#has invalid type#'
-        - '#is not covariant with#'
         - '#Call to an undefined static method Dcat\\Admin\\Models\\[A-Za-z0-9_]+::(where|find|first|create|insert|truncate|pluck)\(\).#'
+
+        # 方法返回值缺失（部分方法依赖子类实现或条件返回）
+        - '#return statement is missing#'
+
+        # void 方法返回值被使用（链式调用等场景）
+        - '#Result of .* is used#'
     reportUnmatchedIgnoredErrors: false

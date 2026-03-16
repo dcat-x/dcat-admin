@@ -49,7 +49,9 @@ class ExcelImporter extends AbstractImporter
         $titles = $this->titles();
         $columns = array_keys($titles);
         $upsertKey = $this->upsertKey();
-        $model = $this->grid->model()->eloquent();
+        /** @var \Dcat\Admin\Repositories\EloquentRepository $repository */
+        $repository = $this->grid->model()->repository();
+        $model = $repository->model();
         $rowIndex = 0;
 
         Excel::import($file)->first()->each(function ($row) use (&$result, $rules, $columns, $upsertKey, $model, &$rowIndex) {
