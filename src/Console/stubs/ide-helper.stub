@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * A helper file for Dcat Admin, to provide autocomplete information to your IDE
  *

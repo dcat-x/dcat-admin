@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DummyNamespace;
 
 use Dcat\Admin\Widgets\Metrics\Round;
@@ -33,7 +35,9 @@ class ProductOrders extends Round
      */
     public function handle(Request $request)
     {
-        switch ($request->get('option')) {
+        $option = (string) $request->get('option');
+
+        switch ($option) {
             case '365':
             case '30':
             case '28':

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DummyNamespace;
 
 use Dcat\Admin\Widgets\Metrics\Line;
@@ -34,13 +36,15 @@ class NewUsers extends Line
      */
     public function handle(Request $request)
     {
+        $option = (string) $request->get('option');
+
         $generator = function ($len, $min = 10, $max = 300) {
             for ($i = 0; $i <= $len; $i++) {
                 yield mt_rand($min, $max);
             }
         };
 
-        switch ($request->get('option')) {
+        switch ($option) {
             case '365':
                 // 卡片内容
                 $this->withContent(mt_rand(1000, 5000).'k');

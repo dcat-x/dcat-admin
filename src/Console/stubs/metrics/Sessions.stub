@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DummyNamespace;
 
 use Dcat\Admin\Admin;
@@ -50,7 +52,9 @@ class Sessions extends Bar
      */
     public function handle(Request $request)
     {
-        switch ($request->get('option')) {
+        $option = (string) $request->get('option');
+
+        switch ($option) {
             case '7':
             default:
                 // 卡片内容
@@ -92,9 +96,7 @@ class Sessions extends Bar
     public function withContent($title, $value, $style = 'success')
     {
         // 根据选项显示
-        $label = strtolower(
-            $this->dropdown[request()->option] ?? 'last 7 days'
-        );
+        $label = strtolower((string) ($this->dropdown[(string) request()->option] ?? 'last 7 days'));
 
         $minHeight = '183px';
 

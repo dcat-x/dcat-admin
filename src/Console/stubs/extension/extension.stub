@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace {namespace};
 
 use Dcat\Admin\Extend\ServiceProvider;
@@ -7,26 +9,26 @@ use Dcat\Admin\Admin;
 
 class {className}ServiceProvider extends ServiceProvider
 {
-	{property}
-	protected $css = [
-		'css/index.css',
-	];
+    {property}
+    protected $css = [
+        'css/index.css',
+    ];
 
-	public function register()
-	{
-		//
-	}
+    public function register()
+    {
+        //
+    }
 
-	public function init()
-	{
-		parent::init();
+    public function init()
+    {
+        parent::init();
 
-		//
-		{registerTheme}
-	}
+        //
+        {registerTheme}
+    }
 
-	public function settingForm()
-	{
-		return new Setting($this);
-	}
+    public function settingForm()
+    {
+        return new Setting($this);
+    }
 }

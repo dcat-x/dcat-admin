@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DummyNamespace;
 
 use Dcat\Admin\Widgets\Metrics\Card;
@@ -40,7 +42,9 @@ class TotalUsers extends Card
      */
     public function handle(Request $request)
     {
-        switch ($request->get('option')) {
+        $option = (string) $request->get('option');
+
+        switch ($option) {
             case '365':
                 $this->content(mt_rand(600, 1500));
                 $this->down(mt_rand(1, 30));

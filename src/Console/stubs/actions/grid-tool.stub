@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DummyNamespace;
 
 use Dcat\Admin\Grid\Tools\AbstractTool;
@@ -14,7 +16,7 @@ class DummyClass extends AbstractTool
     /**
      * @return string
      */
-	protected $title = 'Title';
+    protected $title = 'Title';
 
     /**
      * Handle the action request.
