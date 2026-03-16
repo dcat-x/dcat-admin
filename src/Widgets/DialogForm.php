@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin\Widgets;
 
 use Dcat\Admin\Admin;
@@ -152,7 +154,7 @@ class DialogForm
      *
      * @return $this
      */
-    public function dimensions(string $width, string $height)
+    public function dimensions(string|int $width, string|int $height)
     {
         $this->options['area'] = [$width, $height];
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin\Models;
 
 use Dcat\Admin\Admin;

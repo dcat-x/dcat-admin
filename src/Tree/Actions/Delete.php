@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin\Tree\Actions;
 
 use Dcat\Admin\Tree\RowAction;

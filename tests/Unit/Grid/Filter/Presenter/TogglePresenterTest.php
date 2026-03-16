@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin\Tests\Unit\Grid\Filter\Presenter;
 
 use Dcat\Admin\Grid\Filter\Presenter\Toggle;

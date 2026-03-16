@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin\Grid\Concerns;
 
 use Dcat\Admin\Exception\InvalidArgumentException;

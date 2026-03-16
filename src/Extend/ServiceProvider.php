@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin\Extend;
 
 use Dcat\Admin\Admin;
@@ -141,7 +143,7 @@ abstract class ServiceProvider extends LaravelServiceProvider
      */
     public function getName()
     {
-        return $this->name ?: ($this->name = str_replace('/', '.', $this->getPackageName()));
+        return $this->name ?: ($this->name = str_replace('/', '.', (string) $this->getPackageName()));
     }
 
     /**
@@ -235,7 +237,7 @@ abstract class ServiceProvider extends LaravelServiceProvider
             }
         }
 
-        $path = ltrim($path, '/');
+        $path = ltrim((string) $path, '/');
 
         return $path ? $this->path.'/'.$path : $this->path;
     }

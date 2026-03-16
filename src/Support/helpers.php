@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Dcat\Admin\Admin;
 use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Support\Helper;
@@ -235,7 +237,7 @@ if (! function_exists('admin_path')) {
      */
     function admin_path($path = '')
     {
-        return ucfirst(config('admin.directory')).($path ? DIRECTORY_SEPARATOR.$path : $path);
+        return ucfirst((string) config('admin.directory')).($path ? DIRECTORY_SEPARATOR.$path : $path);
     }
 }
 
@@ -269,7 +271,7 @@ if (! function_exists('admin_base_path')) {
      */
     function admin_base_path($path = '')
     {
-        $prefix = '/'.trim(config('admin.route.prefix'), '/');
+        $prefix = '/'.trim((string) config('admin.route.prefix'), '/');
 
         $prefix = ($prefix == '/') ? '' : $prefix;
 
@@ -407,7 +409,7 @@ if (! function_exists('admin_extension_path')) {
      */
     function admin_extension_path(string $path = '')
     {
-        $dir = rtrim(config('admin.extension.dir'), '/') ?: base_path('dcat-admin-extensions');
+        $dir = rtrim((string) config('admin.extension.dir'), '/') ?: base_path('dcat-admin-extensions');
 
         $path = ltrim($path, '/');
 

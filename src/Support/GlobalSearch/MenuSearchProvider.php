@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin\Support\GlobalSearch;
 
 use Dcat\Admin\Models\Menu;

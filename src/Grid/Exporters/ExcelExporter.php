@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin\Grid\Exporters;
 
 use Dcat\Admin\Exception\RuntimeException;

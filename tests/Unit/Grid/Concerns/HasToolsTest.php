@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin\Tests\Unit\Grid\Concerns;
 
 use Dcat\Admin\Grid\Concerns\HasTools;

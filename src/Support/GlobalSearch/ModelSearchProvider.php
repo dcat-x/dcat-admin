@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin\Support\GlobalSearch;
 
 abstract class ModelSearchProvider implements SearchProviderInterface

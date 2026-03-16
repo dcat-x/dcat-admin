@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin\Http\Actions\Menu;
 
 use Dcat\Admin\Tree\RowAction;

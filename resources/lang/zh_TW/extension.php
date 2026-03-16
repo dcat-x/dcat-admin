@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'labels' => [
         'Extensions' => '擴展',

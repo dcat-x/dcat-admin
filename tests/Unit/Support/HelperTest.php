@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin\Tests\Unit\Support;
 
 use Dcat\Admin\Support\Helper;

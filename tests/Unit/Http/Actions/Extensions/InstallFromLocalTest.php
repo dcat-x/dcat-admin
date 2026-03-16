@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin\Tests\Unit\Http\Actions\Extensions;
 
 use Dcat\Admin\Grid\Tools\AbstractTool;

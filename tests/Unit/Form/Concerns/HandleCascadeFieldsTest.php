@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin\Tests\Unit\Form\Concerns;
 
 use Dcat\Admin\Form\Concerns\HandleCascadeFields;

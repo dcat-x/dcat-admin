@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin\Tests\Unit\Console\Development;
 
 use Dcat\Admin\Console\Development\LinkCommand;

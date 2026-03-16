@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin\Traits;
 
 use Dcat\Admin\Admin;
@@ -106,7 +108,7 @@ trait HasDataPermission
         // 查找匹配的菜单
         $menuModel = config('admin.database.menu_model');
 
-        if (! class_exists($menuModel)) {
+        if (! $menuModel || ! class_exists($menuModel)) {
             return null;
         }
 

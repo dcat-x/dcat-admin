@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin\Tests\Fixtures\Http\Controllers;
 
 use Dcat\Admin\Contracts\LazyRenderable;

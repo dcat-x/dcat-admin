@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin\Http\Displayers\Extensions;
 
 use Dcat\Admin\Admin;

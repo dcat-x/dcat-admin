@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin\Support;
 
 use Dcat\Admin\Grid;
@@ -152,7 +154,7 @@ class Helper
                 continue;
             }
 
-            $elements[] = $key.'="'.htmlentities($value, ENT_QUOTES, 'UTF-8').'"';
+            $elements[] = $key.'="'.htmlentities((string) $value, ENT_QUOTES, 'UTF-8').'"';
         }
 
         return $elements ? implode(' ', $elements).' ' : '';

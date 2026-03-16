@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin\Tests\Unit\Form\Field;
 
 use Dcat\Admin\Form\Field\PrivateMultipleImage;
@@ -104,7 +106,7 @@ class PrivateMultipleImageTest extends TestCase
     {
         $field = new PrivateMultipleImage('images', ['Images']);
 
-        $result = $field->thumbnail('100', '120');
+        $result = $field->thumbnail('thumb', 100, 120);
 
         $this->assertSame($field, $result);
     }

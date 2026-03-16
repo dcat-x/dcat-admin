@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'scaffold' => [
         'header' => '代码生成器',

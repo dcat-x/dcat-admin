@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin\Octane\Listeners;
 
 use Dcat\Admin\AdminServiceProvider;

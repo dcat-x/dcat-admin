@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin\Support;
 
 use Dcat\Admin\Admin;
@@ -304,7 +306,7 @@ class DataPermission
                 // 否则用逗号连接
                 $replacement = implode(',', $replacement);
             }
-            $value = str_replace($var, $replacement, $value);
+            $value = str_replace($var, (string) $replacement, $value);
         }
 
         return $value;

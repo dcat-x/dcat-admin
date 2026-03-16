@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin;
 
 use Closure;
@@ -554,7 +556,7 @@ class Admin
 
         return in_array(
             'dark-mode',
-            is_array($bodyClass) ? $bodyClass : explode(' ', $bodyClass),
+            is_array($bodyClass) ? $bodyClass : explode(' ', (string) $bodyClass),
             true
         );
     }

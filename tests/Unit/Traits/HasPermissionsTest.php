@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin\Tests\Unit\Traits;
 
 use Dcat\Admin\Models\Administrator;

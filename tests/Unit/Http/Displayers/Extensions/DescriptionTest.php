@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dcat\Admin\Tests\Unit\Http\Displayers\Extensions;
 
 use Dcat\Admin\Grid;
