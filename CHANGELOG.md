@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.31] - 2026-03-16
+
+### Other
+
+- ♻️ refactor: 优化 Rector 规则配置并清理死代码
+- 🎨 style: 优化代码生成模板（stubs）
+- ♻️ refactor: 引入 Rector 自动检测并修复 strict_types 类型安全问题
+- 🐛 fix: 修复 strict_types 下的潜在 TypeError（第五批）
+- 🐛 fix: 深度扫描修复 strict_types 下的潜在 TypeError（第四批）
+
 ## [1.1.30] - 2026-03-16
 
 ### Other
@@ -446,7 +456,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.30...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.31...HEAD
+[1.1.31]: https://github.com/dcat-x/dcat-admin/compare/v1.1.30...v1.1.31
 [1.1.30]: https://github.com/dcat-x/dcat-admin/compare/v1.1.29...v1.1.30
 [1.1.29]: https://github.com/dcat-x/dcat-admin/compare/v1.1.28...v1.1.29
 [1.1.28]: https://github.com/dcat-x/dcat-admin/compare/v1.1.27...v1.1.28
