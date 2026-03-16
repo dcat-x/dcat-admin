@@ -51,7 +51,7 @@ class RenderableController
     {
         $class = $request->get('renderable');
 
-        $class = str_replace('_', '\\', $class);
+        $class = str_replace('_', '\\', (string) $class);
 
         $renderable = new $class;
 

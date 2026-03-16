@@ -358,7 +358,7 @@ abstract class GeneratorCommand extends Command
      */
     protected function getNameInput()
     {
-        return trim($this->argument('name'));
+        return trim((string) $this->argument('name'));
     }
 
     /**
@@ -455,8 +455,8 @@ abstract class GeneratorCommand extends Command
      */
     protected function askBaseDirectory()
     {
-        if (! Str::startsWith(config('admin.route.namespace'), 'App')) {
-            $dir = explode('\\', config('admin.route.namespace'))[0];
+        if (! Str::startsWith((string) config('admin.route.namespace'), 'App')) {
+            $dir = explode('\\', (string) config('admin.route.namespace'))[0];
 
             $this->baseDirectory = trim($this->ask('Please enter the application path', Helper::slug($dir)));
         }

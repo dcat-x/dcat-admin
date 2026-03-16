@@ -43,8 +43,8 @@ class PermissionController extends AdminController
             $tree->disableEditButton();
 
             $tree->branch(function ($branch) {
-                $branchName = htmlspecialchars($branch['name']);
-                $branchSlug = htmlspecialchars($branch['slug']);
+                $branchName = htmlspecialchars((string) $branch['name']);
+                $branchSlug = htmlspecialchars((string) $branch['slug']);
                 $payload = "<div class='pull-left' style='min-width:310px'><b>{$branchName}</b>&nbsp;&nbsp;[<span class='text-primary'>{$branchSlug}</span>]";
 
                 $path = array_filter($branch['http_path']);

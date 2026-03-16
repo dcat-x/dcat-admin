@@ -71,7 +71,7 @@ class ValueFilter
 
     protected function wrap($value)
     {
-        if (! preg_match('/<[^>]+>(.*)<\/[^>]+>/', $value)) {
+        if (! preg_match('/<[^>]+>(.*)<\/[^>]+>/', (string) $value)) {
             return "<span>{$value}</span>";
         }
 

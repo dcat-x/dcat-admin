@@ -24,7 +24,7 @@ class ExtensionRollbackCommand extends Command
             throw new \InvalidArgumentException('Extension not found');
         }
 
-        $stopOnVersion = ltrim(($this->argument('ver') ?: null), 'v');
+        $stopOnVersion = ltrim((string) ($this->argument('ver') ?: ''), 'v');
 
         if ($stopOnVersion) {
             if (! Admin::extension()->versionManager()->hasDatabaseVersion($name, $stopOnVersion)) {

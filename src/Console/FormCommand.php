@@ -58,7 +58,7 @@ class FormCommand extends GeneratorCommand
             return $namespace;
         }
 
-        return str_replace('Controllers', 'Forms', config('admin.route.namespace'));
+        return str_replace('Controllers', 'Forms', (string) config('admin.route.namespace'));
     }
 
     /**
@@ -68,7 +68,7 @@ class FormCommand extends GeneratorCommand
      */
     protected function getNameInput()
     {
-        $name = trim($this->argument('name'));
+        $name = trim((string) $this->argument('name'));
 
         $this->type = $this->qualifyClass($name);
 

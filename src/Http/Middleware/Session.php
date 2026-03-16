@@ -21,7 +21,7 @@ class Session
             $path_prefix = rtrim($path_arr['path'], '/');
         }
 
-        $path = $path_prefix.'/'.trim(config('admin.route.prefix'), '/');
+        $path = $path_prefix.'/'.trim((string) config('admin.route.prefix'), '/');
 
         config(['session.path' => $path]);
 

@@ -129,7 +129,7 @@ class Tree extends Widget
     {
         $value = $this->value;
         if ($value && ! is_array($value)) {
-            $value = explode(',', $value);
+            $value = explode(',', (string) $value);
         }
         $value = (array) $value;
 

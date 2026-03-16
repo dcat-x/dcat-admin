@@ -87,7 +87,7 @@ class ExportSeedCommand extends Command
 
     protected function getTableName($config)
     {
-        return trim(str_replace('Dcat\\Admin\\', '', config($config)), '\\');
+        return trim(str_replace('Dcat\\Admin\\', '', (string) config($config)), '\\');
     }
 
     /**

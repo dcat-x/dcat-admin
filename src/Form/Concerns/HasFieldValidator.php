@@ -147,7 +147,7 @@ trait HasFieldValidator
         if (is_array($rules)) {
             foreach ($rules as &$rule) {
                 if (is_string($rule)) {
-                    $rule = str_replace('{{id}}', $id, $rule);
+                    $rule = str_replace('{{id}}', (string) $id, $rule);
                 }
             }
         }

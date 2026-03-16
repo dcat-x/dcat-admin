@@ -64,7 +64,7 @@ class File extends Field implements UploadFieldInterface
         }
 
         $value = Arr::get($input, $this->column);
-        $value = array_filter(is_array($value) ? $value : explode(',', $value));
+        $value = array_filter(is_array($value) ? $value : explode(',', (string) $value));
 
         $rules = $attributes = [];
         $requiredIf = null;
@@ -72,7 +72,7 @@ class File extends Field implements UploadFieldInterface
         $fileLimit = $this->options['fileNumLimit'] ?? 1;
         if (! empty($value) && $fileLimit > 1) {
             $rules[$this->column][] = function ($atribute, $value, $fail) use ($fileLimit) {
-                $value = array_filter(is_array($value) ? $value : explode(',', $value));
+                $value = array_filter(is_array($value) ? $value : explode(',', (string) $value));
                 if (count($value) > $fileLimit) {
                     $fail(trans('admin.uploader.max_file_limit', ['attribute' => $this->label, 'max' => $fileLimit]));
                 }

@@ -166,7 +166,7 @@ trait HasDisplayers
                 return $v;
             }
 
-            return $v ? explode($d, $v) : [];
+            return $v ? explode($d, (string) $v) : [];
         });
     }
 

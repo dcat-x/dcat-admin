@@ -270,7 +270,7 @@ trait HasQuickSearch
      */
     protected function addWhereInBinding($query, ?string $column, ?bool $or, ?bool $not, ?string $values)
     {
-        $values = explode(',', $values);
+        $values = explode(',', (string) $values);
 
         foreach ($values as $key => $value) {
             if ($value === 'NULL') {

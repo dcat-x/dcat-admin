@@ -175,7 +175,7 @@ class InstallCommand extends Command
      */
     protected function namespace($name = null)
     {
-        $base = str_replace('\\Controllers', '\\', config('admin.route.namespace'));
+        $base = str_replace('\\Controllers', '\\', (string) config('admin.route.namespace'));
 
         return trim($base, '\\').($name ? "\\{$name}" : '');
     }

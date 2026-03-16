@@ -165,7 +165,7 @@ JS
                 $value = $subArray['options'];
                 $original = array_merge($original, $subArray['original']);
                 $toReplace = array_merge($toReplace, $subArray['toReplace']);
-            } elseif (preg_match('/function.*?/', $value)) {
+            } elseif (is_string($value) && preg_match('/function.*?/', $value)) {
                 $original[] = $value;
                 $value = "%{$key}%";
                 $toReplace[] = "\"{$value}\"";

@@ -44,7 +44,7 @@ trait HasDataPermission
     protected function detectMenuIdFromRequest(): ?int
     {
         $path = request()->path();
-        $prefix = config('admin.route.prefix', 'admin');
+        $prefix = (string) config('admin.route.prefix', 'admin');
 
         // 移除前缀
         if ($prefix && strpos($path, $prefix) === 0) {

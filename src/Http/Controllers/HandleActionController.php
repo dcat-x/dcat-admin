@@ -39,7 +39,7 @@ class HandleActionController
             throw new AdminException('Invalid action request.');
         }
 
-        $actionClass = str_replace('_', '\\', $request->get('_action'));
+        $actionClass = str_replace('_', '\\', (string) $request->get('_action'));
 
         if (! class_exists($actionClass)) {
             throw new AdminException("Action [{$actionClass}] does not exist.");

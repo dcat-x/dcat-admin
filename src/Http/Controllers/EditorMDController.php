@@ -15,7 +15,7 @@ class EditorMDController
     public function upload(Request $request)
     {
         $file = $request->file('editormd-image-file');
-        $dir = trim($request->get('dir'), '/');
+        $dir = trim((string) $request->get('dir'), '/');
         $disk = $this->disk();
 
         $newName = $this->generateNewName($file);

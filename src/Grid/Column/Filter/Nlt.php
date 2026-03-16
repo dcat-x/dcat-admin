@@ -15,7 +15,7 @@ class Nlt extends Equal
      */
     public function addBinding($value, Model $model)
     {
-        $value = trim($value);
+        $value = trim((string) $value);
         if ($value === '') {
             return;
         }
