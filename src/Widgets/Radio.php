@@ -73,7 +73,7 @@ class Radio extends Widget
     /**
      * 设置禁选的选项.
      *
-     * @param  string|array  $values
+     * @param  string|array|int|null  $values
      * @return $this
      */
     public function disable($values = null)

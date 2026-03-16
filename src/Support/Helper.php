@@ -314,7 +314,7 @@ class Helper
      * 生成层级数据.
      *
      * @param  array  $nodes
-     * @param  int  $parentId
+     * @param  int|string  $parentId
      * @return array
      */
     public static function buildNestedArray(

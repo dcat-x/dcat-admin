@@ -526,7 +526,7 @@ if (! function_exists('admin_exit')) {
     /**
      * 响应数据并中断后续逻辑.
      *
-     * @param  Response|string|array  $response
+     * @param  Response|string|array|\Illuminate\Contracts\Support\Renderable  $response
      *
      * @throws \Illuminate\Http\Exceptions\HttpResponseException
      */

@@ -327,7 +327,7 @@ HTML;
      */
     protected function renderCustomTools($tools)
     {
-        return $tools->map([Helper::class, 'render'])->implode(' ');
+        return $tools->map(fn ($v) => Helper::render($v))->implode(' ');
     }
 
     /**

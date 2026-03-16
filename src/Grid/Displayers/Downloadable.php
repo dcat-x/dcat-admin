@@ -37,8 +37,11 @@ HTML;
         })->implode('<br>');
     }
 
-    protected function resolveStorageUrl(FilesystemAdapter $storage, string $path): string
+    protected function resolveStorageUrl(\Illuminate\Contracts\Filesystem\Filesystem $storage, string $path): string
     {
-        return (string) $storage->url($path);
+        /** @var FilesystemAdapter $adapter */
+        $adapter = $storage;
+
+        return (string) $adapter->url($path);
     }
 }

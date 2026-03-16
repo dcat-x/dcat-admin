@@ -229,7 +229,7 @@ abstract class GeneratorCommand extends Command
     /**
      * Get the default namespace for the class.
      *
-     * @param  string  $rootNamespace
+     * @param  string|null  $rootNamespace
      * @return string
      */
     protected function getDefaultNamespace($rootNamespace)

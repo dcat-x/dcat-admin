@@ -19,7 +19,7 @@ abstract class ModelSearchProvider implements SearchProviderInterface
     abstract protected function titleColumn(): string;
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  \Illuminate\Database\Eloquent\Model|object  $model
      */
     abstract protected function url($model): string;
 

@@ -128,7 +128,7 @@ class Tags extends Field
             return $value;
         }
 
-        return array_filter($value, 'strlen');
+        return array_filter($value, fn ($v) => strlen((string) $v) > 0);
     }
 
     /**

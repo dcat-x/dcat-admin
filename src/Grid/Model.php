@@ -646,9 +646,9 @@ class Model
     }
 
     /**
-     * @param  Builder  $query
+     * @param  Builder|\Illuminate\Database\Eloquent\Builder  $query
      * @param  string[]  $columns
-     * @return Builder|Paginator|Collection
+     * @return Builder|\Illuminate\Database\Eloquent\Builder|Paginator|Collection
      */
     public function apply($query, bool $fetch = false, $columns = null)
     {

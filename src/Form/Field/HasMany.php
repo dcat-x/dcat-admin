@@ -395,7 +395,7 @@ class HasMany extends Field
     /**
      * Build a Nested form.
      *
-     * @param  null  $key
+     * @param  int|string|null  $key
      * @return NestedForm
      */
     public function buildNestedForm($key = null)
@@ -611,7 +611,7 @@ class HasMany extends Field
         }, '');
 
         /* Build cell with hidden elements */
-        $template .= '<td class="hidden">'.implode('', $hidden).'</td>';
+        $template .= '<td class="hidden">'.implode('', array_map('strval', $hidden)).'</td>';
 
         // specify a view to render.
         $this->view = $this->view ?: $this->views[$this->viewMode];

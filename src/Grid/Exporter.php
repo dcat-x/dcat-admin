@@ -202,8 +202,8 @@ class Exporter
     /**
      * Format query for export url.
      *
-     * @param  string  $scope
-     * @param  string|null  $args
+     * @param  string|int  $scope
+     * @param  string|int|null  $args
      * @return array
      */
     public function formatExportQuery($scope = '', $args = null)

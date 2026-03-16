@@ -111,7 +111,7 @@ class SelectTable extends Field
     }
 
     /**
-     * @param  array  $options
+     * @param  array|\Closure  $options
      * @return $this
      */
     public function options($options = [])

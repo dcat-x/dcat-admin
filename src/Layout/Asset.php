@@ -500,9 +500,10 @@ class Asset
     /**
      * 获取真实路径.
      *
+     * @param  string|array|null  $path
      * @return string|null
      */
-    public function getRealPath(?string $path)
+    public function getRealPath($path)
     {
         if (! $this->containsAlias($path)) {
             return $path;

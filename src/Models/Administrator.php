@@ -93,9 +93,12 @@ class Administrator extends Model implements AuthenticatableContract, Authorizab
         return $this->storageUrl($storage, $path);
     }
 
-    protected function storageUrl(FilesystemAdapter $storage, string $path): string
+    protected function storageUrl(\Illuminate\Contracts\Filesystem\Filesystem $storage, string $path): string
     {
-        return (string) $storage->url($path);
+        /** @var FilesystemAdapter $adapter */
+        $adapter = $storage;
+
+        return (string) $adapter->url($path);
     }
 
     /**

@@ -112,8 +112,8 @@ trait HasExporter
     /**
      * Get the export url.
      *
-     * @param  int  $scope
-     * @param  null  $args
+     * @param  int|string  $scope
+     * @param  int|string|null  $args
      * @return string
      */
     public function exportUrl($scope = 1, $args = null)

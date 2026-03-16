@@ -308,9 +308,12 @@ HTML;
         });
     }
 
-    protected function resolveStorageUrl(FilesystemAdapter $storage, string $path): string
+    protected function resolveStorageUrl(\Illuminate\Contracts\Filesystem\Filesystem $storage, string $path): string
     {
-        return (string) $storage->url($path);
+        /** @var FilesystemAdapter $adapter */
+        $adapter = $storage;
+
+        return (string) $adapter->url($path);
     }
 
     /**
@@ -439,6 +442,7 @@ HTML;
 
         return $this->as(function ($v) use (&$val, $name) {
             if ($val instanceof \Closure) {
+                // @phpstan-ignore-next-line
                 $val = $val->call($this, $v, Arr::get($this, $name));
             }
 
@@ -464,6 +468,7 @@ HTML;
 
         return $this->as(function ($v) use (&$val, $name) {
             if ($val instanceof \Closure) {
+                // @phpstan-ignore-next-line
                 $val = $val->call($this, $v, Arr::get($this, $name));
             }
 
@@ -675,6 +680,7 @@ HTML;
                 $field->wrap(false);
             }
 
+            // @phpstan-ignore-next-line
             $extend->setValue($value)->setModel($this);
 
             return $extend->render(...$arguments);

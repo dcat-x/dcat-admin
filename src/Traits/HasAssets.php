@@ -91,7 +91,7 @@ trait HasAssets
     }
 
     /**
-     * @param  string|array  $font
+     * @param  string|array|false  $font
      * @return void
      */
     public static function fonts($font)

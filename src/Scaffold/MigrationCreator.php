@@ -56,7 +56,7 @@ class MigrationCreator extends BaseMigrationCreator
      *
      * @param  string  $name
      * @param  string  $stub
-     * @param  string  $table
+     * @param  string|null  $table
      * @return mixed
      */
     protected function populateAdminStub($name, $stub, $table)

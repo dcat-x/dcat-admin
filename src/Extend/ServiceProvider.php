@@ -262,7 +262,7 @@ abstract class ServiceProvider extends LaravelServiceProvider
         try {
             $logo = $this->getLogoPath();
 
-            if (is_file($logo) && $file = fopen($logo, 'rb', 0)) {
+            if (is_file($logo) && $file = fopen($logo, 'rb', false)) {
                 $content = fread($file, filesize($logo));
                 fclose($file);
                 $base64 = chunk_split(base64_encode($content));

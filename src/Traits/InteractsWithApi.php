@@ -259,7 +259,7 @@ JS;
     /**
      * 合并.
      *
-     * @param  static  $self
+     * @param  object  $self
      * @return $this
      */
     public function merge($self)

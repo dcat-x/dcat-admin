@@ -40,7 +40,9 @@ class TinymceController
 
     protected function putFileAs(\Illuminate\Contracts\Filesystem\Filesystem $disk, string $dir, UploadedFile $file, string $name): void
     {
-        $disk->putFileAs($dir, $file, $name);
+        /** @var \Illuminate\Http\UploadedFile $uploadedFile */
+        $uploadedFile = $file;
+        $disk->putFileAs($dir, $uploadedFile, $name);
     }
 
     protected function diskUrl(\Illuminate\Contracts\Filesystem\Filesystem $disk, string $path): string

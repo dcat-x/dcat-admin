@@ -256,6 +256,7 @@ trait HasDisplayers
             return $action
                 ->setGrid($grid)
                 ->setColumn($column)
+                // @phpstan-ignore-next-line
                 ->setRow($this);
         });
     }

@@ -231,7 +231,7 @@ class Select extends Field
             $this->options($this->resolveOptionsFromClosure($this->options));
         }
 
-        $this->options = array_filter($this->options, 'strlen');
+        $this->options = array_filter($this->options, fn ($v) => strlen((string) $v) > 0);
     }
 
     protected function resolveOptionsFromClosure(\Closure $options)

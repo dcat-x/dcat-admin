@@ -59,6 +59,6 @@ class Tools implements Renderable
      */
     public function render()
     {
-        return $this->tools->map([Helper::class, 'render'])->implode(' ');
+        return $this->tools->map(fn ($v) => Helper::render($v))->implode(' ');
     }
 }

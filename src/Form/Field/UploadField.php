@@ -492,11 +492,14 @@ trait UploadField
             throw new \RuntimeException('Configured storage driver does not support putFileAs().');
         }
 
+        /** @var \Illuminate\Http\UploadedFile $uploadedFile */
+        $uploadedFile = $file;
+
         if ($permission !== null) {
-            return $storage->putFileAs($directory, $file, $name, $permission);
+            return $storage->putFileAs($directory, $uploadedFile, $name, $permission);
         }
 
-        return $storage->putFileAs($directory, $file, $name);
+        return $storage->putFileAs($directory, $uploadedFile, $name);
     }
 
     protected function storageUrl(string $path, $storage = null): string

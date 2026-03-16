@@ -203,7 +203,7 @@ class EloquentRepository extends Repository implements TreeRepository
     /**
      * @param  string  $column
      * @param  string  $type
-     * @param  string  $cast
+     * @param  string|null  $cast
      *
      * @throws \Exception
      */
