@@ -13,8 +13,6 @@ class RepositoryCreator
      */
     public function create(?string $modelClass, ?string $repositoryClass)
     {
-        $model = class_basename($modelClass);
-
         $files = app('files');
 
         $path = Helper::guessClassFileName($repositoryClass);
