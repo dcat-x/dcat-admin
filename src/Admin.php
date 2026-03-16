@@ -64,6 +64,11 @@ class Admin
     private static $defaultPjaxContainerId = 'pjax-container';
 
     /**
+     * @var Widgets\GlobalSearch|null
+     */
+    protected static $globalSearch;
+
+    /**
      * 版本.
      *
      * @return string
@@ -555,6 +560,14 @@ class Admin
     }
 
     /**
+     * 全局搜索.
+     */
+    public static function globalSearch(): Widgets\GlobalSearch
+    {
+        return static::$globalSearch ?: (static::$globalSearch = new Widgets\GlobalSearch);
+    }
+
+    /**
      * 注册路由.
      *
      * @return void
@@ -629,6 +642,10 @@ class Admin
             $router->get('render', 'RenderableController@handle')->name('render');
             $router->post('tinymce/upload', 'TinymceController@upload')->name('tinymce.upload');
             $router->post('editor-md/upload', 'EditorMDController@upload')->name('editor-md.upload');
+
+            $router->get('import/template', 'ImportController@template')->name('import.template');
+            $router->post('import/preview', 'ImportController@preview')->name('import.preview');
+            $router->post('import/execute', 'ImportController@execute')->name('import.execute');
 
             // OSS direct upload routes (when enabled)
             if (config('admin.upload.oss.enable', false)) {

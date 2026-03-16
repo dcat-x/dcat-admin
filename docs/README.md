@@ -39,6 +39,8 @@
 - [规格筛选器](grid/selector.md)
 - [数据导出](grid/export.md)
 - [自定义导出](grid/exporter.md)
+- [数据导入](grid/import.md)
+- [视图模式切换](grid/view-mode.md)
 - [快捷创建](grid/quick-create.md)
 - [行内编辑](grid/editable.md)
 - [事件](grid/events.md)
@@ -65,6 +67,7 @@
 - [表单初始化](form/init.md)
 - [工具表单](form/widgets-form.md)
 - [表单布局](form/layout.md)
+- [表单自动保存](form/auto-save.md)
 - [表单字段翻译](form/trans.md)
 
 ## 数据详情
@@ -118,6 +121,7 @@
 - [调试输出](widgets/dump.md)
 - [弹窗表格](widgets/dialog-table.md)
 - [暗黑模式切换器](widgets/dark-mode-switcher.md)
+- [全局搜索](widgets/global-search.md)
 
 ## 高级功能
 

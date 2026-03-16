@@ -8,6 +8,7 @@
     <div class="box-header with-border">
         <div class="pull-right">
             {!! $grid->renderExportButton() !!}
+            {!! $grid->renderImportButton() !!}
             {!! $grid->renderCreateButton() !!}
         </div>
         <span>

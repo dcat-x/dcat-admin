@@ -42,6 +42,11 @@ return [
         '403' => 'Permission deny !',
         '401' => 'Unauthorized !',
         '419' => 'Page expired !',
+
+        'auto_save_tip' => 'Unsaved draft detected. Restore it?',
+        'auto_save_restore' => 'Restore',
+        'auto_save_discard' => 'Discard',
+        'auto_save_restored' => 'Draft restored',
     ],
     'online' => 'Online',
     'login' => 'Login',

@@ -24,6 +24,7 @@ import Slider from './extensions/Slider'
 import Color from './extensions/Color'
 import Validator from './extensions/Validator'
 import DarkMode from './extensions/DarkMode'
+import FormAutoSave from './extensions/FormAutoSave'
 
 import Menu from './bootstrappers/Menu'
 import Footer from './bootstrappers/Footer'
@@ -75,6 +76,11 @@ function extend (Dcat) {
     // 滑动面板
     Dcat.Slider = function (options) {
         return new Slider(Dcat, options)
+    };
+
+    // 表单自动保存
+    Dcat.FormAutoSave = function (options) {
+        return new FormAutoSave(options)
     };
 }
 

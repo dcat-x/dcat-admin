@@ -14,6 +14,8 @@
                         {!! $grid->renderColumnSelector() !!}
                         {!! $grid->renderCreateButton() !!}
                         {!! $grid->renderExportButton() !!}
+                        {!! $grid->renderImportButton() !!}
+                        {!! $grid->renderViewModeButton() !!}
                         {!! $grid->renderQuickSearch() !!}
                     </div>
                 @else
@@ -23,6 +25,8 @@
                         {!! $grid->renderColumnSelector() !!}
                         {!! $grid->renderCreateButton() !!}
                         {!! $grid->renderExportButton() !!}
+                        {!! $grid->renderImportButton() !!}
+                        {!! $grid->renderViewModeButton() !!}
                     </div>
                 @endif
             </div>

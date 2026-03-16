@@ -27,12 +27,14 @@ class Grid
     use Concerns\HasEvents;
     use Concerns\HasExporter;
     use Concerns\HasFilter;
+    use Concerns\HasImporter;
     use Concerns\HasNames;
     use Concerns\HasPaginator;
     use Concerns\HasQuickCreate;
     use Concerns\HasQuickSearch;
     use Concerns\HasSelector;
     use Concerns\HasTools;
+    use Concerns\HasViewMode;
     use HasBuilderEvents;
     use HasVariables;
     use Macroable {
@@ -997,6 +999,7 @@ HTML;
     {
         $this->callComposing();
         $this->build();
+        $this->applyViewMode();
         $this->applyFixColumns();
         $this->setUpOptions();
         $this->addFilterScript();

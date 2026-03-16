@@ -117,6 +117,7 @@ class AdminServiceProvider extends ServiceProvider
         $this->registerBladeDirective();
         $this->registerGate();
         $this->registerBuiltinShowFields();
+        $this->registerGlobalSearchRoute();
     }
 
     protected function aliasAdmin()
@@ -216,6 +217,12 @@ class AdminServiceProvider extends ServiceProvider
 
             // Register menu
             Admin::menu()->register();
+
+            // Register global search in navbar
+            $search = Admin::globalSearch();
+            if (! empty($search->getProviders())) {
+                Admin::navbar()->left($search);
+            }
         }, true);
     }
 
@@ -285,6 +292,19 @@ PHP;
 
             // 返回 null 继续其他检查
             return null;
+        });
+    }
+
+    protected function registerGlobalSearchRoute(): void
+    {
+        $attributes = [
+            'prefix' => config('admin.route.prefix'),
+            'middleware' => config('admin.route.middleware'),
+        ];
+
+        app('router')->group($attributes, function ($router) {
+            $router->get('_global-search', [\Dcat\Admin\Http\Controllers\GlobalSearchController::class, 'search'])
+                ->name('dcat.global-search');
         });
     }
 

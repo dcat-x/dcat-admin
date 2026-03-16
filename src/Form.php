@@ -100,6 +100,7 @@ use Symfony\Component\HttpFoundation\Response;
 class Form implements Renderable
 {
     use Concerns\HandleCascadeFields;
+    use Concerns\HasAutoSave;
     use Concerns\HasDataPermission;
     use Concerns\HasEvents;
     use Concerns\HasFiles;
@@ -1248,12 +1249,12 @@ class Form implements Renderable
 
         if ($this->isCreating()) {
             $this->callCreating();
-
-            return;
+        } else {
+            $this->fillFields($this->model()->toArray());
+            $this->callEditing();
         }
 
-        $this->fillFields($this->model()->toArray());
-        $this->callEditing();
+        $this->renderAutoSave();
     }
 
     /**
