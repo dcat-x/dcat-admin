@@ -895,7 +895,7 @@ class Helper
      */
     public static function withRelationQuery($model, ?string $column, string $query, array $params)
     {
-        $column = explode('.', $column);
+        $column = explode('.', (string) $column);
 
         $relColumn = array_pop($column);
 

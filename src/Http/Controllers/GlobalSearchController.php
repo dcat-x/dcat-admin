@@ -16,6 +16,8 @@ class GlobalSearchController extends Controller
         $keyword = $request->input('q', '');
         $limit = (int) $request->input('limit', 5);
 
+        $keyword = (string) $keyword;
+
         if (strlen($keyword) < 1) {
             return response()->json(['groups' => []]);
         }

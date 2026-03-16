@@ -100,7 +100,7 @@ class ExtensionMakeCommand extends Command
             $this->makeDir();
         }
 
-        $this->package = str_replace('.', '/', $this->argument('name'));
+        $this->package = str_replace('.', '/', (string) $this->argument('name'));
         $this->extensionName = str_replace('/', '.', $this->package);
 
         $this->basePath = rtrim($this->extensionDir, '/').'/'.ltrim($this->package, '/');

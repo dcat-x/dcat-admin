@@ -420,7 +420,7 @@ class Color
      */
     public function lighten(?string $color, int $amt)
     {
-        return Helper::colorLighten($this->get($color, $color), $amt);
+        return Helper::colorLighten((string) $this->get($color, $color), $amt);
     }
 
     /**
@@ -430,7 +430,7 @@ class Color
      */
     public function darken(string $color, int $amt)
     {
-        return Helper::colorDarken($this->get($color, $color), $amt);
+        return Helper::colorDarken((string) $this->get($color, $color), $amt);
     }
 
     /**
@@ -441,7 +441,7 @@ class Color
      */
     public function alpha(?string $color, $alpha)
     {
-        return Helper::colorAlpha($this->get($color, $color), $alpha);
+        return Helper::colorAlpha((string) $this->get($color, $color), $alpha);
     }
 
     /**

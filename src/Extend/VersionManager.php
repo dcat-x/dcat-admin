@@ -196,7 +196,7 @@ class VersionManager
             return static::NO_VERSION_VALUE;
         }
 
-        return trim(key(array_slice($versionInfo, -1, 1)));
+        return trim((string) key(array_slice($versionInfo, -1, 1)));
     }
 
     public function getNewFileVersions($name, $version = null)

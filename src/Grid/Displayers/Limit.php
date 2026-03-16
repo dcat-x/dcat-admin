@@ -42,7 +42,7 @@ JS;
         // 字符串
         $this->addScript();
 
-        $value = Helper::strLimit($this->value, $limit, $end);
+        $value = Helper::strLimit((string) $this->value, $limit, $end);
 
         if ($value == $this->value) {
             return $value;

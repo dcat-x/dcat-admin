@@ -215,7 +215,7 @@ class ScaffoldController extends Controller
         $databases = Arr::where(config('database.connections', []), function ($value) {
             $supports = ['mysql'];
 
-            return in_array(strtolower(Arr::get($value, 'driver')), $supports);
+            return in_array(strtolower((string) Arr::get($value, 'driver')), $supports);
         });
 
         $data = [];
@@ -253,8 +253,8 @@ class ScaffoldController extends Controller
 
                 $data[$value['database']] = $collection->groupBy('TABLE_NAME')->map(function ($v) {
                     return collect($v)->keyBy('COLUMN_NAME')->map(function ($v) {
-                        $v['COLUMN_TYPE'] = strtolower($v['COLUMN_TYPE']);
-                        $v['DATA_TYPE'] = strtolower($v['DATA_TYPE']);
+                        $v['COLUMN_TYPE'] = strtolower((string) $v['COLUMN_TYPE']);
+                        $v['DATA_TYPE'] = strtolower((string) $v['DATA_TYPE']);
 
                         if (Str::contains($v['COLUMN_TYPE'], 'unsigned')) {
                             $v['DATA_TYPE'] .= '@unsigned';

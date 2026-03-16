@@ -101,7 +101,7 @@ class IdeHelperCommand extends Command
         $databases = Arr::where(config('database.connections', []), function ($value) {
             $supports = ['mysql'];
 
-            return in_array(strtolower(Arr::get($value, 'driver')), $supports);
+            return in_array(strtolower((string) Arr::get($value, 'driver')), $supports);
         });
 
         $exceptTables = [
@@ -143,7 +143,7 @@ class IdeHelperCommand extends Command
         $option = $this->option('controller');
 
         return $this->getAllControllers()
-            ->merge(explode(',', $option))
+            ->merge(explode(',', (string) $option))
             ->map(function ($controller) use (&$reject) {
                 if (! $controller || ! $content = $this->getClassContent($controller)) {
                     return [];

@@ -444,7 +444,7 @@ abstract class GeneratorCommand extends Command
         }
 
         if ($this->hasOption('base') && $this->option('base')) {
-            return trim(base_path($this->option('base')), '/');
+            return trim(base_path((string) $this->option('base')), '/');
         }
 
         return $this->laravel['path'];

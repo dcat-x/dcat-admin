@@ -57,13 +57,13 @@ class ActionCommand extends GeneratorCommand
 
         INPUT_NAME:
 
-        $this->className = ucfirst(trim($this->ask('Please enter a name of action class')));
+        $this->className = ucfirst(trim((string) $this->ask('Please enter a name of action class')));
 
         if (! $this->className) {
             goto INPUT_NAME;
         }
 
-        $this->namespace = ucfirst(trim($this->ask('Please enter the namespace of action class', $this->getDefaultNamespace(null))));
+        $this->namespace = ucfirst(trim((string) $this->ask('Please enter the namespace of action class', $this->getDefaultNamespace(null))));
 
         $this->askBaseDirectory();
 

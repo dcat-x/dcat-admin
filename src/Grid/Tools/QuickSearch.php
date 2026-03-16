@@ -73,7 +73,7 @@ class QuickSearch extends AbstractTool
      */
     public function value()
     {
-        return trim(request($this->getQueryName()) ?? '');
+        return trim((string) (request($this->getQueryName()) ?? ''));
     }
 
     /**
