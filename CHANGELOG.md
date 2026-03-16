@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.28] - 2026-03-16
+
+### Other
+
+- 🎨 style: 升级 Pint v1.29 并修复新增代码风格规则
+
 ## [1.1.27] - 2026-03-16
 
 ### Added
@@ -427,7 +433,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.27...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.28...HEAD
+[1.1.28]: https://github.com/dcat-x/dcat-admin/compare/v1.1.27...v1.1.28
 [1.1.27]: https://github.com/dcat-x/dcat-admin/compare/v1.1.26...v1.1.27
 [1.1.26]: https://github.com/dcat-x/dcat-admin/compare/v1.1.25...v1.1.26
 [1.1.25]: https://github.com/dcat-x/dcat-admin/compare/v1.1.24...v1.1.25
