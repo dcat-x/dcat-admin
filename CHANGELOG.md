@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.30] - 2026-03-16
+
+### Other
+
+- 🐛 fix: 补充修复 strict_types 下的潜在 TypeError（第三批）
+- 🐛 fix: 全面修复 strict_types 下潜在的 TypeError
+
 ## [1.1.29] - 2026-03-16
 
 ### Other
@@ -439,7 +446,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.29...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.30...HEAD
+[1.1.30]: https://github.com/dcat-x/dcat-admin/compare/v1.1.29...v1.1.30
 [1.1.29]: https://github.com/dcat-x/dcat-admin/compare/v1.1.28...v1.1.29
 [1.1.28]: https://github.com/dcat-x/dcat-admin/compare/v1.1.27...v1.1.28
 [1.1.27]: https://github.com/dcat-x/dcat-admin/compare/v1.1.26...v1.1.27
