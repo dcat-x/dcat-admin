@@ -41,7 +41,7 @@ trait HasFiles
             $field = $this->findFieldByName($column);
         } else {
             // hasMany表单文件上传
-            $relation = explode(',', $relation)[0];
+            $relation = explode(',', (string) $relation)[0];
 
             $field = $this->getFieldByRelationName($relation, $column);
         }
@@ -72,7 +72,7 @@ trait HasFiles
             return $field;
         }
 
-        $columns = explode('.', $column);
+        $columns = explode('.', (string) $column);
         $field = $this->builder;
         foreach ($columns as $column) {
             if ($field instanceof FieldsCollection) {

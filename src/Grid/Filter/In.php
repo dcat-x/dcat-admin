@@ -32,7 +32,7 @@ class In extends AbstractFilter
             return;
         }
 
-        $this->value = is_array($value) ? $value : explode(',', $value);
+        $this->value = is_array($value) ? $value : explode(',', (string) $value);
 
         return $this->buildCondition($this->column, $this->value);
     }

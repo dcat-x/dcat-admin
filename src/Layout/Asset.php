@@ -362,7 +362,7 @@ class Asset
         }
 
         return array_filter($files, function ($file) {
-            return ! mb_strpos($file, '{');
+            return ! mb_strpos((string) $file, '{');
         });
     }
 
@@ -490,8 +490,8 @@ class Asset
 
         $path = $this->getRealPath($path);
 
-        if (mb_strpos($path, '//') === false) {
-            $path = (string) config('admin.assets_server').'/'.trim($path, '/');
+        if (mb_strpos((string) $path, '//') === false) {
+            $path = (string) config('admin.assets_server').'/'.trim((string) $path, '/');
         }
 
         return (config('admin.https') || config('admin.secure')) ? secure_asset($path) : asset($path);

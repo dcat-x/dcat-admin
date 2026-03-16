@@ -29,6 +29,6 @@ class StringOutput extends Output
 
     public function getContent()
     {
-        return trim($this->output);
+        return trim((string) $this->output);
     }
 }

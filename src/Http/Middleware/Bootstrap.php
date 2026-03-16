@@ -86,7 +86,7 @@ class Bootstrap
             return $request->prefetch();
         }
 
-        return strcasecmp($request->server->get('HTTP_X_MOZ'), 'prefetch') === 0 ||
-            strcasecmp($request->headers->get('Purpose'), 'prefetch') === 0;
+        return strcasecmp((string) $request->server->get('HTTP_X_MOZ'), 'prefetch') === 0 ||
+            strcasecmp((string) $request->headers->get('Purpose'), 'prefetch') === 0;
     }
 }

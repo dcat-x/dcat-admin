@@ -43,7 +43,7 @@ class Range extends Field
 
         $result = [];
         foreach ($messages as $key => $message) {
-            $column = explode('.', $key);
+            $column = explode('.', (string) $key);
             $rule = array_pop($column);
             $column = implode('.', $column);
 

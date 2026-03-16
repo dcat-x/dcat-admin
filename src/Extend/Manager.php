@@ -487,7 +487,7 @@ class Manager
         $classLoader = Admin::classLoader();
 
         foreach ($psr4 as $namespace => $path) {
-            $path = $directory.'/'.trim($path, '/').'/';
+            $path = $directory.'/'.trim((string) $path, '/').'/';
 
             $classLoader->addPsr4($namespace, $path);
         }

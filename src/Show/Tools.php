@@ -340,7 +340,7 @@ HTML;
         $output = $this->renderCustomTools($this->prepends);
 
         foreach ($this->tools as $tool) {
-            $renderMethod = 'render'.ucfirst($tool);
+            $renderMethod = 'render'.ucfirst((string) $tool);
             $output .= $this->$renderMethod();
         }
 

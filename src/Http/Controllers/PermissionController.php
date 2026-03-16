@@ -63,7 +63,7 @@ class PermissionController extends AdminController
 
                 $path = collect($path)->map(function ($path) use (&$method) {
                     if (Str::contains($path, ':')) {
-                        [$me, $path] = explode(':', $path);
+                        [$me, $path] = explode(':', (string) $path);
 
                         $method = array_merge($method, explode(',', $me));
                     }

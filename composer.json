@@ -42,7 +42,8 @@
         "mockery/mockery": "^1.6",
         "orchestra/testbench": "^10.0",
         "phpstan/phpstan": "^1.0",
-        "phpunit/phpunit": "^11.0"
+        "phpunit/phpunit": "^11.0",
+        "rector/rector": "^1.2"
     },
     "autoload": {
         "psr-4": {
@@ -61,10 +62,13 @@
         "pint": "vendor/bin/pint",
         "pint:test": "vendor/bin/pint --test",
         "phpstan": "vendor/bin/phpstan analyse",
+        "rector": "vendor/bin/rector",
+        "rector:test": "vendor/bin/rector --dry-run",
         "test": "vendor/bin/phpunit",
         "test:coverage": "vendor/bin/phpunit --coverage-html coverage",
         "ci": [
             "@pint:test",
+            "@rector:test",
             "@phpstan",
             "@test"
         ],

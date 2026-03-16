@@ -15,7 +15,7 @@ class Session
         }
 
         $path_prefix = '';
-        $path_arr = parse_url(config('app.url'));
+        $path_arr = parse_url((string) config('app.url'));
 
         if (array_key_exists('path', $path_arr) && ! empty($path_arr['path'])) {
             $path_prefix = rtrim($path_arr['path'], '/');

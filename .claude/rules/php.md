@@ -5,8 +5,9 @@ globs: ["src/**/*.php", "tests/**/*.php"]
 
 # PHP 规范
 
-- 全局启用 `declare(strict_types=1)`，禁止传 `null` 给 string 参数，必要时用 `(string)` 转换
+- 全局启用 `declare(strict_types=1)`，禁止传 `null`/`mixed` 给 string 参数，必要时用 `(string)` 转换
 - 代码风格: Pint preset `laravel`，修改后运行 `composer pint`
+- 类型安全: Rector (`NullToStrictStringFuncCallArgRector`)，新代码不得引入新的 Rector 错误
 - 静态分析: PHPStan level 5，新代码不得引入新的 PHPStan 错误
 - Namespace: `Dcat\Admin\*`，tests 使用 `Dcat\Admin\Tests\*`
 - 断言统一使用 `assertSame`（严格相等），不用 `assertEquals`

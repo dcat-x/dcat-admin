@@ -193,7 +193,7 @@ class Permission extends Model implements Sortable
      */
     protected function matchRequest(array $match, Request $request): bool
     {
-        if (! $path = trim($match['path'], '/')) {
+        if (! $path = trim((string) $match['path'], '/')) {
             return false;
         }
 

@@ -189,7 +189,7 @@ class ScaffoldController extends Controller
      */
     public function table()
     {
-        $db = addslashes(\request('db'));
+        $db = addslashes((string) \request('db'));
         $table = \request('tb');
         if (! $table || ! $db) {
             return ['status' => 1, 'list' => []];
@@ -292,7 +292,7 @@ class ScaffoldController extends Controller
         $messages = [];
 
         foreach ($paths as $name => $path) {
-            $messages[] = ucfirst($name).": $path";
+            $messages[] = ucfirst((string) $name).": $path";
         }
 
         $messages[] = "<br />$message";

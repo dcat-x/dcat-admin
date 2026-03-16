@@ -24,7 +24,7 @@ class Downloadable extends AbstractDisplayer
             if (filter_var($value, FILTER_VALIDATE_URL)) {
                 $src = $value;
             } elseif ($server) {
-                $src = rtrim($server, '/').'/'.ltrim($value, '/');
+                $src = rtrim((string) $server, '/').'/'.ltrim($value, '/');
             } else {
                 $src = $this->resolveStorageUrl($storage, $value);
             }

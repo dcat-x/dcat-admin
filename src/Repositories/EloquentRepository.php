@@ -232,7 +232,7 @@ class EloquentRepository extends Repository implements TreeRepository
         $isJsonColumn = Str::contains($column, '->');
 
         if ($isJsonColumn) {
-            $explodedCols = explode('->', $column);
+            $explodedCols = explode('->', (string) $column);
             // json字段排序
             $col = $this->wrapMySqlColumn(array_shift($explodedCols));
             $parts = implode('.', $explodedCols);
@@ -548,7 +548,7 @@ class EloquentRepository extends Repository implements TreeRepository
     {
         $models = $this->collection->keyBy($this->getKeyName());
 
-        collect(explode(',', $form->getKey()))->filter()->each(function ($id) use ($form, $models) {
+        collect(explode(',', (string) $form->getKey()))->filter()->each(function ($id) use ($form, $models) {
             $model = $models->get($id);
 
             if (! $model) {
@@ -590,7 +590,7 @@ class EloquentRepository extends Repository implements TreeRepository
         $this->collection = $query
             ->with($this->getRelations())
             ->findOrFail(
-                collect(explode(',', $id))->filter()->toArray(),
+                collect(explode(',', (string) $id))->filter()->toArray(),
                 $this->getFormColumns()
             );
 

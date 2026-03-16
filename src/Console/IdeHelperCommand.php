@@ -88,7 +88,7 @@ class IdeHelperCommand extends Command
 
         $this->write($fields);
 
-        $path = basename($this->path);
+        $path = basename((string) $this->path);
 
         $this->info("The helper file [$path] created successfully.");
     }
@@ -212,7 +212,7 @@ class IdeHelperCommand extends Command
     {
         $content = $this->getClassContent(Grid\Filter::class);
 
-        preg_match_all($this->patterns['grid-filter'], $content, $fields);
+        preg_match_all($this->patterns['grid-filter'], (string) $content, $fields);
 
         $reject = $fields[1];
 
@@ -256,7 +256,7 @@ class IdeHelperCommand extends Command
     {
         $content = $this->getClassContent(Form::class);
 
-        preg_match_all($this->patterns['form-field'], $content, $fields);
+        preg_match_all($this->patterns['form-field'], (string) $content, $fields);
 
         $reject = $fields[1];
 
@@ -282,7 +282,7 @@ class IdeHelperCommand extends Command
     {
         $content = $this->getClassContent(Grid\Column::class);
 
-        preg_match_all($this->patterns['grid-column'], $content, $column);
+        preg_match_all($this->patterns['grid-column'], (string) $content, $column);
 
         $reject = $column[1];
 

@@ -128,7 +128,7 @@ trait HasHtml
             return;
         }
 
-        if (! empty($script = trim($element->nodeValue))) {
+        if (! empty($script = trim((string) $element->nodeValue))) {
             if ($require = $element->getAttribute('require')) {
                 static::asset()->require(explode(',', $require));
             }
@@ -154,7 +154,7 @@ trait HasHtml
      */
     protected static function resolveStyle(DOMElement $element)
     {
-        if (! empty(trim($element->nodeValue))) {
+        if (! empty(trim((string) $element->nodeValue))) {
             static::style($element->nodeValue);
         }
     }

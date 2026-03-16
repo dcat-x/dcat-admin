@@ -120,7 +120,7 @@ abstract class Action implements Renderable
      */
     protected function getElementClass()
     {
-        return ltrim($this->selector(), '.');
+        return ltrim((string) $this->selector(), '.');
     }
 
     /**

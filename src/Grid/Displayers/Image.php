@@ -25,7 +25,7 @@ class Image extends AbstractDisplayer
             if (filter_var($path, FILTER_VALIDATE_URL) || mb_strpos($path, 'data:image') === 0) {
                 $src = $path;
             } elseif ($server) {
-                $src = rtrim($server, '/').'/'.ltrim($path, '/');
+                $src = rtrim((string) $server, '/').'/'.ltrim($path, '/');
             } else {
                 $src = $this->resolveStorageUrl($storage, $path);
             }

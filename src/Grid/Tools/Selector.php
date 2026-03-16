@@ -138,7 +138,7 @@ class Selector
         });
 
         foreach ($selected as &$value) {
-            $value = explode(',', $value);
+            $value = explode(',', (string) $value);
 
             foreach ($value as &$v) {
                 $v = (string) $v;

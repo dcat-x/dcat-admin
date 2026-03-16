@@ -38,7 +38,7 @@ trait Resizable
     public function getThumbnailPath($image, $type)
     {
         // We need to get extension type ( .jpeg , .png ...)
-        $ext = pathinfo($image, PATHINFO_EXTENSION);
+        $ext = pathinfo((string) $image, PATHINFO_EXTENSION);
 
         // We remove extension from file name so we can append thumbnail type
         $name = Str::replaceLast('.'.$ext, '', $image);

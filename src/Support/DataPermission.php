@@ -245,17 +245,17 @@ class DataPermission
                 break;
 
             case DataRule::CONDITION_IN:
-                $values = is_array($value) ? $value : explode(',', $value);
+                $values = is_array($value) ? $value : explode(',', (string) $value);
                 $query->whereIn($field, $values);
                 break;
 
             case DataRule::CONDITION_NOT_IN:
-                $values = is_array($value) ? $value : explode(',', $value);
+                $values = is_array($value) ? $value : explode(',', (string) $value);
                 $query->whereNotIn($field, $values);
                 break;
 
             case DataRule::CONDITION_BETWEEN:
-                $values = is_array($value) ? $value : explode(',', $value);
+                $values = is_array($value) ? $value : explode(',', (string) $value);
                 if (count($values) >= 2) {
                     $query->whereBetween($field, [$values[0], $values[1]]);
                 } else {

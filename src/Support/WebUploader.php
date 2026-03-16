@@ -116,7 +116,7 @@ class WebUploader
 
         if (
             ! Finder::create()
-                ->in($dir = dirname($this->temporaryFilePath))
+                ->in($dir = dirname((string) $this->temporaryFilePath))
                 ->files()
                 ->count()
         ) {

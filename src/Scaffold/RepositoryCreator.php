@@ -47,7 +47,7 @@ class RepositoryCreator
 
     protected function getNamespace($name)
     {
-        return trim(implode('\\', array_slice(explode('\\', $name), 0, -1)), '\\');
+        return trim(implode('\\', array_slice(explode('\\', (string) $name), 0, -1)), '\\');
     }
 
     protected function stub()

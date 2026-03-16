@@ -143,7 +143,7 @@ class AuthController extends Controller
 
         if (
             (! $newPassword)
-            || password_verify($newPassword, $user->getAuthPassword())
+            || password_verify((string) $newPassword, $user->getAuthPassword())
         ) {
             return true;
         }

@@ -130,7 +130,7 @@ class Helper
         $actionName = $router->current()->getActionName();
 
         if (! isset(static::$controllerNames[$actionName])) {
-            $controllerClass = strstr($actionName, '@', true) ?: $actionName;
+            $controllerClass = strstr((string) $actionName, '@', true) ?: $actionName;
             $controller = class_basename($controllerClass);
 
             static::$controllerNames[$actionName] = str_replace('Controller', '', $controller);
@@ -834,7 +834,7 @@ class Helper
             if (is_array($column)) {
                 foreach ($column as $v) {
                     if (Str::contains($v, '.')) {
-                        $first = strstr($v, '.', true) ?: $v;
+                        $first = strstr((string) $v, '.', true) ?: $v;
                         $relations[$first] = null;
                     }
                 }
@@ -843,7 +843,7 @@ class Helper
             }
 
             if (Str::contains($column, '.')) {
-                $first = strstr($column, '.', true) ?: $column;
+                $first = strstr((string) $column, '.', true) ?: $column;
                 $relations[$first] = null;
             }
         }

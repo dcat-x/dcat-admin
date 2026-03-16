@@ -83,7 +83,7 @@ abstract class AbstractDisplayer
      */
     public function getElementName()
     {
-        $name = explode('.', $this->column->getName());
+        $name = explode('.', (string) $this->column->getName());
 
         if (count($name) == 1) {
             return $name[0];

@@ -458,7 +458,7 @@ abstract class GeneratorCommand extends Command
         if (! Str::startsWith((string) config('admin.route.namespace'), 'App')) {
             $dir = explode('\\', (string) config('admin.route.namespace'))[0];
 
-            $this->baseDirectory = trim($this->ask('Please enter the application path', Helper::slug($dir)));
+            $this->baseDirectory = trim((string) $this->ask('Please enter the application path', Helper::slug($dir)));
         }
     }
 }

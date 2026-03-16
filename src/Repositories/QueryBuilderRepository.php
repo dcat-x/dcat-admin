@@ -335,7 +335,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
 
         $deletingData = collect($deletingData)->keyBy($this->getKeyName());
 
-        collect(explode(',', $id))->filter()->each(function ($id) use ($form, $deletingData) {
+        collect(explode(',', (string) $id))->filter()->each(function ($id) use ($form, $deletingData) {
             $data = $deletingData->get($id, []);
 
             if (! $data) {
@@ -365,7 +365,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
         return $query
             ->whereIn(
                 $this->getKeyName(),
-                collect(explode(',', $id))->filter()->toArray()
+                collect(explode(',', (string) $id))->filter()->toArray()
             )
             ->get($this->getFormColumns())
             ->transform(function ($value) {

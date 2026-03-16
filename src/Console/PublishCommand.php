@@ -138,7 +138,7 @@ class PublishCommand extends Command
     protected function publishFile($from, $to)
     {
         if (! $this->files->exists($to) || $this->option('force')) {
-            $this->createParentDirectory(dirname($to));
+            $this->createParentDirectory(dirname((string) $to));
 
             $this->files->copy($from, $to);
 

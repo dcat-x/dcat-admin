@@ -5,9 +5,11 @@
 ```bash
 composer test          # PHPUnit 测试
 composer pint:test     # Pint 代码风格检查
+composer rector:test   # Rector 类型安全检查
 composer phpstan       # PHPStan 静态分析
-composer ci            # 以上三项依次执行（pint → phpstan → test）
+composer ci            # 以上四项依次执行（pint → rector → phpstan → test）
 composer pint          # 自动修复代码风格
+composer rector        # 自动修复类型安全问题
 npx mix --production   # 编译前端资源
 php scripts/release.php <version>  # 发布新版本
 ```

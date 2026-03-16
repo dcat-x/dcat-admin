@@ -179,7 +179,7 @@ class Permission
 
         // 移除前缀
         if ($prefix && strpos($path, '/'.$prefix) === 0) {
-            $path = substr($path, strlen($prefix) + 1);
+            $path = substr($path, strlen((string) $prefix) + 1);
         }
 
         $path = ltrim($path, '/');
