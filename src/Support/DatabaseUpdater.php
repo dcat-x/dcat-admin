@@ -81,7 +81,7 @@ class DatabaseUpdater
      * Resolve a migration instance from a file.
      *
      * @param  string  $file
-     * @return object
+     * @return object|null
      */
     public function resolve($file)
     {
@@ -90,7 +90,7 @@ class DatabaseUpdater
         }
 
         if (! is_file($file)) {
-            return;
+            return null;
         }
 
         // Support Laravel 8+ anonymous migration classes
@@ -130,7 +130,7 @@ class DatabaseUpdater
      * Extracts the namespace and class name from a file.
      *
      * @param  string  $file
-     * @return string
+     * @return string|false
      */
     public function getClassFromFile($file)
     {

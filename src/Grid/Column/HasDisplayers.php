@@ -24,7 +24,7 @@ trait HasDisplayers
      *
      * @param  string  $abstract
      * @param  array  $arguments
-     * @return Column
+     * @return $this
      */
     public function displayUsing($abstract, $arguments = [])
     {

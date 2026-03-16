@@ -53,7 +53,7 @@ trait HasActionHandler
     /**
      * Confirm message of action.
      *
-     * @return string|void
+     * @return string|array|void
      */
     public function confirm() {}
 

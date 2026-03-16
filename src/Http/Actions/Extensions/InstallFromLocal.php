@@ -12,6 +12,9 @@ class InstallFromLocal extends AbstractTool
 {
     protected $style = 'btn btn-primary';
 
+    /**
+     * @return string|\Dcat\Admin\Widgets\Modal
+     */
     public function html()
     {
         return Modal::make()

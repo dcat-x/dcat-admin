@@ -219,12 +219,12 @@ abstract class Widget implements Renderable
     /**
      * 渲染HTML.
      *
-     * @return string
+     * @return string|null
      */
     public function html()
     {
         if (! $this->view) {
-            return;
+            return null;
         }
 
         $result = Admin::resolveHtml(view($this->view, $this->variables()), ['runScript' => $this->runScript]);

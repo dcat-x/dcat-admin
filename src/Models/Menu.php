@@ -36,7 +36,7 @@ class Menu extends Model implements Sortable
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = ['parent_id', 'order', 'title', 'icon', 'uri', 'extension', 'show'];
 

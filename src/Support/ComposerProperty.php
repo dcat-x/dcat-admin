@@ -46,7 +46,7 @@ class ComposerProperty implements Arrayable
     }
 
     /**
-     * @return $this
+     * @return static
      */
     public function set($key, $val)
     {
@@ -58,7 +58,7 @@ class ComposerProperty implements Arrayable
     }
 
     /**
-     * @return $this
+     * @return static
      */
     public function delete($key)
     {

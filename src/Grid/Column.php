@@ -162,7 +162,7 @@ class Column
     protected $sort;
 
     /**
-     * @var string
+     * @var string|int|array|null
      */
     protected $width;
 
@@ -174,7 +174,7 @@ class Column
     protected $attributes = [];
 
     /**
-     * @var Closure[]
+     * @var array<int, array{0: \Closure|mixed, 1: array}>
      */
     protected $displayCallbacks = [];
 
@@ -189,7 +189,7 @@ class Column
     protected static $model;
 
     /**
-     * @var Grid\Column\Condition
+     * @var Grid\Column\Condition[]
      */
     protected $conditions = [];
 
@@ -481,7 +481,7 @@ class Column
     }
 
     /**
-     * @return \Closure[]
+     * @return array
      */
     public function getDisplayCallbacks()
     {
@@ -641,7 +641,7 @@ class Column
      *
      * @param  string  $abstract
      * @param  array  $arguments
-     * @return Column
+     * @return $this
      */
     protected function resolveDisplayer($abstract, $arguments)
     {
@@ -657,7 +657,7 @@ class Column
      *
      * @param  string  $abstract
      * @param  array  $arguments
-     * @return Column
+     * @return $this
      */
     protected function callSupportDisplayer($abstract, $arguments)
     {
@@ -679,7 +679,7 @@ class Column
      *
      * @param  string  $abstract
      * @param  array  $arguments
-     * @return Column
+     * @return $this
      */
     protected function callBuiltinDisplayer($abstract, $arguments)
     {

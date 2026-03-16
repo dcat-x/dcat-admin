@@ -29,14 +29,14 @@ trait UploadField
     /**
      * File name.
      *
-     * @var null
+     * @var string|callable|null
      */
     protected $name = null;
 
     /**
      * Storage instance.
      *
-     * @var \Illuminate\Filesystem\Filesystem
+     * @var \Illuminate\Contracts\Filesystem\Filesystem|false|null
      */
     protected $storage;
 
@@ -328,7 +328,7 @@ trait UploadField
     }
 
     /**
-     * @return bool|\Illuminate\Support\MessageBag
+     * @return bool|\Illuminate\Support\MessageBag|string|null
      */
     protected function getValidationErrors(UploadedFile $file)
     {
@@ -420,7 +420,7 @@ trait UploadField
     /**
      * Get storage instance.
      *
-     * @return \Illuminate\Filesystem\Filesystem|null
+     * @return \Illuminate\Contracts\Filesystem\Filesystem|false|null
      */
     public function getStorage()
     {

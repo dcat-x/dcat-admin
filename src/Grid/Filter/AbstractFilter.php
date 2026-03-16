@@ -88,7 +88,7 @@ abstract class AbstractFilter
     protected $parent;
 
     /**
-     * @var int
+     * @var int|string
      */
     protected $width = 10;
 
@@ -180,7 +180,7 @@ abstract class AbstractFilter
      * Format name.
      *
      * @param  string  $column
-     * @return string
+     * @return string|array
      */
     protected function formatName($column)
     {
@@ -372,7 +372,7 @@ abstract class AbstractFilter
      * Datetime filter.
      *
      * @param  array  $options
-     * @return DateTime
+     * @return DateTime|static
      */
     public function datetime($options = [])
     {
@@ -638,7 +638,7 @@ abstract class AbstractFilter
     }
 
     /**
-     * @return string
+     * @return \Closure
      *
      * @throws \Throwable
      */

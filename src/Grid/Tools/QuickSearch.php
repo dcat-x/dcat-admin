@@ -98,7 +98,7 @@ class QuickSearch extends AbstractTool
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return string|\Illuminate\Contracts\View\View
      */
     public function render()
     {

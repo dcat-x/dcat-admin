@@ -115,7 +115,7 @@ trait ModelTree
     /**
      * Get all elements.
      *
-     * @return static[]|\Illuminate\Support\Collection
+     * @return \Illuminate\Support\Collection
      */
     public function allNodes()
     {

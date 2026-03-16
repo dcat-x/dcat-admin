@@ -17,7 +17,7 @@ class Paginator implements Renderable
     protected $grid;
 
     /**
-     * @var \Illuminate\Pagination\LengthAwarePaginator
+     * @var \Illuminate\Pagination\AbstractPaginator|\Illuminate\Pagination\LengthAwarePaginator|null
      */
     public $paginator = null;
 
@@ -48,11 +48,14 @@ class Paginator implements Renderable
     /**
      * Get Pagination links.
      *
-     * @return string
+     * @return \Illuminate\Contracts\Support\Htmlable|string
      */
     protected function paginationLinks()
     {
-        return $this->paginator->render('admin::grid.pagination');
+        /** @var LengthAwarePaginator $paginator */
+        $paginator = $this->paginator;
+
+        return $paginator->render('admin::grid.pagination');
     }
 
     /**
@@ -63,7 +66,7 @@ class Paginator implements Renderable
     protected function perPageSelector()
     {
         if (! $this->grid->getPerPages()) {
-            return;
+            return null;
         }
 
         return (new PerPageSelector($this->grid))->render();

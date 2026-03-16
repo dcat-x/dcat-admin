@@ -177,10 +177,12 @@ JS
     public function render()
     {
         if ($this->built) {
-            return;
+            return '';
         }
         $this->built = true;
 
         $this->addScript();
+
+        return '';
     }
 }

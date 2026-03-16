@@ -139,14 +139,14 @@ class ExportButtonTest extends TestCase
         $this->assertStringContainsString('_export_=page', $html);
     }
 
-    public function test_render_export_current_page_returns_null_when_disabled(): void
+    public function test_render_export_current_page_returns_empty_when_disabled(): void
     {
         $grid = $this->createMockGrid(['show_export_current_page' => false]);
         $button = new ExportButton($grid);
 
         $result = $this->invokeProtectedMethod($button, 'renderExportCurrentPage');
 
-        $this->assertNull($result);
+        $this->assertSame('', $result);
     }
 
     // -------------------------------------------------------------------------

@@ -99,7 +99,7 @@ class Field implements Renderable
     /**
      * Options for specify elements.
      *
-     * @var array
+     * @var array|\Closure
      */
     protected $options = [];
 
@@ -1171,7 +1171,7 @@ class Field implements Renderable
     /**
      * Set view of current field.
      *
-     * @return string
+     * @return $this
      */
     public function setView($view)
     {

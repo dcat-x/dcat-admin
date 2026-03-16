@@ -24,7 +24,7 @@ class Sorter implements Renderable
     /**
      * Cast Name.
      *
-     * @var array
+     * @var array|string
      */
     protected $cast;
 

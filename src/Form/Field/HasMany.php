@@ -120,7 +120,7 @@ class HasMany extends Field
     /**
      * Get validator for this field.
      *
-     * @return bool|Validator
+     * @return bool|\Illuminate\Validation\Validator
      */
     public function getValidator(array $input)
     {
@@ -427,12 +427,12 @@ class HasMany extends Field
     /**
      * Get the HasMany relation key name.
      *
-     * @return string
+     * @return string|null
      */
     public function getKeyName()
     {
         if (is_null($this->form)) {
-            return;
+            return null;
         }
 
         return $this->relationKeyName;

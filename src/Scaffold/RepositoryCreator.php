@@ -25,7 +25,7 @@ class RepositoryCreator
         }
 
         if (is_file($path)) {
-            return;
+            return '';
         }
 
         $content = $files->get($this->stub());

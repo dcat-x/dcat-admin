@@ -232,6 +232,8 @@ class DialogForm
 })();
 JS
         );
+
+        return '';
     }
 
     /**

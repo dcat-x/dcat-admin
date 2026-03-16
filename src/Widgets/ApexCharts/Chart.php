@@ -251,13 +251,16 @@ JS
     public function render()
     {
         if ($this->built) {
-            return;
+            return '';
         }
         $this->built = true;
 
         return parent::render();
     }
 
+    /**
+     * @return string|null
+     */
     public function html()
     {
         $hasSelector = (bool) $this->containerSelector;
@@ -272,7 +275,7 @@ JS
         $this->addScript();
 
         if ($hasSelector) {
-            return;
+            return null;
         }
 
         // 没有指定容器选择器，则需自动生成

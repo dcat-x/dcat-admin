@@ -64,7 +64,7 @@ EOT;
     /**
      * 渲染组件.
      */
-    public function render(): mixed
+    public function render()
     {
         $this->symbol('$')->defaultAttribute(
             'value',

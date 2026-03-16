@@ -73,7 +73,7 @@ trait HasQuickSearch
     }
 
     /**
-     * @return \Illuminate\View\View|string
+     * @return \Illuminate\Contracts\View\View|string
      */
     public function renderQuickSearch()
     {

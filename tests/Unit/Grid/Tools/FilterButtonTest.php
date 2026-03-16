@@ -162,6 +162,6 @@ class FilterButtonTest extends TestCase
 
         $result = $button->render();
 
-        $this->assertNull($result);
+        $this->assertSame('', $result);
     }
 }

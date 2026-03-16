@@ -644,7 +644,7 @@ class Helper
     /**
      * 判断是否是IE浏览器.
      *
-     * @return false|int
+     * @return bool
      */
     public static function isIEBrowser()
     {
@@ -961,7 +961,7 @@ class Helper
      * @param  array|\ArrayAccess  $array
      * @param  string  $key
      * @param  mixed  $value
-     * @return array
+     * @return array|\ArrayAccess
      */
     public static function arraySet(&$array, $key, $value)
     {

@@ -30,8 +30,10 @@ trait HasPermissions
 
     /**
      * 用户角色集合缓存
+     *
+     * @var Collection|array|null
      */
-    protected ?Collection $userRolesCache = null;
+    protected $userRolesCache = null;
 
     /**
      * 用户角色 slug 缓存
@@ -220,7 +222,10 @@ trait HasPermissions
         return $this->permissionIds = $this->allPermissions()->pluck('id')->all();
     }
 
-    protected function getUserRoles(): Collection
+    /**
+     * @return Collection|array
+     */
+    protected function getUserRoles()
     {
         if ($this->userRolesCache !== null) {
             return $this->userRolesCache;

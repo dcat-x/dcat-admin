@@ -166,6 +166,7 @@ HTML
             $sortable
             && $this->findQueryByMethod('orderBy')->isEmpty()
             && $this->findQueryByMethod('orderByDesc')->isEmpty()
+            && $this->repository instanceof \Dcat\Admin\Repositories\Repository
             && ($orderColumn = $this->repository->getOrderColumn())
         ) {
             $this->orderBy($orderColumn)
@@ -179,7 +180,9 @@ HTML
             return;
         }
 
-        $this->where($this->repository->getParentColumn(), $this->getParentIdFromRequest());
+        if ($this->repository instanceof \Dcat\Admin\Repositories\Repository) {
+            $this->where($this->repository->getParentColumn(), $this->getParentIdFromRequest());
+        }
     }
 
     /**
@@ -315,7 +318,10 @@ HTML
             return null;
         }
 
-        return (string) $this->repository->getParentColumn();
+        /** @var \Dcat\Admin\Repositories\Repository $repository */
+        $repository = $this->repository;
+
+        return (string) $repository->getParentColumn();
     }
 
     protected function resolveRepositoryDefaultParentId(EloquentRepository $repository)

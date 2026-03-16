@@ -1,5 +1,5 @@
 parameters:
-    level: 2
+    level: 3
     paths:
         - src
     excludePaths:
@@ -23,4 +23,7 @@ parameters:
 
         # void 方法返回值被使用（链式调用等场景）
         - '#Result of .* is used#'
+
+        # HasComplexHeaders::sortHeaders() 中对 $columns 的数组赋值，PHPDoc 已声明 Collection|array
+        - '#Property Dcat\\Admin\\Grid::\$columns \(Illuminate\\Support\\Collection\) does not accept array\.#'
     reportUnmatchedIgnoredErrors: false

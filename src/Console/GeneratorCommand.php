@@ -285,7 +285,7 @@ abstract class GeneratorCommand extends Command
      *
      * @param  string  $stub
      * @param  string  $name
-     * @return \Illuminate\Console\GeneratorCommand
+     * @return $this
      */
     protected function replaceNamespace(&$stub, $name)
     {

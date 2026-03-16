@@ -17,7 +17,7 @@ class PerPageSelector implements Renderable
     protected $parent;
 
     /**
-     * @var string
+     * @var string|int
      */
     protected $perPage;
 

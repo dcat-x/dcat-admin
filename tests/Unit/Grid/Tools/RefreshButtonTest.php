@@ -76,7 +76,7 @@ class RefreshButtonTest extends TestCase
         $button = new RefreshButton;
         $button->display(false);
 
-        $this->assertNull($button->render());
+        $this->assertSame('', $button->render());
     }
 
     public function test_render_contains_refresh_icon(): void

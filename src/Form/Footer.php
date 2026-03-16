@@ -194,7 +194,7 @@ class Footer implements Renderable
         }
 
         if (! $options) {
-            return;
+            return null;
         }
 
         $checkbox = (new Checkbox('after-save', $options))->check($checked)->inline();

@@ -63,7 +63,9 @@ class AuthController extends Controller
             return $this->validationErrorsResponse($validator);
         }
 
-        if ($this->guard()->attempt($credentials, $remember)) {
+        /** @var \Illuminate\Contracts\Auth\StatefulGuard $guard */
+        $guard = $this->guard();
+        if ($guard->attempt($credentials, $remember)) {
             return $this->sendLoginResponse($request);
         }
 
@@ -75,11 +77,13 @@ class AuthController extends Controller
     /**
      * User logout.
      *
-     * @return Redirect|string
+     * @return \Illuminate\Http\RedirectResponse|string
      */
     public function getLogout(Request $request)
     {
-        $this->guard()->logout();
+        /** @var \Illuminate\Contracts\Auth\StatefulGuard $guard */
+        $guard = $this->guard();
+        $guard->logout();
 
         $request->session()->invalidate();
 
@@ -258,7 +262,7 @@ class AuthController extends Controller
     /**
      * Get the guard to be used during authentication.
      *
-     * @return \Illuminate\Contracts\Auth\StatefulGuard
+     * @return \Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard
      */
     protected function guard()
     {

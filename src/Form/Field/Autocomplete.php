@@ -28,9 +28,14 @@ class Autocomplete extends Text
         parent::__construct($column, $arguments);
     }
 
+    /**
+     * @return $this
+     */
     public function datalist($entries = [])
     {
-        return $this->options($entries);
+        $this->options($entries);
+
+        return $this;
     }
 
     /**

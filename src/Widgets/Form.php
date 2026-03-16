@@ -130,7 +130,7 @@ class Form implements Renderable
     protected $ajax = true;
 
     /**
-     * @var Fluent
+     * @var Fluent|\Illuminate\Contracts\Support\Arrayable
      */
     protected $data;
 
@@ -328,7 +328,7 @@ class Form implements Renderable
     }
 
     /**
-     * @return Fluent|\Illuminate\Database\Eloquent\Model
+     * @return \Illuminate\Database\Eloquent\Model|Fluent|\Illuminate\Contracts\Support\Arrayable
      */
     public function data()
     {
@@ -359,7 +359,7 @@ class Form implements Renderable
     }
 
     /**
-     * @return Fluent|\Illuminate\Database\Eloquent\Model
+     * @return \Illuminate\Database\Eloquent\Model|Fluent|\Illuminate\Contracts\Support\Arrayable
      */
     public function model()
     {
@@ -604,12 +604,12 @@ class Form implements Renderable
     /**
      * 表单底部内容.
      *
-     * @return string
+     * @return string|null
      */
     protected function renderFooter()
     {
         if (empty($this->buttons['reset']) && empty($this->buttons['submit'])) {
-            return;
+            return null;
         }
 
         return <<<HTML
@@ -668,12 +668,12 @@ HTML;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     protected function open()
     {
         if (! $this->useFormTag) {
-            return;
+            return null;
         }
 
         return <<<HTML
@@ -682,12 +682,12 @@ HTML;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     protected function close()
     {
         if (! $this->useFormTag) {
-            return;
+            return null;
         }
 
         return '</form>';
@@ -923,7 +923,7 @@ JS
 
     /**
      * @param  mixed  ...$params
-     * @return $this
+     * @return static
      */
     public static function make(...$params)
     {

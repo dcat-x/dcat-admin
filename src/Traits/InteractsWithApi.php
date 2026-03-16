@@ -176,12 +176,12 @@ trait InteractsWithApi
     /**
      * 构建请求数据js代码.
      *
-     * @return null|string
+     * @return string|null
      */
     public function buildRequestScript()
     {
         if (! $this->allowBuildRequest()) {
-            return;
+            return null;
         }
 
         $fetching = implode(';', $this->requestScripts['fetching']);

@@ -38,7 +38,7 @@ class Dropdown extends Widget
     protected $builder;
 
     /**
-     * @var bool
+     * @var bool|null
      */
     protected $divider;
 

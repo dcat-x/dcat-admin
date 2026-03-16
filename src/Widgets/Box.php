@@ -133,7 +133,9 @@ class Box extends Widget
      */
     public function solid()
     {
-        return $this->style('solid');
+        $this->style('solid');
+
+        return $this;
     }
 
     /**

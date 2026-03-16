@@ -165,7 +165,7 @@ class Row implements Renderable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Support\Fluent|void
+     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Support\Fluent|\Illuminate\Contracts\Support\Arrayable|void|null
      */
     public function model()
     {
@@ -200,7 +200,7 @@ class Row implements Renderable
     /**
      * Render the row.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return string|\Illuminate\Contracts\View\View
      */
     public function render()
     {

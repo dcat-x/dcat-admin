@@ -35,12 +35,12 @@ class IconTest extends TestCase
 
     public function test_js_static_property(): void
     {
-        $this->assertSame('@fontawesome-iconpicker', Icon::$js);
+        $this->assertSame(['@fontawesome-iconpicker'], Icon::$js);
     }
 
     public function test_css_static_property(): void
     {
-        $this->assertSame('@fontawesome-iconpicker', Icon::$css);
+        $this->assertSame(['@fontawesome-iconpicker'], Icon::$css);
     }
 
     // -------------------------------------------------------

@@ -32,12 +32,12 @@ class Model
     protected $request;
 
     /**
-     * @var Repository
+     * @var Repository|\Dcat\Admin\Contracts\Repository|null
      */
     protected $repository;
 
     /**
-     * @var AbstractPaginator
+     * @var AbstractPaginator|LengthAwarePaginator|null
      */
     protected $paginator;
 
@@ -56,7 +56,7 @@ class Model
     protected $sort;
 
     /**
-     * @var Collection
+     * @var Collection|null
      */
     protected $data;
 
@@ -152,7 +152,7 @@ class Model
     }
 
     /**
-     * @return Repository|null
+     * @return Repository|\Dcat\Admin\Contracts\Repository|null
      */
     public function repository()
     {
@@ -499,7 +499,7 @@ class Model
     public function getCurrentPage()
     {
         if (! $this->usePaginate) {
-            return;
+            return null;
         }
 
         return $this->currentPage ?: ($this->currentPage = ($this->request->get($this->getPageName()) ?: 1));
@@ -520,7 +520,7 @@ class Model
     public function getPerPage()
     {
         if (! $this->usePaginate) {
-            return;
+            return null;
         }
 
         $perPage = $this->request->get($this->getPerPageName()) ?: $this->perPage;

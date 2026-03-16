@@ -146,7 +146,7 @@ JS;
         $valueCount = $filter->countConditions();
 
         if ($scopres->isEmpty() && ! $filters) {
-            return;
+            return '';
         }
 
         $this->addScript();

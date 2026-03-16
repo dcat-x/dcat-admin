@@ -128,12 +128,12 @@ JS
     /**
      * Add cascade scripts to contents.
      *
-     * @return string
+     * @return string|null
      */
     protected function getCascadeScript()
     {
         if (empty($this->conditions)) {
-            return;
+            return null;
         }
 
         $cascadeGroups = collect($this->conditions)->map(function ($condition) {

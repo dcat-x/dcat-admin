@@ -361,12 +361,12 @@ class IdeHelperCommand extends Command
 
     /**
      * @param  string  $class
-     * @return string
+     * @return string|null
      */
     public function getFileNameByClass($class)
     {
         if (! class_exists($class)) {
-            return;
+            return null;
         }
 
         return (new \ReflectionClass($class))->getFileName();

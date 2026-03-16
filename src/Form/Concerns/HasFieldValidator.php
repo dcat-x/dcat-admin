@@ -116,7 +116,7 @@ trait HasFieldValidator
     /**
      * Get field validation rules.
      *
-     * @return string
+     * @return mixed
      */
     protected function getRules()
     {
@@ -343,7 +343,7 @@ trait HasFieldValidator
     /**
      * Get validator for this field.
      *
-     * @return bool|Validator
+     * @return bool|\Illuminate\Validation\Validator
      */
     public function getValidator(array $input)
     {

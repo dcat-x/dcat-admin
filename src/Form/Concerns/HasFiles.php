@@ -85,12 +85,12 @@ trait HasFiles
     /**
      * 新增页面删除文件.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\JsonResponse|null
      */
     protected function deleteFileWhenCreating(array $input)
     {
         if (! array_key_exists(Field::FILE_DELETE_FLAG, $input)) {
-            return;
+            return null;
         }
 
         $column = $input['_column'] ?? null;
@@ -98,7 +98,7 @@ trait HasFiles
         $relation = $input['_relation'] ?? null;
 
         if (! $column && ! $filePath) {
-            return;
+            return null;
         }
 
         if (empty($relation)) {

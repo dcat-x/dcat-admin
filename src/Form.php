@@ -318,7 +318,7 @@ class Form implements Renderable
      * Create a form instance.
      *
      * @param  mixed  ...$params
-     * @return $this
+     * @return static
      */
     public static function make(...$params)
     {
@@ -991,7 +991,7 @@ class Form implements Renderable
     }
 
     /**
-     * @return string|null
+     * @return string|false|null
      */
     public function getRedirectUrl($key, $redirectTo = null)
     {
@@ -1850,7 +1850,7 @@ class Form implements Renderable
      */
     public function __set($name, $value)
     {
-        return Arr::set($this->inputs, $name, $value);
+        Arr::set($this->inputs, $name, $value);
     }
 
     /**

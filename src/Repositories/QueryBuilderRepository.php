@@ -37,7 +37,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
     protected $updatedAtColumn = 'updated_at';
 
     /**
-     * @var Builder
+     * @var \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder
      */
     protected $queryBuilder;
 
@@ -287,7 +287,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
     /**
      * 更新数据.
      *
-     * @return bool
+     * @return bool|int|null
      */
     public function update(Form $form)
     {

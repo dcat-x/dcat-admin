@@ -236,7 +236,7 @@ HMLT;
      */
     public function render()
     {
-        //
+        return '';
     }
 
     /**

@@ -149,12 +149,12 @@ abstract class ServiceProvider extends LaravelServiceProvider
     /**
      * 获取扩展别名.
      *
-     * @return string
+     * @return string|null
      */
     public function getAlias()
     {
         if (! $this->composerProperty) {
-            return;
+            return null;
         }
 
         return $this->composerProperty->alias;
@@ -530,7 +530,7 @@ abstract class ServiceProvider extends LaravelServiceProvider
     /**
      * 获取自身实例.
      *
-     * @return $this
+     * @return static
      */
     public static function instance()
     {

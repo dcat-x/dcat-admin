@@ -240,7 +240,7 @@ class Tools implements Renderable
     protected function renderList()
     {
         if (! $this->showList) {
-            return;
+            return '';
         }
 
         $list = trans('admin.list');
@@ -262,7 +262,7 @@ HTML;
     protected function renderEdit()
     {
         if (! $this->showQuickEdit && ! $this->showEdit) {
-            return;
+            return '';
         }
 
         $edit = trans('admin.edit');
@@ -305,7 +305,7 @@ HTML;
     protected function renderDelete()
     {
         if (! $this->showDelete) {
-            return;
+            return '';
         }
 
         $delete = trans('admin.delete');

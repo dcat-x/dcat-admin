@@ -47,7 +47,7 @@ class Builder implements FieldsCollection
     protected $id;
 
     /**
-     * @var Form
+     * @var Form|null
      */
     protected $form;
 
@@ -453,7 +453,7 @@ class Builder implements FieldsCollection
      *
      * @param  string  $option
      * @param  mixed  $value
-     * @return void
+     * @return mixed
      */
     public function option($option, $value = null)
     {
@@ -654,12 +654,12 @@ class Builder implements FieldsCollection
     /**
      * Render form footer.
      *
-     * @return string
+     * @return string|null
      */
     public function renderFooter()
     {
         if (! $this->showFooter) {
-            return;
+            return null;
         }
 
         return $this->footer->render();

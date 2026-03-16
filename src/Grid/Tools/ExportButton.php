@@ -64,7 +64,7 @@ JS;
     protected function renderExportCurrentPage()
     {
         if (! $this->grid->exporter()->option('show_export_current_page')) {
-            return;
+            return '';
         }
 
         $page = $this->grid->model()->getCurrentPage() ?: 1;

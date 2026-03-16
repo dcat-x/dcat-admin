@@ -67,7 +67,7 @@ class Field implements Renderable
     protected $value;
 
     /**
-     * @var Collection
+     * @var Collection|array
      */
     protected $showAs = [];
 
@@ -93,7 +93,7 @@ class Field implements Renderable
     protected $border = true;
 
     /**
-     * @var int
+     * @var array|int
      */
     protected $width = ['field' => 8, 'label' => 2];
 
@@ -250,7 +250,7 @@ class Field implements Renderable
      *
      * @param  string  $server
      * @param  bool  $download
-     * @return Field
+     * @return $this
      */
     public function file($server = '', $download = true)
     {
@@ -318,7 +318,7 @@ HTML;
      *
      * @param  string  $href
      * @param  string  $target
-     * @return Field
+     * @return $this
      */
     public function link($href = '', $target = '_blank')
     {
@@ -333,7 +333,7 @@ HTML;
      * Show field as labels.
      *
      * @param  string  $style
-     * @return Field
+     * @return $this
      */
     public function label($style = 'primary')
     {
@@ -372,7 +372,7 @@ HTML;
      * Show field as badges.
      *
      * @param  string  $style
-     * @return Field
+     * @return $this
      */
     public function badge($style = 'blue')
     {
@@ -408,7 +408,7 @@ HTML;
     /**
      * Show field as json code.
      *
-     * @return Field
+     * @return $this
      */
     public function json()
     {
@@ -528,7 +528,7 @@ HTML;
     /**
      * Unescape for this field.
      *
-     * @return Field
+     * @return $this
      */
     public function unescape()
     {
@@ -640,7 +640,7 @@ HTML;
      *
      * @param  string|AbstractField|\Closure  $abstract
      * @param  array  $arguments
-     * @return Field
+     * @return $this
      */
     protected function callExtendedField($abstract, $arguments = [])
     {
@@ -722,7 +722,7 @@ HTML;
     /**
      * Render this field.
      *
-     * @return string
+     * @return string|\Illuminate\Contracts\View\View
      */
     public function render()
     {
@@ -771,7 +771,7 @@ HTML;
      * set file size.
      *
      * @param  int  $dec
-     * @return Field
+     * @return $this
      */
     public function filesize($dec = 0)
     {

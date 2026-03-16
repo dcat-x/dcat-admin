@@ -81,7 +81,7 @@ abstract class AbstractTool extends Action
 
     /**
      * @param  mixed  ...$params
-     * @return $this
+     * @return static
      */
     public static function allowOnlyCreating(...$params)
     {
@@ -95,7 +95,7 @@ abstract class AbstractTool extends Action
 
     /**
      * @param  mixed  ...$params
-     * @return $this
+     * @return static
      */
     public static function allowOnlyEditing(...$params)
     {

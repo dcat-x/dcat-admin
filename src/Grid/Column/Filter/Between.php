@@ -152,7 +152,7 @@ JS
     public function render()
     {
         if (! $this->shouldDisplay()) {
-            return;
+            return '';
         }
 
         $script = <<<'JS'

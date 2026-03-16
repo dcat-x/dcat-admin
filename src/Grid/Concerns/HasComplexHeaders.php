@@ -12,7 +12,7 @@ use Illuminate\Support\Collection;
 trait HasComplexHeaders
 {
     /**
-     * @var ComplexHeader[]|Collection
+     * @var ComplexHeader[]|Collection|array|null
      */
     protected $complexHeaders;
 

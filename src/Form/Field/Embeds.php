@@ -56,7 +56,9 @@ class Embeds extends Field implements FieldsCollection
     }
 
     /**
-     * {@inheritdoc}
+     * Get validator for this field.
+     *
+     * @return bool|\Illuminate\Validation\Validator
      */
     public function getValidator(array $input)
     {
@@ -265,7 +267,7 @@ class Embeds extends Field implements FieldsCollection
     /**
      * Render the form.
      *
-     * @return \Illuminate\View\View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      */
     public function render()
     {
@@ -290,7 +292,7 @@ class Embeds extends Field implements FieldsCollection
     /**
      * 获取所有字段.
      *
-     * @return void
+     * @return \Illuminate\Support\Collection
      */
     public function fields()
     {

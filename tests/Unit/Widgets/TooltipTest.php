@@ -216,6 +216,6 @@ class TooltipTest extends TestCase
         // second render should return early
         $result = $tooltip->render();
 
-        $this->assertNull($result);
+        $this->assertSame('', $result);
     }
 }

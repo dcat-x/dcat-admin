@@ -27,7 +27,7 @@ class LangCreator
 
         $filename = $this->getLangPath($controller);
         if (is_file($filename)) {
-            return;
+            return '';
         }
 
         $title = $title ?: $controller;

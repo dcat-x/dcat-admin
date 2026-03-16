@@ -129,7 +129,7 @@ JS;
     protected function getLoadScript()
     {
         if (! $this->load) {
-            return;
+            return '';
         }
 
         return <<<'JS'

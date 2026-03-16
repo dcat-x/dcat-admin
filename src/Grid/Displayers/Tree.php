@@ -48,6 +48,7 @@ JS;
         $indents = str_repeat(' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ', $depth);
 
         $icon = '<i class="fa fa-angle-right"></i>';
+        /** @var \Dcat\Admin\Repositories\Repository $repository */
         $repository = $this->grid->model()->repository();
         $parentColumn = $repository->getParentColumn();
         $model = $this->resolveRepositoryModel($repository);

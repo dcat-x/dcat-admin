@@ -37,8 +37,6 @@ class Radio extends Presenter
         }
 
         $this->options = (array) $options;
-
-        return $this;
     }
 
     /**

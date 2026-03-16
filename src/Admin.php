@@ -515,7 +515,7 @@ class Admin
     /**
      * 获取js配置.
      *
-     * @return string
+     * @return string|void
      */
     public static function jsVariables(?array $variables = null)
     {

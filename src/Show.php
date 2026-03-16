@@ -155,7 +155,7 @@ class Show implements Renderable
      * Create a show instance.
      *
      * @param  mixed  ...$params
-     * @return $this
+     * @return static
      */
     public static function make(...$params)
     {

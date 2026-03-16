@@ -255,7 +255,7 @@ HTML;
 
     /**
      * @param  mixed  ...$params
-     * @return $this
+     * @return static
      */
     public static function make(...$params)
     {

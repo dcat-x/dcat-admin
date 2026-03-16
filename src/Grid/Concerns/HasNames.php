@@ -63,12 +63,12 @@ trait HasNames
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getNamePrefix()
     {
         if (! $name = $this->getName()) {
-            return;
+            return null;
         }
 
         return $name.'_';

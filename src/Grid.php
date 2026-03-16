@@ -59,7 +59,7 @@ class Grid
     /**
      * Collection of grid columns.
      *
-     * @var \Illuminate\Support\Collection
+     * @var \Illuminate\Support\Collection|array
      */
     protected $columns;
 
@@ -857,7 +857,7 @@ HTML;
      * Create a grid instance.
      *
      * @param  mixed  ...$params
-     * @return $this
+     * @return static
      */
     public static function make(...$params)
     {
@@ -1047,12 +1047,12 @@ JS
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     protected function doWrap()
     {
         if (! $this->show) {
-            return;
+            return null;
         }
 
         $view = view($this->getView(), $this->variables());

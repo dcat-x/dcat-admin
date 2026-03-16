@@ -36,7 +36,7 @@ trait HasUploadedFile
     /**
      * 获取文件管理仓库.
      *
-     * @return \Illuminate\Contracts\Filesystem\Filesystem|FilesystemAdapter
+     * @return \Illuminate\Contracts\Filesystem\Filesystem
      */
     public function disk(?string $disk = null)
     {

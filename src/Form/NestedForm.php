@@ -30,7 +30,7 @@ class NestedForm extends WidgetForm
     /**
      * NestedForm key.
      *
-     * @var string
+     * @var string|null
      */
     protected $key;
 
@@ -42,7 +42,7 @@ class NestedForm extends WidgetForm
     /**
      * Fields in form.
      *
-     * @var Collection
+     * @var Collection&iterable<\Dcat\Admin\Form\Field>
      */
     protected $fields;
 

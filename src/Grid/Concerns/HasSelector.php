@@ -85,7 +85,7 @@ trait HasSelector
     /**
      * Render grid selector.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     * @return \Illuminate\Contracts\View\View|string
      */
     public function renderSelector()
     {

@@ -224,7 +224,7 @@ class Manager
     /**
      * 获取扩展类实例.
      *
-     * @return ServiceProvider
+     * @return ServiceProvider|null
      */
     public function resolveExtension(string $directory, bool $addPsr4 = true)
     {
@@ -234,7 +234,7 @@ class Manager
         $psr4 = $composerProperty->get('autoload.psr-4');
 
         if (! $serviceProvider || ! $psr4) {
-            return;
+            return null;
         }
 
         if ($addPsr4) {
@@ -333,7 +333,7 @@ class Manager
 
     /**
      * @param  string  $filePath
-     * @return bool
+     * @return string
      */
     public function extractZip($filePath, bool $force = false)
     {

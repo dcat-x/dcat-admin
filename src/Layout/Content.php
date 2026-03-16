@@ -73,7 +73,7 @@ class Content implements Renderable
      * Create a content instance.
      *
      * @param  mixed  ...$params
-     * @return $this
+     * @return static
      */
     public static function make(...$params)
     {

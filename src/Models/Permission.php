@@ -28,7 +28,7 @@ class Permission extends Model implements Sortable
     const TYPE_DATA = 3;
 
     /**
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = ['parent_id', 'name', 'slug', 'http_method', 'http_path', 'type', 'permission_key', 'menu_id'];
 

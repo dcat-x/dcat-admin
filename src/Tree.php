@@ -72,7 +72,7 @@ class Tree implements Renderable
     protected $callback;
 
     /**
-     * @var null
+     * @var \Closure|null
      */
     protected $branchCallback = null;
 
@@ -676,7 +676,7 @@ class Tree implements Renderable
      * Create a tree instance.
      *
      * @param  mixed  ...$param
-     * @return $this
+     * @return static
      */
     public static function make(...$param)
     {

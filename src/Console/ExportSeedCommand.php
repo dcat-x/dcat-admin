@@ -123,7 +123,7 @@ class ExportSeedCommand extends Command
      * Custom var_export for correct work with \r\n.
      *
      * @param  string  $indent
-     * @return string
+     * @return string|int|float
      */
     protected function varExport($var, $indent = '')
     {

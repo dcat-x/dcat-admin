@@ -236,7 +236,7 @@ abstract class Repository implements RepositoryInterface, TreeRepository
 
     /**
      * @param  mixed  ...$params
-     * @return $this
+     * @return static
      */
     public static function make(...$params)
     {
