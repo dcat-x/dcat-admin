@@ -43,7 +43,7 @@ class RenderableController
     protected function initTranslation(Request $request)
     {
         if ($path = $request->get('_trans_')) {
-            Admin::translation($path);
+            Admin::translation((string) $path);
         }
     }
 

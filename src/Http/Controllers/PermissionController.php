@@ -196,7 +196,7 @@ class PermissionController extends AdminController
                 }
             }
 
-            $path = preg_replace('/{.*}+/', '*', $uri);
+            $path = (string) preg_replace('/{.*}+/', '*', $uri);
 
             if ($prefix !== '/') {
                 return Str::replaceFirst($prefix, '', $path);

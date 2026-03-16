@@ -53,7 +53,7 @@ trait HasDataPermission
         }
 
         // 移除 /create, /edit, /{id} 等路径部分
-        $path = preg_replace('#/(create|edit|\d+)$#', '', ltrim($path, '/'));
+        $path = (string) preg_replace('#/(create|edit|\d+)$#', '', ltrim($path, '/'));
 
         // 查找匹配的菜单
         $menuModel = config('admin.database.menu_model');

@@ -35,7 +35,7 @@ JS;
             return;
         }
 
-        $value = $this->value([]);
+        $value = (array) $this->value([]);
 
         $this->addScript();
 

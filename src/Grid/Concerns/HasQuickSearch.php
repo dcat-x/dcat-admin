@@ -312,9 +312,7 @@ trait HasQuickSearch
 
         if ($value === 'NULL') {
             $value = null;
-        }
-
-        if (Str::startsWith($value, '"') && Str::endsWith($value, '"')) {
+        } elseif (Str::startsWith($value, '"') && Str::endsWith($value, '"')) {
             $value = substr($value, 1, -1);
         }
 

@@ -241,7 +241,7 @@ trait HasFieldValidator
 
         $pattern = "/{$rule}[^\|]?(\||$)/";
 
-        $rules = preg_replace($pattern, '', $rules, -1);
+        $rules = (string) preg_replace($pattern, '', $rules, -1);
     }
 
     /**

@@ -74,7 +74,7 @@ class ExportSeedCommand extends Command
                 'ArrayPivotRoleUsers' => $this->getTableDataArrayAsString(config('admin.database.role_users_table'), $exceptFields),
             ]);
         } else {
-            $contents = preg_replace('/\/\/ users tables[\s\S]*?(?=\/\/ finish)/mu', '', $contents);
+            $contents = (string) preg_replace('/\/\/ users tables[\s\S]*?(?=\/\/ finish)/mu', '', $contents);
         }
 
         $contents = str_replace(array_keys($replaces), array_values($replaces), $contents);
