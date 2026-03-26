@@ -2,6 +2,7 @@
 /node_modules/
 /laravel-tests/
 /docs/plans/
+/docs/superpowers/
 
 composer.lock
 package-lock.json

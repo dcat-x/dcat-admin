@@ -95,7 +95,6 @@ class ComingSoon extends Repository
         // 获取要修改的数据
         $attributes = $form->updates();
 
-        // TODO
         // 这里写你的修改逻辑
 
         return true;
@@ -127,8 +126,6 @@ class ComingSoon extends Repository
         // 当使用批量删除功能时，这里的id是用","隔开的字符串
         $id = explode(',', $id);
 
-        // TODO
-//        var_dump($id, $deletingData);
 
         return true;
     }
