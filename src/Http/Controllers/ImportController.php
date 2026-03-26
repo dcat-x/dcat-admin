@@ -10,6 +10,21 @@ use Illuminate\Routing\Controller;
 
 class ImportController extends Controller
 {
+    /**
+     * @var array<string, array{titles?: array, rules?: array, upsert_key?: string|null}>
+     */
+    protected static array $importerRegistry = [];
+
+    public static function registerImporter(string $gridName, array $config): void
+    {
+        static::$importerRegistry[$gridName] = $config;
+    }
+
+    public static function flushImporterRegistry(): void
+    {
+        static::$importerRegistry = [];
+    }
+
     public function template(Request $request)
     {
         $importer = $this->resolveImporter($request);
@@ -56,6 +71,23 @@ class ImportController extends Controller
 
     protected function resolveImporter(Request $request): ExcelImporter
     {
-        return ExcelImporter::make();
+        $gridName = (string) $request->input('_grid', '');
+        $config = static::$importerRegistry[$gridName] ?? [];
+
+        $importer = ExcelImporter::make();
+
+        if (! empty($config['titles'])) {
+            $importer->titles($config['titles']);
+        }
+
+        if (! empty($config['rules'])) {
+            $importer->rules($config['rules']);
+        }
+
+        if (! empty($config['upsert_key'])) {
+            $importer->upsertKey($config['upsert_key']);
+        }
+
+        return $importer;
     }
 }

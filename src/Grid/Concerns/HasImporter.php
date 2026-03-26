@@ -7,6 +7,7 @@ namespace Dcat\Admin\Grid\Concerns;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Importer;
 use Dcat\Admin\Grid\Tools;
+use Dcat\Admin\Http\Controllers\ImportController;
 
 trait HasImporter
 {
@@ -58,7 +59,37 @@ trait HasImporter
             return '';
         }
 
+        $this->registerImporterConfig();
+
         return (new Tools\ImportButton($this))->render();
+    }
+
+    protected function registerImporterConfig(): void
+    {
+        $driver = $this->importerManager()->driver();
+        $config = [];
+
+        if ($driver instanceof Grid\Importers\AbstractImporter) {
+            $titles = $driver->titles();
+            if ($titles) {
+                $config['titles'] = $titles;
+            }
+
+            $rules = $driver->rules();
+            if ($rules) {
+                $config['rules'] = $rules;
+            }
+
+            $upsertKey = $driver->upsertKey();
+            if ($upsertKey) {
+                $config['upsert_key'] = $upsertKey;
+            }
+        }
+
+        ImportController::registerImporter(
+            $this->getName(),
+            $config
+        );
     }
 
     /**

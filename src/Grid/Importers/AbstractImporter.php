@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 abstract class AbstractImporter implements ImporterInterface
 {
     /**
-     * @var Grid
+     * @var Grid|null
      */
     protected $grid;
 
@@ -71,6 +71,10 @@ abstract class AbstractImporter implements ImporterInterface
 
     protected function defaultTitles(): array
     {
+        if (! $this->grid) {
+            return [];
+        }
+
         return $this->grid
             ->columns()
             ->mapWithKeys(function (Grid\Column $column, $name) {
