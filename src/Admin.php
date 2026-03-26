@@ -655,7 +655,6 @@ class Admin
             $router->post('editor-md/upload', 'EditorMDController@upload')->name('editor-md.upload');
 
             $router->get('import/template', 'ImportController@template')->name('import.template');
-            $router->post('import/preview', 'ImportController@preview')->name('import.preview');
             $router->post('import/execute', 'ImportController@execute')->name('import.execute');
 
             // OSS direct upload routes (when enabled)

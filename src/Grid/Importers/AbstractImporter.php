@@ -124,14 +124,6 @@ abstract class AbstractImporter implements ImporterInterface
             ->download($filename);
     }
 
-    /**
-     * @return array
-     */
-    public function preview(UploadedFile $file, int $limit = 10)
-    {
-        return [];
-    }
-
     abstract public function import(UploadedFile $file): ImportResult;
 
     /**

@@ -32,17 +32,6 @@ class ImportController extends Controller
         return $importer->template();
     }
 
-    public function preview(Request $request)
-    {
-        $request->validate(['import_file' => 'required|file']);
-
-        $importer = $this->resolveImporter($request);
-
-        return response()->json(
-            $importer->preview($request->file('import_file'))
-        );
-    }
-
     public function execute(Request $request)
     {
         $request->validate(['import_file' => 'required|file']);

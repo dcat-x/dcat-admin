@@ -21,28 +21,6 @@ class ExcelImporter extends AbstractImporter
         }
     }
 
-    /**
-     * @return array
-     */
-    public function preview(UploadedFile $file, int $limit = 10)
-    {
-        $rows = [];
-        $count = 0;
-
-        Excel::import($file)->first()->each(function ($row) use (&$rows, &$count, $limit) {
-            if ($count < $limit) {
-                $rows[] = $row->toArray();
-            }
-            $count++;
-        });
-
-        return [
-            'total' => $count,
-            'preview' => $rows,
-            'titles' => $this->titles(),
-        ];
-    }
-
     public function import(UploadedFile $file): ImportResult
     {
         $result = new ImportResult;

@@ -64,7 +64,6 @@ $grid->import(new UserImporter);
 | `upsertKey(string $key)` | 设置 upsert 唯一键（默认 null，仅 insert） |
 | `titles(array $titles)` | 自定义列标题映射 |
 | `template()` | 生成下载模板 |
-| `preview(UploadedFile $file, int $limit)` | 预览文件前 N 行 |
 
 ### ImportResult 属性
 
