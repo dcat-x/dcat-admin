@@ -486,6 +486,71 @@ class PermissionTest extends TestCase
         $this->assertFalse($nextCalled);
     }
 
+    public function test_normalize_menu_path_replaces_uuid_segment(): void
+    {
+        $this->app['config']->set('admin.route.prefix', 'admin');
+
+        $middleware = new TestablePermissionMiddleware;
+        [$path, $pathPattern] = $middleware->callNormalizeMenuPath(
+            Request::create('/admin/users/550e8400-e29b-41d4-a716-446655440000/edit', 'GET')
+        );
+
+        $this->assertSame('users/550e8400-e29b-41d4-a716-446655440000/edit', $path);
+        $this->assertSame('users/*/edit', $pathPattern);
+    }
+
+    public function test_normalize_menu_path_replaces_ulid_segment(): void
+    {
+        $this->app['config']->set('admin.route.prefix', 'admin');
+
+        $middleware = new TestablePermissionMiddleware;
+        [$path, $pathPattern] = $middleware->callNormalizeMenuPath(
+            Request::create('/admin/posts/01ARZ3NDEKTSV4RRFFQ69G5FAV/edit', 'GET')
+        );
+
+        $this->assertSame('posts/01ARZ3NDEKTSV4RRFFQ69G5FAV/edit', $path);
+        $this->assertSame('posts/*/edit', $pathPattern);
+    }
+
+    public function test_normalize_menu_path_preserves_slug_segments(): void
+    {
+        $this->app['config']->set('admin.route.prefix', 'admin');
+
+        $middleware = new TestablePermissionMiddleware;
+        [$path, $pathPattern] = $middleware->callNormalizeMenuPath(
+            Request::create('/admin/posts/my-first-post/edit', 'GET')
+        );
+
+        $this->assertSame('posts/my-first-post/edit', $path);
+        $this->assertSame('posts/*/edit', $pathPattern);
+    }
+
+    public function test_normalize_menu_path_preserves_resource_name_segments(): void
+    {
+        $this->app['config']->set('admin.route.prefix', 'admin');
+
+        $middleware = new TestablePermissionMiddleware;
+        [$path, $pathPattern] = $middleware->callNormalizeMenuPath(
+            Request::create('/admin/users', 'GET')
+        );
+
+        $this->assertSame('users', $path);
+        $this->assertSame('users', $pathPattern);
+    }
+
+    public function test_normalize_menu_path_handles_nested_resource_with_uuid(): void
+    {
+        $this->app['config']->set('admin.route.prefix', 'admin');
+
+        $middleware = new TestablePermissionMiddleware;
+        [$path, $pathPattern] = $middleware->callNormalizeMenuPath(
+            Request::create('/admin/users/550e8400-e29b-41d4-a716-446655440000/posts/01ARZ3NDEKTSV4RRFFQ69G5FAV', 'GET')
+        );
+
+        $this->assertSame('users/550e8400-e29b-41d4-a716-446655440000/posts/01ARZ3NDEKTSV4RRFFQ69G5FAV', $path);
+        $this->assertSame('users/*/posts/*', $pathPattern);
+    }
+
     public function test_handle_allows_when_user_in_menu_roles(): void
     {
         $this->app['config']->set('admin.permission.enable', true);

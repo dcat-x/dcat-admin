@@ -185,9 +185,41 @@ class Permission
         $path = ltrim($path, '/');
 
         // 移除路径中的 ID 部分 (如 users/1/edit -> users/*/edit)
-        $pathPattern = (string) preg_replace('/\/\d+/', '/*', $path);
+        $pathPattern = $this->replaceResourceIdSegments($path);
 
         return [$path, $pathPattern];
+    }
+
+    /**
+     * 将路径中的资源 ID 段替换为通配符。
+     *
+     * 采用结构化匹配：在 RESTful 路径中，资源名（如 users、posts）后面紧跟的段
+     * 通常是 ID，而 create/edit 等操作词不是。对每个段判断其是否像 ID：
+     * - 纯数字（123）
+     * - UUID（550e8400-e29b-41d4-a716-446655440000）
+     * - ULID（01ARZ3NDEKTSV4RRFFQ69G5FAV）
+     * - 其它非操作词的段（slug 如 my-first-post）
+     *
+     * 保留的操作词不会被替换：create, edit, show, delete, export, import 等。
+     */
+    protected function replaceResourceIdSegments(string $path): string
+    {
+        $segments = explode('/', $path);
+        $count = count($segments);
+
+        if ($count <= 1) {
+            return $path;
+        }
+
+        $actions = ['create', 'edit', 'show', 'delete', 'export', 'import', 'template'];
+
+        for ($i = 1; $i < $count; $i += 2) {
+            if (! in_array($segments[$i], $actions, true)) {
+                $segments[$i] = '*';
+            }
+        }
+
+        return implode('/', $segments);
     }
 
     /**
