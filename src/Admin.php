@@ -12,6 +12,23 @@ use Dcat\Admin\Exception\InvalidArgumentException;
 use Dcat\Admin\Extend\Manager;
 use Dcat\Admin\Extend\ServiceProvider;
 use Dcat\Admin\Http\Controllers\AuthController;
+use Dcat\Admin\Http\Controllers\DataRuleController;
+use Dcat\Admin\Http\Controllers\DepartmentController;
+use Dcat\Admin\Http\Controllers\EditorMDController;
+use Dcat\Admin\Http\Controllers\ExtensionController;
+use Dcat\Admin\Http\Controllers\HandleActionController;
+use Dcat\Admin\Http\Controllers\HandleFormController;
+use Dcat\Admin\Http\Controllers\IconController;
+use Dcat\Admin\Http\Controllers\ImportController;
+use Dcat\Admin\Http\Controllers\MenuController;
+use Dcat\Admin\Http\Controllers\OssController;
+use Dcat\Admin\Http\Controllers\PermissionController;
+use Dcat\Admin\Http\Controllers\RenderableController;
+use Dcat\Admin\Http\Controllers\RoleController;
+use Dcat\Admin\Http\Controllers\ScaffoldController;
+use Dcat\Admin\Http\Controllers\TinymceController;
+use Dcat\Admin\Http\Controllers\UserController;
+use Dcat\Admin\Http\Controllers\ValueController;
 use Dcat\Admin\Http\JsonResponse;
 use Dcat\Admin\Layout\Menu;
 use Dcat\Admin\Layout\Navbar;
@@ -593,36 +610,33 @@ class Admin
         if (config('admin.auth.enable', true)) {
             app('router')->group($attributes, function ($router) {
                 /* @var \Illuminate\Routing\Router $router */
-                $router->namespace('Dcat\Admin\Http\Controllers')->group(function ($router) {
-                    /* @var \Illuminate\Routing\Router $router */
-                    $router->resource('auth/users', 'UserController');
-                    $router->resource('auth/menu', 'MenuController', ['except' => ['create', 'show']]);
+                $router->resource('auth/users', UserController::class);
+                $router->resource('auth/menu', MenuController::class, ['except' => ['create', 'show']]);
 
-                    if (config('admin.permission.enable')) {
-                        $router->resource('auth/roles', 'RoleController');
-                        $router->resource('auth/permissions', 'PermissionController');
-                    }
+                if (config('admin.permission.enable')) {
+                    $router->resource('auth/roles', RoleController::class);
+                    $router->resource('auth/permissions', PermissionController::class);
+                }
 
-                    // 部门管理路由
-                    if (config('admin.department.enable', false)) {
-                        $router->resource('auth/departments', 'DepartmentController');
-                    }
+                // 部门管理路由
+                if (config('admin.department.enable', false)) {
+                    $router->resource('auth/departments', DepartmentController::class);
+                }
 
-                    // 数据规则路由
-                    if (config('admin.data_permission.enable', false)) {
-                        $router->resource('auth/data-rules', 'DataRuleController');
-                    }
-                });
+                // 数据规则路由
+                if (config('admin.data_permission.enable', false)) {
+                    $router->resource('auth/data-rules', DataRuleController::class);
+                }
 
-                $router->resource('auth/extensions', 'Dcat\Admin\Http\Controllers\ExtensionController', ['only' => ['index', 'store', 'update']]);
+                $router->resource('auth/extensions', ExtensionController::class, ['only' => ['index', 'store', 'update']]);
 
                 $authController = config('admin.auth.controller', AuthController::class);
 
-                $router->get('auth/login', $authController.'@getLogin');
-                $router->post('auth/login', $authController.'@postLogin');
-                $router->get('auth/logout', $authController.'@getLogout');
-                $router->get('auth/setting', $authController.'@getSetting');
-                $router->put('auth/setting', $authController.'@putSetting');
+                $router->get('auth/login', [$authController, 'getLogin']);
+                $router->post('auth/login', [$authController, 'postLogin']);
+                $router->get('auth/logout', [$authController, 'getLogout']);
+                $router->get('auth/setting', [$authController, 'getSetting']);
+                $router->put('auth/setting', [$authController, 'putSetting']);
             });
         }
 
@@ -639,29 +653,28 @@ class Admin
         $attributes = [
             'prefix' => admin_base_path('dcat-api'),
             'middleware' => config('admin.route.middleware'),
-            'namespace' => 'Dcat\Admin\Http\Controllers',
             'as' => 'dcat-api.',
         ];
 
         app('router')->group($attributes, function ($router) {
             /* @var \Illuminate\Routing\Router $router */
-            $router->post('action', 'HandleActionController@handle')->name('action');
-            $router->post('form', 'HandleFormController@handle')->name('form');
-            $router->post('form/upload', 'HandleFormController@uploadFile')->name('form.upload');
-            $router->post('form/destroy-file', 'HandleFormController@destroyFile')->name('form.destroy-file');
-            $router->post('value', 'ValueController@handle')->name('value');
-            $router->get('render', 'RenderableController@handle')->name('render');
-            $router->post('tinymce/upload', 'TinymceController@upload')->name('tinymce.upload');
-            $router->post('editor-md/upload', 'EditorMDController@upload')->name('editor-md.upload');
+            $router->post('action', [HandleActionController::class, 'handle'])->name('action');
+            $router->post('form', [HandleFormController::class, 'handle'])->name('form');
+            $router->post('form/upload', [HandleFormController::class, 'uploadFile'])->name('form.upload');
+            $router->post('form/destroy-file', [HandleFormController::class, 'destroyFile'])->name('form.destroy-file');
+            $router->post('value', [ValueController::class, 'handle'])->name('value');
+            $router->get('render', [RenderableController::class, 'handle'])->name('render');
+            $router->post('tinymce/upload', [TinymceController::class, 'upload'])->name('tinymce.upload');
+            $router->post('editor-md/upload', [EditorMDController::class, 'upload'])->name('editor-md.upload');
 
-            $router->get('import/template', 'ImportController@template')->name('import.template');
-            $router->post('import/execute', 'ImportController@execute')->name('import.execute');
+            $router->get('import/template', [ImportController::class, 'template'])->name('import.template');
+            $router->post('import/execute', [ImportController::class, 'execute'])->name('import.execute');
 
             // OSS direct upload routes (when enabled)
             if (config('admin.upload.oss.enable', false)) {
-                $router->post('oss/sts-token', 'OssController@getStsToken')->name('oss.sts-token');
-                $router->post('oss/filename', 'OssController@generateFilename')->name('oss.filename');
-                $router->get('oss/proxy/{path}', 'OssController@privateImageProxy')->name('oss.proxy')->where('path', '.*');
+                $router->post('oss/sts-token', [OssController::class, 'getStsToken'])->name('oss.sts-token');
+                $router->post('oss/filename', [OssController::class, 'generateFilename'])->name('oss.filename');
+                $router->get('oss/proxy/{path}', [OssController::class, 'privateImageProxy'])->name('oss.proxy')->where('path', '.*');
             }
         });
     }
@@ -684,10 +697,10 @@ class Admin
 
         app('router')->group($attributes, function ($router) {
             /* @var \Illuminate\Routing\Router $router */
-            $router->get('helpers/scaffold', 'Dcat\Admin\Http\Controllers\ScaffoldController@index');
-            $router->post('helpers/scaffold', 'Dcat\Admin\Http\Controllers\ScaffoldController@store');
-            $router->post('helpers/scaffold/table', 'Dcat\Admin\Http\Controllers\ScaffoldController@table');
-            $router->get('helpers/icons', 'Dcat\Admin\Http\Controllers\IconController@index');
+            $router->get('helpers/scaffold', [ScaffoldController::class, 'index']);
+            $router->post('helpers/scaffold', [ScaffoldController::class, 'store']);
+            $router->post('helpers/scaffold/table', [ScaffoldController::class, 'table']);
+            $router->get('helpers/icons', [IconController::class, 'index']);
         });
     }
 }
