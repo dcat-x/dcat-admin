@@ -58,7 +58,7 @@ class DropdownActions extends Actions
                 continue;
             }
 
-            array_push($this->default, $this->{'render'.ucfirst($action)}());
+            array_push($this->default, $this->{'render'.ucfirst((string) $action)}());
         }
     }
 

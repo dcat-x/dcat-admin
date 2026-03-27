@@ -296,11 +296,9 @@ class ModelCreator
                 case 'mariadb':
                     // MySQL/MariaDB
                     $comments = \Illuminate\Support\Facades\DB::table('information_schema.columns')
-                        ->select('COLUMN_NAME as column_name', 'COLUMN_COMMENT as column_comment')
                         ->where('TABLE_SCHEMA', $databaseName)
                         ->where('TABLE_NAME', $tableName)
-                        ->get()
-                        ->pluck('column_comment', 'column_name')
+                        ->pluck('COLUMN_COMMENT', 'COLUMN_NAME')
                         ->toArray();
                     break;
 

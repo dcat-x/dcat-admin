@@ -431,7 +431,7 @@ class Field implements Renderable
     }
 
     /**
-     * @return Fluent|Model
+     * @return Fluent|Model|Arrayable|null
      */
     public function values()
     {

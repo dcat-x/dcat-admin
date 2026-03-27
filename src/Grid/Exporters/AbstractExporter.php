@@ -256,8 +256,7 @@ abstract class AbstractExporter implements ExporterInterface
      */
     protected function callBuilder(Collection &$data)
     {
-        /** @var Collection|null $data */
-        if ($data && $this->builder) {
+        if ($this->builder) {
             return ($this->builder)($data);
         }
 

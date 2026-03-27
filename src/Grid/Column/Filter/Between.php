@@ -96,9 +96,7 @@ class Between extends Filter
         if ($this->timestamp) {
             $value = array_map(function ($v) {
                 /** @var mixed $v */
-                if ($v) {
-                    return strtotime($v);
-                }
+                return strtotime($v);
             }, $value);
         }
 

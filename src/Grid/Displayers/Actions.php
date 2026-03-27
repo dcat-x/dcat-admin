@@ -306,7 +306,7 @@ class Actions extends AbstractDisplayer
 
         foreach ($this->actions as $action => $enable) {
             if ($enable) {
-                $method = 'render'.ucfirst($action);
+                $method = 'render'.ucfirst((string) $action);
                 array_push($prepends, $this->{$method}());
             }
         }

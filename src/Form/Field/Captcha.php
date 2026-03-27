@@ -35,7 +35,7 @@ class Captcha extends Text
 
     public function render()
     {
-        $this->addVariables(['captchaSrc' => captcha_src()]);
+        $this->addVariables(['captchaSrc' => captcha_src()]); // @phpstan-ignore function.notFound
 
         return parent::render();
     }

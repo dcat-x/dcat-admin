@@ -1,22 +1,25 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
 parameters:
     level: 5
     paths:
         - src
     excludePaths:
         - src/Console/stubs
+    treatPhpDocTypesAsCertain: false
     ignoreErrors:
         # Laravel 惯用的 new static() 模式
         - '#Unsafe usage of new static#'
 
-        # Laravel Facade 和可选依赖（Intervention/Image, Flysystem, 阿里云 SDK 等）
+        # 可选依赖（Intervention/Image, Flysystem v1/v2, 阿里云 SDK 等）
         - '#on an unknown class#'
-        - '#not found#'
         - '#has invalid type#'
+        - identifier: class.notFound
 
-        # Eloquent Model 魔术属性和方法
+        # Eloquent Model 魔术属性
         - '#Access to an undefined property#'
         - '#Access to undefined constant#'
-        - '#Call to an undefined static method Dcat\\Admin\\Models\\[A-Za-z0-9_]+::(where|find|first|create|insert|truncate|pluck)\(\).#'
 
         # 方法返回值缺失（部分方法依赖子类实现或条件返回）
         - '#return statement is missing#'
@@ -24,6 +27,53 @@ parameters:
         # void 方法返回值被使用（链式调用等场景）
         - '#Result of .* is used#'
 
-        # HasComplexHeaders::sortHeaders() 中对 $columns 的数组赋值，PHPDoc 已声明 Collection|array
+        # HasComplexHeaders::sortHeaders() 中对 $columns 的数组赋值
         - '#Property Dcat\\Admin\\Grid::\$columns \(Illuminate\\Support\\Collection\) does not accept array\.#'
+
+        # view() 参数：运行时动态拼接的 view 名不满足 view-string 字面量要求
+        - identifier: argument.templateType
+        - message: '#expects view-string#'
+
+        # 未使用的 Trait（公共 API，供用户项目使用）
+        - identifier: trait.unused
+
+        # 多余的类型检查（防御性编程，保留以兼容扩展包）
+        - identifier: function.alreadyNarrowedType
+        - identifier: empty.variable
+
+        # static vs $this 类型差异
+        - '#static\(.*\) given#'
+
+        # MessageBag 构造参数宽泛用法
+        - '#constructor expects array<string, array<string>.*given#'
+
+        # Collection::map 泛型解析
+        - identifier: argument.unresolvableType
+
+        # str_replace array 参数类型
+        - '#str_replace expects array<string>\|string, array<int, int\|string> given#'
+
+        # SectionManager::resolveContent by-ref 参数
+        - identifier: parameterByRef.type
+
+        # PHPDoc @var 与原生类型差异
+        - identifier: varTag.nativeType
+
+        # EloquentRepository::with 返回类型
+        - '#should return \$this.*but returns static#'
+
+        # PHPDoc 解析错误（第三方或历史遗留的不规范注释）
+        - identifier: phpDoc.parseError
+
+        # 类名大小写（DateTimeRange 等历史命名）
+        - identifier: class.nameCase
+
+        # Larastan env() 规则：部分写在 ServiceProvider 中而非 config 目录
+        - identifier: larastan.noEnvCallsOutsideOfConfig
+
+        # Eloquent 关联动态方法
+        - '#Call to an undefined method.*::getForeignKey\(\)#'
+
+        # PHPDoc 与实际类型不完全匹配
+        - identifier: property.phpDocType
     reportUnmatchedIgnoredErrors: false
