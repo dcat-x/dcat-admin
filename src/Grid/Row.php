@@ -162,7 +162,7 @@ class Row implements Arrayable
      */
     public function column($name, $value = null)
     {
-        if (is_null($value)) {
+        if ($value === null) {
             return $this->output(
                 Arr::get($this->data, $name)
             );
@@ -209,7 +209,7 @@ class Row implements Arrayable
             $value = $value->toJson();
         }
 
-        if (! is_null($value) && ! is_scalar($value)) {
+        if ($value !== null && ! is_scalar($value)) {
             return sprintf('<pre class="dump">%s</pre>', json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
         }
 

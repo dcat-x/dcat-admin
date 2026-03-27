@@ -40,7 +40,7 @@ trait HasTabs
      */
     public function getTab()
     {
-        if (is_null($this->tab)) {
+        if ($this->tab === null) {
             $this->tab = new Tab($this);
         }
 

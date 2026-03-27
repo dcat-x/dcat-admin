@@ -139,7 +139,7 @@ class Tags extends Field
      */
     public function value($value = null)
     {
-        if (is_null($value)) {
+        if ($value === null) {
             return Helper::array(parent::value());
         }
 

@@ -129,7 +129,7 @@ class Tools implements Renderable
      */
     public function resource()
     {
-        if (is_null($this->resource)) {
+        if ($this->resource === null) {
             $this->resource = $this->panel->parent()->resource();
         }
 

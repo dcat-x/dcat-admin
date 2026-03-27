@@ -38,7 +38,7 @@ class ResetPasswordCommand extends Command
             return $user->username == $username;
         });
 
-        if (is_null($user)) {
+        if ($user === null) {
             $this->error('The user you entered is not exists');
             goto askForUserName;
         }

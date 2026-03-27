@@ -129,7 +129,7 @@ trait HasQuickSearch
                     $this->addWhereLikeBinding($q, $column, true, $keyword);
                 }
             });
-        } elseif (is_null($this->search)) {
+        } elseif ($this->search === null) {
             $this->addWhereBindings($query);
         }
     }

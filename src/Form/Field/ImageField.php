@@ -181,7 +181,7 @@ trait ImageField
                 $constraint->aspectRatio();
             });
 
-            if (! is_null($this->storagePermission)) {
+            if ($this->storagePermission !== null) {
                 $this->getStorage()->put("{$this->getDirectory()}/{$path}", $image->encode()->stream(), $this->storagePermission);
             } else {
                 $this->getStorage()->put("{$this->getDirectory()}/{$path}", $image->encode()->stream());

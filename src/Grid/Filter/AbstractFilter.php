@@ -237,12 +237,12 @@ abstract class AbstractFilter
     /**
      * Get siblings of current filter.
      *
-     * @param  null  $index
+     * @param  int|string|null  $index
      * @return AbstractFilter[]|mixed
      */
     public function siblings($index = null)
     {
-        if (! is_null($index)) {
+        if ($index !== null) {
             return Arr::get($this->parent->filters(), $index);
         }
 

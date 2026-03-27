@@ -25,7 +25,7 @@ class ArrayField extends HasMany
 
     protected function buildRelatedForms()
     {
-        if (is_null($this->form)) {
+        if ($this->form === null) {
             return [];
         }
 

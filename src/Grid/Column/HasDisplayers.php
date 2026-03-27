@@ -49,7 +49,7 @@ trait HasDisplayers
     public function using(array $values, $default = null)
     {
         return $this->display(function ($value) use ($values, $default) {
-            if (is_null($value)) {
+            if ($value === null) {
                 return $default;
             }
 
@@ -199,7 +199,7 @@ trait HasDisplayers
     public function dot($options = [], $default = 'default')
     {
         return $this->prepend(function ($_, $original) use ($options, $default) {
-            $style = is_null($original) ? $default : Arr::get((array) $options, $original, $default);
+            $style = $original === null ? $default : Arr::get((array) $options, $original, $default);
 
             $style = $style === 'default' ? 'dark70' : $style;
 

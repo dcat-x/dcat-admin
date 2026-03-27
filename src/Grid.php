@@ -756,7 +756,7 @@ HTML;
      */
     public function option($key, $value = null)
     {
-        if (is_null($value)) {
+        if ($value === null) {
             return $this->options[$key] ?? null;
         }
 

@@ -563,7 +563,7 @@ abstract class ServiceProvider extends LaravelServiceProvider
     protected function formatAssetFiles($files)
     {
         if (is_array($files)) {
-            return array_map([$this, 'formatAssetFiles'], $files);
+            return array_map($this->formatAssetFiles(...), $files);
         }
 
         if (URL::isValidUrl($files)) {

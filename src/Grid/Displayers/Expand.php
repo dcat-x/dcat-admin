@@ -49,7 +49,7 @@ class Expand extends AbstractDisplayer
             $this->button = $callbackOrButton;
         }
 
-        $button = is_null($this->button) ? $this->value : $this->button;
+        $button = $this->button === null ? $this->value : $this->button;
 
         return Admin::view('admin::grid.displayer.expand', [
             'key' => $this->getKey(),

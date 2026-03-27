@@ -28,7 +28,7 @@ trait HasActionHandler
      */
     public function response()
     {
-        if (is_null($this->response)) {
+        if ($this->response === null) {
             $this->response = new Response;
         }
 

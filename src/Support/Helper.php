@@ -948,7 +948,7 @@ class Helper implements Resettable
         }
 
         if (is_array($name)) {
-            return array_map([static::class, 'formatElementName'], $name);
+            return array_map(static::formatElementName(...), $name);
         }
 
         if (strpos($name, '.') === false) {
@@ -972,7 +972,7 @@ class Helper implements Resettable
      */
     public static function arraySet(&$array, $key, $value)
     {
-        if (is_null($key)) {
+        if ($key === null) {
             return $array = $value;
         }
 

@@ -203,7 +203,7 @@ class Tree implements Renderable
      */
     protected function setDefaultBranchCallback()
     {
-        if (is_null($this->branchCallback)) {
+        if ($this->branchCallback === null) {
             $this->branchCallback = function ($branch) {
                 $key = $branch[$this->repository->getPrimaryKeyColumn()];
                 $title = $branch[$this->repository->getTitleColumn()];

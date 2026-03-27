@@ -401,7 +401,7 @@ class Filter implements Renderable
      */
     public function withBorder($border = null)
     {
-        $this->border = is_null($border) ? 'border-top:1px solid #f4f4f4;' : $border;
+        $this->border = $border === null ? 'border-top:1px solid #f4f4f4;' : $border;
 
         return $this;
     }
@@ -427,14 +427,14 @@ class Filter implements Renderable
      */
     public function inputs()
     {
-        if (! is_null($this->inputs)) {
+        if ($this->inputs !== null) {
             return $this->inputs;
         }
 
         $this->inputs = Arr::dot(request()->all());
 
         $this->inputs = array_filter($this->inputs, function ($input) {
-            return $input !== '' && ! is_null($input);
+            return $input !== '' && $input !== null;
         });
 
         $this->sanitizeInputs($this->inputs);

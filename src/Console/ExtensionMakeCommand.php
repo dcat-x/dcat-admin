@@ -368,7 +368,7 @@ TEXT;
      */
     protected function copy($from, $to = null)
     {
-        if (is_array($from) && is_null($to)) {
+        if (is_array($from) && $to === null) {
             foreach ($from as $key => $value) {
                 $this->copy($key, $value);
             }

@@ -27,7 +27,7 @@ trait HasHtml
 
         static::context()->html = array_merge(
             $html,
-            array_map([Helper::class, 'render'], (array) $content)
+            array_map(Helper::render(...), (array) $content)
         );
     }
 

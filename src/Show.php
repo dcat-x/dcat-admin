@@ -378,7 +378,7 @@ class Show implements Renderable
      */
     public function relation($name, $label, $builder = null)
     {
-        if (is_null($builder)) {
+        if ($builder === null) {
             $builder = $label;
             $label = '';
         }
