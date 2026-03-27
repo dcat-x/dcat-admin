@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Http\Controllers;
 
+use Dcat\Admin\Contracts\Resettable;
 use Dcat\Admin\Grid\Importers\ExcelImporter;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
-class ImportController extends Controller
+class ImportController extends Controller implements Resettable
 {
     /**
      * @var array<string, array{titles?: array, rules?: array, upsert_key?: string|null}>
@@ -21,6 +22,11 @@ class ImportController extends Controller
     }
 
     public static function flushImporterRegistry(): void
+    {
+        static::$importerRegistry = [];
+    }
+
+    public static function resetState(): void
     {
         static::$importerRegistry = [];
     }

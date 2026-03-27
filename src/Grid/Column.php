@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dcat\Admin\Grid;
 
 use Closure;
+use Dcat\Admin\Contracts\Resettable;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Displayers\AbstractDisplayer;
 use Dcat\Admin\Support\Helper;
@@ -59,7 +60,7 @@ use Illuminate\Support\Traits\Macroable;
  *
  * @mixin Collection
  */
-class Column
+class Column implements Resettable
 {
     use Column\HasDisplayers;
     use Column\HasHeader;
@@ -109,7 +110,7 @@ class Column
     /**
      * Original grid data.
      *
-     * @var Collection
+     * @var Collection|null
      */
     protected static $originalGridModels;
 
@@ -225,6 +226,11 @@ class Column
     public static function extensions()
     {
         return static::$displayers;
+    }
+
+    public static function resetState(): void
+    {
+        static::$originalGridModels = null;
     }
 
     /**

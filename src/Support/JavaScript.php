@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Support;
 
+use Dcat\Admin\Contracts\Resettable;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Str;
 
-class JavaScript
+class JavaScript implements Resettable
 {
     protected static $scripts = [];
 
@@ -88,6 +89,11 @@ class JavaScript
         }
 
         return $value;
+    }
+
+    public static function resetState(): void
+    {
+        static::$scripts = [];
     }
 
     /**

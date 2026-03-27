@@ -7,6 +7,7 @@ namespace Dcat\Admin;
 use Closure;
 use Dcat\Admin\Actions\Action;
 use Dcat\Admin\Contracts\Repository;
+use Dcat\Admin\Contracts\Resettable;
 use Dcat\Admin\Form\AbstractTool;
 use Dcat\Admin\Form\Builder;
 use Dcat\Admin\Form\Concerns;
@@ -102,7 +103,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @method Field\AliMultipleImage aliMultipleImage($column, $label = '')
  * @method Field\PrivateMultipleImage privateMultipleImage($column, $label = '')
  */
-class Form implements Renderable
+class Form implements Renderable, Resettable
 {
     use Concerns\HandleCascadeFields;
     use Concerns\HasAutoSave;
@@ -315,6 +316,11 @@ class Form implements Renderable
         $this->model(new Fluent);
         $this->prepareDialogForm();
         $this->callResolving();
+    }
+
+    public static function resetState(): void
+    {
+        static::$collectedAssets = [];
     }
 
     /**
