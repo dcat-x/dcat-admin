@@ -11,10 +11,7 @@ class JavaScriptTest extends TestCase
 {
     protected function tearDown(): void
     {
-        // Clear static scripts registry between tests
-        $ref = new \ReflectionProperty(JavaScript::class, 'scripts');
-        $ref->setAccessible(true);
-        $ref->setValue(null, []);
+        JavaScript::resetState();
 
         parent::tearDown();
     }
