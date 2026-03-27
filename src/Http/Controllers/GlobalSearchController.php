@@ -13,12 +13,10 @@ class GlobalSearchController extends Controller
 {
     public function search(Request $request): JsonResponse
     {
-        $keyword = $request->input('q', '');
-        $limit = (int) $request->input('limit', 5);
+        $keyword = trim((string) $request->input('q', ''));
+        $limit = min(max((int) $request->input('limit', 5), 1), 50);
 
-        $keyword = (string) $keyword;
-
-        if (strlen($keyword) < 1) {
+        if (strlen($keyword) < 2) {
             return response()->json(['groups' => []]);
         }
 
@@ -26,7 +24,14 @@ class GlobalSearchController extends Controller
         $groups = [];
 
         foreach ($globalSearch->getProviders() as $provider) {
-            $results = $provider->search($keyword, $limit);
+            try {
+                $results = $provider->search($keyword, $limit);
+            } catch (\Throwable $e) {
+                report($e);
+
+                continue;
+            }
+
             if (! empty($results)) {
                 $groups[] = [
                     'title' => $provider->title(),
