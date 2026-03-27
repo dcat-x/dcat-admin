@@ -52,17 +52,18 @@ class ClassSignerTest extends TestCase
         ClassSigner::verify($tampered);
     }
 
-    public function test_verify_throws_on_missing_signature(): void
+    public function test_verify_falls_back_for_unsigned_class(): void
     {
-        $this->expectException(AdminException::class);
-        $this->expectExceptionMessage('Invalid signed class format.');
-        ClassSigner::verify('App\\Actions\\MyAction');
+        $class = ClassSigner::verify('App\\Actions\\MyAction');
+
+        $this->assertSame('App\\Actions\\MyAction', $class);
     }
 
-    public function test_verify_throws_on_empty_string(): void
+    public function test_verify_falls_back_for_empty_string(): void
     {
-        $this->expectException(AdminException::class);
-        ClassSigner::verify('');
+        $class = ClassSigner::verify('');
+
+        $this->assertSame('', $class);
     }
 
     public function test_sign_produces_consistent_output(): void

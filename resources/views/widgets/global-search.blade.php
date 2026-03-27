@@ -139,7 +139,7 @@
     var searchUrl = '{{ admin_url("_global-search") }}';
 
     function doSearch(keyword) {
-        if (!keyword || keyword.length < 1) {
+        if (!keyword || keyword.length < 2) {
             $results.removeClass('active').empty();
             return;
         }

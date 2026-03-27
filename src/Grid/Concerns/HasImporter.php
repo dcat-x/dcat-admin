@@ -64,7 +64,10 @@ trait HasImporter
         return (new Tools\ImportButton($this))->render();
     }
 
-    protected function registerImporterConfig(): void
+    /**
+     * @return array{titles?: array, rules?: array, upsert_key?: string|null}
+     */
+    public function buildImporterConfig(): array
     {
         $driver = $this->importerManager()->driver();
         $config = [];
@@ -86,9 +89,14 @@ trait HasImporter
             }
         }
 
+        return $config;
+    }
+
+    protected function registerImporterConfig(): void
+    {
         ImportController::registerImporter(
             $this->getName(),
-            $config
+            $this->buildImporterConfig()
         );
     }
 

@@ -83,16 +83,21 @@ class HandleFormControllerTest extends TestCase
         $this->controller->handle($request);
     }
 
-    public function test_throws_exception_when_signature_missing(): void
+    public function test_unsigned_form_does_not_throw_signature_error(): void
     {
         $request = Request::create('/handle-form', 'POST', [
-            Form::REQUEST_NAME => StubWidgetForm::class,
+            Form::REQUEST_NAME => 'NonExistent\\Form\\Class',
         ]);
 
-        $this->expectException(AdminException::class);
-        $this->expectExceptionMessage('Invalid signed class format.');
-
-        $this->controller->handle($request);
+        // Unsigned class names fall back gracefully — the error should be
+        // "Form does not exist" (class not found), not "Invalid signed class format"
+        try {
+            $this->controller->handle($request);
+            $this->fail('Expected AdminException');
+        } catch (AdminException $e) {
+            $this->assertStringContainsString('does not exist', $e->getMessage());
+            $this->assertStringNotContainsString('signed', $e->getMessage());
+        }
     }
 
     public function test_get_field_returns_null_for_nonexistent_column(): void

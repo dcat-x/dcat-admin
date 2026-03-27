@@ -120,7 +120,7 @@ class HandleActionControllerTest extends TestCase
         $this->controller->handle($request);
     }
 
-    public function test_throws_exception_when_signature_missing(): void
+    public function test_unsigned_action_falls_back_gracefully(): void
     {
         $encoded = str_replace('\\', '_', StubAction::class);
 
@@ -128,10 +128,10 @@ class HandleActionControllerTest extends TestCase
             '_action' => $encoded,
         ]);
 
-        $this->expectException(AdminException::class);
-        $this->expectExceptionMessage('Invalid signed class format.');
+        // Unsigned class names are accepted with a log warning (legacy fallback)
+        $response = $this->controller->handle($request);
 
-        $this->controller->handle($request);
+        $this->assertSame('handled', $response);
     }
 
     public function test_action_class_name_underscore_to_namespace(): void

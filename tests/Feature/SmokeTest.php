@@ -97,8 +97,9 @@ class SmokeTest extends FeatureTestCase
 
     // ── Action Signature ──
 
-    public function test_action_rejects_unsigned_class(): void
+    public function test_action_rejects_nonexistent_unsigned_class(): void
     {
+        // Unsigned class falls back but class doesn't exist → 500
         $response = $this->postJson(route('dcat-api.action'), [
             '_action' => 'App_Actions_FakeAction',
         ]);

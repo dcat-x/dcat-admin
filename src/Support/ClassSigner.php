@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dcat\Admin\Support;
 
 use Dcat\Admin\Exception\AdminException;
+use Illuminate\Support\Facades\Log;
 
 class ClassSigner
 {
@@ -21,6 +22,9 @@ class ClassSigner
     /**
      * Verify a signed class string and return the class name.
      *
+     * If the signed string has no signature (legacy format from cached pages),
+     * the class name is returned with a deprecation warning logged.
+     *
      * @throws AdminException
      */
     public static function verify(string $signed): string
@@ -28,7 +32,13 @@ class ClassSigner
         $parts = explode('|', $signed, 2);
 
         if (count($parts) !== 2) {
-            throw new AdminException('Invalid signed class format.');
+            // Legacy format: unsigned class name from cached page
+            Log::warning('admin.class_signer.unsigned', [
+                'class' => $signed,
+                'hint' => 'Client submitted unsigned class name. This usually means a cached page was loaded before the signing upgrade. The user should refresh the page.',
+            ]);
+
+            return $signed;
         }
 
         [$class, $signature] = $parts;

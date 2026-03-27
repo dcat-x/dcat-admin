@@ -6,6 +6,7 @@ namespace Dcat\Admin\Grid\Tools;
 
 use Dcat\Admin\Admin;
 use Dcat\Admin\Grid;
+use Dcat\Admin\Http\Controllers\ImportController;
 use Illuminate\Contracts\Support\Renderable;
 
 class ImportButton implements Renderable
@@ -24,6 +25,7 @@ class ImportButton implements Renderable
     {
         $url = admin_base_path('dcat-api/import');
         $gridName = $this->grid->getName();
+        $importConfig = $this->buildEncodedConfig();
 
         $script = <<<JS
 (function () {
@@ -51,6 +53,7 @@ class ImportButton implements Renderable
                 var formData = new FormData(form[0]);
                 formData.append('_token', Dcat.token);
                 formData.append('_grid', '{$gridName}');
+                formData.append('_import_config', '{$importConfig}');
 
                 var btn = layer.getChildFrame ? null : true;
                 layer.msg('{$this->importingMessage()}', {icon: 16, shade: [0.3, '#000'], time: 0});
@@ -104,12 +107,20 @@ JS;
             : 'Importing...';
     }
 
+    protected function buildEncodedConfig(): string
+    {
+        $config = $this->grid->buildImporterConfig();
+
+        return ImportController::encodeConfig($config);
+    }
+
     public function render()
     {
         $this->setUpScripts();
 
         $import = trans('admin.import');
-        $templateUrl = admin_base_path('dcat-api/import/template').'?_grid='.$this->grid->getName();
+        $encodedConfig = $this->buildEncodedConfig();
+        $templateUrl = admin_base_path('dcat-api/import/template').'?_grid='.$this->grid->getName().'&_import_config='.urlencode($encodedConfig);
         $templateText = trans('admin.import_template', [], 'en') !== 'admin.import_template'
             ? trans('admin.import_template')
             : 'Download Template';

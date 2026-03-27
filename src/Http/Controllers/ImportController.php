@@ -31,6 +31,54 @@ class ImportController extends Controller implements Resettable
         static::$importerRegistry = [];
     }
 
+    /**
+     * Encode importer config for embedding in HTML/JS (signed to prevent tampering).
+     */
+    public static function encodeConfig(array $config): string
+    {
+        if (! $config) {
+            return '';
+        }
+
+        $json = json_encode($config, JSON_THROW_ON_ERROR);
+        $signature = hash_hmac('sha256', $json, (string) config('app.key'));
+
+        return base64_encode($json.'|'.$signature);
+    }
+
+    /**
+     * Decode and verify importer config from request.
+     *
+     * @return array{titles?: array, rules?: array, upsert_key?: string|null}
+     */
+    public static function decodeConfig(string $encoded): array
+    {
+        if (! $encoded) {
+            return [];
+        }
+
+        $decoded = base64_decode($encoded, true);
+        if ($decoded === false) {
+            return [];
+        }
+
+        $parts = explode('|', $decoded, 2);
+        if (count($parts) !== 2) {
+            return [];
+        }
+
+        [$json, $signature] = $parts;
+        $expected = hash_hmac('sha256', $json, (string) config('app.key'));
+
+        if (! hash_equals($expected, $signature)) {
+            return [];
+        }
+
+        $config = json_decode($json, true);
+
+        return is_array($config) ? $config : [];
+    }
+
     public function template(Request $request)
     {
         $importer = $this->resolveImporter($request);
@@ -66,8 +114,13 @@ class ImportController extends Controller implements Resettable
 
     protected function resolveImporter(Request $request): ExcelImporter
     {
-        $gridName = (string) $request->input('_grid', '');
-        $config = static::$importerRegistry[$gridName] ?? [];
+        // Priority: request-embedded config > static registry > empty
+        $config = self::decodeConfig((string) $request->input('_import_config', ''));
+
+        if (! $config) {
+            $gridName = (string) $request->input('_grid', '');
+            $config = static::$importerRegistry[$gridName] ?? [];
+        }
 
         $importer = ExcelImporter::make();
 
