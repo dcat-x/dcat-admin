@@ -8,6 +8,7 @@ use Dcat\Admin\Actions\Action;
 use Dcat\Admin\Exception\AdminException;
 use Dcat\Admin\Http\Controllers\HandleActionController;
 use Dcat\Admin\Models\Administrator;
+use Dcat\Admin\Support\ClassSigner;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Http\Request;
 
@@ -62,8 +63,11 @@ class HandleActionControllerTest extends TestCase
 
     public function test_throws_exception_when_action_class_not_exists(): void
     {
+        $signed = ClassSigner::sign('Non\\Existent\\Class');
+        $encoded = str_replace('\\', '_', $signed);
+
         $request = Request::create('/handle-action', 'POST', [
-            '_action' => 'Non_Existent_Class',
+            '_action' => $encoded,
         ]);
 
         $this->expectException(AdminException::class);
@@ -74,10 +78,11 @@ class HandleActionControllerTest extends TestCase
 
     public function test_throws_exception_when_class_is_not_action_instance(): void
     {
-        $className = str_replace('\\', '_', NotAnAction::class);
+        $signed = ClassSigner::sign(NotAnAction::class);
+        $encoded = str_replace('\\', '_', $signed);
 
         $request = Request::create('/handle-action', 'POST', [
-            '_action' => $className,
+            '_action' => $encoded,
         ]);
 
         $this->expectException(AdminException::class);
@@ -88,16 +93,45 @@ class HandleActionControllerTest extends TestCase
 
     public function test_resolves_valid_action_class(): void
     {
-        $className = str_replace('\\', '_', StubAction::class);
+        $signed = ClassSigner::sign(StubAction::class);
+        $encoded = str_replace('\\', '_', $signed);
 
         $request = Request::create('/handle-action', 'POST', [
-            '_action' => $className,
+            '_action' => $encoded,
         ]);
 
         // StubAction 是有效的 Action 子类，应正常处理
         $result = $this->controller->handle($request);
 
         $this->assertNotNull($result);
+    }
+
+    public function test_throws_exception_when_signature_invalid(): void
+    {
+        $encoded = str_replace('\\', '_', StubAction::class.'|invalidsignature');
+
+        $request = Request::create('/handle-action', 'POST', [
+            '_action' => $encoded,
+        ]);
+
+        $this->expectException(AdminException::class);
+        $this->expectExceptionMessage('Class signature verification failed.');
+
+        $this->controller->handle($request);
+    }
+
+    public function test_throws_exception_when_signature_missing(): void
+    {
+        $encoded = str_replace('\\', '_', StubAction::class);
+
+        $request = Request::create('/handle-action', 'POST', [
+            '_action' => $encoded,
+        ]);
+
+        $this->expectException(AdminException::class);
+        $this->expectExceptionMessage('Invalid signed class format.');
+
+        $this->controller->handle($request);
     }
 
     public function test_action_class_name_underscore_to_namespace(): void

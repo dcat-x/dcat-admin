@@ -6,6 +6,7 @@ namespace Dcat\Admin\Tests\Unit\Http\Controllers;
 
 use Dcat\Admin\Exception\AdminException;
 use Dcat\Admin\Http\Controllers\HandleFormController;
+use Dcat\Admin\Support\ClassSigner;
 use Dcat\Admin\Tests\TestCase;
 use Dcat\Admin\Widgets\Form;
 use Illuminate\Http\Request;
@@ -49,7 +50,7 @@ class HandleFormControllerTest extends TestCase
     public function test_throws_exception_when_form_class_not_exists(): void
     {
         $request = Request::create('/handle-form', 'POST', [
-            Form::REQUEST_NAME => 'Non\\Existent\\FormClass',
+            Form::REQUEST_NAME => ClassSigner::sign('Non\\Existent\\FormClass'),
         ]);
 
         $this->expectException(AdminException::class);
@@ -61,11 +62,35 @@ class HandleFormControllerTest extends TestCase
     public function test_throws_exception_when_class_is_not_form_instance(): void
     {
         $request = Request::create('/handle-form', 'POST', [
-            Form::REQUEST_NAME => NotAForm::class,
+            Form::REQUEST_NAME => ClassSigner::sign(NotAForm::class),
         ]);
 
         $this->expectException(AdminException::class);
         $this->expectExceptionMessage('must be an instance of');
+
+        $this->controller->handle($request);
+    }
+
+    public function test_throws_exception_when_signature_invalid(): void
+    {
+        $request = Request::create('/handle-form', 'POST', [
+            Form::REQUEST_NAME => StubWidgetForm::class.'|invalidsignature',
+        ]);
+
+        $this->expectException(AdminException::class);
+        $this->expectExceptionMessage('Class signature verification failed.');
+
+        $this->controller->handle($request);
+    }
+
+    public function test_throws_exception_when_signature_missing(): void
+    {
+        $request = Request::create('/handle-form', 'POST', [
+            Form::REQUEST_NAME => StubWidgetForm::class,
+        ]);
+
+        $this->expectException(AdminException::class);
+        $this->expectExceptionMessage('Invalid signed class format.');
 
         $this->controller->handle($request);
     }

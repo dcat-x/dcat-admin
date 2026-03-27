@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dcat\Admin\Actions;
 
 use Dcat\Admin\Admin;
+use Dcat\Admin\Support\ClassSigner;
 use Dcat\Admin\Traits\HasAuthorization;
 
 trait HasActionHandler
@@ -62,7 +63,9 @@ trait HasActionHandler
      */
     public function makeCalledClass()
     {
-        return str_replace('\\', '_', get_called_class());
+        $signed = ClassSigner::sign(get_called_class());
+
+        return str_replace('\\', '_', $signed);
     }
 
     /**

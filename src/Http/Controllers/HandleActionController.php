@@ -7,6 +7,7 @@ namespace Dcat\Admin\Http\Controllers;
 use Dcat\Admin\Actions\Action;
 use Dcat\Admin\Actions\Response;
 use Dcat\Admin\Exception\AdminException;
+use Dcat\Admin\Support\ClassSigner;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -39,7 +40,8 @@ class HandleActionController
             throw new AdminException('Invalid action request.');
         }
 
-        $actionClass = str_replace('_', '\\', (string) $request->get('_action'));
+        $signed = str_replace('_', '\\', (string) $request->get('_action'));
+        $actionClass = ClassSigner::verify($signed);
 
         if (! class_exists($actionClass)) {
             throw new AdminException("Action [{$actionClass}] does not exist.");

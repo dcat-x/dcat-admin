@@ -14,6 +14,7 @@ use Dcat\Admin\Form\Concerns\HasRows;
 use Dcat\Admin\Form\Concerns\HasTabs;
 use Dcat\Admin\Form\Field;
 use Dcat\Admin\Form\ResolveField;
+use Dcat\Admin\Support\ClassSigner;
 use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Traits\HasAuthorization;
 use Dcat\Admin\Traits\HasFormResponse;
@@ -201,7 +202,7 @@ class Form implements Renderable
 
         $this->initPayload();
 
-        $formData = [static::REQUEST_NAME => static::class];
+        $formData = [static::REQUEST_NAME => ClassSigner::sign(static::class)];
 
         $this->resolvingField(function ($field) use ($formData) {
             if (! method_exists($this, 'form')) {
@@ -824,7 +825,7 @@ HTML;
             $addHiddenFields = function () {
                 $this->method('POST');
                 $this->defaultHtmlAttribute('action', route(admin_api_route_name('form')));
-                $this->hidden(static::REQUEST_NAME)->default(get_called_class());
+                $this->hidden(static::REQUEST_NAME)->default(ClassSigner::sign(get_called_class()));
                 $this->hidden(static::CURRENT_URL_NAME)->default($this->getCurrentUrl());
 
                 if (! empty($this->payload) && is_array($this->payload)) {

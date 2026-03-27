@@ -10,6 +10,7 @@ use Dcat\Admin\Form\Field\Embeds;
 use Dcat\Admin\Form\Field\File;
 use Dcat\Admin\Form\Field\HasMany;
 use Dcat\Admin\Http\JsonResponse;
+use Dcat\Admin\Support\ClassSigner;
 use Dcat\Admin\Traits\HasUploadedFile;
 use Dcat\Admin\Widgets\Form;
 use Illuminate\Http\Request;
@@ -109,7 +110,9 @@ class HandleFormController
             throw new AdminException('Invalid form request.');
         }
 
-        $formClass = $request->get(Form::REQUEST_NAME);
+        $formClass = ClassSigner::verify(
+            (string) $request->get(Form::REQUEST_NAME)
+        );
 
         if (! class_exists($formClass)) {
             throw new AdminException("Form [{$formClass}] does not exist.");
