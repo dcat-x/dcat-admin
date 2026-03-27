@@ -31,7 +31,7 @@ class Context extends Fluent
         $data = is_array($key) ? $key : [$key => $value];
 
         foreach ($data as $key => $value) {
-            if (is_string($key) && strpos($key, '.') === false) {
+            if (is_string($key) && ! str_contains($key, '.')) {
                 $this->attributes[$key] = $value;
             } else {
                 Arr::set($this->attributes, $key, $value);

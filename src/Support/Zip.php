@@ -256,7 +256,7 @@ class Zip extends ZipArchive
      */
     protected function removePathPrefix($prefix, $path)
     {
-        return (strpos($path, $prefix) === 0)
+        return str_starts_with($path, $prefix)
             ? substr($path, strlen($prefix))
             : $path;
     }

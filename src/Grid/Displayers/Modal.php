@@ -87,6 +87,7 @@ class Modal extends AbstractDisplayer
 
     protected function payloadLazyRenderable(LazyRenderable $renderable, array $payload): LazyRenderable
     {
-        return call_user_func([$renderable, 'payload'], $payload);
+        /** @phpstan-ignore method.notFound */
+        return $renderable->payload($payload);
     }
 }

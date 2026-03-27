@@ -133,7 +133,7 @@ class QueryBuilderRepository extends Repository implements TreeRepository
                 $value['arguments'] = [$this->getGridColumns()];
             }
 
-            $query = call_user_func_array([$query, $value['method']], $value['arguments'] ?? []);
+            $query = $query->{$value['method']}(...($value['arguments'] ?? []));
         });
 
         return $query;

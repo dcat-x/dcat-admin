@@ -41,7 +41,7 @@ class DropdownActions extends Actions
     {
         $action = Helper::render($action);
 
-        if (mb_strpos($action, '</a>') === false) {
+        if (! str_contains($action, '</a>')) {
             return "<a>$action</a>";
         }
 

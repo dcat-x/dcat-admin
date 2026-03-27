@@ -35,8 +35,7 @@ class UserController extends AdminController
 
             if (config('admin.permission.enable')) {
                 $roleColumn = $grid->column('roles')->pluck('name');
-                call_user_func([$roleColumn, 'label'], 'primary', 3);
-
+                $roleColumn->label('primary', 3); /** @phpstan-ignore method.notFound */
                 $permissionModel = config('admin.database.permissions_model');
                 $roleModel = config('admin.database.roles_model');
                 $nodes = (new $permissionModel)->allNodes();
@@ -54,7 +53,7 @@ class UserController extends AdminController
                         }
                     });
 
-                call_user_func([$permissionColumn, 'else']);
+                $permissionColumn->else(); /** @phpstan-ignore method.notFound */
                 $permissionColumn->display('');
             }
 

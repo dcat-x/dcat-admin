@@ -63,6 +63,7 @@ class HandleActionController
 
     protected function handleAction(Action $action, Request $request)
     {
-        return call_user_func([$action, 'handle'], $request);
+        /** @phpstan-ignore method.notFound */
+        return $action->handle($request);
     }
 }

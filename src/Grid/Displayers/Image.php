@@ -22,7 +22,7 @@ class Image extends AbstractDisplayer
 
         return collect((array) $this->value)->filter()->map(function ($path) use ($server, $width, $height, $storage) {
             $path = (string) $path;
-            if (filter_var($path, FILTER_VALIDATE_URL) || mb_strpos($path, 'data:image') === 0) {
+            if (filter_var($path, FILTER_VALIDATE_URL) || str_starts_with($path, 'data:image')) {
                 $src = $path;
             } elseif ($server) {
                 $src = rtrim((string) $server, '/').'/'.ltrim($path, '/');

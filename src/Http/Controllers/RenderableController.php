@@ -18,7 +18,7 @@ class RenderableController
         $renderable = $this->newRenderable($request);
 
         if (method_exists($renderable, 'passesAuthorization') && ! $renderable->passesAuthorization()) {
-            return call_user_func([$renderable, 'failedAuthorization']);
+            return $renderable->failedAuthorization(); /** @phpstan-ignore method.notFound */
         }
 
         $this->addScript();

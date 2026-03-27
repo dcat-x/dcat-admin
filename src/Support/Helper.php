@@ -183,7 +183,7 @@ class Helper implements Resettable
             $url = substr($url, 0, $hashPos);
         }
 
-        if (strpos($url, '?') === false) {
+        if (! str_contains($url, '?')) {
             return $url.'?'.http_build_query($query).$fragment;
         }
 
@@ -203,7 +203,7 @@ class Helper implements Resettable
     {
         $url = (string) $url;
 
-        if (strpos($url, '?') === false || ! $keys) {
+        if (! str_contains($url, '?') || ! $keys) {
             return $url;
         }
 
@@ -285,7 +285,7 @@ class Helper implements Resettable
         $path = (string) $path;
         $current = $current ?: $request->decodedPath();
 
-        if (strpos($path, ':') !== false) {
+        if (str_contains($path, ':')) {
             [$methods, $path] = explode(':', $path, 2);
             $requestMethod = strtoupper($request->method());
             $allowMethods = array_flip(array_map('strtoupper', explode(',', $methods)));
@@ -305,7 +305,7 @@ class Helper implements Resettable
             return true;
         }
 
-        if (strpos($path, '*') === false) {
+        if (! str_contains($path, '*')) {
             return $path === $current;
         }
 
@@ -375,7 +375,7 @@ class Helper implements Resettable
      */
     public static function slug(string $name, string $symbol = '-')
     {
-        if (strpos($name, '_') === false && ! preg_match('/[A-Z]/', $name)) {
+        if (! str_contains($name, '_') && ! preg_match('/[A-Z]/', $name)) {
             return $name;
         }
 
@@ -545,7 +545,7 @@ class Helper implements Resettable
 
         $hasPrefix = false;
 
-        if (mb_strpos($color, '#') === 0) {
+        if (str_starts_with($color, '#')) {
             $color = mb_substr($color, 1);
 
             $hasPrefix = true;
@@ -578,7 +578,7 @@ class Helper implements Resettable
             return $color;
         }
 
-        if (mb_strpos($color, '#') === 0) {
+        if (str_starts_with($color, '#')) {
             $color = mb_substr($color, 1);
         }
 
@@ -665,7 +665,7 @@ class Helper implements Resettable
      */
     public static function isQQBrowser()
     {
-        return mb_strpos(mb_strtolower($_SERVER['HTTP_USER_AGENT'] ?? ''), 'qqbrowser') !== false;
+        return str_contains(mb_strtolower($_SERVER['HTTP_USER_AGENT'] ?? ''), 'qqbrowser');
     }
 
     /**
@@ -951,7 +951,7 @@ class Helper implements Resettable
             return array_map(static::formatElementName(...), $name);
         }
 
-        if (strpos($name, '.') === false) {
+        if (! str_contains($name, '.')) {
             return $name;
         }
 

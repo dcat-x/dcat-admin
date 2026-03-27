@@ -152,7 +152,8 @@ class AuthController extends Controller
             return false;
         }
 
-        $provider = call_user_func([$this->guard(), 'getProvider']);
+        /** @phpstan-ignore method.notFound */
+        $provider = $this->guard()->getProvider();
 
         return $provider->validateCredentials($user, ['password' => $oldPassword]);
     }

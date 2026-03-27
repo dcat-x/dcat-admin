@@ -56,10 +56,7 @@ trait ImageField
             $mime = $mime ?: finfo_file(finfo_open(FILEINFO_MIME_TYPE), $target);
 
             foreach ($this->interventionCalls as $call) {
-                call_user_func_array(
-                    [$image, $call['method']],
-                    $call['arguments']
-                )->save($target, null, $mime);
+                $image->{$call['method']}(...$call['arguments'])->save($target, null, $mime);
             }
         }
 

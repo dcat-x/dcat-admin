@@ -202,7 +202,7 @@ trait ModelTree
 
         $query = $this->buildSortQuery()->limit(1);
 
-        $swapWithModel = call_user_func([$query, 'ordered'])
+        $swapWithModel = $query->ordered() /** @phpstan-ignore method.notFound */
             ->where($orderColumnName, '>', $this->$orderColumnName)
             ->where($parentColumnName, $this->$parentColumnName)
             ->first();
@@ -221,7 +221,7 @@ trait ModelTree
 
         $query = $this->buildSortQuery()->limit(1);
 
-        $swapWithModel = call_user_func([$query, 'ordered'], 'desc')
+        $swapWithModel = $query->ordered('desc') /** @phpstan-ignore method.notFound */
             ->where($orderColumnName, '<', $this->$orderColumnName)
             ->where($parentColumnName, $this->$parentColumnName)
             ->first();
@@ -262,7 +262,7 @@ trait ModelTree
 
         $query = $this->buildSortQuery()->limit(1);
 
-        $firstModel = call_user_func([$query, 'ordered'])
+        $firstModel = $query->ordered() /** @phpstan-ignore method.notFound */
             ->where($parentColumnName, $this->$parentColumnName)
             ->first();
 
@@ -352,8 +352,7 @@ trait ModelTree
         parent::boot();
 
         static::saving(function (Model $branch) {
-            $parentColumn = call_user_func([$branch, 'getParentColumn']);
-
+            $parentColumn = $branch->getParentColumn(); /** @phpstan-ignore method.notFound */
             if (
                 $branch->getKey()
                 && Request::has($parentColumn)

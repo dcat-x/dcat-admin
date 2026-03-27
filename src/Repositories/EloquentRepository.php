@@ -700,7 +700,7 @@ class EloquentRepository extends Repository implements TreeRepository
 
     protected function callSortable(string $method): bool
     {
-        return (bool) call_user_func([$this->getSortableModel(), $method]);
+        return (bool) $this->getSortableModel()->$method();
     }
 
     protected function isTrashed($model): bool

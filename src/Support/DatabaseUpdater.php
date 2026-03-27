@@ -36,9 +36,9 @@ class DatabaseUpdater
 
         $this->transaction(function () use ($object, $callback) {
             if ($object instanceof Migration) {
-                call_user_func([$object, 'up']);
+                $object->up(); /** @phpstan-ignore method.notFound */
             } elseif ($object instanceof Seeder) {
-                call_user_func([$object, 'run']);
+                $object->run(); /** @phpstan-ignore method.notFound */
             }
 
             $callback && $callback();
@@ -66,7 +66,7 @@ class DatabaseUpdater
 
         $this->transaction(function () use ($object, $callback) {
             if ($object instanceof Migration) {
-                call_user_func([$object, 'down']);
+                $object->down(); /** @phpstan-ignore method.notFound */
             }
 
             $callback && $callback();
@@ -148,7 +148,7 @@ class DatabaseUpdater
             // Prefix and suffix string to prevent unterminated comment warning
             $tokens = token_get_all('/**/'.$buffer.'/**/');
 
-            if (strpos($buffer, '{') === false) {
+            if (! str_contains($buffer, '{')) {
                 continue;
             }
 

@@ -178,7 +178,7 @@ class Permission
         $prefix = config('admin.route.prefix', 'admin');
 
         // 移除前缀
-        if ($prefix && strpos($path, '/'.$prefix) === 0) {
+        if ($prefix && str_starts_with($path, '/'.$prefix)) {
             $path = substr($path, strlen((string) $prefix) + 1);
         }
 
@@ -435,7 +435,7 @@ class Permission
             throw new RuntimeException("Invalid permission method [$method].");
         }
 
-        call_user_func_array([Checker::class, $method], [$args]);
+        Checker::$method($args);
 
         return true;
     }

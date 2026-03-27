@@ -143,11 +143,11 @@ class HandleFormController
 
     protected function buildForm(Form $form): void
     {
-        call_user_func([$form, 'form']);
+        $form->form(); /** @phpstan-ignore method.notFound */
     }
 
     protected function handleForm(Form $form, array $input)
     {
-        return call_user_func([$form, 'handle'], $input);
+        return $form->handle($input); /** @phpstan-ignore method.notFound */
     }
 }

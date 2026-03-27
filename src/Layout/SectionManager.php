@@ -118,10 +118,7 @@ class SectionManager
         }
         krsort($this->sections[$name]);
 
-        return call_user_func_array(
-            'array_merge',
-            $this->sections[$name]
-        );
+        return array_merge(...$this->sections[$name]);
     }
 
     /**

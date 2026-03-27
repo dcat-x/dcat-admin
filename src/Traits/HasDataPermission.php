@@ -99,7 +99,7 @@ trait HasDataPermission
         $prefix = (string) config('admin.route.prefix', 'admin');
 
         // 移除前缀
-        if ($prefix && strpos($path, $prefix) === 0) {
+        if ($prefix && str_starts_with($path, $prefix)) {
             $path = substr($path, strlen($prefix));
         }
 

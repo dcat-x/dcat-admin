@@ -88,7 +88,7 @@ class Translator
         }
 
         if (
-            mb_strpos($key, 'global.') !== 0
+            ! str_starts_with($key, 'global.')
             && count($arr = explode('.', $key)) > 1
         ) {
             unset($arr[0]);

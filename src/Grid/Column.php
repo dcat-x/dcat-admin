@@ -669,11 +669,11 @@ class Column implements Resettable
     {
         return $this->display(function ($value) use ($abstract, $arguments) {
             if (is_array($value) || $value instanceof Arrayable) {
-                return call_user_func_array([collect($value), $abstract], $arguments);
+                return collect($value)->$abstract(...$arguments);
             }
 
             if (is_string($value)) {
-                return call_user_func_array([Str::class, $abstract], array_merge([$value], $arguments));
+                return Str::$abstract($value, ...$arguments);
             }
 
             return $value;
