@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Breaking Changes
+
+- **导入预览接口移除** — `POST /dcat-api/import/preview` 路由及 Importer `preview()` 方法已删除，前端从未使用
+- **Action/Form 类名签名校验** — `_action` 和 `_form_` 参数现在必须携带 HMAC 签名，前端 JS 无需修改，直接构造请求的外部系统需适配（参见 `docs/advanced/class-signing.md`）
+- **全局搜索最短关键词** — 从 1 字符提升到 2 字符
+
+### Added
+
+- **Octane 静态状态清理** — `Resettable` 接口 + `FlushAdminState` 集成，6 个核心类实现 `resetState()`（参见 `docs/advanced/octane.md`）
+- **导入器注册表** — Grid 渲染时自动注册 importer 配置到 `ImportController`
+- **全局搜索增强** — limit 参数限制 1~50，搜索提供者异常隔离
+- **Feature 测试基础设施** — `FeatureTestCase` 基类支持 HTTP 级测试
+- **`HasRequestCache::resetRequestCache()`** — 请求级缓存显式清理方法
+
+### Changed
+
+- **菜单权限匹配** — 支持 UUID/ULID/slug 路径，RESTful 结构化位置匹配
+- **上传控制器** — 公共逻辑抽到 `UploadsFiles` trait，新增文件校验，命名改用 `Str::random(32)`
+- **路由注册** — 全部改用 `[Controller::class, 'method']` 数组语法
+
+### Fixed
+
+- **导入链路** — `ImportController::resolveImporter()` 缺少 Grid 上下文导致 NPE
+
 ## [1.1.31] - 2026-03-16
 
 ### Other
