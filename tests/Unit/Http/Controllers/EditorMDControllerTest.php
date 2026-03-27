@@ -25,26 +25,33 @@ class EditorMDControllerTest extends TestCase
         $file = $this->makeUploadedFile('editor-image.jpg', 'editor-content');
         $disk = Mockery::mock(FilesystemAdapter::class);
 
-        $disk->shouldReceive('putFileAs')->once()->with('articles', Mockery::type(\Illuminate\Http\UploadedFile::class), 'fixed-name.jpg');
+        $disk->shouldReceive('putFileAs')->once()->with('articles', Mockery::type(UploadedFile::class), 'fixed-name.jpg');
         $disk->shouldReceive('url')->once()->with('articles/fixed-name.jpg')->andReturn('https://cdn.example.com/articles/fixed-name.jpg');
 
-        $controller = new class($disk) extends EditorMDController
+        $controller = new class($disk, $file) extends EditorMDController
         {
-            public function __construct(private FilesystemAdapter $mockDisk) {}
+            public function __construct(
+                private FilesystemAdapter $mockDisk,
+                private UploadedFile $mockFile,
+            ) {}
+
+            protected function validateUploadFile(Request $request, string $fieldName): UploadedFile
+            {
+                return $this->mockFile;
+            }
 
             protected function disk(): FilesystemAdapter
             {
                 return $this->mockDisk;
             }
 
-            protected function generateNewName(UploadedFile $file)
+            protected function generateNewName(UploadedFile $file): string
             {
                 return 'fixed-name.jpg';
             }
         };
 
         $request = Request::create('/editor/upload', 'POST', ['dir' => '/articles/']);
-        $request->files->set('editormd-image-file', $file);
 
         $result = $controller->upload($request);
 
@@ -54,15 +61,14 @@ class EditorMDControllerTest extends TestCase
         @unlink($file->getPathname());
     }
 
-    public function test_generate_new_name_uses_original_name_hash_and_extension(): void
+    public function test_generate_new_name_uses_random_string_and_extension(): void
     {
         $file = Mockery::mock(UploadedFile::class);
-        $file->shouldReceive('getClientOriginalName')->andReturn('avatar.png');
         $file->shouldReceive('getClientOriginalExtension')->andReturn('png');
 
         $controller = new class extends EditorMDController
         {
-            public function exposeGenerateNewName(UploadedFile $file)
+            public function exposeGenerateNewName(UploadedFile $file): string
             {
                 return $this->generateNewName($file);
             }
@@ -71,7 +77,7 @@ class EditorMDControllerTest extends TestCase
         $generated = $controller->exposeGenerateNewName($file);
 
         $this->assertStringEndsWith('.png', $generated);
-        $this->assertStringStartsWith(md5('avatar.png'), $generated);
+        $this->assertSame(36, strlen($generated));
     }
 
     public function test_disk_resolves_from_request_disk_parameter(): void

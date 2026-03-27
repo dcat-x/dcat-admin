@@ -25,26 +25,33 @@ class TinymceControllerTest extends TestCase
         $file = $this->makeUploadedFile('doc-image.png', 'tinymce-content');
         $disk = Mockery::mock(FilesystemAdapter::class);
 
-        $disk->shouldReceive('putFileAs')->once()->with('docs', Mockery::type(\Illuminate\Http\UploadedFile::class), 'fixed-name.png');
+        $disk->shouldReceive('putFileAs')->once()->with('docs', Mockery::type(UploadedFile::class), 'fixed-name.png');
         $disk->shouldReceive('url')->once()->with('docs/fixed-name.png')->andReturn('https://cdn.example.com/docs/fixed-name.png');
 
-        $controller = new class($disk) extends TinymceController
+        $controller = new class($disk, $file) extends TinymceController
         {
-            public function __construct(private FilesystemAdapter $mockDisk) {}
+            public function __construct(
+                private FilesystemAdapter $mockDisk,
+                private UploadedFile $mockFile,
+            ) {}
+
+            protected function validateUploadFile(Request $request, string $fieldName): UploadedFile
+            {
+                return $this->mockFile;
+            }
 
             protected function disk(): FilesystemAdapter
             {
                 return $this->mockDisk;
             }
 
-            protected function generateNewName(UploadedFile $file)
+            protected function generateNewName(UploadedFile $file): string
             {
                 return 'fixed-name.png';
             }
         };
 
         $request = Request::create('/tinymce/upload', 'POST', ['dir' => '/docs/']);
-        $request->files->set('file', $file);
 
         $result = $controller->upload($request);
 
@@ -53,15 +60,14 @@ class TinymceControllerTest extends TestCase
         @unlink($file->getPathname());
     }
 
-    public function test_generate_new_name_uses_original_name_hash_and_extension(): void
+    public function test_generate_new_name_uses_random_string_and_extension(): void
     {
         $file = Mockery::mock(UploadedFile::class);
-        $file->shouldReceive('getClientOriginalName')->andReturn('manual.pdf');
         $file->shouldReceive('getClientOriginalExtension')->andReturn('pdf');
 
         $controller = new class extends TinymceController
         {
-            public function exposeGenerateNewName(UploadedFile $file)
+            public function exposeGenerateNewName(UploadedFile $file): string
             {
                 return $this->generateNewName($file);
             }
@@ -70,7 +76,7 @@ class TinymceControllerTest extends TestCase
         $generated = $controller->exposeGenerateNewName($file);
 
         $this->assertStringEndsWith('.pdf', $generated);
-        $this->assertStringStartsWith(md5('manual.pdf'), $generated);
+        $this->assertSame(36, strlen($generated));
     }
 
     public function test_disk_resolves_from_request_disk_parameter(): void
