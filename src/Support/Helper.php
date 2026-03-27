@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Support;
 
+use Dcat\Admin\Contracts\Resettable;
 use Dcat\Admin\Grid;
 use Dcat\Laravel\Database\WhereHasInServiceProvider;
 use Illuminate\Contracts\Foundation\Application;
@@ -24,7 +25,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Symfony\Component\Process\Process;
 
-class Helper
+class Helper implements Resettable
 {
     /**
      * @var array
@@ -1085,5 +1086,10 @@ class Helper
         $redirectCodes = [201, 301, 302, 303, 307, 308];
 
         return redirect($to, in_array($statusCode, $redirectCodes, true) ? $statusCode : 302);
+    }
+
+    public static function resetState(): void
+    {
+        static::$controllerNames = [];
     }
 }

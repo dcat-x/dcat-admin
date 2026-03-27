@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Contracts;
 
+use Dcat\Admin\Admin;
 use Dcat\Admin\Contracts\Resettable;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid\Column;
 use Dcat\Admin\Http\Controllers\ImportController;
+use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Support\JavaScript;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Support\Collection;
@@ -70,5 +72,35 @@ class ResettableTest extends TestCase
 
         Column::resetState();
         $this->assertNull($ref->getValue());
+    }
+
+    public function test_admin_implements_resettable(): void
+    {
+        $this->assertContains(Resettable::class, class_implements(Admin::class));
+    }
+
+    public function test_admin_reset_clears_global_search(): void
+    {
+        // Access the singleton to create it
+        Admin::globalSearch();
+        $ref = new \ReflectionProperty(Admin::class, 'globalSearch');
+        $this->assertNotNull($ref->getValue());
+
+        Admin::resetState();
+        $this->assertNull($ref->getValue());
+    }
+
+    public function test_helper_implements_resettable(): void
+    {
+        $this->assertContains(Resettable::class, class_implements(Helper::class));
+    }
+
+    public function test_helper_reset_clears_controller_names(): void
+    {
+        $ref = new \ReflectionProperty(Helper::class, 'controllerNames');
+        $ref->setValue(null, ['test' => 'TestController']);
+
+        Helper::resetState();
+        $this->assertSame([], $ref->getValue());
     }
 }

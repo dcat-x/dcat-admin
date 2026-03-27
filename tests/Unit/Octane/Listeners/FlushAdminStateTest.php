@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Tests\Unit\Octane\Listeners;
 
+use Dcat\Admin\Admin;
 use Dcat\Admin\Contracts\Resettable;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid\Column;
 use Dcat\Admin\Http\Controllers\ImportController;
 use Dcat\Admin\Octane\Listeners\FlushAdminState;
+use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Support\JavaScript;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Support\Collection;
@@ -63,6 +65,8 @@ class FlushAdminStateTest extends TestCase
         $ref = new \ReflectionProperty(FlushAdminState::class, 'resettables');
         $resettables = $ref->getValue();
 
+        $this->assertContains(Admin::class, $resettables);
+        $this->assertContains(Helper::class, $resettables);
         $this->assertContains(ImportController::class, $resettables);
         $this->assertContains(JavaScript::class, $resettables);
         $this->assertContains(Form::class, $resettables);

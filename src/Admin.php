@@ -8,6 +8,7 @@ use Closure;
 use Composer\Autoload\ClassLoader;
 use Dcat\Admin\Contracts\ExceptionHandler;
 use Dcat\Admin\Contracts\Repository;
+use Dcat\Admin\Contracts\Resettable;
 use Dcat\Admin\Exception\InvalidArgumentException;
 use Dcat\Admin\Extend\Manager;
 use Dcat\Admin\Extend\ServiceProvider;
@@ -52,7 +53,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Symfony\Component\HttpFoundation\Response;
 
-class Admin
+class Admin implements Resettable
 {
     use HasAssets;
     use HasHtml;
@@ -702,5 +703,10 @@ class Admin
             $router->post('helpers/scaffold/table', [ScaffoldController::class, 'table']);
             $router->get('helpers/icons', [IconController::class, 'index']);
         });
+    }
+
+    public static function resetState(): void
+    {
+        static::$globalSearch = null;
     }
 }

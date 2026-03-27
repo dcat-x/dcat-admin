@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Octane\Listeners;
 
+use Dcat\Admin\Admin;
 use Dcat\Admin\AdminServiceProvider;
 use Dcat\Admin\Contracts\Resettable;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid\Column;
 use Dcat\Admin\Http\Controllers\ImportController;
+use Dcat\Admin\Support\Helper;
 use Dcat\Admin\Support\JavaScript;
 use Illuminate\Container\Container;
 
@@ -32,6 +34,8 @@ class FlushAdminState
 
     /** @var array<int, class-string<Resettable>> */
     protected static array $resettables = [
+        Admin::class,
+        Helper::class,
         ImportController::class,
         JavaScript::class,
         Form::class,
