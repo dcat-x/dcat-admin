@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-04-30
+
+### Changed
+
+- 全面扁平化 dcat 阴影系统，主题层覆盖 AdminLTE 装饰阴影
+- 统一 .alert-* 视觉风格，移除全部 box-shadow
+
+### Fixed
+
+- 加固 import 派发，防重放并修复默认 Grid 上下文丢失
+
 ## [1.2.0] - 2026-04-30
 
 ### Breaking Changes
@@ -493,7 +504,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/dcat-x/dcat-admin/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/dcat-x/dcat-admin/compare/v1.1.31...v1.2.0
 [1.1.31]: https://github.com/dcat-x/dcat-admin/compare/v1.1.30...v1.1.31
 [1.1.30]: https://github.com/dcat-x/dcat-admin/compare/v1.1.29...v1.1.30
