@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dcat\Admin\Grid\Importers;
 
+use Dcat\Admin\Contracts\Repository;
 use Dcat\Admin\Grid;
 use Dcat\EasyExcel\Excel;
 use Illuminate\Http\UploadedFile;
@@ -20,6 +21,11 @@ abstract class AbstractImporter implements ImporterInterface
      * @var Grid\Importer
      */
     protected $parent;
+
+    /**
+     * @var Repository|null
+     */
+    protected $repository;
 
     /**
      * @var array
@@ -51,7 +57,35 @@ abstract class AbstractImporter implements ImporterInterface
         $this->grid = $grid;
         $this->parent = $grid->importerManager();
 
+        try {
+            $repository = $grid->model()->repository();
+            if ($repository instanceof Repository) {
+                $this->setRepository($repository);
+            }
+        } catch (\Throwable) {
+            // Grid may be set up without a model (e.g. unit tests with mocks);
+            // repository will then be wired manually via setRepository().
+        }
+
         return $this;
+    }
+
+    /**
+     * 直接注入 repository。当 import 通过 generic endpoint 触发、
+     * Grid 不可重建时使用。导入逻辑应优先依赖 repository，避免依赖 grid。
+     *
+     * @return $this
+     */
+    public function setRepository(Repository $repository)
+    {
+        $this->repository = $repository;
+
+        return $this;
+    }
+
+    public function repository(): ?Repository
+    {
+        return $this->repository;
     }
 
     /**

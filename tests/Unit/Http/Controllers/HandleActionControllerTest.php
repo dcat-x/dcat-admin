@@ -120,7 +120,7 @@ class HandleActionControllerTest extends TestCase
         $this->controller->handle($request);
     }
 
-    public function test_unsigned_action_falls_back_gracefully(): void
+    public function test_unsigned_action_rejected_by_default(): void
     {
         $encoded = str_replace('\\', '_', StubAction::class);
 
@@ -128,7 +128,22 @@ class HandleActionControllerTest extends TestCase
             '_action' => $encoded,
         ]);
 
-        // Unsigned class names are accepted with a log warning (legacy fallback)
+        $this->expectException(AdminException::class);
+        $this->expectExceptionMessage('Class signature missing.');
+
+        $this->controller->handle($request);
+    }
+
+    public function test_unsigned_action_falls_back_when_flag_enabled(): void
+    {
+        $this->app['config']->set('admin.allow_unsigned_dispatch', true);
+
+        $encoded = str_replace('\\', '_', StubAction::class);
+
+        $request = Request::create('/handle-action', 'POST', [
+            '_action' => $encoded,
+        ]);
+
         $response = $this->controller->handle($request);
 
         $this->assertSame('handled', $response);

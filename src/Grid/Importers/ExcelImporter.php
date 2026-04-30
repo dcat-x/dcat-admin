@@ -28,8 +28,11 @@ class ExcelImporter extends AbstractImporter
         $titles = $this->titles();
         $columns = array_keys($titles);
         $upsertKey = $this->upsertKey();
-        /** @var EloquentRepository $repository */
-        $repository = $this->grid->model()->repository();
+
+        $repository = $this->repository();
+        if (! $repository instanceof EloquentRepository) {
+            throw new RuntimeException('ExcelImporter requires an EloquentRepository. Either call setRepository() before import(), or use it through Grid which auto-wires the repository.');
+        }
         $model = $repository->model();
         $rowIndex = 0;
 

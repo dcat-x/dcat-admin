@@ -94,3 +94,9 @@ $grid->import('custom');
 - 依赖 `dcat/easy-excel` 包（已包含在项目依赖中）
 - 导入路由自动注册，无需手动配置
 - 弹窗使用 Layer.js，遮罩层配置为 `shade: [0.3, '#000']`
+
+## 实现细节（仅供参考）
+
+- 服务端 `/dcat-api/import/execute` 是 Grid 无关的通用端点，但为了写入数据库需要 Grid 的 repository 上下文。Grid 渲染时会把 importer 类名、repository 类名、titles/rules/upsert_key 一起 HMAC 签名（见 `ImportController::encodeConfig`）随表单提交。
+- 服务端反序列化时会校验 importer 是 `AbstractImporter` 子类、repository 是 `Dcat\Admin\Contracts\Repository` 实现，否则拒绝；签名串使用 base64-JSON envelope（`{p, s}`）避免 payload 中包含 `|` 等字符时被截断。
+- 自定义 importer（继承 `AbstractImporter`）有两种使用 repository 的方式：通过 `setGrid()` 自动从 `$grid->model()->repository()` 拿（默认行为），或显式 `setRepository()` 注入。导入逻辑应优先依赖 `$this->repository()` 而不是 `$this->grid`。

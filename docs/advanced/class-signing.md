@@ -53,5 +53,24 @@ ClassSigner::sign(string $class): string
 
 // 验证
 ClassSigner::verify(string $signed): string
-// 返回类名，签名无效时抛出 AdminException
+// 返回类名，签名无效或缺失时抛出 AdminException
 ```
+
+## 升级兼容（未签名兜底开关）
+
+> ⚠️ 安全提示：未签名兜底**默认关闭**。开启后任何登录管理员都能通过未签名请求派发任意已存在的 Action/Form 类，绕过签名校验。
+
+老版本（< 该签名机制引入前）渲染的页面被浏览器缓存后，提交时会带未签名的类名。如果担心这部分流量被一刀切拒绝，可在升级期间临时打开兜底：
+
+```php
+// config/admin.php
+'allow_unsigned_dispatch' => env('ADMIN_ALLOW_UNSIGNED_DISPATCH', true),
+```
+
+或在 `.env` 中：
+
+```dotenv
+ADMIN_ALLOW_UNSIGNED_DISPATCH=true
+```
+
+打开后未签名请求会被放行，但日志中会留下 `admin.class_signer.unsigned` 的 warning 记录，便于追踪。**待所有用户刷新页面后必须立即关闭**，否则等同于回退到无签名状态，签名机制形同虚设。

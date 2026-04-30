@@ -52,18 +52,27 @@ class ClassSignerTest extends TestCase
         ClassSigner::verify($tampered);
     }
 
-    public function test_verify_falls_back_for_unsigned_class(): void
+    public function test_verify_rejects_unsigned_class_by_default(): void
     {
+        $this->expectException(AdminException::class);
+        $this->expectExceptionMessage('Class signature missing.');
+        ClassSigner::verify('App\\Actions\\MyAction');
+    }
+
+    public function test_verify_rejects_empty_string_by_default(): void
+    {
+        $this->expectException(AdminException::class);
+        $this->expectExceptionMessage('Class signature missing.');
+        ClassSigner::verify('');
+    }
+
+    public function test_verify_falls_back_for_unsigned_class_when_flag_enabled(): void
+    {
+        $this->app['config']->set('admin.allow_unsigned_dispatch', true);
+
         $class = ClassSigner::verify('App\\Actions\\MyAction');
 
         $this->assertSame('App\\Actions\\MyAction', $class);
-    }
-
-    public function test_verify_falls_back_for_empty_string(): void
-    {
-        $class = ClassSigner::verify('');
-
-        $this->assertSame('', $class);
     }
 
     public function test_sign_produces_consistent_output(): void

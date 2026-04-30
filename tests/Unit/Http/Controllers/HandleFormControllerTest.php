@@ -83,14 +83,26 @@ class HandleFormControllerTest extends TestCase
         $this->controller->handle($request);
     }
 
-    public function test_unsigned_form_does_not_throw_signature_error(): void
+    public function test_unsigned_form_rejected_by_default(): void
     {
         $request = Request::create('/handle-form', 'POST', [
             Form::REQUEST_NAME => 'NonExistent\\Form\\Class',
         ]);
 
-        // Unsigned class names fall back gracefully — the error should be
-        // "Form does not exist" (class not found), not "Invalid signed class format"
+        $this->expectException(AdminException::class);
+        $this->expectExceptionMessage('Class signature missing.');
+
+        $this->controller->handle($request);
+    }
+
+    public function test_unsigned_form_falls_back_when_flag_enabled(): void
+    {
+        $this->app['config']->set('admin.allow_unsigned_dispatch', true);
+
+        $request = Request::create('/handle-form', 'POST', [
+            Form::REQUEST_NAME => 'NonExistent\\Form\\Class',
+        ]);
+
         try {
             $this->controller->handle($request);
             $this->fail('Expected AdminException');

@@ -65,7 +65,7 @@ trait HasImporter
     }
 
     /**
-     * @return array{titles?: array, rules?: array, upsert_key?: string|null}
+     * @return array{titles?: array, rules?: array, upsert_key?: string|null, importer?: string, repository?: string}
      */
     public function buildImporterConfig(): array
     {
@@ -87,6 +87,19 @@ trait HasImporter
             if ($upsertKey) {
                 $config['upsert_key'] = $upsertKey;
             }
+
+            $config['importer'] = get_class($driver);
+        }
+
+        try {
+            $repository = $this->model()->repository();
+            if ($repository) {
+                $config['repository'] = get_class($repository);
+            }
+        } catch (\Throwable) {
+            // Grid set up without a model (typical in unit tests) — repository
+            // signal is best-effort metadata, callers that need it must wire
+            // grid->model()->repository() before rendering.
         }
 
         return $config;

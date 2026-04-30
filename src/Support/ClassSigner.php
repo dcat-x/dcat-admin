@@ -22,8 +22,10 @@ class ClassSigner
     /**
      * Verify a signed class string and return the class name.
      *
-     * If the signed string has no signature (legacy format from cached pages),
-     * the class name is returned with a deprecation warning logged.
+     * 默认拒绝未签名输入。升级期间为兼容老缓存页面，
+     * 可通过 config('admin.allow_unsigned_dispatch') = true 临时放行；
+     * 放行时仅记录 warning，且建议升级稳定后立即关闭，避免攻击者
+     * 绕过签名直接派发任意已存在的类。
      *
      * @throws AdminException
      */
@@ -32,10 +34,13 @@ class ClassSigner
         $parts = explode('|', $signed, 2);
 
         if (count($parts) !== 2) {
-            // Legacy format: unsigned class name from cached page
+            if (! (bool) config('admin.allow_unsigned_dispatch', false)) {
+                throw new AdminException('Class signature missing.');
+            }
+
             Log::warning('admin.class_signer.unsigned', [
                 'class' => $signed,
-                'hint' => 'Client submitted unsigned class name. This usually means a cached page was loaded before the signing upgrade. The user should refresh the page.',
+                'hint' => 'Client submitted unsigned class name. This usually means a cached page was loaded before the signing upgrade. The user should refresh the page. Disable admin.allow_unsigned_dispatch once all users have refreshed.',
             ]);
 
             return $signed;
