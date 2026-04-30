@@ -9,58 +9,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.0] - 2026-04-30
 
-### Added
-
-- 引入 Larastan 替代原生 PHPStan，收窄忽略规则
-- Admin 和 Helper 纳入 Resettable 第二批覆盖
-- FlushAdminState 集成 Resettable 统一清理静态状态
-- 四个类实现 Resettable 接口
-- 新增 Resettable 接口定义静态状态清理契约
-
-### Changed
-
-- 消除 call_user_func 并替换 strpos 为原生 PHP 8 函数
-- PHP 8.2+ 语法现代化（is_null、first-class callable、死代码）
-- 路由注册改用类引用替代字符串控制器
-- 抽取上传控制器公共逻辑到 UploadsFiles trait
-- 移除未使用的预览功能
-
-### Fixed
-
-- 修复 Codex review 发现的三处 dispatch/import 缺陷
-- 修复三个兼容性问题确保安全升级
-- action/form 类名解析增加 HMAC 签名校验
-- 增强全局搜索稳定性和输入校验
-- 菜单权限匹配支持 UUID/ULID/slug 资源路径
-- 修复导入链路缺少 Grid 上下文的问题
-
-### Other
-
-- 🎨 style: 统一 stubs strict_types 与 LF 行尾
-
 ### Breaking Changes
 
+- **Action/Form 类名签名校验** — `_action` 和 `_form_` 参数现在必须携带 HMAC 签名，未签名请求默认拒绝。新增 `admin.allow_unsigned_dispatch`（env: `ADMIN_ALLOW_UNSIGNED_DISPATCH`）作为升级期临时开关，默认 false。前端 JS 无需修改，直接构造请求的外部系统需适配（参见 `docs/advanced/class-signing.md`）
 - **导入预览接口移除** — `POST /dcat-api/import/preview` 路由及 Importer `preview()` 方法已删除，前端从未使用
-- **Action/Form 类名签名校验** — `_action` 和 `_form_` 参数现在必须携带 HMAC 签名，前端 JS 无需修改，直接构造请求的外部系统需适配（参见 `docs/advanced/class-signing.md`）
 - **全局搜索最短关键词** — 从 1 字符提升到 2 字符
+- **导入配置签名格式变更** — `_import_config` 由 `base64(json|sig)` 改为 `base64(json({p,s}))` envelope，避免 payload 含 `|` 时被截断；老缓存页面提交会因校验失败回退空配置，刷新页面即恢复
 
 ### Added
 
 - **Octane 静态状态清理** — `Resettable` 接口 + `FlushAdminState` 集成，6 个核心类实现 `resetState()`（参见 `docs/advanced/octane.md`）
-- **导入器注册表** — Grid 渲染时自动注册 importer 配置到 `ImportController`
+- **导入器签名负载** — Grid 渲染时把 importer / repository 类名一同 HMAC 签名传输，服务端反序列化时校验类型归属（`AbstractImporter` / `Repository`）
+- **`AbstractImporter::setRepository()` / `repository()`** — 允许在没有 Grid 的场景显式注入 repository
 - **全局搜索增强** — limit 参数限制 1~50，搜索提供者异常隔离
 - **Feature 测试基础设施** — `FeatureTestCase` 基类支持 HTTP 级测试
 - **`HasRequestCache::resetRequestCache()`** — 请求级缓存显式清理方法
+- **Larastan 替代原生 PHPStan** — 收窄忽略规则
 
 ### Changed
 
 - **菜单权限匹配** — 支持 UUID/ULID/slug 路径，RESTful 结构化位置匹配
 - **上传控制器** — 公共逻辑抽到 `UploadsFiles` trait，新增文件校验，命名改用 `Str::random(32)`
 - **路由注册** — 全部改用 `[Controller::class, 'method']` 数组语法
+- **PHP 8.2+ 语法现代化** — `is_null` → `=== null`、first-class callable、消除 `call_user_func`、清理死代码
 
 ### Fixed
 
+- **`ClassSigner::verify()` 默认拒绝未签名输入**（high）— 此前 `b8b9420` 把校验失败降级为 warn+放行，等同于回退到无签名状态；攻击者只要不带签名即可绕过 HMAC 派发任意 Action（如 `Extensions\Uninstall`）
+- **`ExcelImporter::import()` 不再依赖 grid**（high）— 此前 `resolveImporter()` 创建的 importer 从未调用 `setGrid()`，`$this->grid->model()->repository()` 必空指针，generic `/dcat-api/import/execute` 真实上传时 500
+- **导入配置签名 pipe 截断**（medium）— `decodeConfig` 用 `explode('|', ..., 2)` 切首个 `|`，含 `required|email` 这类规则的 JSON 必被截断，校验失败后静默落入空配置
 - **导入链路** — `ImportController::resolveImporter()` 缺少 Grid 上下文导致 NPE
+
+### Build
+
+- **生产 sourcemap 关闭** — `webpack.mix.js` 增加 `mix.options({ sourceMaps: false })`，配合清理 57 个孤儿 `.map` 文件，仓库瘦身约 19 MB（保留被 `sourceMappingURL` 显式引用的 4 个 colorpicker map）
 
 ## [1.1.31] - 2026-03-16
 
