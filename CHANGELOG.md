@@ -11,9 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- 移除 _modern.scss 冗余 CSS shadow 变量层 (F)
-- 彻底清理冗余 shadow 变量与 box-shadow 引用 (E)
-- 扁平化样式收敛 — 半径/过渡/装饰/不透明度对齐变量体系
+- **扁平化样式收敛** — `border-radius` / `transition` / `opacity` 散落硬编码统一为 `var(--radius-*)` / `var(--transition-*)` 体系；移除滚动条 45° 斜纹与暗色 tab 渐变 active 横条
+- **彻底移除 SCSS 阴影变量层** — `_variables.scss` 中 9 个值为 `none` 的 shadow 变量定义全部删除（`$shadow / $shadow-100..200 / $btn-shadow*` 等），17 个组件文件中约 30 处冗余 `box-shadow` 引用一并清除
+- **移除 CSS 自定义属性 shadow 层** — `_modern.scss` `:root` 下 `--shadow-xs/sm/md/lg/xl` 5 个 `none` 定义删除；6 个 `.shadow-*` 工具类合并为单一规则（保留选择器作为外部 API）
+- **保留功能性阴影** — `$menu-shadow`（菜单/侧栏轻量分层）、focus ring、`kbd` inset、固定列分隔阴影等语义性阴影不动
 
 ## [1.2.1] - 2026-04-30
 
