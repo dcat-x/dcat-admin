@@ -1,4 +1,11 @@
 {
+  "enabledPlugins": {
+    "gopls-lsp@claude-plugins-official": false,
+    "jdtls-lsp@claude-plugins-official": false,
+    "pyright-lsp@claude-plugins-official": false,
+    "rust-analyzer-lsp@claude-plugins-official": false,
+    "typescript-lsp@claude-plugins-official": false
+  },
   "hooks": {
     "PostToolUse": [
       {
