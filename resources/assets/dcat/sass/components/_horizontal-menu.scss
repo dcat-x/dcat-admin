@@ -52,7 +52,7 @@
       color: $font-color;
       font-size: 1rem;
       padding: 0.45rem .7rem;
-      transition: all .35s ease!important;
+      transition: all var(--transition-slow) ease!important;
     }
 
     .nav-link.dropdown-toggle::after {
@@ -93,7 +93,7 @@
 
     .nav-sidebar > .nav-item > .nav-treeview {
       background: $white;
-      border-radius: .4rem;
+      border-radius: var(--radius-md);
     }
   }
 
@@ -127,7 +127,7 @@ body.dark-mode.horizontal-menu {
 
   [class*=sidebar-light-] .nav-sidebar > .nav-item > .nav-treeview {
     background: $body-dark-color;
-    border-radius: .4rem;
+    border-radius: var(--radius-md);
   }
 
   [class*=sidebar-dark-] .nav-sidebar > .nav-item i {

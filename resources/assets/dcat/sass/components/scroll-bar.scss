@@ -1,17 +1,5 @@
 
 .ps__thumb-y {
+  // 扁平化：纯色滚动条拇指，去除原 45deg 斜纹装饰
   background-color: lighten($primary, 5%);
-  background-image: linear-gradient(45deg,
-          rgba(255,255,255,.15) 25%,
-          transparent 25%,
-          rgba(255,255,255,.15) 25%,
-          transparent 25%,
-          rgba(255,255,255,.15) 25%,
-          transparent 25%,
-          rgba(255,255,255,.15) 25%,
-          transparent 25%,
-          rgba(255,255,255,.15) 25%,
-          transparent 25%,
-          transparent
-  );
 }

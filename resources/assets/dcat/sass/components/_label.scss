@@ -8,7 +8,7 @@
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
-  border-radius: .25em;
+  border-radius: var(--radius-md);
   cursor: pointer;
   margin-bottom: 4px;
 }
@@ -20,7 +20,7 @@
   font-size: 87%;
   font-weight: 600;
   color: #fff;
-  border-radius: 10px;
+  border-radius: var(--radius-full);
 }
 .bg-default.badge, .label.bg-default {
   color: $font-color;

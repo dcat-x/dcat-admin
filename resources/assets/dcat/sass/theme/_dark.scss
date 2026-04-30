@@ -337,7 +337,8 @@ body.dark-mode {
     }
 
     .nav-item .nav-link.active:after {
-      background: linear-gradient(30deg, $primary, rgba($primary, 0.5)) !important;
+      // 扁平化：纯主色，与亮色 tab 激活态 border-bottom 视觉一致
+      background: $primary !important;
     }
   }
 

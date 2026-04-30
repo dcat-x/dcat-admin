@@ -31,7 +31,7 @@
 }
 
 .box, .panel {
-  transition: .3s cubic-bezier(.25,.8,.5,1);
+  transition: var(--transition-slow) cubic-bezier(.25,.8,.5,1);
 }
 
 .box-shadow {

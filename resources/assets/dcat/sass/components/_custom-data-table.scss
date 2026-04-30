@@ -102,7 +102,7 @@ table.custom-data-table.data-table tbody tr {
   //box-shadow: 0 4px 20px 0 rgba(0, 0, 0, .05);
   box-shadow: $shadow;
   cursor: pointer;
-  transition: all .3s ease;
+  transition: all var(--transition-slow) ease;
   border-radius:$table-border-radius
 }
 
