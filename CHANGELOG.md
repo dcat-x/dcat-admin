@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-04-30
+
+### Added
+
+- 引入 Larastan 替代原生 PHPStan，收窄忽略规则
+- Admin 和 Helper 纳入 Resettable 第二批覆盖
+- FlushAdminState 集成 Resettable 统一清理静态状态
+- 四个类实现 Resettable 接口
+- 新增 Resettable 接口定义静态状态清理契约
+
+### Changed
+
+- 消除 call_user_func 并替换 strpos 为原生 PHP 8 函数
+- PHP 8.2+ 语法现代化（is_null、first-class callable、死代码）
+- 路由注册改用类引用替代字符串控制器
+- 抽取上传控制器公共逻辑到 UploadsFiles trait
+- 移除未使用的预览功能
+
+### Fixed
+
+- 修复 Codex review 发现的三处 dispatch/import 缺陷
+- 修复三个兼容性问题确保安全升级
+- action/form 类名解析增加 HMAC 签名校验
+- 增强全局搜索稳定性和输入校验
+- 菜单权限匹配支持 UUID/ULID/slug 资源路径
+- 修复导入链路缺少 Grid 上下文的问题
+
+### Other
+
+- 🎨 style: 统一 stubs strict_types 与 LF 行尾
+
 ### Breaking Changes
 
 - **导入预览接口移除** — `POST /dcat-api/import/preview` 路由及 Importer `preview()` 方法已删除，前端从未使用
@@ -480,7 +511,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.1.31...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/dcat-x/dcat-admin/compare/v1.1.31...v1.2.0
 [1.1.31]: https://github.com/dcat-x/dcat-admin/compare/v1.1.30...v1.1.31
 [1.1.30]: https://github.com/dcat-x/dcat-admin/compare/v1.1.29...v1.1.30
 [1.1.29]: https://github.com/dcat-x/dcat-admin/compare/v1.1.28...v1.1.29
