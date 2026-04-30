@@ -949,3 +949,61 @@ body.dark-mode .progress {
     background-position: 0 0;
   }
 }
+
+// ============================================
+// AdminLTE Shadow Flatten (主题层覆盖)
+//
+// 通过主题层覆盖 AdminLTE 残留的装饰性阴影，保持扁平化外观。
+// 与 _custom.scss 中的扁平化兜底群配合：
+//   - _custom.scss 兜底已覆盖 .btn / .form-control:focus / .toast-container 等
+//   - 这里补 _custom.scss 没覆盖到的 AdminLTE 选择器
+//
+// 保留（合理的功能性 / 语义性 shadow）：
+//   - 按钮 / 表单 :focus 的彩色 ring（a11y 必备）
+//   - .elevation-1..5（AdminLTE 工具类，用户显式调用的语义）
+//   - PACE 进度条彩色 glow（PACE 标志性效果）
+//   - kbd inset shadow（按键边缘语义）
+//   - 固定列分隔阴影（表格语义）
+// ============================================
+
+// 自定义表单控件 focus → 走 border-color，不走阴影
+.custom-select:focus,
+.custom-file-input:focus ~ .custom-file-label,
+.custom-control-input:focus ~ .custom-control-label::before {
+  box-shadow: none;
+}
+
+// 按钮 hover 阴影补充覆盖（_custom.scss 已覆盖 .btn-light:hover）
+.btn.btn-dark:hover,
+.btn.btn-secondary:hover,
+.btn[class*='bg-gradient-']:hover {
+  box-shadow: none;
+}
+
+// Bootstrap 阴影工具类 → 走 dcat 变量（已为 none）
+// .shadow / .shadow-100 / .shadow-200 已在 _custom.scss / _utilities.scss 处理
+.shadow-sm,
+.shadow-lg {
+  box-shadow: $shadow !important;
+}
+
+// toast 通知阴影 → 走变量
+.toast {
+  box-shadow: $shadow-200;
+}
+
+// ribbon 装饰
+.ribbon-wrapper .ribbon {
+  box-shadow: none;
+}
+
+// 登录/注册页输入图标
+.login-card-body .input-group .input-group-text,
+.register-card-body .input-group .input-group-text {
+  box-shadow: none;
+}
+
+// header-navbar 头像阴影
+.header-navbar .navbar-container ul.nav li a.dropdown-user-link img {
+  box-shadow: none;
+}

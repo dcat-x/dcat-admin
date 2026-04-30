@@ -14,7 +14,6 @@ $table-border-radius: .3rem;
 }
 
 .custom-data-table-header .table-responsive .top .action-btns .actions-dropodown {
-  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .14);
   border-radius: $table-border-radius;
   margin-right: .75rem
 }
@@ -148,5 +147,4 @@ table.custom-data-table.data-table tbody td:focus {
 
 table.custom-data-table.data-table tbody td .progress {
   margin-bottom: 0;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .12), 0 2px 4px 0 rgba(0, 0, 0, .08)
 }
