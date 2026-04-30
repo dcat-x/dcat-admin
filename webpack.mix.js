@@ -13,6 +13,10 @@ require('dotenv').config();
  */
 const glob = require('glob')
 
+mix.options({
+  sourceMaps: false,
+});
+
 let theme = process.env.THEME || null;
 let buildThemeOnly = ['1', 'true', 'yes'].includes(String(process.env.BUILD_THEME_ONLY || '').toLowerCase());
 let customThemePrimary = process.env.CUSTOM_THEME_PRIMARY || null;
