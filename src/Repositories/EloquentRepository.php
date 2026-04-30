@@ -728,6 +728,16 @@ class EloquentRepository extends Repository implements TreeRepository
     }
 
     /**
+     * 返回 repository 绑定的 Eloquent 模型类名。
+     * 用于 import 等场景需要"在另一次请求中重建相同 repository 上下文"时，
+     * 把 model 信息序列化到签名 payload。
+     */
+    public function eloquentClass(): ?string
+    {
+        return $this->eloquentClass;
+    }
+
+    /**
      * @return EloquentModel
      */
     public function createModel(array $data = [])

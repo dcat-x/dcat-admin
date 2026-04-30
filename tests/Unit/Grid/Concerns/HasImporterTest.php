@@ -7,6 +7,7 @@ namespace Dcat\Admin\Tests\Unit\Grid\Concerns;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Concerns\HasImporter;
 use Dcat\Admin\Grid\Importer;
+use Dcat\Admin\Grid\Importers\ExcelImporter;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
 
@@ -91,6 +92,20 @@ class HasImporterTest extends TestCase
         $this->assertSame('importerDriver', $params[0]->getName());
         $this->assertTrue($params[0]->isDefaultValueAvailable());
         $this->assertNull($params[0]->getDefaultValue());
+    }
+
+    public function test_build_importer_config_includes_replay_protection_fields(): void
+    {
+        // Finding 1: 防重放需要 expires_at。其他字段（user_id、source）依赖
+        // 完整 admin auth + request 上下文，单元测试这里只验 expires_at 必然存在。
+        $helper = new HasImporterTestHelper;
+        // import() 显式启用并设个有 titles 的 driver，避免触发默认 columns 路径。
+        $helper->import(ExcelImporter::make()->titles(['name' => 'Name']));
+
+        $config = $helper->buildImporterConfig();
+
+        $this->assertArrayHasKey('expires_at', $config);
+        $this->assertGreaterThan(time(), $config['expires_at']);
     }
 
     private function getAllTraits(\ReflectionClass $ref): array

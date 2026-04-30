@@ -6,8 +6,10 @@ namespace Dcat\Admin\Tests\Unit\Http\Controllers;
 
 use Dcat\Admin\Admin;
 use Dcat\Admin\Exception\AdminException;
+use Dcat\Admin\Grid\Importers\AbstractImporter;
 use Dcat\Admin\Grid\Importers\ExcelImporter;
 use Dcat\Admin\Http\Controllers\ImportController;
+use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\Repositories\EloquentRepository;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ImportTestModel extends Model
 {
@@ -36,6 +39,22 @@ class NotAnImporter {}
 
 class ImportControllerTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // 配置 admin guard，让 Admin::user() 不抛 "guard not defined"。
+        $this->app['config']->set('admin.auth.guard', 'admin');
+        $this->app['config']->set('auth.guards.admin', [
+            'driver' => 'session',
+            'provider' => 'admin',
+        ]);
+        $this->app['config']->set('auth.providers.admin', [
+            'driver' => 'eloquent',
+            'model' => Administrator::class,
+        ]);
+    }
+
     public function test_resolve_importer_returns_default_without_registry(): void
     {
         $controller = new ImportController;
@@ -209,6 +228,96 @@ class ImportControllerTest extends TestCase
         }
     }
 
+    public function test_default_eloquent_repository_rebuilt_from_signed_model(): void
+    {
+        // Finding 2: Grid::make(new Model) 路径下 repository 是基类 EloquentRepository，
+        // 仅靠 class name 无法重建 model 上下文。新设计要求同时签 model 字段。
+        $encoded = ImportController::encodeConfig([
+            'titles' => ['name' => 'Name'],
+            'repository' => EloquentRepository::class,
+            'model' => ImportTestModel::class,
+        ]);
+
+        $controller = new ImportController;
+        $request = Request::create('/dcat-api/import/execute', 'POST', ['_import_config' => $encoded]);
+
+        $importer = $this->callResolveImporter($controller, $request);
+
+        $repository = $importer->repository();
+        $this->assertInstanceOf(EloquentRepository::class, $repository);
+        $this->assertInstanceOf(ImportTestModel::class, $repository->model());
+    }
+
+    public function test_default_eloquent_repository_without_model_returns_null(): void
+    {
+        $encoded = ImportController::encodeConfig([
+            'titles' => ['name' => 'Name'],
+            'repository' => EloquentRepository::class,
+            // 故意不带 model
+        ]);
+
+        $controller = new ImportController;
+        $request = Request::create('/dcat-api/import/execute', 'POST', ['_import_config' => $encoded]);
+
+        $importer = $this->callResolveImporter($controller, $request);
+
+        $this->assertNull($importer->repository(), 'EloquentRepository 没有 model 上下文时应该拒绝重建');
+    }
+
+    public function test_default_eloquent_repository_rejects_non_model_class(): void
+    {
+        $encoded = ImportController::encodeConfig([
+            'repository' => EloquentRepository::class,
+            'model' => NotARepository::class,  // 不是 Eloquent Model
+        ]);
+
+        $controller = new ImportController;
+        $request = Request::create('/dcat-api/import/execute', 'POST', ['_import_config' => $encoded]);
+
+        $importer = $this->callResolveImporter($controller, $request);
+
+        $this->assertNull($importer->repository());
+    }
+
+    public function test_guard_rejects_expired_config(): void
+    {
+        // Finding 1: 过期的签名 config 不能重放写入。
+        $controller = new ImportController;
+
+        $this->expectException(HttpException::class);
+        $this->expectExceptionMessage('Import config expired.');
+
+        $this->callGuardExecute($controller, [
+            'expires_at' => time() - 60,
+        ]);
+    }
+
+    public function test_guard_rejects_config_bound_to_other_user(): void
+    {
+        // Finding 1: 即使签名合法，user_id 不匹配当前登录用户也拒绝。
+        $controller = new ImportController;
+
+        $this->expectException(HttpException::class);
+        $this->expectExceptionMessage('Import config bound to a different user.');
+
+        // 当前未登录，user_id 必然不匹配。
+        $this->callGuardExecute($controller, [
+            'expires_at' => time() + 3600,
+            'user_id' => 999,
+        ]);
+    }
+
+    public function test_guard_passes_when_no_binding_specified(): void
+    {
+        // 兼容老的 client：完全没有 user_id / expires_at / source 时不强制拒绝（fail-open
+        // 由签名验证保证不被伪造，guardExecute 只在字段存在时才校验）。
+        $controller = new ImportController;
+
+        $this->callGuardExecute($controller, []);
+
+        $this->assertTrue(true);
+    }
+
     public function test_api_routes_include_template_and_execute_but_not_preview(): void
     {
         Admin::registerApiRoutes();
@@ -227,10 +336,19 @@ class ImportControllerTest extends TestCase
         parent::tearDown();
     }
 
-    protected function callResolveImporter(ImportController $controller, Request $request): ExcelImporter
+    protected function callResolveImporter(ImportController $controller, Request $request): AbstractImporter
     {
-        $method = new \ReflectionMethod($controller, 'resolveImporter');
+        $loadConfig = new \ReflectionMethod($controller, 'loadConfig');
+        $resolveImporter = new \ReflectionMethod($controller, 'resolveImporter');
 
-        return $method->invoke($controller, $request);
+        $config = $loadConfig->invoke($controller, $request);
+
+        return $resolveImporter->invoke($controller, $config);
+    }
+
+    protected function callGuardExecute(ImportController $controller, array $config): void
+    {
+        $method = new \ReflectionMethod($controller, 'guardExecute');
+        $method->invoke($controller, $config);
     }
 }
