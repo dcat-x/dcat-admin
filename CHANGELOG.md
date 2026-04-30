@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.2] - 2026-04-30
+
+### Changed
+
+- 移除 _modern.scss 冗余 CSS shadow 变量层 (F)
+- 彻底清理冗余 shadow 变量与 box-shadow 引用 (E)
+- 扁平化样式收敛 — 半径/过渡/装饰/不透明度对齐变量体系
+
 ## [1.2.1] - 2026-04-30
 
 ### Changed
@@ -504,7 +512,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.2.1...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.2.2...HEAD
+[1.2.2]: https://github.com/dcat-x/dcat-admin/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/dcat-x/dcat-admin/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/dcat-x/dcat-admin/compare/v1.1.31...v1.2.0
 [1.1.31]: https://github.com/dcat-x/dcat-admin/compare/v1.1.30...v1.1.31
