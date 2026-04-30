@@ -179,9 +179,6 @@ body.dark-mode {
       }
     }
   }
-  .dropdown .dropdown-menu {
-    box-shadow: $shadow-200;
-  }
   .dropdown-menu {
     background-color: $body-dark-color;
     &:before {
@@ -796,7 +793,6 @@ body.dark-mode {
   .switchery {
     background-color: lighten($body-dark-font-color, 4%)!important;
     border-color: lighten($body-dark-font-color, 4%)!important;
-    box-shadow: $shadow-200;
   }
   .switchery>small {
     background-color: lighten($body-dark-font-color, 10%)!important;

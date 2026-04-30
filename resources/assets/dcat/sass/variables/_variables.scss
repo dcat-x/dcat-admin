@@ -16,21 +16,7 @@ $enable-deprecation-messages: false;
 
 $font-family-sans-serif: Nunito, Montserrat,system-ui,BlinkMacSystemFont,-apple-system,sans-serif;
 
-// 常用阴影颜色 (已禁用阴影以保持简洁风格)
-$shadow: none;
-$shadow-100: none;
-$shadow-150: none;
-$shadow-180: none;
-$shadow-200: none;
-
-// 按钮阴影颜色 (已禁用)
-$default-btn-shadow: none;
-$btn-white-shadow: none;
-$btn-shadow: none;
-$btn-shadow-hover: none;
-$btn-group-btn-shadow: none;
-
-// 菜单阴影
+// 菜单阴影（保留：唯一非 none 的阴影，菜单/侧栏轻量分层用）
 $menu-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.05);
 
 $card-border-radius: .25rem;

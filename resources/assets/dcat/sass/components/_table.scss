@@ -114,7 +114,6 @@ table.data-table.complex-headers thead th, table.data-table.complex-headers thea
 table.table-bordered.data-table.complex-headers {
   border-spacing: 0;
   margin-top: 12px!important;
-  box-shadow: $shadow;
 
   thead th {
     vertical-align: middle;
@@ -225,7 +224,6 @@ $table-bg: darken(#f7f7f9, 3.8%);
 
 body:not(.dark-mode) {
   .table-collapse {
-    box-shadow: $shadow;
     background: $table-bg;
     margin-top: 1rem;
 

@@ -980,16 +980,15 @@ body.dark-mode .progress {
   box-shadow: none;
 }
 
-// Bootstrap 阴影工具类 → 走 dcat 变量（已为 none）
-// .shadow / .shadow-100 / .shadow-200 已在 _custom.scss / _utilities.scss 处理
+// Bootstrap 阴影工具类 → 扁平化为 none
 .shadow-sm,
 .shadow-lg {
-  box-shadow: $shadow !important;
+  box-shadow: none !important;
 }
 
-// toast 通知阴影 → 走变量
+// toast 通知扁平化
 .toast {
-  box-shadow: $shadow-200;
+  box-shadow: none;
 }
 
 // ribbon 装饰

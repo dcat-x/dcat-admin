@@ -4,7 +4,6 @@
   line-height: 1.2;
   border-radius: 0.2rem;
   cursor: pointer;
-  box-shadow: $default-btn-shadow;
 }
 
 .btn.btn-trans {
@@ -15,17 +14,6 @@
   background-color: lighten($primary, 40%);
   border-color: lighten($primary, 40%);
   color: $primary;
-}
-
-.btn-shadow.btn,
-.btn:hover,
-.btn:focus {
-  box-shadow: $btn-shadow;
-}
-
-.btn-shadow.btn:hover,
-.btn-shadow.btn:focus {
-  box-shadow: $btn-shadow-hover;
 }
 
 .btn-group-sm>.btn, .btn-sm, .btn-lg {
@@ -73,22 +61,12 @@ a.btn-sm, .btn-group-sm > a.btn {
 }
 .btn-default:hover, .btn-default:focus, .btn-default.active {
   background: white;
-  box-shadow: $shadow-100;
 }
 
 .btn-group {
-  .btn:not(.btn-white):hover {
-    box-shadow: $shadow-100;
-  }
   .btn {
     box-shadow: none!important;
   }
-
-  box-shadow: $default-btn-shadow;
-}
-
-.btn-group.btn-shadow {
-  box-shadow: $btn-group-btn-shadow;
 }
 
 // --------------------- btn-custom -----------------------
@@ -109,19 +87,11 @@ a.btn-sm, .btn-group-sm > a.btn {
 
 .btn.btn-white, .btn.btn-default {
   color: $font-color;
-  box-shadow: $default-btn-shadow;
   background: $white;
 }
 
-//.btn.btn-white.btn-shadow, .btn.btn-default.btn-shadow {
-//  box-shadow: none;
-//}
-
 .btn.btn-white.btn-primary, .btn.btn-white.btn-primary:hover, .btn.btn-white.btn-primary:focus {
   color: $white !important;
-}
-.btn-white:hover, .btn-white:focus, .btn-white.active {
-  box-shadow: $btn-shadow-hover !important;
 }
 
 .btn-light {
@@ -132,7 +102,6 @@ a.btn-sm, .btn-group-sm > a.btn {
 }
 
 .btn-light:hover, .btn-light:focus {
-  box-shadow: $btn-shadow-hover!important;
   color: #444!important;
 }
 
@@ -141,9 +110,6 @@ a.btn-sm, .btn-group-sm > a.btn {
   background-color: lighten(#eee, 2.5%)!important;
   color: $font-color!important;
   box-shadow: none;
-}
-.btn-secondary:hover, .btn-secondary:focus {
-  box-shadow: $btn-shadow-hover!important;
 }
 
 .btn-no-shadow {

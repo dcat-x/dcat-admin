@@ -66,12 +66,6 @@ table.custom-data-table.data-table {
   padding: 0;
 }
 
-//table.custom-data-table {
-//  background: #ededf1;
-//  border-radius: $card-border-radius;
-//  box-shadow: $shadow;
-//}
-
 table.custom-data-table tbody tr {
   background: $white;
 }
@@ -99,8 +93,6 @@ table.custom-data-table.data-table thead th:first-child {
 
 table.custom-data-table.data-table tbody tr {
   background-color: #fff;
-  //box-shadow: 0 4px 20px 0 rgba(0, 0, 0, .05);
-  box-shadow: $shadow;
   cursor: pointer;
   transition: all var(--transition-slow) ease;
   border-radius:$table-border-radius

@@ -4,7 +4,6 @@
   background: #ffffff;
   margin-bottom: 10px;
   width: 100%;
-  box-shadow: $shadow;
   display: flex;
   flex-direction: column;
 }
@@ -35,7 +34,7 @@
 }
 
 .box-shadow {
-  box-shadow: $shadow-200;
+  box-shadow: none;
 }
 
 .box.box-solid {
