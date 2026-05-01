@@ -120,8 +120,10 @@ class ListField extends Field
     {
         $messages = new MessageBag;
 
-        foreach ($messageBag->toArray() as $column => $message) {
-            $messages->add($this->column, $message);
+        foreach ($messageBag->toArray() as $messagesPerField) {
+            foreach ($messagesPerField as $message) {
+                $messages->add($this->column, $message);
+            }
         }
 
         return $messages;

@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Breaking Changes
+
+- **PHP 最低版本提升至 8.3** — Laravel 13 要求 PHP 8.3+，对应 dcat-admin 升至 v2.0.0；PHP 8.2 用户请继续使用 v1.x（仍维护安全修复）
+- **移除 `doctrine/dbal` 依赖** — Laravel 11+ 已不再依赖该包，源码全程零引用，从 require 中移除以减少依赖图体积；如外部项目曾依赖此传递依赖，请显式 `composer require doctrine/dbal`
+
+### Added
+
+- **支持 Laravel 13** — `laravel/framework: ^12.0||^13.0`、`orchestra/testbench: ^10.0||^11.0`、`spatie/eloquent-sortable: ^4.0||^5.0`、`phpunit/phpunit: ^11.0||^12.0`，CI 双版矩阵覆盖 PHP 8.3/8.4 × Laravel 12/13
+
+### Fixed
+
+- **`ListField::formatValidatorMessages()` 数组消息处理** — 此前把 `MessageBag::toArray()` 返回的 `array<string>` 当作单条消息整体塞进新 MessageBag，PHPStan 在新版 Larastan / Laravel 13 类型签名下报错；修复为遍历每条字符串消息分别 add，行为更正确
+
 ## [1.2.2] - 2026-04-30
 
 ### Changed
