@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-05-01
+
+### Added
+
+- 支持 Laravel 13（双版并行 + v2.0.0）
+
 ### Breaking Changes
 
 - **PHP 最低版本提升至 8.3** — Laravel 13 要求 PHP 8.3+，对应 dcat-admin 升至 v2.0.0；PHP 8.2 用户请继续使用 v1.x（仍维护安全修复）
@@ -526,7 +532,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v1.2.2...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/dcat-x/dcat-admin/compare/v1.2.2...v2.0.0
 [1.2.2]: https://github.com/dcat-x/dcat-admin/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/dcat-x/dcat-admin/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/dcat-x/dcat-admin/compare/v1.1.31...v1.2.0
