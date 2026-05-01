@@ -9,22 +9,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0] - 2026-05-01
 
-### Added
-
-- 支持 Laravel 13（双版并行 + v2.0.0）
+> v2.0.0 是包含破坏性变更的主版本，主要面向想升级到 Laravel 13 的用户。停留在 PHP 8.2 / Laravel 12 的项目请固定 `dcat-x/laravel-admin: ^1.0`，1.x 仍维护安全修复。
 
 ### Breaking Changes
 
-- **PHP 最低版本提升至 8.3** — Laravel 13 要求 PHP 8.3+，对应 dcat-admin 升至 v2.0.0；PHP 8.2 用户请继续使用 v1.x（仍维护安全修复）
-- **移除 `doctrine/dbal` 依赖** — Laravel 11+ 已不再依赖该包，源码全程零引用，从 require 中移除以减少依赖图体积；如外部项目曾依赖此传递依赖，请显式 `composer require doctrine/dbal`
+- **PHP 最低版本提升至 8.3** — Laravel 13 要求 PHP 8.3+，对应 dcat-admin 升至 v2.0.0；PHP 8.2 用户请继续使用 v1.x
+- **移除 `doctrine/dbal` 依赖** — Laravel 11+ 已不再依赖该包，dcat-admin 源码全程零引用；如外部项目通过本包传递依赖该库，请显式 `composer require doctrine/dbal`
 
 ### Added
 
-- **支持 Laravel 13** — `laravel/framework: ^12.0||^13.0`、`orchestra/testbench: ^10.0||^11.0`、`spatie/eloquent-sortable: ^4.0||^5.0`、`phpunit/phpunit: ^11.0||^12.0`，CI 双版矩阵覆盖 PHP 8.3/8.4 × Laravel 12/13
+- **支持 Laravel 13** — 同时兼容 Laravel 12 与 Laravel 13：
+  - `laravel/framework: ^12.0||^13.0`
+  - `orchestra/testbench: ^10.0||^11.0`
+  - `phpunit/phpunit: ^11.0||^12.0`
+  - `spatie/eloquent-sortable: ^4.0||^5.0`
+- **CI 双版矩阵** — PHP 8.3/8.4 × Laravel 12/13 共 6 个 job，本地双跑 5027 tests / 8071 assertions 全绿
 
 ### Fixed
 
-- **`ListField::formatValidatorMessages()` 数组消息处理** — 此前把 `MessageBag::toArray()` 返回的 `array<string>` 当作单条消息整体塞进新 MessageBag，PHPStan 在新版 Larastan / Laravel 13 类型签名下报错；修复为遍历每条字符串消息分别 add，行为更正确
+- **`ListField::formatValidatorMessages()` 数组消息处理** — 此前把 `MessageBag::toArray()` 返回的 `array<string>` 当作单条消息整体塞进新 MessageBag，行为不正确（被 Laravel 13 收紧的 `MessageBag::add()` 类型签名揭出）；修复为遍历每条字符串消息分别 add
+
+### Docs
+
+- README / `docs/getting-started/introduction.md` / `upgrade-from-original.md` / `update.md` 全部同步至 v2.x 兼容性矩阵
+- `update.md` 新增「从 1.x 升级到 2.x」完整章节
 
 ## [1.2.2] - 2026-04-30
 
