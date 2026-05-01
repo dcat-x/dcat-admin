@@ -35,3 +35,6 @@ Thumbs.db
 .env.*
 !.env.testing
 !.env.example
+
+# Claude Code: 本地用户配置（含可能的 MCP token / 个人 hook 等），禁止提交
+.claude/settings.local.json

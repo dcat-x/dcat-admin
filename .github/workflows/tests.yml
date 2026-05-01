@@ -44,23 +44,39 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          # PHP 8.3 + Laravel 12（主分片矩阵：完整覆盖）
           - php: '8.3'
+            laravel: '12'
             suite: 'tests/Unit/Actions tests/Unit/Console tests/Unit/Contracts tests/Unit/Exception tests/Unit/Extend tests/Unit/Form'
             label: 'unit-a'
           - php: '8.3'
+            laravel: '12'
             suite: 'tests/Unit/Grid tests/Unit/Http'
             label: 'unit-gh'
           - php: '8.3'
+            laravel: '12'
             suite: 'tests/Feature tests/Unit/ApplicationTest.php tests/Unit/AdminTest.php tests/Unit/ColorTest.php tests/Unit/FormTest.php tests/Unit/GridTest.php tests/Unit/AdminServiceProviderTest.php tests/Unit/ShowTest.php tests/Unit/Layout tests/Unit/Models tests/Unit/Octane tests/Unit/Repositories tests/Unit/Scaffold tests/Unit/Services tests/Unit/Show tests/Unit/Support tests/Unit/Traits tests/Unit/Tree tests/Unit/Widgets'
             label: 'unit-misc'
-          - php: '8.2'
-            suite: 'tests/Feature tests/Unit/ApplicationTest.php tests/Unit/AdminTest.php tests/Unit/ColorTest.php tests/Unit/FormTest.php tests/Unit/GridTest.php tests/Unit/AdminServiceProviderTest.php tests/Unit/ShowTest.php'
-            label: 'compat-smoke-82'
-          - php: '8.4'
-            suite: 'tests/Feature tests/Unit/ApplicationTest.php tests/Unit/AdminTest.php tests/Unit/ColorTest.php tests/Unit/FormTest.php tests/Unit/GridTest.php tests/Unit/AdminServiceProviderTest.php tests/Unit/ShowTest.php'
-            label: 'compat-smoke-84'
 
-    name: PHP ${{ matrix.php }} / ${{ matrix.label }}
+          # PHP 8.4 + Laravel 12（兼容性烟测，跑核心套件）
+          - php: '8.4'
+            laravel: '12'
+            suite: 'tests/Feature tests/Unit/ApplicationTest.php tests/Unit/AdminTest.php tests/Unit/ColorTest.php tests/Unit/FormTest.php tests/Unit/GridTest.php tests/Unit/AdminServiceProviderTest.php tests/Unit/ShowTest.php'
+            label: 'compat-smoke'
+
+          # PHP 8.3 + Laravel 13（新版本，跑核心套件）
+          - php: '8.3'
+            laravel: '13'
+            suite: 'tests/Feature tests/Unit/ApplicationTest.php tests/Unit/AdminTest.php tests/Unit/ColorTest.php tests/Unit/FormTest.php tests/Unit/GridTest.php tests/Unit/AdminServiceProviderTest.php tests/Unit/ShowTest.php'
+            label: 'l13-smoke'
+
+          # PHP 8.4 + Laravel 13（推荐生产组合，跑核心套件）
+          - php: '8.4'
+            laravel: '13'
+            suite: 'tests/Feature tests/Unit/ApplicationTest.php tests/Unit/AdminTest.php tests/Unit/ColorTest.php tests/Unit/FormTest.php tests/Unit/GridTest.php tests/Unit/AdminServiceProviderTest.php tests/Unit/ShowTest.php'
+            label: 'l13-recommended'
+
+    name: PHP ${{ matrix.php }} / Laravel ${{ matrix.laravel }} / ${{ matrix.label }}
 
     steps:
       - name: Checkout code
@@ -74,8 +90,24 @@ jobs:
           coverage: none
           cache: composer
 
+      - name: Lock Laravel 13 stack
+        if: matrix.laravel == '13'
+        env:
+          LARAVEL_VERSION: ${{ matrix.laravel }}
+        run: |
+          composer require \
+            "laravel/framework:^13.0" \
+            "spatie/eloquent-sortable:^5.0" \
+            --no-update --no-interaction
+          composer require --dev \
+            "orchestra/testbench:^11.0" \
+            "phpunit/phpunit:^12.0" \
+            --no-update --no-interaction
+
       - name: Install dependencies
-        run: composer install --prefer-dist --no-interaction --no-progress
+        run: composer update --prefer-dist --no-interaction --no-progress
 
       - name: Run tests
-        run: vendor/bin/phpunit ${{ matrix.suite }}
+        env:
+          SUITE: ${{ matrix.suite }}
+        run: vendor/bin/phpunit $SUITE

@@ -6,8 +6,8 @@
     <a href="https://github.com/dcat-x/dcat-admin/actions"><img src="https://github.com/dcat-x/dcat-admin/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
     <a href="https://packagist.org/packages/dcat-x/laravel-admin"><img src="https://poser.pugx.org/dcat-x/laravel-admin/v/stable" alt="Latest Stable Version"></a>
     <a href="https://packagist.org/packages/dcat-x/laravel-admin"><img src="https://img.shields.io/packagist/dt/dcat-x/laravel-admin.svg" alt="Total Downloads"></a>
-    <a href="https://www.php.net/"><img src="https://img.shields.io/badge/php-8.2+-59a9f8.svg" alt="PHP Version"></a>
-    <a href="https://laravel.com/"><img src="https://img.shields.io/badge/laravel-12+-59a9f8.svg" alt="Laravel Version"></a>
+    <a href="https://www.php.net/"><img src="https://img.shields.io/badge/php-8.3+-59a9f8.svg" alt="PHP Version"></a>
+    <a href="https://laravel.com/"><img src="https://img.shields.io/badge/laravel-12%20%7C%2013-59a9f8.svg" alt="Laravel Version"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
 </p>
 
@@ -34,9 +34,10 @@ Dcat Admin 只需很少的代码即可快速构建出一个功能完善的高颜
 
 ## 版本兼容
 
-| Dcat Admin X | Laravel | PHP   |
-|--------------|---------|-------|
-| 1.x          | 12.x    | 8.2+  |
+| Dcat Admin X | Laravel    | PHP   |
+|--------------|------------|-------|
+| 2.x          | 12.x, 13.x | 8.3+  |
+| 1.x          | 12.x       | 8.2+  |
 
 ## 安装
 

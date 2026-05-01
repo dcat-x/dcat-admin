@@ -13,20 +13,20 @@
 
 ### Dcat Admin X (本项目)
 
-- **当前版本**: 1.x
-- **Laravel 支持**: 12.x
-- **PHP 支持**: 8.2+
+- **当前版本**: 2.x（v1.x 仍维护安全修复）
+- **Laravel 支持**: 12.x / 13.x
+- **PHP 支持**: 8.3+
 - **维护状态**: 持续维护
 
 ## 主要变化
 
 ### 1. 环境要求
 
-| 项目 | 原版 Dcat Admin | Dcat Admin X |
-|------|----------------|--------------|
-| PHP | 7.1 - 8.1 | 8.2+ |
-| Laravel | 5.5 - 9.x | 12.x |
-| Composer 包名 | `dcat/laravel-admin` | `dcat-x/laravel-admin` |
+| 项目 | 原版 Dcat Admin | Dcat Admin X 1.x | Dcat Admin X 2.x |
+|------|----------------|------------------|------------------|
+| PHP | 7.1 - 8.1 | 8.2+ | 8.3+ |
+| Laravel | 5.5 - 9.x | 12.x | 12.x / 13.x |
+| Composer 包名 | `dcat/laravel-admin` | `dcat-x/laravel-admin` | `dcat-x/laravel-admin` |
 
 ### 2. 新增功能
 
@@ -89,7 +89,7 @@ cp -r /path/to/project /path/to/project-backup
 php -v
 ```
 
-确保 PHP 版本 >= 8.2。如果不满足,需要先升级 PHP。
+Dcat Admin X 2.x 要求 PHP >= 8.3；1.x 要求 PHP >= 8.2。如果不满足，需要先升级 PHP。
 
 4. **检查 Laravel 版本**
 
@@ -97,11 +97,11 @@ php -v
 php artisan --version
 ```
 
-如果 Laravel 版本 < 12.x,需要先升级 Laravel。
+Dcat Admin X 2.x 支持 Laravel 12.x 与 13.x；1.x 仅支持 12.x。如果 Laravel 版本低于支持范围，需要先升级 Laravel。
 
 ### 升级 Laravel (如需要)
 
-如果当前 Laravel 版本低于 12.x,请参考 [Laravel 升级指南](https://laravel.com/docs/12.x/upgrade) 进行升级。
+如果计划使用 Dcat Admin X 2.x，建议升级到 Laravel 13.x。请参考 [Laravel 13 升级指南](https://laravel.com/docs/13.x/upgrade) 或 [Laravel 12 升级指南](https://laravel.com/docs/12.x/upgrade)。
 
 主要步骤:
 
@@ -119,12 +119,14 @@ php artisan --version
 ```json
 {
     "require": {
-        "php": "^8.2",
-        "laravel/framework": "^12.0",
-        "dcat-x/laravel-admin": "^1.0"
+        "php": "^8.3",
+        "laravel/framework": "^12.0||^13.0",
+        "dcat-x/laravel-admin": "^2.0"
     }
 }
 ```
+
+> 如需停留在 PHP 8.2 / Laravel 12，请使用 `dcat-x/laravel-admin: ^1.0`。
 
 移除原版 Dcat Admin:
 
@@ -211,9 +213,9 @@ use Dcat\Admin\Show;
 use Dcat\Admin\Layout\Content;
 ```
 
-### 2. PHP 8.2+ 语法适配
+### 2. PHP 8.3+ 语法适配
 
-需要注意 PHP 8.2+ 的语法变化:
+需要注意 PHP 8.2/8.3 的语法变化（Dcat Admin X 2.x 要求 PHP 8.3+）:
 
 #### 动态属性
 
@@ -264,7 +266,7 @@ public function show($id)
 }
 ```
 
-### 3. Laravel 12 API 适配
+### 3. Laravel 12 / 13 API 适配
 
 #### 字符串辅助函数
 
@@ -292,7 +294,7 @@ $result = Arr::get($array, 'key', 'default');
 
 ### 4. 数据库查询
 
-Laravel 12 的查询构建器更严格:
+Laravel 12 / 13 的查询构建器更严格:
 
 ```php
 // 原代码
@@ -456,7 +458,7 @@ $grid->column('price')->fee('¥', 2);
 
 ### 2. 代码优化
 
-利用 PHP 8.2+ 新特性优化代码:
+利用 PHP 8.3+ 新特性优化代码:
 
 ```php
 // 使用 match 表达式
@@ -501,11 +503,11 @@ php artisan octane:install
 
 升级到 Dcat Admin X 的主要步骤:
 
-1. ✅ 确保环境满足要求 (PHP 8.2+, Laravel 12+)
+1. ✅ 确保环境满足要求 (Dcat Admin X 2.x: PHP 8.3+, Laravel 12.x / 13.x)
 2. ✅ 备份数据库和代码
 3. ✅ 更新 Composer 依赖
 4. ✅ 发布资源和更新配置
-5. ✅ 适配 PHP 8.2+ 和 Laravel 12 API
+5. ✅ 适配 PHP 8.3+ 和 Laravel 12 / 13 API
 6. ✅ 测试所有功能
 7. ✅ 使用新功能优化代码
 

@@ -3,12 +3,12 @@
 
 `Dcat Admin` 是一个基于 [laravel-admin](https://github.com/z-song/laravel-admin) 二次开发而成的后台系统构建工具。
 
-`Dcat Admin X` 是基于 [Dcat Admin](https://github.com/jqhph/dcat-admin) 的继续维护版本，适配 Laravel 12+ 和 PHP 8.2+，只需极少的代码即可快速构建出一个功能完善的高颜值后台系统。支持页面一键生成 CRUD 代码，内置丰富的后台常用组件，开箱即用，让开发者告别冗杂的 HTML 代码，对后端开发者非常友好。
+`Dcat Admin X` 是基于 [Dcat Admin](https://github.com/jqhph/dcat-admin) 的继续维护版本，适配 Laravel 12 / Laravel 13 与 PHP 8.3+，只需极少的代码即可快速构建出一个功能完善的高颜值后台系统。支持页面一键生成 CRUD 代码，内置丰富的后台常用组件，开箱即用，让开发者告别冗杂的 HTML 代码，对后端开发者非常友好。
 
 <p align="center">
     <a href="https://github.com/dcat-x/dcat-admin/blob/main/LICENSE"><img style="display:inline" src="https://img.shields.io/badge/license-MIT-7389D8.svg?style=flat" ></a>
-    <a><img style="display:inline"  src="https://img.shields.io/badge/php-8.2+-59a9f8.svg?style=flat" /></a>
-    <a><img style="display:inline"  src="https://img.shields.io/badge/laravel-12+-59a9f8.svg?style=flat" ></a>
+    <a><img style="display:inline"  src="https://img.shields.io/badge/php-8.3+-59a9f8.svg?style=flat" /></a>
+    <a><img style="display:inline"  src="https://img.shields.io/badge/laravel-12%20%7C%2013-59a9f8.svg?style=flat" ></a>
 </p>
 
 ### 技术栈
