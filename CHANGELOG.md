@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.1] - 2026-05-06
+
+### Fixed
+
+- 修复 Field::image()/file() 闭包内 $this 误绑导致 BadMethodCallException
+
 ## [2.0.0] - 2026-05-01
 
 > v2.0.0 是包含破坏性变更的主版本，主要面向想升级到 Laravel 13 的用户。停留在 PHP 8.2 / Laravel 12 的项目请固定 `dcat-x/laravel-admin: ^1.0`，1.x 仍维护安全修复。
@@ -540,7 +546,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v2.0.1...HEAD
+[2.0.1]: https://github.com/dcat-x/dcat-admin/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/dcat-x/dcat-admin/compare/v1.2.2...v2.0.0
 [1.2.2]: https://github.com/dcat-x/dcat-admin/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/dcat-x/dcat-admin/compare/v1.2.0...v1.2.1

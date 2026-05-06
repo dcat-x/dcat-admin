@@ -58,7 +58,7 @@ class Admin implements Resettable
     use HasAssets;
     use HasHtml;
 
-    const VERSION = '2.0.0';
+    const VERSION = '2.0.1';
 
     const SECTION = [
         // 往 <head> 标签内输入内容
