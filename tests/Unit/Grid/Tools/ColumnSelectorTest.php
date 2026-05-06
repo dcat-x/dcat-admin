@@ -10,7 +10,9 @@ use Dcat\Admin\Grid\Tools\ColumnSelector;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Support\Collection;
 use Mockery;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class ColumnSelectorTest extends TestCase
 {
     protected function tearDown(): void

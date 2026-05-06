@@ -9,7 +9,9 @@ use Dcat\Admin\Form\Field;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Support\Collection;
 use Mockery;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class HasFieldsTestHelper
 {
     use HasFields;

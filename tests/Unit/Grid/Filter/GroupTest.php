@@ -9,7 +9,9 @@ use Dcat\Admin\Grid\Filter;
 use Dcat\Admin\Grid\Filter\Group;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Support\Collection;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class GroupTest extends TestCase
 {
     protected function makeFilter(string $column, ?\Closure $builder = null, string $label = ''): Group

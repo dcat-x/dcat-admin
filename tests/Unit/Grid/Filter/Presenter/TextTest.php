@@ -8,9 +8,11 @@ use Dcat\Admin\Grid\Filter;
 use Dcat\Admin\Grid\Filter\AbstractFilter;
 use Dcat\Admin\Grid\Filter\Presenter\Text;
 use Dcat\Admin\Tests\TestCase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionProperty;
 
+#[AllowMockObjectsWithoutExpectations]
 class TextTest extends TestCase
 {
     protected function makeText(string $placeholder = ''): Text

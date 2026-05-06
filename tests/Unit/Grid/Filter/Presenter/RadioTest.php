@@ -8,8 +8,10 @@ use Dcat\Admin\Grid\Filter\AbstractFilter;
 use Dcat\Admin\Grid\Filter\Presenter\Radio;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Support\Collection;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use ReflectionProperty;
 
+#[AllowMockObjectsWithoutExpectations]
 class RadioTest extends TestCase
 {
     protected function makeRadio(array $options = []): Radio

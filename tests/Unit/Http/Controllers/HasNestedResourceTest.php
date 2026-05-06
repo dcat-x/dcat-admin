@@ -8,7 +8,9 @@ use Dcat\Admin\Http\Controllers\HasNestedResource;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Http\Request;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class HasNestedResourceTest extends TestCase
 {
     public function test_show_and_edit_proxy_to_parent_with_nested_resource_id(): void

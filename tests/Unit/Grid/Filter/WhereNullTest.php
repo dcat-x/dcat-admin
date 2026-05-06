@@ -8,7 +8,9 @@ use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Filter;
 use Dcat\Admin\Grid\Filter\WhereNull;
 use Dcat\Admin\Tests\TestCase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class WhereNullTest extends TestCase
 {
     protected function makeFilter(string $column, string $label = ''): WhereNull

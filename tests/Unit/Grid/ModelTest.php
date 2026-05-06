@@ -10,7 +10,9 @@ use Dcat\Admin\Tests\TestCase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Mockery;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class ModelTest extends TestCase
 {
     protected function tearDown(): void

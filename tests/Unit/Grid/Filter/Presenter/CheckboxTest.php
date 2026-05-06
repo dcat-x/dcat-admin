@@ -9,8 +9,10 @@ use Dcat\Admin\Grid\Filter\Presenter\Checkbox;
 use Dcat\Admin\Grid\Filter\Presenter\Radio;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Support\Collection;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use ReflectionProperty;
 
+#[AllowMockObjectsWithoutExpectations]
 class CheckboxTest extends TestCase
 {
     protected function makeCheckbox(array $options = []): Checkbox

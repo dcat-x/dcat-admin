@@ -7,8 +7,10 @@ namespace Dcat\Admin\Tests\Unit\Grid\Filter\Presenter;
 use Dcat\Admin\Grid\Filter\AbstractFilter;
 use Dcat\Admin\Grid\Filter\Presenter\DateTime;
 use Dcat\Admin\Tests\TestCase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use ReflectionProperty;
 
+#[AllowMockObjectsWithoutExpectations]
 class DateTimeTest extends TestCase
 {
     protected function makeDateTime(array $options = []): DateTime

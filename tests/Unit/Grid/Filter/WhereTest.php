@@ -9,7 +9,9 @@ use Dcat\Admin\Grid\Filter;
 use Dcat\Admin\Grid\Filter\Where;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Database\Query\Builder;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class WhereTest extends TestCase
 {
     protected function makeFilter(string $column, \Closure $query, string $label = ''): Where

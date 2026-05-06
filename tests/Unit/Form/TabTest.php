@@ -10,7 +10,9 @@ use Dcat\Admin\Form\Tab;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Support\Collection;
 use Mockery;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class TabTest extends TestCase
 {
     protected function tearDown(): void

@@ -9,7 +9,9 @@ use Dcat\Admin\Grid\Filter;
 use Dcat\Admin\Grid\Filter\AbstractFilter;
 use Dcat\Admin\Grid\Filter\Ngt;
 use Dcat\Admin\Tests\TestCase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class NgtFilterTest extends TestCase
 {
     protected function getProtectedProperty(object $object, string $property)

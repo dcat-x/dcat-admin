@@ -8,7 +8,9 @@ use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Exporter;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class ExporterTest extends TestCase
 {
     protected function tearDown(): void

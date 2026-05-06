@@ -8,8 +8,10 @@ use Dcat\Admin\Grid\Filter\AbstractFilter;
 use Dcat\Admin\Grid\Filter\Presenter\MultipleSelect;
 use Dcat\Admin\Grid\Filter\Presenter\Select;
 use Dcat\Admin\Tests\TestCase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use ReflectionProperty;
 
+#[AllowMockObjectsWithoutExpectations]
 class MultipleSelectTest extends TestCase
 {
     protected function makeMultipleSelect($options = []): MultipleSelect

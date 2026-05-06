@@ -8,7 +8,9 @@ use Dcat\Admin\Form;
 use Dcat\Admin\Form\Condition;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class ConditionTest extends TestCase
 {
     protected function tearDown(): void

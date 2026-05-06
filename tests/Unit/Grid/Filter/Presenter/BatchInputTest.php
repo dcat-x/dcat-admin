@@ -8,9 +8,11 @@ use Dcat\Admin\Grid\Filter\AbstractFilter;
 use Dcat\Admin\Grid\Filter\Presenter\BatchInput;
 use Dcat\Admin\Grid\Filter\Presenter\Presenter;
 use Dcat\Admin\Tests\TestCase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionProperty;
 
+#[AllowMockObjectsWithoutExpectations]
 class BatchInputTest extends TestCase
 {
     protected function makeBatchInput(string $lookupUrl = '/api/lookup'): BatchInput

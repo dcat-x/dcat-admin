@@ -9,7 +9,9 @@ use Dcat\Admin\Grid\Row;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Support\Fluent;
 use Mockery;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class RowTest extends TestCase
 {
     protected function tearDown(): void

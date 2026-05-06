@@ -7,7 +7,9 @@ namespace Dcat\Admin\Tests\Unit\Grid\Filter;
 use Dcat\Admin\Grid\Filter;
 use Dcat\Admin\Grid\Filter\Scope;
 use Dcat\Admin\Tests\TestCase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class ScopeTest extends TestCase
 {
     protected function makeScope(string $key, string $label = ''): Scope

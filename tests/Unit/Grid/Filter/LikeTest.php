@@ -8,7 +8,9 @@ use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\Filter;
 use Dcat\Admin\Grid\Filter\Like;
 use Dcat\Admin\Tests\TestCase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class LikeTest extends TestCase
 {
     protected function makeFilter(string $column, string $label = ''): Like

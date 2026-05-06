@@ -10,10 +10,12 @@ use Dcat\Admin\Form\Field\HasMany;
 use Dcat\Admin\Form\NestedForm;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
 /**
  * 测试 HasMany 表单字段的关键方法。
  */
+#[AllowMockObjectsWithoutExpectations]
 class HasManyTest extends TestCase
 {
     protected function tearDown(): void

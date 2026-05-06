@@ -8,7 +8,9 @@ use Dcat\Admin\Grid\Column\Filter;
 use Dcat\Admin\Grid\Column\ValueFilter;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class ValueFilterTest extends TestCase
 {
     protected function tearDown(): void

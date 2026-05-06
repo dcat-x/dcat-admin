@@ -9,7 +9,9 @@ use Dcat\Admin\Grid\FixColumns;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Support\Collection;
 use Mockery;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class FixColumnsTest extends TestCase
 {
     protected function tearDown(): void

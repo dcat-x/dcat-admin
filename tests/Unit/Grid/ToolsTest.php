@@ -13,7 +13,9 @@ use Dcat\Admin\Grid\Tools\RefreshButton;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Support\Collection;
 use Mockery;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class ToolsTest extends TestCase
 {
     protected function tearDown(): void

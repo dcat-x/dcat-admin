@@ -14,7 +14,9 @@ use Dcat\Admin\Grid\Events\Fetched;
 use Dcat\Admin\Grid\Events\Fetching;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class GridEventTest extends TestCase
 {
     protected function tearDown(): void

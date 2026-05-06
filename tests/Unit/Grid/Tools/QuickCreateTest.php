@@ -13,7 +13,9 @@ use Dcat\Admin\Grid\Tools\QuickCreate;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Support\Collection;
 use Mockery;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class QuickCreateTest extends TestCase
 {
     protected function tearDown(): void

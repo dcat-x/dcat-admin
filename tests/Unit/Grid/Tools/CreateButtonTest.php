@@ -10,7 +10,9 @@ use Dcat\Admin\Grid\Tools\CreateButton;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Contracts\Support\Renderable;
 use Mockery;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class CreateButtonTest extends TestCase
 {
     protected function tearDown(): void

@@ -7,7 +7,9 @@ namespace Dcat\Admin\Tests\Unit\Show;
 use Dcat\Admin\Show;
 use Dcat\Admin\Show\Field;
 use Dcat\Admin\Tests\TestCase;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Fluent;
 
 class FieldTest extends TestCase
@@ -440,6 +442,92 @@ class FieldTest extends TestCase
         $this->assertSame(['x', 'y', 'z'], $result);
     }
 
+    public function test_image_callback_does_not_break_when_rebound_to_model_with_explicit_server(): void
+    {
+        $field = new Field('avatar', 'Avatar');
+        $field->image('https://cdn.example.com');
+
+        $showAs = $this->getProperty($field, 'showAs');
+        [$callable] = $showAs->first();
+
+        // Render() rebinds the closure to the parent model. The closure
+        // must not call $this->resolveStorageUrl() (or any other Field
+        // method) on the model, since the model has no such method.
+        $result = $callable->call(new FieldTestStubModel, 'avatar.png');
+
+        $this->assertStringContainsString('https://cdn.example.com/avatar.png', $result);
+        $this->assertStringContainsString("data-action='preview-img'", $result);
+    }
+
+    public function test_image_callback_does_not_break_when_rebound_to_model_with_storage_disk(): void
+    {
+        Storage::fake('public');
+        config(['admin.upload.disk' => 'public']);
+
+        $field = new Field('avatar', 'Avatar');
+        $field->image();
+
+        $showAs = $this->getProperty($field, 'showAs');
+        [$callable] = $showAs->first();
+
+        // Render() rebinds the closure to the parent model — exactly the path
+        // that triggered BadMethodCallException because the closure called
+        // $this->resolveStorageUrl() on the model instead of the Field.
+        $result = $callable->call(new FieldTestStubModel, 'avatar.png');
+
+        $this->assertStringContainsString("data-action='preview-img'", $result);
+        $this->assertStringContainsString('avatar.png', $result);
+    }
+
+    public function test_filesize_callback_returns_empty_string_for_empty_value(): void
+    {
+        $field = new Field('size', 'Size');
+        $field->filesize();
+
+        $showAs = $this->getProperty($field, 'showAs');
+        [$callable] = $showAs->first();
+
+        // Previously the closure returned $this (rebound to the model),
+        // leaking the model's JSON into the rendered page.
+        $result = $callable->call(new FieldTestStubModel, null);
+
+        $this->assertSame('', $result);
+    }
+
+    public function test_filesize_callback_formats_byte_value(): void
+    {
+        $field = new Field('size', 'Size');
+        $field->filesize();
+
+        $showAs = $this->getProperty($field, 'showAs');
+        [$callable] = $showAs->first();
+
+        $result = $callable->call(new FieldTestStubModel, 1024);
+
+        $this->assertIsString($result);
+        $this->assertNotSame('', $result);
+    }
+
+    public function test_file_callback_does_not_break_when_rebound_to_model_with_storage_disk(): void
+    {
+        Storage::fake('public');
+        config(['admin.upload.disk' => 'public']);
+        Storage::disk('public')->put('doc.pdf', 'content');
+
+        $field = new Field('attachment', 'Attachment');
+        $field->file();
+
+        $showAs = $this->getProperty($field, 'showAs');
+        [$callable] = $showAs->first();
+
+        // Same regression as image(): the closure previously called
+        // $this->resolveStorageUrl() which fails when rebound to the model.
+        $result = $callable->call(new FieldTestStubModel, 'doc.pdf');
+
+        $this->assertStringContainsString('doc.pdf', $result);
+        $this->assertStringContainsString('mailbox-attachments', $result);
+    }
+
     private function assertArrayContainsKeys(array $expectedKeys, array $actual): void
     {
         $keys = array_keys($actual);
@@ -448,4 +536,9 @@ class FieldTest extends TestCase
             $this->assertContains($key, $keys);
         }
     }
+}
+
+class FieldTestStubModel extends Model
+{
+    protected $guarded = [];
 }

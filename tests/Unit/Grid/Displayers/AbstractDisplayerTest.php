@@ -10,7 +10,9 @@ use Dcat\Admin\Grid\Displayers\AbstractDisplayer;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Support\Fluent;
 use Mockery;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class AbstractDisplayerTest extends TestCase
 {
     protected function tearDown(): void

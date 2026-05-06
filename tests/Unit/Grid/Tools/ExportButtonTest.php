@@ -13,7 +13,9 @@ use Dcat\Admin\Layout\Asset;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Contracts\Support\Renderable;
 use Mockery;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class ExportButtonTest extends TestCase
 {
     protected function tearDown(): void

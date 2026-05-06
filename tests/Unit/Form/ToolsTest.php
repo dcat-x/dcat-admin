@@ -9,7 +9,9 @@ use Dcat\Admin\Form\Builder;
 use Dcat\Admin\Form\Tools;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class ToolsTest extends TestCase
 {
     protected function tearDown(): void

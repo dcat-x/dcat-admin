@@ -7,8 +7,10 @@ namespace Dcat\Admin\Tests\Unit\Grid\Filter\Presenter;
 use Dcat\Admin\Grid\Filter\AbstractFilter;
 use Dcat\Admin\Grid\Filter\Presenter\Select;
 use Dcat\Admin\Tests\TestCase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use ReflectionProperty;
 
+#[AllowMockObjectsWithoutExpectations]
 class SelectTest extends TestCase
 {
     protected function makeSelect($options = []): Select

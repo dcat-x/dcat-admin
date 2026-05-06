@@ -9,7 +9,9 @@ use Dcat\Admin\Grid\Filter;
 use Dcat\Admin\Grid\Filter\Date;
 use Dcat\Admin\Grid\Filter\Day;
 use Dcat\Admin\Tests\TestCase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class DayTest extends TestCase
 {
     protected function getProtectedProperty(object $object, string $property)

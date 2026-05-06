@@ -9,7 +9,9 @@ use Dcat\Admin\Grid\Tools\RowSelector;
 use Dcat\Admin\Layout\Asset;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class RowSelectorTest extends TestCase
 {
     protected function tearDown(): void

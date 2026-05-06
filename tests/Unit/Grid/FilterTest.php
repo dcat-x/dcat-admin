@@ -13,8 +13,10 @@ use Dcat\Admin\Grid\Filter\Toggle;
 use Dcat\Admin\Grid\Filter\WhereNotNull;
 use Dcat\Admin\Grid\Filter\WhereNull;
 use Dcat\Admin\Tests\TestCase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[AllowMockObjectsWithoutExpectations]
 class FilterTest extends TestCase
 {
     protected function attachParentFilter(object $filter): void

@@ -19,7 +19,9 @@ use Dcat\Admin\Form\Events\Uploaded;
 use Dcat\Admin\Form\Events\Uploading;
 use Dcat\Admin\Tests\TestCase;
 use Mockery;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class FormEventTest extends TestCase
 {
     protected function tearDown(): void

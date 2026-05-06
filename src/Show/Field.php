@@ -241,7 +241,7 @@ class Field implements Renderable
                 } elseif ($server) {
                     $src = rtrim($server, '/').'/'.ltrim($path, '/');
                 } else {
-                    $src = $this->resolveStorageUrl($storage, $path);
+                    $src = Field::resolveStorageUrl($storage, $path);
                 }
 
                 return "<img data-action='preview-img' src='$src' style='max-width:{$width}px;max-height:{$height}px' class='img' />";
@@ -282,7 +282,7 @@ class Field implements Renderable
                     $url = $server.$path;
                 } else {
                     if ($storage->exists($path)) {
-                        $url = $this->resolveStorageUrl($storage, $path);
+                        $url = Field::resolveStorageUrl($storage, $path);
                         $size = ($storage->size($path) / 1000).'KB';
                     }
                 }
@@ -313,7 +313,7 @@ HTML;
         });
     }
 
-    protected function resolveStorageUrl(Filesystem $storage, string $path): string
+    public static function resolveStorageUrl(Filesystem $storage, string $path): string
     {
         /** @var FilesystemAdapter $adapter */
         $adapter = $storage;
@@ -788,7 +788,7 @@ HTML;
     {
         return $this->unescape()->as(function ($value) use ($dec) {
             if (empty($value)) {
-                return $this;
+                return '';
             }
 
             return format_byte($value, $dec);

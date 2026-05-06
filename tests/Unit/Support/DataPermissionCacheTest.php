@@ -9,7 +9,9 @@ use Dcat\Admin\Support\DataPermission;
 use Dcat\Admin\Tests\TestCase;
 use Illuminate\Http\Request;
 use Mockery;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class DataPermissionCacheTest extends TestCase
 {
     protected function setUp(): void
