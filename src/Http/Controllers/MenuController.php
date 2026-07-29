@@ -112,18 +112,19 @@ class MenuController extends AdminController
     public function form()
     {
         $menuModel = config('admin.database.menu_model');
+        $controller = $this;
 
         $relations = $menuModel::withPermission() ? ['permissions', 'roles'] : 'roles';
 
-        return Form::make(Menu::with($relations), function (Form $form) use ($menuModel) {
+        return Form::make(Menu::with($relations), function (Form $form) use ($controller, $menuModel) {
             $form->tools(function (Form\Tools $tools) {
                 $tools->disableView();
             });
 
             $form->display('id', 'ID');
 
-            $form->select('parent_id', trans('admin.parent_id'))->options(function () {
-                return $this->getMenuSelectOptions();
+            $form->select('parent_id', trans('admin.parent_id'))->options(function () use ($controller) {
+                return $controller->getMenuSelectOptions();
             })->saving(function ($v) {
                 return (int) $v;
             });
@@ -134,8 +135,8 @@ class MenuController extends AdminController
 
             if ($menuModel::withRole()) {
                 $form->multipleSelect('roles', trans('admin.roles'))
-                    ->options(function () {
-                        return $this->getRoleOptions();
+                    ->options(function () use ($controller) {
+                        return $controller->getRoleOptions();
                     })
                     ->customFormat(function ($v) {
                         return array_column($v, 'id');
@@ -158,8 +159,8 @@ class MenuController extends AdminController
 
             $form->display('created_at', trans('admin.created_at'));
             $form->display('updated_at', trans('admin.updated_at'));
-        })->saved(function (Form $form, $result) {
-            $this->reportConfigHealthIssues('menu.saved');
+        })->saved(function (Form $form, $result) use ($controller) {
+            $controller->reportConfigHealthIssues('menu.saved');
 
             $response = $form->response()->location('auth/menu');
 

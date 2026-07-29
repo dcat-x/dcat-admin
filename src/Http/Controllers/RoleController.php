@@ -50,14 +50,16 @@ class RoleController extends AdminController
     protected function detail($id)
     {
         return Show::make($id, new Role('permissions'), function (Show $show) {
+            $permissionNodes = $this->getPermissionNodes();
+
             $show->field('id');
             $show->field('slug');
             $show->field('name');
 
-            $show->field('permissions')->unescape()->as(function ($permission) {
+            $show->field('permissions')->unescape()->as(function ($permission) use ($permissionNodes) {
                 $permissionModel = config('admin.database.permissions_model');
                 $permissionModel = new $permissionModel;
-                $tree = Tree::make($this->getPermissionNodes());
+                $tree = Tree::make($permissionNodes);
 
                 $keyName = $permissionModel->getKeyName();
                 $tree->check(

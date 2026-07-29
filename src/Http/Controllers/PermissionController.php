@@ -92,6 +92,7 @@ class PermissionController extends AdminController
     public function form()
     {
         $with = [];
+        $controller = $this;
 
         if ($bindMenu = config('admin.menu.permission_bind_menu', true)) {
             $with[] = 'menus';
@@ -165,11 +166,11 @@ class PermissionController extends AdminController
 
             $form->disableViewButton();
             $form->disableViewCheck();
-        })->saved(function () {
+        })->saved(function () use ($controller) {
             $model = config('admin.database.menu_model');
             (new $model)->flushCache();
 
-            $this->reportConfigHealthIssues('permission.saved');
+            $controller->reportConfigHealthIssues('permission.saved');
         });
     }
 
