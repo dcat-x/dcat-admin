@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace Dcat\Admin\Tests\Unit\Traits;
 
 use Dcat\Admin\Models\Administrator;
+use Dcat\Admin\Models\DataRule;
 use Dcat\Admin\Models\Permission;
 use Dcat\Admin\Tests\TestCase;
 use Dcat\Admin\Traits\HasPermissions;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class FakePermissionUserForHasPermissionsTest
 {
@@ -165,5 +169,50 @@ class HasPermissionsTest extends TestCase
         $this->assertTrue($user->inRoles(['auditor']));
         $this->assertTrue($user->isRole('9'));
         $this->assertSame(1, $user->allRolesCalls);
+    }
+
+    public function test_get_data_rules_qualifies_join_columns_and_hydrates_data_rule(): void
+    {
+        $this->app['config']->set('admin.database.data_rules_table', 'test_data_rules');
+        $this->app['config']->set('admin.database.data_rules_model', DataRule::class);
+        $this->app['config']->set('admin.database.role_data_rules_table', 'test_role_data_rules');
+
+        Schema::create('test_data_rules', function (Blueprint $table): void {
+            $table->id();
+            $table->unsignedBigInteger('menu_id');
+            $table->string('name');
+            $table->boolean('status');
+            $table->integer('order');
+        });
+        Schema::create('test_role_data_rules', function (Blueprint $table): void {
+            $table->id();
+            $table->unsignedBigInteger('role_id');
+            $table->unsignedBigInteger('data_rule_id');
+        });
+
+        DB::table('test_data_rules')->insert([
+            'id' => 10,
+            'menu_id' => 42,
+            'name' => 'Owned rule',
+            'status' => 1,
+            'order' => 1,
+        ]);
+        DB::table('test_role_data_rules')->insert([
+            'id' => 100,
+            'role_id' => 8,
+            'data_rule_id' => 10,
+        ]);
+
+        try {
+            $rules = (new FakeInheritedRoleUserForHasPermissionsTest)->getDataRules(42);
+        } finally {
+            Schema::dropIfExists('test_role_data_rules');
+            Schema::dropIfExists('test_data_rules');
+        }
+
+        $this->assertCount(1, $rules);
+        $this->assertInstanceOf(DataRule::class, $rules->first());
+        $this->assertSame(10, $rules->first()->getKey());
+        $this->assertSame('Owned rule', $rules->first()->name);
     }
 }

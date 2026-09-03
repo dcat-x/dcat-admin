@@ -183,13 +183,16 @@ trait HasPermissions
 
         $dataRuleModel = config('admin.database.data_rules_model', DataRule::class);
         $pivotTable = config('admin.database.role_data_rules_table', 'admin_role_data_rules');
+        $query = $dataRuleModel::query();
+        $dataRuleTable = $query->getModel()->getTable();
 
-        return $dataRuleModel::query()
-            ->join($pivotTable, 'data_rule_id', '=', 'id')
-            ->whereIn('role_id', $roleIds)
-            ->where('menu_id', $menuId)
-            ->where('status', 1)
-            ->orderBy('order')
+        return $query
+            ->select($dataRuleTable.'.*')
+            ->join($pivotTable, $pivotTable.'.data_rule_id', '=', $dataRuleTable.'.id')
+            ->whereIn($pivotTable.'.role_id', $roleIds)
+            ->where($dataRuleTable.'.menu_id', $menuId)
+            ->where($dataRuleTable.'.status', 1)
+            ->orderBy($dataRuleTable.'.order')
             ->get();
     }
 

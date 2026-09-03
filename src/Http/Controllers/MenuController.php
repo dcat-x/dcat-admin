@@ -89,7 +89,7 @@ class MenuController extends AdminController
             $tree->branch(function ($branch) {
                 $payload = "<i class='fa {$branch['icon']}'></i>&nbsp;<strong>{$branch['title']}</strong>";
 
-                if (! isset($branch['children'])) {
+                if (! isset($branch['children']) && ! empty($branch['uri'])) {
                     if (filter_var($branch['uri'], FILTER_VALIDATE_URL)) {
                         $uri = $branch['uri'];
                     } else {

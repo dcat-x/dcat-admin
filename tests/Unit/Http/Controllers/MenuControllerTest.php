@@ -95,4 +95,34 @@ class MenuControllerTest extends TestCase
 
         $this->assertInstanceOf(Tree::class, $controller->exposeTreeView());
     }
+
+    public function test_tree_branch_only_renders_link_for_non_empty_uri(): void
+    {
+        $controller = new class extends MenuController
+        {
+            public function exposeTreeView(): Tree
+            {
+                return $this->treeView();
+            }
+        };
+        $tree = $controller->exposeTreeView();
+        $property = new \ReflectionProperty($tree, 'branchCallback');
+        $property->setAccessible(true);
+        $branch = $property->getValue($tree);
+
+        $linkedPayload = $branch([
+            'icon' => 'fa-link',
+            'title' => 'Users',
+            'uri' => 'auth/users',
+        ]);
+        $emptyPayload = $branch([
+            'icon' => 'fa-folder',
+            'title' => 'Root',
+            'uri' => null,
+        ]);
+
+        $this->assertStringContainsString('<a href=', $linkedPayload);
+        $this->assertStringContainsString('<strong>Root</strong>', $emptyPayload);
+        $this->assertStringNotContainsString('<a href=', $emptyPayload);
+    }
 }
