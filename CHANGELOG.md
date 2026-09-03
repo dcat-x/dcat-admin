@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.3] - 2026-09-03
+
+### Fixed
+
+- 修复菜单树与数据规则查询异常
+- 修复 JSON session 通知渲染异常
+- 修复部门与数据权限启用异常
+
 ## [2.0.2] - 2026-07-29
 
 ### Fixed
@@ -552,7 +560,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v2.0.2...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v2.0.3...HEAD
+[2.0.3]: https://github.com/dcat-x/dcat-admin/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/dcat-x/dcat-admin/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/dcat-x/dcat-admin/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/dcat-x/dcat-admin/compare/v1.2.2...v2.0.0
