@@ -169,6 +169,7 @@ class Menu
         if (
             ! $this->checkPermission($item)
             || ! $this->checkExtension($item)
+            || ! $this->checkFeature($item)
             || ! $this->userCanSeeMenu($item)
         ) {
             return false;
@@ -200,6 +201,15 @@ class Menu
         }
 
         return $extension->enabled();
+    }
+
+    protected function checkFeature($item): bool
+    {
+        return match (trim((string) ($item['uri'] ?? ''), '/')) {
+            'auth/departments' => (bool) config('admin.department.enable', false),
+            'auth/data-rules' => (bool) config('admin.data_permission.enable', false),
+            default => true,
+        };
     }
 
     /**

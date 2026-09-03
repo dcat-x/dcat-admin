@@ -64,6 +64,17 @@ class MenuTest extends TestCase
         $this->assertSame('Some Unknown Menu', $result);
     }
 
+    public function test_translate_returns_chinese_optional_feature_titles(): void
+    {
+        $this->app['translator']->addPath(dirname(__DIR__, 3).'/resources/lang');
+        $this->app->setLocale('zh_CN');
+
+        $menu = $this->makeMenu();
+
+        $this->assertSame('部门管理', $menu->translate('Departments'));
+        $this->assertSame('数据规则', $menu->translate('Data Rules'));
+    }
+
     public function test_get_path_with_empty_uri(): void
     {
         $menu = $this->makeMenu();
@@ -101,6 +112,25 @@ class MenuTest extends TestCase
         $menu = $this->makeMenu();
         $item = ['show' => false, 'extension' => null, 'permission_id' => null, 'roles' => [], 'permissions' => []];
         $this->assertFalse($menu->visible($item));
+    }
+
+    public function test_optional_feature_menus_follow_feature_configuration(): void
+    {
+        config()->set('admin.menu.role_bind_menu', false);
+        config()->set('admin.department.enable', false);
+        config()->set('admin.data_permission.enable', false);
+        $this->mockAdminGuardUserCanSeeMenu();
+
+        $menu = $this->makeMenu();
+
+        $this->assertFalse($menu->visible(['uri' => 'auth/departments']));
+        $this->assertFalse($menu->visible(['uri' => 'auth/data-rules']));
+
+        config()->set('admin.department.enable', true);
+        config()->set('admin.data_permission.enable', true);
+
+        $this->assertTrue($menu->visible(['uri' => 'auth/departments']));
+        $this->assertTrue($menu->visible(['uri' => 'auth/data-rules']));
     }
 
     public function test_helper_nodes_static_property(): void
@@ -177,6 +207,12 @@ class MenuTest extends TestCase
     public function test_check_extension_is_protected(): void
     {
         $ref = new \ReflectionMethod(Menu::class, 'checkExtension');
+        $this->assertTrue($ref->isProtected());
+    }
+
+    public function test_check_feature_is_protected(): void
+    {
+        $ref = new \ReflectionMethod(Menu::class, 'checkFeature');
         $this->assertTrue($ref->isProtected());
     }
 }

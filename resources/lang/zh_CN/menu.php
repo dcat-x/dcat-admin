@@ -13,6 +13,8 @@ return [
         'operation_log' => '操作日志',
         'helpers' => '开发工具',
         'extensions' => '扩展',
+        'departments' => '部门管理',
+        'data_rules' => '数据规则',
         'scaffold' => '代码生成器',
         'icons' => '图标',
     ],

@@ -228,7 +228,11 @@ class Administrator extends Model implements AuthenticatableContract, Authorizab
             return $this->departmentIdsCache;
         }
 
-        return $this->departmentIdsCache = $this->departments()->pluck('id')->toArray();
+        $departments = $this->departments();
+
+        return $this->departmentIdsCache = $departments
+            ->pluck($departments->getRelated()->getQualifiedKeyName())
+            ->toArray();
     }
 
     protected function queryDepartmentRolesByIds(array $departmentIds): Collection

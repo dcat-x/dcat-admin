@@ -11,7 +11,10 @@ use Dcat\Admin\Tests\TestCase;
 use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class AdministratorTest extends TestCase
 {
@@ -112,6 +115,38 @@ class AdministratorTest extends TestCase
         $admin = new Administrator;
 
         $this->assertNull($admin->primary_department_id);
+    }
+
+    public function test_department_ids_query_qualifies_the_department_primary_key(): void
+    {
+        $this->app['config']->set('admin.department.enable', true);
+
+        Schema::create('admin_users', function (Blueprint $table): void {
+            $table->id();
+            $table->string('username');
+        });
+        Schema::create('admin_departments', function (Blueprint $table): void {
+            $table->id();
+        });
+        Schema::create('admin_department_users', function (Blueprint $table): void {
+            $table->id();
+            $table->unsignedBigInteger('department_id');
+            $table->unsignedBigInteger('user_id');
+            $table->boolean('is_primary')->default(false);
+            $table->timestamps();
+        });
+
+        DB::table('admin_users')->insert(['id' => 1, 'username' => 'admin']);
+        DB::table('admin_departments')->insert(['id' => 10]);
+        DB::table('admin_department_users')->insert([
+            'id' => 100,
+            'department_id' => 10,
+            'user_id' => 1,
+        ]);
+
+        $admin = Administrator::query()->findOrFail(1);
+
+        $this->assertSame('10', $admin->department_ids);
     }
 
     public function test_all_roles_is_cached_for_repeated_calls(): void
