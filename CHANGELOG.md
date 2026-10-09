@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.4] - 2026-10-09
+
+### Fixed
+
+- 修复菜单图标、缩进、暗黑模式白条与横向滚动条
+
 ## [2.0.3] - 2026-09-03
 
 ### Fixed
@@ -560,7 +566,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v2.0.3...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v2.0.4...HEAD
+[2.0.4]: https://github.com/dcat-x/dcat-admin/compare/v2.0.3...v2.0.4
 [2.0.3]: https://github.com/dcat-x/dcat-admin/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/dcat-x/dcat-admin/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/dcat-x/dcat-admin/compare/v2.0.0...v2.0.1
