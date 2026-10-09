@@ -60,10 +60,6 @@
   margin-top: 0 !important;
 }
 
-[class*=sidebar-light-] .nav-treeview > .nav-item > .nav-link i {
-  visibility: hidden;
-}
-
 .main-sidebar .nav-sidebar > .nav-link {
   font-weight: 400;
 }
@@ -75,13 +71,13 @@
 // Second level menu
 .main-sidebar .nav-treeview.nav > .nav-item > .nav-link,
 .main-sidebar .nav-treeview.nav > .nav-item > .nav-link.active {
-  padding: 7px 10px 7px 1.4em !important;
+  padding: 7px 10px 7px 2.4em !important;
 }
 
 // Third level menu
 .main-sidebar .nav-treeview .nav-treeview > .nav-item > .nav-link,
 .main-sidebar .nav-treeview .nav-treeview > .nav-item > .nav-link.active {
-  padding: 7px 10px 7px 2.8em !important;
+  padding: 7px 10px 7px 3.6em !important;
 }
 
 [class*=sidebar-light-] .nav-sidebar > .nav-item > .nav-link.active,

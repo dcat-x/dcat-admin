@@ -107,7 +107,7 @@ class Donut extends Card
     <div class="col-sm-{$this->contentWidth[0]} justify-content-center">
         {$content}
     </div>
-    <div class="col-sm-{$this->contentWidth[1]}" style="margin-right: -15px;">
+    <div class="col-sm-{$this->contentWidth[1]}">
         {$this->renderChart()}
     </div>
 </div>

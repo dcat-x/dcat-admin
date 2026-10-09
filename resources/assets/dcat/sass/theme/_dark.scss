@@ -473,7 +473,8 @@ body.dark-mode {
     padding: 0;
   }
 
-  .card, .box {
+  .card, .box,
+  .dcat-box:not(.simple-grid > .dcat-box) {
     background: $body-dark-card-bg;
   }
   .box.box-solid.box-default {
@@ -879,9 +880,6 @@ body.dark-mode {
       background: $body-darker-color;
     }
 
-    .nav-treeview.nav .nav-item .nav-link.active {
-      padding: 7px 10px 7px 1.4em !important;
-    }
   }
 
   .main-menu .navbar-header .navbar-brand {
