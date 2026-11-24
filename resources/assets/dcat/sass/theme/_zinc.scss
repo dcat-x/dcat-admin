@@ -72,9 +72,17 @@ body.layout-color-zinc {
     color: $zinc-theme-header !important;
   }
 
-  .grid-selector .wrap {
-    background-color: $zinc-theme-header;
-    color: #fff;
+  .grid-selector .wrap a {
+    color: $zinc-theme-sidebar-text;
+
+    &:hover {
+      color: $zinc-theme-header;
+    }
+
+    &.active {
+      color: $zinc-theme-header;
+      font-weight: bold;
+    }
   }
 
   .pagination .page-item.active .page-link {

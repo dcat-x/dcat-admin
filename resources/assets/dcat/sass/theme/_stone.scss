@@ -72,9 +72,17 @@ body.layout-color-stone {
     color: $stone-theme-header !important;
   }
 
-  .grid-selector .wrap {
-    background-color: $stone-theme-header;
-    color: #fff;
+  .grid-selector .wrap a {
+    color: $stone-theme-sidebar-text;
+
+    &:hover {
+      color: $stone-theme-header;
+    }
+
+    &.active {
+      color: $stone-theme-header;
+      font-weight: bold;
+    }
   }
 
   .pagination .page-item.active .page-link {

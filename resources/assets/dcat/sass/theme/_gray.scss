@@ -90,9 +90,17 @@ body.layout-color-gray {
   // ============================================
   // Grid Selector
   // ============================================
-  .grid-selector .wrap {
-    background-color: $gray-theme-header;
-    color: #fff;
+  .grid-selector .wrap a {
+    color: $gray-theme-sidebar-text;
+
+    &:hover {
+      color: $gray-theme-header;
+    }
+
+    &.active {
+      color: $gray-theme-header;
+      font-weight: bold;
+    }
   }
 
   // ============================================

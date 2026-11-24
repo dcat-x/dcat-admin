@@ -72,9 +72,17 @@ body.layout-color-blue-light {
     color: $blue-light-theme-primary !important;
   }
 
-  .grid-selector .wrap {
-    background-color: $blue-light-theme-primary;
-    color: #fff;
+  .grid-selector .wrap a {
+    color: $blue-light-theme-primary;
+
+    &:hover {
+      color: $blue-light-theme-header;
+    }
+
+    &.active {
+      color: $blue-light-theme-primary;
+      font-weight: bold;
+    }
   }
 
   .pagination .page-item.active .page-link {

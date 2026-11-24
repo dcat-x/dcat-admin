@@ -72,9 +72,17 @@ body.layout-color-neutral {
     color: $neutral-theme-header !important;
   }
 
-  .grid-selector .wrap {
-    background-color: $neutral-theme-header;
-    color: #fff;
+  .grid-selector .wrap a {
+    color: $neutral-theme-sidebar-text;
+
+    &:hover {
+      color: $neutral-theme-header;
+    }
+
+    &.active {
+      color: $neutral-theme-header;
+      font-weight: bold;
+    }
   }
 
   .pagination .page-item.active .page-link {

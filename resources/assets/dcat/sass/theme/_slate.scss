@@ -72,9 +72,17 @@ body.layout-color-slate {
     color: $slate-theme-header !important;
   }
 
-  .grid-selector .wrap {
-    background-color: $slate-theme-header;
-    color: #fff;
+  .grid-selector .wrap a {
+    color: $slate-theme-sidebar-text;
+
+    &:hover {
+      color: $slate-theme-header;
+    }
+
+    &.active {
+      color: $slate-theme-header;
+      font-weight: bold;
+    }
   }
 
   .pagination .page-item.active .page-link {
