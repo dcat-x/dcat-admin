@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use Rector\CodeQuality\Rector\FuncCall\SetTypeToCastRector;
-use Rector\CodeQuality\Rector\FuncCall\SimplifyRegexPatternRector;
 use Rector\CodeQuality\Rector\FuncCall\SingleInArrayToCompareRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\Assign\RemoveDoubleAssignRector;
@@ -24,8 +22,6 @@ return RectorConfig::configure()
         // strict_types 类型安全
         NullToStrictStringFuncCallArgRector::class,
         // 代码质量
-        SetTypeToCastRector::class,
-        SimplifyRegexPatternRector::class,
         SingleInArrayToCompareRector::class,
         // 死代码清理
         RemoveDoubleAssignRector::class,
