@@ -87,6 +87,8 @@ function withSourceMaps(builder) {
  */
 const sassOptions = {
   quietDeps: true,
+  // Newer sass prepends a UTF-8 BOM to compressed output when sources contain non-ASCII
+  charset: false,
   silenceDeprecations: ['import', 'global-builtin', 'color-functions', 'slash-div', 'legacy-js-api', 'if-function', 'abs-percent']
 };
 

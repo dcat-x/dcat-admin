@@ -66,5 +66,8 @@
         "sass": "^1.83",
         "sass-loader": "^16.0",
         "sweetalert2": "^9.17.4"
+    },
+    "overrides": {
+        "webpack": "~5.105.4"
     }
 }
