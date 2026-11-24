@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.5] - 2026-11-24
+
+### Fixed
+
+- 修复深色主题规格筛选器文字不可见
+- 修复菜单权限类型下表单无法提交
+
 ## [2.0.4] - 2026-10-09
 
 ### Fixed
@@ -566,7 +573,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum PHP version requirement raised to 8.2
 - Minimum Laravel version requirement raised to 12.0
 
-[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v2.0.4...HEAD
+[Unreleased]: https://github.com/dcat-x/dcat-admin/compare/v2.0.5...HEAD
+[2.0.5]: https://github.com/dcat-x/dcat-admin/compare/v2.0.4...v2.0.5
 [2.0.4]: https://github.com/dcat-x/dcat-admin/compare/v2.0.3...v2.0.4
 [2.0.3]: https://github.com/dcat-x/dcat-admin/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/dcat-x/dcat-admin/compare/v2.0.1...v2.0.2
