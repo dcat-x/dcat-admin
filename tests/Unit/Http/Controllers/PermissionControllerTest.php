@@ -98,6 +98,37 @@ class PermissionControllerTest extends TestCase
         $this->assertInstanceOf(Form::class, $controller->form());
     }
 
+    public function test_button_permission_fields_are_only_required_for_button_type(): void
+    {
+        $this->app['config']->set('admin.menu.permission_bind_menu', false);
+        $this->app['config']->set('admin.database.menu_model', PermissionControllerTestMenuStub::class);
+
+        $controller = new class extends PermissionController
+        {
+            protected function getPermissionSelectOptions(): array
+            {
+                return [0 => 'Root'];
+            }
+        };
+        $form = $controller->form();
+        (new \ReflectionMethod($form, 'build'))->invoke($form);
+
+        foreach (['menu_id', 'permission_key'] as $column) {
+            $field = $form->field($column);
+
+            $this->assertNotNull($field, $column);
+            // Hidden cascade fields must not carry the HTML "required" attribute,
+            // otherwise browser validation silently blocks submission for other types.
+            $this->assertNull($field->getAttribute('required'), $column);
+
+            $validator = $field->getValidator(['type' => 1, $column => null]);
+            $this->assertFalse($validator !== false && $validator->fails(), $column.' should be optional for menu permission');
+
+            $validator = $field->getValidator(['type' => 2, $column => null]);
+            $this->assertTrue($validator !== false && $validator->fails(), $column.' should be required for button permission');
+        }
+    }
+
     public function test_get_routes_returns_array(): void
     {
         $controller = new PermissionController;
@@ -139,5 +170,13 @@ class PermissionControllerTest extends TestCase
         foreach ($result as $key => $value) {
             $this->assertSame($key, $value);
         }
+    }
+}
+
+class PermissionControllerTestMenuStub
+{
+    public static function selectOptions(): array
+    {
+        return [1 => 'Index'];
     }
 }

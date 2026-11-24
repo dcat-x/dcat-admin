@@ -130,11 +130,13 @@ class PermissionController extends AdminController
                     $menuModel = config('admin.database.menu_model');
                     $form->select('menu_id', trans('admin.belong_menu'))
                         ->options($menuModel::selectOptions())
-                        ->required();
+                        ->setLabelClass(['asterisk'])
+                        ->rules('required_if:type,2');
 
                     $form->text('permission_key', trans('admin.permission_key'))
                         ->placeholder('例如: user:add, order:delete')
-                        ->required()
+                        ->setLabelClass(['asterisk'])
+                        ->rules('required_if:type,2')
                         ->help(trans('admin.permission_key_help'));
                 });
 
